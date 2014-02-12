@@ -1,4 +1,4 @@
 pysilfont
 =========
 
-  Python-based font utilities collection (often using Fontforge.
+  Python-based font utilities collection and framework (often using FontForge).
