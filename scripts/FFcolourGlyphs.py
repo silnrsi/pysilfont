@@ -1,5 +1,5 @@
 #!/usr/bin/env python 
-'Set Gylph colours based on a csv file - format gylphname,colour'
+'Set Glyph colours based on a csv file - format glyphname,colour'
 __url__ = 'http://projects.palaso.org/projects/pysilfont'
 __copyright__ = 'Copyright (c) 2013, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
@@ -29,7 +29,7 @@ def doit(args) :
         'yellow' :0xFFFF00,
         'white'  :0xFFFFFF }
 
-# Change colour of Gylphs
+# Change colour of Glyphs
     for line in inpf.readlines() :
         glyphn, colour = line.strip().split(",")  # will exception if not 2 elements
         colour=colour.lower()
@@ -49,4 +49,3 @@ def doit(args) :
     return font
 
 execute(doit, argspec)
-
