@@ -2,12 +2,12 @@
 '''FontForge: Double encode glyphs based on double encoding data in a file
 Lines in file should look like: "LtnSmARetrHook",U+F236,U+1D8F'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2013, SIL International  (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2014, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 __version__ = '0.0.1'
 
-from silfont.fontforge.framework import execute
+from silfont.framework import execute
 
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
@@ -45,4 +45,4 @@ def doit(args) :
     logf.close()
     return font
 
-execute(doit, argspec)
+execute("FF",doit, argspec)

@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 'FontForge: Report Glyph name, Number of references (components)'
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2013, SIL International  (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2014, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 __version__ = '0.0.1'
 
-from silfont.fontforge.framework import execute
+from silfont.framework import execute
 
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
@@ -30,4 +30,4 @@ def doit(args) :
 
     print "Done!"
 
-execute(doit, argspec)
+execute("FF",doit, argspec)

@@ -6,7 +6,7 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'David Raymond'
 __version__ = '0.0.1'
 
-from silfont.fontforge.framework import execute
+from silfont.framework import execute
 
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
@@ -41,4 +41,4 @@ def compare(fonta,fontb,logf,options) :
         else :
             logf.write("Glyph %s missing from %s\n" % (glyph,fonta.path))
 
-execute(doit, argspec)
+execute("FF",doit, argspec)

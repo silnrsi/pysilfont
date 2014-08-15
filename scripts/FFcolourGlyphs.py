@@ -6,7 +6,7 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'David Raymond'
 __version__ = '0.0.1'
 
-from silfont.fontforge.framework import execute
+from silfont.framework import execute
 
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
@@ -48,4 +48,4 @@ def doit(args) :
     logf.close()
     return font
 
-execute(doit, argspec)
+execute("FF",doit, argspec)

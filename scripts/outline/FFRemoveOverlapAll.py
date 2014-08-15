@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 'FontForge: Remove overlap on all glyphs in font'
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2013, SIL International  (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2014, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Victor Gaultney'
 __version__ = '0.0.1'
 
-from silfont.fontforge.framework import execute
+from silfont.framework import execute
 
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
@@ -18,4 +18,4 @@ def doit(args) :
         font[glyph].removeOverlap()
     return font
 
-execute(doit,argspec)
+execute("FF",doit,argspec)

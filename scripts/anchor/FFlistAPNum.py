@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 'FontForge: Report Glyph name, number of anchors - sorted by number of anchors'
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2013, SIL International (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2014, SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 __version__ = '0.0.1' 
 
-from silfont.fontforge.framework import execute
+from silfont.framework import execute
 
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
@@ -35,4 +35,4 @@ def AP_cmp(a, b): # Comparision to sort first by number of attachment points) th
     else:
         return cmp(a[0], b[0])
 
-execute(doit, argspec)
+execute("FF",doit, argspec)

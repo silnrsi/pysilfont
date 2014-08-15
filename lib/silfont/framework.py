@@ -1,19 +1,27 @@
 #!/usr/bin/python
-'''Module to wrap a fontforge type script so that it can be used either standalone
-or as a macro within fontforge. Handles commandline attribute parsing.
+'''Module to wrap a Fontforge or Robofab python script. Handles commandline attribute parsing, font 
+and file opening (including error handling) etc.
 The module pulls attribute strings from the calling module to help it.'''
 __url__ = 'http://projects.palaso.org/projects/pysilfont'
-__copyright__ = 'Copyright (c) 2013, SIL International (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2014, SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Martin Hosken'
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 
-import sys, argparse, os, fontforge
+import sys, argparse, os
 
-def execute(fn, argspec) :
-    
-    if fontforge.hasUserInterface() :
-        return # Exceute is for command-line use
+def execute(tool, fn, argspec) :
+    ff = False
+    rfb = False
+    if tool == "FF" :
+        ff=True
+        import fontforge
+        if fontforge.hasUserInterface() :
+            return # Exceute is for command-line use
+    elif tool == "RFB" :
+        rfb = True
+        from robofab.world import *
+    else : return # Invalid tool     
     
     basemodule = sys.modules[fn.__module__]
     poptions = {}
@@ -63,7 +71,8 @@ def execute(fn, argspec) :
         if atype=='infont' :
             print 'Opening font: ',aval
             try :
-                aval=fontforge.open(aval)
+                if ff : aval=fontforge.open(aval)
+                if rfb: aval=OpenFont(aval)
             except Exception as e :
                 print e
                 sys.exit()
@@ -81,7 +90,9 @@ def execute(fn, argspec) :
             except Exception as e :
                 print e
                 sys.exit()
-        elif atype=='outfont' : outfont=aval # Can only be one outfont
+        elif atype=='outfont' : 
+            outfont=aval # Can only be one outfont
+            outfontext=aext
         
         setattr(args,ainfo['name'],aval)
 
@@ -92,7 +103,9 @@ def execute(fn, argspec) :
             print "No font output"
         else :
             print "Saving font to " + outfont
-            result.save(outfont)
+            if outfontext=="ufo" and ff:
+                result.generate(outfont)
+            else : result.save(outfont)
 
 def _splitfn(fn): # Split filename into path, base and extension
     (path,base) = os.path.split(fn)
