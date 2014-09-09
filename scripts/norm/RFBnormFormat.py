@@ -17,16 +17,7 @@ def doit(args) :
     font=args.ifont
     logf = args.log
         
-    # Sort anchors and components in Glyphs alphabetically
-    for g in font:
-        new=sorted(g.anchors, key=lambda anc: anc.name )
-        if new <> g.anchors:
-            g.anchors=new
-            logf.write ("Glyph anchors reordered for " + g._name + "\n")
-        new=sorted(g.components, key=lambda comp: comp.baseGlyph + str(comp.offset) )
-        if new <> g.components:
-            g.components=new
-            logf.write ("Glyph components reordered for " + g._name + "\n")
+    # Currently no formatting changes identified other than those made by round-tripping through RoboFab
     
     logf.close()
     return font
