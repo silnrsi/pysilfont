@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 'Set Glyph colours based on a csv file - format glyphname,colour'
-__url__ = 'http://projects.palaso.org/projects/pysilfont'
+__url__ = 'https://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2013, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'

@@ -2,7 +2,7 @@
 '''Module to wrap a Fontforge or Robofab python script. Handles commandline attribute parsing, font 
 and file opening (including error handling) etc.
 The module pulls attribute strings from the calling module to help it.'''
-__url__ = 'http://projects.palaso.org/projects/pysilfont'
+__url__ = 'https://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2014, SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Martin Hosken'

@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 '''Sort components and anchors to allow diff tools to detect other changes to glyphs '''
-__url__ = 'http://projects.palaso.org/projects/pysilfont'
+__url__ = 'https://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2014, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
