@@ -59,11 +59,12 @@ class ETWriter(object) :
                 topns if set puts all namespaces in root element else put them as low as possible"""
         if base is None :
             base = self.root
-            write('<?xml version="1.0" encoding="utf-8"?>\n')
+            write('<?xml version="1.0" encoding="UTF-8"?>\n')
             doctype=getattr(base, "doctype", "")
             if doctype <> "":
                 write(u'<!DOCTYPE {}>\n'.format(doctype))
         (tag, q, ns) = self._localisens(base.tag)
+        print base.tag,tag,q,ns
         localattribs = {}
         if ns and ns not in namespaces :
             namespaces[ns] = q
@@ -134,20 +135,30 @@ class dirTree(dict) :
 class xmlitem(dict) :
     """ The xml data item for an xml file from the UFO"""
 
-    def __init__(self, fn = None, parse = True ) :
-        self.xmlstring = ""
+    def __init__(self, dirn = None, filen = None, parse = True ) :
+        self.dirn = dirn
+        self.filen = filen
+        self.inxmlstr = ""
+        self.outxmlstr = ""
         self.etree = None
         self.type = None
-        if fn :
+        if filen :
             try :
-                inxml=open(fn,"r")
+                inxml=open(os.path.join( dirn, filen), "r")
             except Exception as e :
                 print e
                 sys.exit()
             for line in inxml.readlines() :
-                self.xmlstring = self.xmlstring + line
+                self.inxmlstr = self.inxmlstr + line
             if parse :
-                self.etree = ET.fromstring(self.xmlstring)
+                self.etree = ET.fromstring(self.inxmlstr)
 
     def write_to_xml(self,text) :
-        self.xmlstring = self.xmlstring + text
+        self.outxmlstr = self.outxmlstr + text
+        
+    def write_to_file(self,dirn,filen) :
+        
+        print "Writing to", filen, "in", dirn
+        outfile=open(os.path.join(dirn,filen),"w")
+        outfile.write(self.outxmlstr)
+        outfile.close

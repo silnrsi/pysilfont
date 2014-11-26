@@ -24,6 +24,10 @@ if __name__ == '__main__' :
             print glif[i]
             index = glif[i]['index']
             print glif.etree[index]
+    
+    #font.outparams["UFOversion"] = 3
+    
+    font.write("./out.ufo")
         
     sys.exit()
 

@@ -23,11 +23,9 @@ class Ufont(object) :
                 sys.exit()
             # Read list of files and folders in top 2 levels; anything at lower levels just needs copying
             self.tree=dirTree(ufodir)
-            (self.path,base) = os.path.split(ufodir)
-            (self.base,self.ext) = os.path.splitext(base)            
-            # Read metainfo.plist and identify UFO version
+            #self.path,base) = os.path.split(ufodir)
             self.metainfo = self._readPlist("metainfo.plist")
-            self.UFOversion = self.metainfo["formatVersion"]
+            self.UFOversion = self.metainfo["formatVersion"].text
             # Read other top-level plists
             if "fontinfo.plist" in self.tree : self.fontinfo = self._readPlist("fontinfo.plist")
             if "groups.plist" in self.tree : self.groups = self._readPlist("groups.plist")
@@ -43,58 +41,125 @@ class Ufont(object) :
             # Process the glyphs directories)
             self.layers = []
             for i in sorted(self.layercontents.keys() ) :
-                layername = self.layercontents[i][0]
-                layerdir = self.layercontents[i][1]
+                #print self.layercontents[i][0][1].text
+                layername = self.layercontents[i][0].text
+                layerdir = self.layercontents[i][1].text
                 print "Processing Glyph Layer " + str(i) + ": " + layername,layerdir
                 if layerdir in self.tree:
                     self.layers.append( Ulayer(layername, layerdir, ufodir = ufodir, layertree = self.tree[layerdir]['tree']) )
                 else :
                     print "Glyph directory",layerdir, "missing"
                     sys.exit()
+            # Set initial defaults for outparams            
+            self.outparams = { "indentIncr" : "  ", "indentFirst" : "  ", "plistIndentFirst" : "" }
+            self.outparams["UFOversion"] = self.UFOversion
 
-    def _readPlist(self, fn) :
-        if fn in self.tree :
-            return Uplist( fn = os.path.join(self.ufodir,fn) )
+    def _readPlist(self, filen) :
+        print filen
+        if filen in self.tree :
+            return Uplist( self.ufodir,filen )
         else :
-            print fn, "does not exist2"
-            sys.exit()            
+            print dirn,filen, "does not exist2"
+            sys.exit()
+    
+    def write(self, outdir) :
+        ''' Write UFO out to disk, based on values set in self.outparams'''
+        
+        if not os.path.exists(outdir) :
+            try:
+                os.mkdir(outdir)
+            except Exception as e :
+                print e
+                sys.exit()
+        if not os.path.isdir(outdir) :
+            print outdir + " not a directory"
+            sys.exit()
+        UFOversion = self.outparams["UFOversion"]
+        # Update metainfo.plist and write out
+        if self.UFOversion <> UFOversion : self.metainfo["formatVersion"].text = str(UFOversion)
+        self.metainfo["creator"].text = "org.sil.sripts" # What should this be? pysilfont?
+        writeXMLobject(self.metainfo, self.outparams, outdir, "metainfo.plist")
+        # Write out other plists
+        if "fontinfo" in self.__dict__ : writeXMLobject(self.fontinfo, self.outparams, outdir, "fontinfo.plist")
+        if "groups" in self.__dict__ : writeXMLobject(self.groups, self.outparams, outdir, "groups.plist")
+        if "kerning" in self.__dict__ : writeXMLobject(self.kerning, self.outparams, outdir, "kerning.plist")
+        if "lib" in self.__dict__ : writeXMLobject(self.lib, self.outparams, outdir, "lib.plist")
+        if UFOversion == 3 : writeXMLobject(self.layercontents, self.outparams, outdir, "layercontents.plist")
+        # Write out glyph layers
+        for layer in self.layers : layer.write(outdir,self.outparams)
+        # Copy other files and directories
+        
 
 class Ulayer(dict) :
     
     def __init__(self,layername,layerdir,ufodir = None,layertree = None) :
+        self.layername = layername
+        self.layerdir = layerdir
         fulldir = os.path.join(ufodir,layerdir)
-        self["contents"] = Uplist( fn = os.path.join(fulldir, "contents.plist") )
-        for glyphn in sorted(self["contents"].keys()) :
-            glifn = self["contents"][glyphn]
+        self.contents = Uplist( fulldir, "contents.plist" )
+        for glyphn in sorted(self.contents.keys()) :
+            glifn = self.contents[glyphn].text
             if glifn in layertree :
-                self[glyphn] = Uglif(fn = os.path.join(fulldir, glifn))
+                self[glyphn] = Uglif(fulldir, glifn)
             else :
-                print "Missing glif ",glifn
+                print "Missing glif ",glifn, "in", fulldir
                 sys.exit()
-
+                
+    def write(self,outdir,params) :
+        print "Processing layer", self.layername
+        fulldir = os.path.join(outdir,self.layerdir)
+        if not os.path.exists(fulldir) :
+            try:
+                os.mkdir(fulldir)
+            except Exception as e :
+                print e
+                sys.exit()
+        if not os.path.isdir(fulldir) :
+            print fulldir + " not a directory"
+            sys.exit()
+        writeXMLobject(self.contents, params, fulldir, "contents.plist")
+        for glyphn in self :
+            glyph = self[glyphn]
+            writeXMLobject(glyph, params, fulldir, glyph.filen)
+            
 class Uplist(xmlitem) :
     
-    def __init__(self, fn = None, parse = True ) :
-        xmlitem.__init__(self, fn, parse)
-        if fn : self.populate_dict()
+    def __init__(self, dirn = None, filen = None, parse = True) :
+        xmlitem.__init__(self, dirn, filen, parse)
+        self.type = "plist"
+        if filen : self.populate_dict()
     
     def populate_dict(self) :
         pl = self.etree[0]
         if pl.tag == "dict" :
             for i in range(0,len(pl),2):
                 key = pl[i].text
-                self[key] = pl[i+1].text
+                self[key] = pl[i+1]
         else : # Assume array of 2 element arrays (eg layercontents.plist)
             for i in range(len(pl)) :
-                self[i] = [ pl[i][0].text, pl[i][1].text ]
+                self[i] = pl[i]
+    
+    
 
 class Uglif(xmlitem) :
     
-    def __init__(self, fn = None, parse = True ) :
-        xmlitem.__init__(self, fn, parse)
-        if fn : self.populate_dict()
+    def __init__(self, dirn = None, filen = None, parse = True) :
+        xmlitem.__init__(self, dirn, filen, parse)
+        self.type="glif"
+        if filen : self.populate_dict()
     
     def populate_dict(self) :
         et = self.etree
         for i in range(len(et)) :
             self[et[i].tag] = { 'index' : i, 'element' : et[i] }
+            
+def writeXMLobject(object,params, dirn, filen) :
+    if object.type == "plist" :
+        indentFirst = params["plistIndentFirst"]
+        object.etree.doctype = 'plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"'
+    else :
+        indentFirst = params["indentFirst"]
+        
+    etw = ETWriter(object.etree, indentIncr = params["indentIncr"], indentFirst = indentFirst)
+    etw.serialize_xml(object.write_to_xml)
+    object.write_to_file(dirn,filen)
