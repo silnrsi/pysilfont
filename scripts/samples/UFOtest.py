@@ -15,7 +15,12 @@ if __name__ == '__main__' :
 
     font = Ufont(ufodir=sys.argv[1])
     
-    testn = "CySmO"
+    font.outparams["UFOversion"] = 3
+    #font.outparams["plistIndentFirst"] = "  "
+    font.outparams["indentFirst"] = "\t"
+    font.outparams["indentIncr"] = "\t"
+    
+    testn = "barx"
     if testn in font.layers[0] :
         glif = font.layers[0][testn]
         for i in glif :
@@ -24,9 +29,13 @@ if __name__ == '__main__' :
             print glif[i]
             index = glif[i]['index']
             print glif.etree[index]
+        glif.outparams = font.outparams.copy()
+        glif.outparams["indentFirst"] = "  "
+        glif.outparams["indentIncr"] = "  "
     
-    #font.outparams["UFOversion"] = 3
-    
+
+
+    print "<<<< Writing font out >>>>"
     font.write("./out.ufo")
         
     sys.exit()

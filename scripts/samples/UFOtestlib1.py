@@ -7,7 +7,6 @@ __author__ = 'David Raymond'
 __version__ = '0.0.1'
 
 from xml.etree import ElementTree as ET
-from copy import deepcopy
 import re, sys, os
 
 _elementprotect = {
@@ -64,7 +63,7 @@ class ETWriter(object) :
             if doctype <> "":
                 write(u'<!DOCTYPE {}>\n'.format(doctype))
         (tag, q, ns) = self._localisens(base.tag)
-        print base.tag,tag,q,ns
+        #print base.tag,tag,q,ns
         localattribs = {}
         if ns and ns not in namespaces :
             namespaces[ns] = q
@@ -132,17 +131,19 @@ class dirTree(dict) :
                 item["type"] = "f"
             self[name] = item
 
-class xmlitem(dict) :
+class xmlitem(object) :
     """ The xml data item for an xml file from the UFO"""
 
     def __init__(self, dirn = None, filen = None, parse = True ) :
+        self._contents = {}
         self.dirn = dirn
         self.filen = filen
         self.inxmlstr = ""
         self.outxmlstr = ""
         self.etree = None
         self.type = None
-        if filen :
+        self.outparams = None
+        if filen and dirn :
             try :
                 inxml=open(os.path.join( dirn, filen), "r")
             except Exception as e :
@@ -153,12 +154,25 @@ class xmlitem(dict) :
             if parse :
                 self.etree = ET.fromstring(self.inxmlstr)
 
-    def write_to_xml(self,text) :
+    def write_to_xml(self,text) : # Used by ETWriter.serializeXML
         self.outxmlstr = self.outxmlstr + text
         
     def write_to_file(self,dirn,filen) :
-        
         print "Writing to", filen, "in", dirn
         outfile=open(os.path.join(dirn,filen),"w")
         outfile.write(self.outxmlstr)
         outfile.close
+        
+    # Define methods so it acts like an imutable container - 
+    #  changes should be made via changing self.etree elements or object functions
+    def __len__(self):
+        return len(self._contents)
+    def __getitem__(self, key):
+        return self._contents[key]
+    def __iter__(self):
+        return iter(self._contents)
+    def keys(self) :
+        return self._contents.keys()
+
+def makeAttribOrder(attriblist) : # Turn a list of attrib names into an attributeOrder dict for ETWriter 
+        return dict(map(lambda x:(x[1], x[0]), enumerate(attriblist)))
