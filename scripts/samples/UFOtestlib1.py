@@ -132,7 +132,7 @@ class dirTree(dict) :
             self[name] = item
 
 class xmlitem(object) :
-    """ The xml data item for an xml file from the UFO"""
+    """ The xml data item for an xml file"""
 
     def __init__(self, dirn = None, filen = None, parse = True ) :
         self._contents = {}
@@ -142,7 +142,6 @@ class xmlitem(object) :
         self.outxmlstr = ""
         self.etree = None
         self.type = None
-        self.outparams = None
         if filen and dirn :
             try :
                 inxml=open(os.path.join( dirn, filen), "r")
@@ -164,7 +163,7 @@ class xmlitem(object) :
         outfile.close
         
     # Define methods so it acts like an imutable container - 
-    #  changes should be made via changing self.etree elements or object functions
+    # changes should be made via changing self.etree elements or via object functions
     def __len__(self):
         return len(self._contents)
     def __getitem__(self, key):

@@ -13,12 +13,14 @@ import re, sys, os
 
 if __name__ == '__main__' :
 
+    print
+    print
     font = Ufont(ufodir=sys.argv[1])
     
     font.outparams["UFOversion"] = 3
     #font.outparams["plistIndentFirst"] = "  "
-    font.outparams["indentFirst"] = "\t"
-    font.outparams["indentIncr"] = "\t"
+    #font.outparams["indentFirst"] = "\t"
+    #font.outparams["indentIncr"] = "\t"
     
     testn = "barx"
     if testn in font.layers[0] :
