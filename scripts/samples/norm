@@ -1,0 +1,24 @@
+#!/bin/sh
+if [ $# -eq 0 ]
+then
+  echo "No font name"
+  exit
+fi
+
+BASE=~/testdata/norm/$1.ufo
+SUBDIR=~/testdata/norm/$1_tests
+PREF=${SUBDIR}/$1
+
+if [ -d $BASE ]
+then
+	if [ -d $SUBDIR ] ; then rm -r $SUBDIR ; fi
+	mkdir $SUBDIR
+	
+	python ~/src/pysilfont/scripts/samples/UFOnormdemo.py $BASE  ${PREF}_norm.ufo
+
+else
+	echo "ufo does not exist"
+	echo $BASE
+fi
+ 
+

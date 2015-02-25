@@ -8,6 +8,7 @@ __version__ = '0.0.1'
 
 from xml.etree import ElementTree as ET
 import sys, os
+import collections
 from UFOtestlib1 import *
 
 class _Ucontainer(object) :
@@ -33,15 +34,10 @@ class Uelement(_Ucontainer) :
         self.reindex()
         
     def reindex(self) :
-        self._contents = {}
-        element = self.element
-        for i in range(len(element)) :
-            tag = element[i].tag
-            if tag in self._contents :
-                self._contents[tag].append(element[i])
-            else :
-                self._contents[tag] = [element[i]]
-
+        self._contents = collections.defaultdict(list)
+        for e in self.element :
+            self._contents[e.tag].append(e)
+            
     def remove(self,subelement) :
         self._contents[subelement.tag].remove(subelement)
         self.element.remove(subelement)
@@ -64,9 +60,8 @@ class Ufont(object) :
             if not os.path.isdir(ufodir) :
                 print ufodir + " not a directory"
                 sys.exit()
-            # Read list of files and folders in top 2 levels; anything at lower levels just needs copying
+            # Read list of files and folders in top 4 levels; anything at lower levels just needs copying
             self.tree=dirTree(ufodir)
-            #self.path,base) = os.path.split(ufodir)
             self.metainfo = self._readPlist("metainfo.plist")
             self.UFOversion = self.metainfo["formatVersion"][1].text
             # Read other top-level plists
@@ -87,13 +82,14 @@ class Ufont(object) :
                 layername = self.layercontents[i][0].text
                 layerdir = self.layercontents[i][1].text
                 print "Processing Glyph Layer " + str(i) + ": " + layername,layerdir
-                if layerdir in self.tree:
-                    self.layers.append( Ulayer(layername, layerdir, self) )
+                layer = Ulayer(layername, layerdir, self)
+                if layer :
+                    self.layers.append( layer )
                 else :
                     print "Glyph directory",layerdir, "missing"
                     sys.exit()
             # Set initial defaults for outparams            
-            self.outparams = { "indentIncr" : "  ", "indentFirst" : "  ", "plistIndentFirst" : "", 'sortPlists' : True }
+            self.outparams = { "indentIncr" : "  ", "indentFirst" : "  ", "indentML" : False, "plistIndentFirst" : "", 'sortPlists' : True }
             self.outparams["UFOversion"] = self.UFOversion
             self.outparams["attribOrders"] = {
                 'glif' : makeAttribOrder([
@@ -124,7 +120,7 @@ class Ufont(object) :
         UFOversion = self.outparams["UFOversion"]
         # Update metainfo.plist and write out
         self.metainfo["formatVersion"][1].text = str(UFOversion)
-        self.metainfo["creator"][1].text = "org.sil.sripts" # What should this be? pysilfont?
+        self.metainfo["creator"][1].text = "org.sil.sripts"
         writeXMLobject(self.metainfo, self.outparams, outdir, "metainfo.plist")
         # Write out other plists
         if "fontinfo" in self.__dict__ : writeXMLobject(self.fontinfo, self.outparams, outdir, "fontinfo.plist")
@@ -134,19 +130,23 @@ class Ufont(object) :
         if UFOversion == 3 : writeXMLobject(self.layercontents, self.outparams, outdir, "layercontents.plist")
         # Write out glyph layers
         for layer in self.layers : layer.write(outdir,self.outparams)
-        # Copy other files and directories
+        # Copy other files and directories @@@@
 
 
 class Ulayer(_Ucontainer) :
     
     def __init__(self, layername, layerdir, font) :
         self._contents = {}
+        layertree = font.tree.subTree(layerdir)
+        if not layertree : return
         self.layername = layername
         self.layerdir = layerdir
         self.font = font
-        layertree = font.tree[layerdir]['tree']
         fulldir = os.path.join(font.ufodir,layerdir)
         self.contents = Uplist( font = font, dirn = fulldir, filen = "contents.plist" )
+        if font.UFOversion == 3 :
+            if 'layerinfo.plist' in layertree : self.layerinfo = Uplist( font = font, dirn = fulldir, filen = "layerinfo.plist" )
+                
         for glyphn in sorted(self.contents.keys()) :
             glifn = self.contents[glyphn][1].text
             if glifn in layertree :
@@ -167,17 +167,22 @@ class Ulayer(_Ucontainer) :
         if not os.path.isdir(fulldir) :
             print fulldir + " not a directory"
             sys.exit()
+        
+        UFOversion = params["UFOversion"]
+
         writeXMLobject(self.contents, params, fulldir, "contents.plist")
+        if "layerinfo" in self.__dict__ and UFOversion == 3 : writeXMLobject(self.layerinfo, self.outparams, fulldir, "layerinfo.plist")
+        
         for glyphn in self :
             glyph = self._contents[glyphn]
+            if UFOversion == 2 : glyph.makeFormat1()
             writeXMLobject(glyph, params, fulldir, glyph.filen)
-        # Need to check UFO version and outpur corret glif version
+        # Need to check UFO version and output corret glif version @@@@
             
 class Uplist(xmlitem) :
     
     def __init__(self, font = None, dirn = None, filen = None, parse = True) :
-        if dirn is None :
-            if font : dirn = font.ufodir
+        if dirn is None and font: dirn = font.ufodir
         xmlitem.__init__(self, dirn, filen, parse)
         self.type = "plist"
         self.font = font
@@ -251,12 +256,15 @@ class Uglif(xmlitem) :
         if self.outline is not None and self.format == "1":
             for contour in self.outline.contours :
                 if contour.UFO2anchor :
+                    del contour.UFO2anchor["type"] # remove type="move"
                     self.outline.glif.addanchor(contour.UFO2anchor)
                     self.outline.removeobject(contour, "contour")
         self.format = "2"
         et.set("format",str(2))
 
+
     def addanchor(self,anchor) :
+        print self._contents
         # Add an anchor to glif
         # Needs to be before any outline or lib elements if they exist
         element = ET.Element("anchor",anchor)
@@ -271,10 +279,21 @@ class Uglif(xmlitem) :
             self.etree.insert(index,element)
             self.anchors.append(Uanchor(self,element))
     
-    def setUFO2anchors(self) :
-        # Convert UFO3 anchors to UFO2 contour-style anchors
+    
+    
+    def makeFormat1(self) :
+        et = self.etree
+        # Convert to a glif format of 1 (for UFO2) prior to writing out
+        self.format = 1
+        et.set("format",str(1))
+        # Change anchors to UFO2 style anchors
         for anchor in self.anchors :
-            pass
+            element = anchor.element
+            for attrn in ('colour', 'indentifier') : # Remove format 2 attributes
+                if attrn in element.attrib : del element.attrib[attrn]
+            element.attrib['type'] = 'move'
+            # @@@@ remove anchor and add point
+ 
          
 class Uadvance(Uelement) :
     
@@ -345,8 +364,6 @@ class Uoutline(Uelement) :
         if type == "component" : self.component.remove(object)
         if type == "contour" : self.contours.remove(object)
     
-    # If an element is removed, need to also remove object
-
 class Ucomponent(Uelement) :
     
     def __init__(self, outline, element) :
@@ -385,7 +402,7 @@ def writeXMLobject(object, params, dirn, filen) :
         object.etree.doctype = 'plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"'
         if params["sortPlists"] : object.sort()
 
-    etw = ETWriter(object.etree, attributeOrder = attribOrder, indentIncr = params["indentIncr"], indentFirst = indentFirst)
+    etw = ETWriter(object.etree, attributeOrder = attribOrder, indentIncr = params["indentIncr"], indentFirst = indentFirst, indentML = params["indentML"])
     etw.serialize_xml(object.write_to_xml)
     object.write_to_file(dirn,filen)
     

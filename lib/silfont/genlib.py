@@ -7,7 +7,7 @@ __author__ = 'David Raymond'
 __version__ = '0.0.1'
 
 from xml.etree import ElementTree as ET
-import re, sys, os
+import re, sys, os, codecs
 
 _elementprotect = {
     '&' : '&amp;',
@@ -20,14 +20,15 @@ class ETWriter(object) :
     """ General purpose ElementTree pretty printer complete with options for attribute order
         beyond simple sorting, and which elements should use cdata """
 
-    def __init__(self, etree, namespaces = None, attributeOrder = {}, takesCData = set(), indentIncr = "  ", indentFirst = "  "):
+    def __init__(self, etree, namespaces = None, attributeOrder = {}, takesCData = set(), indentIncr = "  ", indentFirst = "  ", indentML = False):
         self.root = etree
         if namespaces is None : namespaces = {}
         self.namespaces = namespaces
-        self.attributeOrder = attributeOrder
+        self.attributeOrder = attributeOrder    # Sort order for attributes - just one list for all elements
         self.takesCData = takesCData
-        self.indentIncr = indentIncr
-        self.indentFirst = indentFirst
+        self.indentIncr = indentIncr            # Incremental increase in indent
+        self.indentFirst = indentFirst          # Indent for first level
+        self.indentML = indentML                # Add indent to multi-line strings
 
     def _localisens(self, tag) :
         if tag[0] == '{' :
@@ -63,7 +64,7 @@ class ETWriter(object) :
             if doctype <> "":
                 write(u'<!DOCTYPE {}>\n'.format(doctype))
         (tag, q, ns) = self._localisens(base.tag)
-        #print base.tag,tag,q,ns
+
         localattribs = {}
         if ns and ns not in namespaces :
             namespaces[ns] = q
@@ -100,7 +101,10 @@ class ETWriter(object) :
         elif base.text :
             if base.text.strip() :
                 if tag not in self.takesCData :
-                    t = self._protect(base.text.replace('\n', '\n' + indent), base=_elementprotect)
+                    t = base.text
+                    
+                    if self.indentML : t = t.replace('\n', '\n' + indent)
+                    t = self._protect(t, base=_elementprotect)
                 else :
                     t = "<![CDATA[\n\t" + indent + base.text.replace('\n', '\n\t' + indent) + "\n" + indent + "]]>"
                 write(u'>{}</{}>\n'.format(t, tag))
@@ -119,17 +123,41 @@ class ETWriter(object) :
 class dirTree(dict) :
     """ An object to hold list of all files and directories in a directory
         with option to read sub-directory contents into dirTree objects.
-        Does not iterate to lower subdirectories """
-    def __init__(self,dirn,readSub = True) :
+        Iterates through readSub levels of subfolders """
+    def __init__(self,dirn,readSub = 3) :
         for name in os.listdir(dirn) :
             item={}
             if os.path.isdir(os.path.join(dirn, name)) :
                 item["type"] = "d"
                 if readSub :
-                    item["tree"] = dirTree(os.path.join(dirn,name),readSub = False)
+                    item["tree"] = dirTree(os.path.join(dirn,name),readSub-1)
             else :
                 item["type"] = "f"
             self[name] = item
+        
+    def subTree(self,path) : # Returns dirTree object for a subtree based on subfolder name(s)
+        # 'path' can be supplied as either a relative path (eg "subf/subsubf") or array (eg ['subf','subsubf']
+        if type(path) is str : path = self._split(path)
+        subf=path[0]
+        if subf in self:
+            if 'tree' in self[subf] :
+                tree = self[subf]['tree']
+            else :
+                tree = ""
+        else : return ""
+        
+        if len(path) == 1 :
+            return tree
+        else :
+            path.pop(0)
+            return tree.subTree(path)
+        
+    def _split(self,path) : # Turn a relative path into an array of subfolders
+        npath = [os.path.split(path)[1]]
+        while os.path.split(path)[0] :
+            path = os.path.split(path)[0]
+            npath.insert(0,os.path.split(path)[1])
+        return npath
 
 class xmlitem(object) :
     """ The xml data item for an xml file"""
@@ -157,13 +185,12 @@ class xmlitem(object) :
         self.outxmlstr = self.outxmlstr + text
         
     def write_to_file(self,dirn,filen) :
-        print "Writing to", filen, "in", dirn
-        outfile=open(os.path.join(dirn,filen),"w")
+        outfile=codecs.open(os.path.join(dirn,filen),'w','utf-8')
         outfile.write(self.outxmlstr)
         outfile.close
         
-    # Define methods so it acts like an imutable container - 
-    # changes should be made via changing self.etree elements or via object functions
+    # Define methods so it acts like an imumtable container - 
+    # changes should be made via object methods
     def __len__(self):
         return len(self._contents)
     def __getitem__(self, key):
@@ -175,3 +202,4 @@ class xmlitem(object) :
 
 def makeAttribOrder(attriblist) : # Turn a list of attrib names into an attributeOrder dict for ETWriter 
         return dict(map(lambda x:(x[1], x[0]), enumerate(attriblist)))
+    
