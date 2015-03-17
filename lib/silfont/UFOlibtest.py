@@ -36,31 +36,31 @@ class Uelement(_Ucontainer) :
     def __init__(self,element) :
         self.element = element
         self.reindex()
-        
+
     def reindex(self) :
         self._contents = collections.defaultdict(list)
         for e in self.element :
             self._contents[e.tag].append(e)
-            
+
     def remove(self,subelement) :
         self._contents[subelement.tag].remove(subelement)
         self.element.remove(subelement)
-        
+
     def append(self,subelement) :
         self._contents[subelement.tag].append(subelement)
         self.element.append(subelement)
-        
+
     def insert(self,index,subelement) :
         self._contents[subelement.tag].insert(index,subelement)
         self.element.insert(index,subelement)
-    
+
     def replace(self,index,subelement) :
         self._contents[subelement.tag][index] = subelement
         self.element[index] = subelement
 
 class Ufont(object) :
     """ Object to hold all the data from a UFO"""
-    
+
     def __init__(self, ufodir = None ) :
         if ufodir:
             self.ufodir = ufodir
@@ -96,13 +96,13 @@ class Ufont(object) :
                 else :
                     print "Glyph directory",layerdir, "missing"
                     sys.exit()
-            # Set initial defaults for outparams            
+            # Set initial defaults for outparams
             self.outparams = { "indentIncr" : "  ", "indentFirst" : "  ", "indentML" : False, "plistIndentFirst" : "", 'sortPlists' : True }
             self.outparams["UFOversion"] = self.UFOversion
             self.outparams["attribOrders"] = {
                 'glif' : makeAttribOrder([
-                    'pos', 'width', 'height', 'fileName', 'base', 'xScale', 'xyScale', 'yxScale', 
-                    'yScale', 'xOffset', 'yOffset', 'x', 'y', 'angle', 'type', 'smooth', 'name', 
+                    'pos', 'width', 'height', 'fileName', 'base', 'xScale', 'xyScale', 'yxScale',
+                    'yScale', 'xOffset', 'yOffset', 'x', 'y', 'angle', 'type', 'smooth', 'name',
                     'format', 'color', 'identifier'])
                 }
 
@@ -112,10 +112,10 @@ class Ufont(object) :
         else :
             print ufodir,filen, "does not exist2"
             sys.exit()
-    
+
     def write(self, outdir) :
         ''' Write UFO out to disk, based on values set in self.outparams'''
-        
+
         if not os.path.exists(outdir) :
             try:
                 os.mkdir(outdir)
@@ -128,7 +128,7 @@ class Ufont(object) :
         UFOversion = self.outparams["UFOversion"]
         # Update metainfo.plist and write out
         self.metainfo["formatVersion"][1].text = str(UFOversion)
-        self.metainfo["creator"][1].text = "org.sil.sripts"
+        self.metainfo["creator"][1].text = "org.sil.scripts"
         writeXMLobject(self.metainfo, self.outparams, outdir, "metainfo.plist")
         # Write out other plists
         if "fontinfo" in self.__dict__ : writeXMLobject(self.fontinfo, self.outparams, outdir, "fontinfo.plist")
@@ -142,7 +142,7 @@ class Ufont(object) :
 
 
 class Ulayer(_Ucontainer) :
-    
+
     def __init__(self, layername, layerdir, font) :
         self._contents = {}
         layertree = font.tree.subTree(layerdir)
@@ -154,7 +154,7 @@ class Ulayer(_Ucontainer) :
         self.contents = Uplist( font = font, dirn = fulldir, filen = "contents.plist" )
         if font.UFOversion == "3" :
             if 'layerinfo.plist' in layertree : self.layerinfo = Uplist( font = font, dirn = fulldir, filen = "layerinfo.plist" )
-                
+
         for glyphn in sorted(self.contents.keys()) :
             glifn = self.contents[glyphn][1].text
             if glifn in layertree :
@@ -162,7 +162,7 @@ class Ulayer(_Ucontainer) :
             else :
                 print "Missing glif ",glifn, "in", fulldir
                 sys.exit()
-                
+
     def write(self,outdir,params) :
         print "Processing layer", self.layername
         fulldir = os.path.join(outdir,self.layerdir)
@@ -175,20 +175,20 @@ class Ulayer(_Ucontainer) :
         if not os.path.isdir(fulldir) :
             print fulldir + " not a directory"
             sys.exit()
-        
+
         UFOversion = params["UFOversion"]
 
         writeXMLobject(self.contents, params, fulldir, "contents.plist")
         if "layerinfo" in self.__dict__ and UFOversion == "3" : writeXMLobject(self.layerinfo, self.outparams, fulldir, "layerinfo.plist")
-        
+
         for glyphn in self :
             glyph = self._contents[glyphn]
             if UFOversion == "2" : glyph.convertToFormat1()
             if glyph.rebuildETflag : glyph.rebuildET()
             writeXMLobject(glyph, params, fulldir, glyph.filen)
-            
+
 class Uplist(xmlitem) :
-    
+
     def __init__(self, font = None, dirn = None, filen = None, parse = True) :
         if dirn is None and font: dirn = font.ufodir
         xmlitem.__init__(self, dirn, filen, parse)
@@ -196,7 +196,7 @@ class Uplist(xmlitem) :
         self.font = font
         self.outparams = None
         if filen and dirn : self.populate_dict()
-    
+
     def populate_dict(self) :
         self._contents.clear() # Clear existing contents, if any
         pl = self.etree[0]
@@ -207,7 +207,7 @@ class Uplist(xmlitem) :
         else : # Assume array of 2 element arrays (eg layercontents.plist)
             for i in range(len(pl)) :
                 self._contents[i] = pl[i]
-    
+
     def sort(self) : # For dict-based plists sort keys alphabetically
         if self.etree[0].tag == "dict" :
             self.populate_dict() # Recreate dict in case changes have been made
@@ -216,10 +216,10 @@ class Uplist(xmlitem) :
                 self.etree[0][i]=self._contents[key][0]
                 self.etree[0][i+1]=self._contents[key][1]
                 i=i+2
-    
+
 class Uglif(xmlitem) :
     # Unlike plists, glifs can have multiples of some sub-elements (eg anchors) so create lists for those
-    
+
     def __init__(self, layer = None, filen = None, parse = True) :
         if layer is None :
             dirn = None
@@ -230,7 +230,7 @@ class Uglif(xmlitem) :
         self.layer = layer
         self.outparams = None
         self.rebuildETflag = False # Flag to see if self.etree needs rebuilding, eg if sub-objects are changed
-        
+
         # Set initial values for sub-objects
         for i in range(len(_glifElements)) :
             elementn = _glifElements[i]
@@ -259,7 +259,7 @@ class Uglif(xmlitem) :
             multi  = _glifElemMulti[index]
             F1elem = _glifElemF1[index]
             if F1elem or self.format == '2' :
-                if multi : 
+                if multi :
                     self._contents[tag].append(self.makeObject(tag,element))
                 else:
                     self._contents[tag] = self.makeObject(tag,element)
@@ -274,7 +274,7 @@ class Uglif(xmlitem) :
                     self.add('anchor',contour.UFO2anchor)
                     self._contents['outline'].removeobject(contour, "contour")
                     self.rebuildETflag = True
-                  
+
         self.format = "2"
         et.set("format","2")
 
@@ -283,9 +283,9 @@ class Uglif(xmlitem) :
         # originals in the glif's etree updated.  The etree also may need rebuilding to normalise
         # the sub-objects order
         et = self.etree
-        
+
         # Remove existing sub-elements
-        
+
         while et.getchildren() : et.remove(et.getchildren()[0])
 
         # Insert new elements
@@ -301,26 +301,26 @@ class Uglif(xmlitem) :
                     else :
                         et.append(item.element)
         self.rebuildETflag = False
-    
+
     def add(self,ename,attrib) :
         # Add an element and corrensponding object to a glif
         element = ET.Element(ename,attrib)
         index = _glifElements.index(ename)
         multi = _glifElemMulti[index]
-        
+
         # Check element does not already exist for single elements
         if self._contents[ename] and not multi :
             print "Already an " + enam + "in glif"
-            sys.exit() 
-        
+            sys.exit()
+
         # Add new object
         if multi :
             self._contents[ename].append(self.makeObject(ename,element))
         else:
             self._contents[ename] = self.makeObject(ename,element)
-        
+
         self.rebuildETflag = True
-            
+
     def remove(self, ename, index = None, object = None ) :
         # Remove object from a glif
         # For multi objects, an index or object must be supplied to identify which
@@ -341,7 +341,7 @@ class Uglif(xmlitem) :
             del self._contents[ename]
 
         self.rebuildETflag = True
-    
+
     def convertToFormat1(self) :
         # Convert to a glif format of 1 (for UFO2) prior to writing out
         et = self.etree
@@ -354,12 +354,12 @@ class Uglif(xmlitem) :
                 if attrn in element.attrib : del element.attrib[attrn]
             element.attrib['type'] = 'move'
             contelement = ET.Element("contour")
-            contelement.append(ET.Element("point",element.attrib))            
+            contelement.append(ET.Element("point",element.attrib))
             self._contents['outline'].appendobject(Ucontour(self._contents['outline'],contelement),"contour")
             self.remove('anchor',object=anchor)
 
         self.rebuildETflag = True
-            
+
     def makeObject(self, type, element) :
         if type == 'advance'   : return Uadvance(self,element)
         if type == 'unicode'   : return Uunicode(self,element)
@@ -369,39 +369,39 @@ class Uglif(xmlitem) :
         if type == 'image'     : return Uimage(self,element)
         if type == 'guideline' : return Uguideline(self,element)
         if type == 'anchor'    : return Uanchor(self,element)
-         
+
 class Uadvance(Uelement) :
-    
+
     def __init__(self, glif, element) :
         super(Uadvance,self).__init__(element)
 
 class Uunicode(Uelement) :
-    
+
     def __init__(self, glif, element) :
         super(Uunicode,self).__init__(element)
- 
+
 class Unote(Uelement) :
-    
+
     def __init__(self, glif, element) :
         super(Unote,self).__init__(element)
- 
+
 class Uimage(Uelement) :
-    
+
     def __init__(self, glif, element) :
         super(Uimage,self).__init__(element)
- 
+
 class Uguideline(Uelement) :
-    
+
     def __init__(self, glif, element) :
         super(Uguideline,self).__init__(element)
 
 class Uanchor(Uelement) :
-    
+
     def __init__(self, glif, element) :
         super(Uanchor,self).__init__(element)
-  
+
 class Uoutline(Uelement) :
-    
+
     def __init__(self, glif, element) :
         super(Uoutline,self).__init__(element)
         self.glif = glif
@@ -419,24 +419,24 @@ class Uoutline(Uelement) :
         super(Uoutline,self).remove(object.element)
         if type == "component" : self.components.remove(object)
         if type == "contour" : self.contours.remove(object)
-        
+
     def appendobject(self,object,type) :
         super(Uoutline,self).append(object.element)
         if type == "component" : self.components.append(object)
         if type == "contour" : self.contours.append(object)
-    
+
     def insertobject(self,index,object,type) :
         super(Uoutline,self).insert(index,object.element)
         if type == "component" : self.components.insert(index,object)
         if type == "contour" : self.contours.insert(index,object)
-    
+
 class Ucomponent(Uelement) :
-    
+
     def __init__(self, outline, element) :
         super(Ucomponent,self).__init__(element)
- 
+
 class Ucontour(Uelement) :
-    
+
     def __init__(self, outline, element) :
         super(Ucontour,self).__init__(element)
         self.UFO2anchor = None
@@ -445,7 +445,7 @@ class Ucontour(Uelement) :
         if len(points) == 1 and "type" in points[0].attrib :
             if points[0].attrib["type"] == "move" :
                 self.UFO2anchor = points[0].attrib
-        
+
 class Ulib(Uelement) :
     # For glif lib elements; top-level lib files use Uplist
     #@@@@ Need to allow for the fact this should be in plist format
@@ -465,7 +465,7 @@ def writeXMLobject(object, params, dirn, filen) :
     etw = ETWriter(object.etree, attributeOrder = attribOrder, indentIncr = params["indentIncr"], indentFirst = indentFirst, indentML = params["indentML"])
     etw.serialize_xml(object.write_to_xml)
     object.write_to_file(dirn,filen)
-    
+
 def getattrib(element,attrib) :
     if attrib in element.attrib :
         return element.attrib[attrib]
