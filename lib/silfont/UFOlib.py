@@ -128,7 +128,7 @@ class Ufont(object) :
         UFOversion = self.outparams["UFOversion"]
         # Update metainfo.plist and write out
         self.metainfo["formatVersion"][1].text = str(UFOversion)
-        self.metainfo["creator"][1].text = "org.sil.sripts"
+        self.metainfo["creator"][1].text = "org.sil.scripts"
         writeXMLobject(self.metainfo, self.outparams, outdir, "metainfo.plist")
         # Write out other plists
         if "fontinfo" in self.__dict__ : writeXMLobject(self.fontinfo, self.outparams, outdir, "fontinfo.plist")
