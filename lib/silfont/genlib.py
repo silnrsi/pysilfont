@@ -217,16 +217,30 @@ def execute(tool, fn, argspec) :
     elif tool == "PSFU" :
         psfu = True
         from UFOlib import Ufont
+    elif tool == "" or tool is None :
+        tool = None
     else :
         print "Invalid tool in call to execute()"
         return
     
     basemodule = sys.modules[fn.__module__]
     poptions = {}
+    poptions['prog'] = _splitfn(sys.argv[0])[1]
     poptions['description'] = basemodule.__doc__
+    poptions['formatter_class'] = argparse.RawDescriptionHelpFormatter
     if hasattr(basemodule, '__version__') : poptions['epilog'] = "Version: " + basemodule.__version__
 
     parser = argparse.ArgumentParser(**poptions)
+    
+    # Special handling for "-d" to print default value info with help text
+    defhelp = False
+    if "-d" in sys.argv:
+        defhelp = True
+        pos = sys.argv.index("-d")
+        sys.argv[pos] = "-h" # Set back to -h for argparse to recognise
+        deffiles=[]
+        defother=[]
+    argspec.insert(0,('-d',{'help': 'Display help with info on default values', 'action': 'store_true'}, {}))
 
 # Process the supplied argument specs, add args to parser, store other info in arginfo
     arginfo = []
@@ -238,10 +252,32 @@ def execute(tool, fn, argspec) :
         # Create dict of framework keywords using argument name
         argn = nonkwds[-1] # Find the argument name from first 1 or 2 tuple entries
         if argn[0:2] == "--" : argn = argn[2:] # Will start with -- for options
-        ainfo=fkwds=a[-1]
+        ainfo=a[-1]
         ainfo['name']=argn
         arginfo.append(ainfo)
+        if defhelp:
+            arg = nonkwds[0]
+            if 'def' in ainfo:
+                deffiles.append([arg,ainfo['def']])
+            elif 'default' in kwds:
+                defother.append([arg,kwds['default']])
 
+# if -d specified, change the help epilog to info about argument defaults
+    if defhelp:
+        if not (deffiles or defother):
+            deftext = "No defaults for parameters/options"
+        else:
+            deftext = "Defaults for parameters/options\n"
+        if deffiles:
+            deftext = deftext + "\n  Font/file names\n"
+            for (param,defv) in deffiles:
+                deftext = deftext + '    {:<20}{}\n'.format(param,defv)
+        if defother:
+            deftext = deftext + "\n  Other parameters\n"
+            for (param,defv) in defother:
+                deftext = deftext + '    {:<20}{}\n'.format(param,defv)
+        parser.epilog = deftext
+        
 # Parse the command-line arguments. If errors or -h used, procedure will exit here
     args = parser.parse_args()
 
@@ -257,7 +293,7 @@ def execute(tool, fn, argspec) :
             if adef :
                 if not aval : aval=""               
                 (apath,abase,aext)=_splitfn(aval)
-                (dpath,dbase,dext)=_splitfn(adef) # dbase should be None
+                (dpath,dbase,dext)=_splitfn(adef) # dpath should be None
                 if not apath : apath=fppath
                 if not abase : abase = fpbase + dbase
                 if not aext :
@@ -267,6 +303,9 @@ def execute(tool, fn, argspec) :
                 aval = os.path.join(apath,abase+aext)
         # Open files/fonts
         if atype=='infont' :
+            if tool is None:
+                print "Can't specify a font without a font tool"
+                sysexit()
             print 'Opening font: ',aval
             try :
                 if ff : aval=fontforge.open(aval)
@@ -288,7 +327,10 @@ def execute(tool, fn, argspec) :
             except Exception as e :
                 print e
                 sys.exit()
-        elif atype=='outfont' : 
+        elif atype=='outfont' :
+            if tool is None:
+                print "Can't specify a font without a font tool"
+                sysexit() 
             outfont=aval # Can only be one outfont
             outfontext=aext
         elif atype=='optiondict' : # Turn multiple options in the form ['opt1=a','opt2=b'] into a dictionary

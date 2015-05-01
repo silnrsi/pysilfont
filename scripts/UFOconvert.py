@@ -1,5 +1,6 @@
 #!/usr/bin/env python 
-'Normalise a UFO'
+'''Convert/normalise a UFO.
+- If no options are chosen, the output font will simply be a normalised version of the font.'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
@@ -11,8 +12,8 @@ from silfont.UFOlib import *
 
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
-    ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont', 'def': '_norm'}),
-    ('-v','--version',{'help': "UFO version to output"},{}),
+    ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont', 'def': '_conv'}),
+    ('-v','--version',{'help': 'UFO version to output'},{}),
     ('-p','--params',{'help': 'Font output parameters','action': 'append'}, {'type': 'optiondict'})]
 
 def doit(args) :
@@ -30,7 +31,7 @@ def doit(args) :
         else:
             print "Output parameter invalid:",param
             sys.exit()
-    
+                
     return args.ifont
     
 execute("PSFU",doit, argspec)
