@@ -222,7 +222,7 @@ def execute(tool, fn, argspec) :
     else :
         print "Invalid tool in call to execute()"
         return
-    
+
     basemodule = sys.modules[fn.__module__]
     poptions = {}
     poptions['prog'] = _splitfn(sys.argv[0])[1]
@@ -240,7 +240,8 @@ def execute(tool, fn, argspec) :
         sys.argv[pos] = "-h" # Set back to -h for argparse to recognise
         deffiles=[]
         defother=[]
-    argspec.insert(0,('-d',{'help': 'Display help with info on default values', 'action': 'store_true'}, {}))
+    if "-h" in sys.argv or "--help" in sys.argv: # Add extra argument to display in help text
+        argspec.insert(0,('-d',{'help': 'Display help with info on default values', 'action': 'store_true'}, {}))
 
 # Process the supplied argument specs, add args to parser, store other info in arginfo
     arginfo = []
@@ -305,7 +306,7 @@ def execute(tool, fn, argspec) :
         if atype=='infont' :
             if tool is None:
                 print "Can't specify a font without a font tool"
-                sysexit()
+                sys.exit()
             print 'Opening font: ',aval
             try :
                 if ff : aval=fontforge.open(aval)
@@ -330,7 +331,7 @@ def execute(tool, fn, argspec) :
         elif atype=='outfont' :
             if tool is None:
                 print "Can't specify a font without a font tool"
-                sysexit() 
+                sys.exit() 
             outfont=aval # Can only be one outfont
             outfontext=aext
         elif atype=='optiondict' : # Turn multiple options in the form ['opt1=a','opt2=b'] into a dictionary

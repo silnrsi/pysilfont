@@ -1,0 +1,3 @@
+#!/bin/sh
+python /home/david/src/pysilfont/scripts/UFOconvert.py "$@"
+
