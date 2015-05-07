@@ -205,7 +205,7 @@ def makeAttribOrder(attriblist) : # Turn a list of attrib names into an attribut
     
 
 def execute(tool, fn, argspec) :
-    # Function to handle parametes parsing, font and file opening etc in command-line scripts
+    # Function to handle parameter parsing, font and file opening etc in command-line scripts
     # Supports opening (and saving) fonts using FontForge (FF) or PysilFont UFOlib (PSFU).
     ff = False
     psfu = False
@@ -213,7 +213,7 @@ def execute(tool, fn, argspec) :
         ff=True
         import fontforge
         if fontforge.hasUserInterface() :
-            return # Exceute is for command-line use
+            return # Execute is for command-line use
     elif tool == "PSFU" :
         psfu = True
         from UFOlib import Ufont
