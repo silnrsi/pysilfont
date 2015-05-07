@@ -148,10 +148,6 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'David Rowe'
 __version__ = '0.0.1'
 
-# following two lines temporary
-#import sys
-#sys.path.insert(0,'/home/david/Src/pysilfont/lib')
-# above two lines temporary
 from silfont.genlib import execute
 
 # specify two parameters: input file (single line format), output file (XML format).
