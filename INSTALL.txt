@@ -1,0 +1,26 @@
+
+on OSX
+=========
+
+...
+
+
+
+On Ubuntu
+==========
+
+to install setuptools:
+sudo apt-get install python-setuptools
+
+to build:
+python setup.py build
+
+to install module and scripts:
+sudo python setup.py install --record installed-files.txt
+
+to uninstall the module (you need a recent version of pip):
+sudo pip uninstall pysilfont 
+
+to get rid of all the files installed : (careful with rm)
+cat installed-files.txt | xargs sudo rm --verbose -vr
+
