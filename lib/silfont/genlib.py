@@ -283,7 +283,9 @@ def execute(tool, fn, argspec) :
     args = parser.parse_args()
 
 # Process the argument values returned from argparse
-    (fppath,fpbase,fpext)=_splitfn(getattr(args,arginfo[0]['name'])) # First pos param use for defaulting
+    fppval = getattr(args,arginfo[0]['name'])
+    if fppval is None : fppval = "" # For scripts that can be run with no positional parameters
+    (fppath,fpbase,fpext)=_splitfn(fppval) # First pos param use for defaulting
     outfont = None
     
     for c,ainfo in enumerate(arginfo) :
