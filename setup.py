@@ -7,7 +7,7 @@ import platform, sys
 try:
 	import fontforge
 except:
-	print "*** Warning: pysilfont requires the fontforge python module, see python-fontforge"
+	print "*** Warning: many of the pysilfont utilities require the fontforge python module, see python-fontforge"
 
 setup(
 		name='pysilfont',
@@ -32,5 +32,3 @@ setup(
 		"Topic :: Text Processing :: Fonts",
 		],
 )
-
-
