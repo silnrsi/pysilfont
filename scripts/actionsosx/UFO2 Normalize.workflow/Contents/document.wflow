@@ -61,7 +61,8 @@
 					<key>COMMAND_STRING</key>
 					<string>for f in "$@"
 do
-	/usr/local/bin/UFOconvert.py "$f"
+	cp -R -p "$f" "$f".orig
+	/usr/local/bin/UFOconvert.py "$f" "$f"
 done</string>
 					<key>CheckedForUserDefaultShell</key>
 					<true/>

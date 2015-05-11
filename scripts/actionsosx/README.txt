@@ -12,4 +12,4 @@ To install and use the UFO2 Normalize action:
 - copy the action to your ~/Library/Services folder
 - right-click on a UFO file, and choose 'UFO2 Normalize'
 
-The action leaves the original file intact and creates a new converted/normalized file with _conv added to the name.
+The action first saves the original .ufo as (filename).ufo.orig which is displayed as a folder rather than a single package bundle. To recover the original .ufo, simply remove .orig from the folder name.
