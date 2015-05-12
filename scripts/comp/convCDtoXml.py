@@ -335,6 +335,7 @@ __author__ = 'David Rowe'
 __version__ = '0.0.1'
 
 from silfont.genlib import execute
+from silfont.genlib import ETWriter
 
 # specify three parameters: input file (single line format), output file (XML format), log file.
 argspec = [
@@ -353,7 +354,10 @@ def doit(args) :
             f.append(g)
         if e != "" and e != "OK":
             lfile.write(e+'\n')
-    ofile.write(ET.tostring(f))     ### change to use normalised, nicely formatted output
+#   instead of simple serialization with: ofile.write(ET.tostring(f))
+#   create ETWriter object and specify indentation and attribute order to get normalized output
+    etwobj=ETWriter(f, indentFirst='   ', indentIncr='   ', attributeOrder={'PSName':0,'UID':1,'with':2,'at':3,'x':4,'y':5})
+    etwobj.serialize_xml(ofile.write)
     
     return
     
