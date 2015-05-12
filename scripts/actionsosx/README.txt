@@ -10,6 +10,6 @@ To install and use the UFO2 Normalize action:
 
 - install the pysilfont pacakge using the steps in INSTALL.txt (important!)
 - copy the action to your ~/Library/Services folder
-- right-click on a UFO file, and choose 'UFO2 Normalize'
+- right-click on a UFO file, and choose Services>UFO2 Normalize
 
 The action first saves the original .ufo as (filename).ufo.orig which is displayed as a folder rather than a single package bundle. To recover the original .ufo, simply remove .orig from the folder name.
