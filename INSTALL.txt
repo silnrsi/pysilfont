@@ -2,7 +2,11 @@
 on OSX
 =========
 
-...
+to build:
+python setup.py build
+
+to install the module and the scripts:
+sudo python setup.py install --record installed-files.txt
 
 
 
@@ -15,12 +19,15 @@ sudo apt-get install python-setuptools
 to build:
 python setup.py build
 
-to install module and scripts:
+to install the module and the scripts:
 sudo python setup.py install --record installed-files.txt
 
 to uninstall the module (you need a recent version of pip):
-sudo pip uninstall pysilfont 
+sudo pip uninstall pysilfont
 
 to get rid of all the files installed : (careful with rm)
 cat installed-files.txt | xargs sudo rm --verbose -vr
+
+to install the module and scripts in developer mode:
+sudo python setup.py develop 
 
