@@ -4,7 +4,7 @@ __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Rowe'
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
 import re
 from xml.etree import ElementTree as ET
@@ -16,88 +16,70 @@ from xml.etree import ElementTree as ET
 # beginning of line, optional whitespace, remainder, optional whitespace, comment to end of line
 inputline=re.compile(r"""^\s*(?P<remainder>.*?)(\s*#\s*(?P<commenttext>.*))?$""")
 
-# Parse optional parameters (SIL extension) & [name=val,name=val]
+# Parse optional parameters in [...] (SIL extension)
 paraminfo=re.compile(r"""^\s*
     (?P<remainder>[^&]*?)
-    \s*                                     # optional whitespace
-    (?:&\s*\[(?P<paraminfo>[^]]*)\])?       # optional & [ paraminfo ]
-    \s*$""",re.VERBOSE)                     # optional whitespace, end of line
+    \s*
+    (?:&\s*\[(?P<paraminfo>[^]]*)\])?                   # & [ paraminfo ]
+    \s*$""",re.VERBOSE)
 
 # Parse markinfo
 markinfo=re.compile(r"""^\s*
     (?P<remainder>[^!]*?)
-    \s*                                                 # optional whitespace
-    (?:!\s*(?P<markinfo>[.0-9]+(?:,[ .0-9]+?){3}))?     # optional ! markinfo
-    \s*$""",re.VERBOSE)                                 # optional whitespace, end of line
+    \s*
+    (?:!\s*(?P<markinfo>[.0-9]+(?:,[ .0-9]+?){3}))?     # ! markinfo
+    \s*$""",re.VERBOSE)
 
 # Parse uid
 uidinfo=re.compile(r"""^\s*
-    (?P<remainder>[^!]*?)
-    \s*                                                 # optional whitespace
-    (?:\|\s*(?P<UID>[0-9A-Za-z]{4,6}))?                 # optional | UID
-    \s*$""",re.VERBOSE)                                 # optional whitespace, end of line
+    (?P<remainder>[^|]*?)
+    \s*
+    (?:\|\s*(?P<UID>[0-9A-Za-z]{4,6}))?                 # | UID
+    \s*$""",re.VERBOSE)
 
 # Parse metrics
 metricsinfo=re.compile(r"""^\s*
     (?P<remainder>[^^]*?)
-    \s*                                                 # optional whitespace
-    (?:\^\s*(?P<metrics>[-0-9]+\s*(?:,\s*[-0-9]+)?))?   # optional metrics (either ^x,y or ^a)
-    \s*$""",re.VERBOSE)                                 # optional whitespace, end of line
+    \s*
+    (?:\^\s*(?P<metrics>[-0-9]+\s*(?:,\s*[-0-9]+)?))?   # metrics (either ^x,y or ^a)
+    \s*$""",re.VERBOSE)
 
 # Parse glyph information (up to =)
-glyphdef=re.compile(r"""^\s*                            # beginning of line, optional whitespace
+glyphdef=re.compile(r"""^\s*
     (?P<PSName>[.A-Za-z][._A-Za-z0-9]*)                 # glyphname
-    \s*=\s*                                             # = (with optional white space before/after)
-    (?P<remainder>.*?)                                  # remainder of line
-    \s*$""",re.VERBOSE)                                 # optional whitespace, end of line
+    \s*=\s*
+    (?P<remainder>.*?)
+    \s*$""",re.VERBOSE)
 
 # break tokens off the right hand side from right to left and finally off left hand side (up to =)
-initialtokens=[ (inputline,   'commenttext', False, ""),  
-                (paraminfo,   'paraminfo',   False, "Error parsing paramters after &:"),
-                (markinfo,    'markinfo',    False, "Error parsing information after ^"),
-                (uidinfo,     'UID',         False, "Error parsing information after |"),
-                (metricsinfo, 'metrics',     False, "Error parsing information after ^"),
-                (glyphdef,    'PSName',      True,  "Error parsing glyph name before =") ]
+initialtokens=[ (inputline,   'commenttext', ""),  
+                (paraminfo,   'paraminfo',   "Error parsing paramters after &:"),
+                (markinfo,    'markinfo',    "Error parsing information after ^"),
+                (uidinfo,     'UID',         "Error parsing information after |"),
+                (metricsinfo, 'metrics',     "Error parsing information after ^"),
+                (glyphdef,    'PSName',      "Error parsing glyph name before =") ]
 
-# REs to parse base and diacritic
-# Parse base information
-basedef=re.compile(r"""^\s*                             # beginning of line, optional whitespace
-    (?P<basename>[.A-Za-z][._A-Za-z0-9]*)               # basename
-    # position information is allowed but ignored (except to issue warning)
-    (?:@                                                # optional position information preceded by @
-    \s*                                                 # optional white space
-    (?P<position>(?:[^ +_[])+)                          # optional position information preceded by @ (delimited by space + _ [ or end of line)
-    \s*                                                 # optional whitespace
-    )?                                                  # end of optional @ clause
-    # end of position information
-    \s*                                                 # optional whitespace
-    (?:\[(?P<params>[^]]*)\])?                          # optional parameters
-    \s*                                                 # optional whitespace
-    (?P<remainder>.*)                                   # remainder of line
-    $""",re.VERBOSE)                                    # end of line
-
-# Parse diacritic information
-diacdef=re.compile(r"""^\s*                             # beginning of line, optional whitespace
-    (?P<diacname>[.A-Za-z][._A-Za-z0-9]*)               # diacname
-    (?:@                                                # optional position information preceded by @
-    (?:(?:\s*(?P<base>[^: ]+)):)?                       # optional base glyph followed by :
-    \s*                                                 # optional white space
-    (?P<position>(?:[^ +_[])+)                          # optional position information preceded by @ (delimited by space + _ [ or end of line)
-    \s*                                                 # optional whitespace
-    )?                                                  # end of optional @ clause
-    \s*                                                 # optional whitespace
-    (?:\[(?P<params>[^]]*)\])?                          # optional parameters
-    \s*                                                 # optional whitespace
-    (?P<remainder>.*)                                   # remainder of line
-    $""",re.VERBOSE)                                    # end of line
+# Parse base and diacritic information
+compdef=re.compile(r"""^\s*
+    (?P<compname>[.A-Za-z][._A-Za-z0-9]*)               # name of base or diacritic in composite definition
+        (?:@                                            # @ preceeds position information
+        (?:(?:\s*(?P<base>[^: ]+)):)?                   # optional base glyph followed by :
+        \s*
+        (?P<position>(?:[^ +_[])+)                      # position information (delimited by space + _ [ or end of line)
+        \s*)?                                           # end of @ clause
+    \s*
+    (?:\[(?P<params>[^]]*)\])?                          # parameters inside [..]
+    \s*
+    (?P<remainder>.*)$
+    """,re.VERBOSE)
 
 # Parse metrics
-lsb_rsb=re.compile(r"""^\s*                         # beginning of line, optional whitespace
-    (?P<lsb>[-0-9]+)\s*(?:,\s*(?P<rsb>[-0-9]+))?    # optional metrics (either ^lsb,rsb or ^adv)
-    \s*$""",re.VERBOSE)                             # optional whitespace, end of line
+lsb_rsb=re.compile(r"""^\s*
+    (?P<lsb>[-0-9]+)\s*(?:,\s*(?P<rsb>[-0-9]+))?        # optional metrics (either ^lsb,rsb or ^adv)
+    \s*$""",re.VERBOSE)
 
 # RE to break off one key=value parameter from text inside [key=value;key=value;key=value]
-paramdef=re.compile(r"""^\s*                # beginning of line, optional whitespace
+paramdef=re.compile(r"""^\s*
     (?P<paramname>[a-z0-9]+)                # paramname
     \s*=\s*                                 # = (with optional white space before/after)
     (?P<paramval>[^;]+?)                    # any text up to ; or end of string
@@ -120,35 +102,32 @@ class CompGlyph(object):
         while rest:
             matchparam=re.match(paramdef,rest)
             if matchparam == None:
-                raise ValueError('Parameter error: ' + rest)
-            params[matchparam.group("paramname")] = matchparam.group("paramval")
-            rest = matchparam.group("rest")
+                raise ValueError("Parameter error: " + rest)
+            params[matchparam.group('paramname')] = matchparam.group('paramval')
+            rest = matchparam.group('rest')
         return(params)
 
     def parsefromCDline(self):
-        """Parse a line of composite glyph information such as:
+        """Parse the composite glyph information (in self.CDline) such as:
         LtnCapADiear = LtnCapA + CombDiaer@U |00C4 ! 1, 0, 0, 1 # comment
-        and return a <glyph> element
-        <glyph PSName="LtnCapADiear" UID="00C4" commenttext="comment" markinfo="1, 0, 0, 1">
+        and return a <glyph> element (in self.CDelement)
+        <glyph PSName="LtnCapADiear" UID="00C4">
+          <note>comment</note>
+          <property name="mark" value="1, 0, 0, 1"/>
           <base PSName="LtnCapA">
-            <attach PSName="CombDiaer" at="U"/>
+            <attach PSName="CombDiaer" with="_U" at="U"/>
           </base>
         </glyph>
-        Position info after @ can include optional base: (glyph name followed by colon).
-        Return value is tuple: text message and None|<glyph> element.
-        Any syntax error returns an error message and None.
-        A valid line, returns "OK"|warning and <glyph> element. 
-        A blank line or one with comment only returns "" and None.
+        Position info after @ can include optional base glyph name followed by colon.
         """
         linetoparse = self.CDline
-        errorfound = False
         line = re.sub('/_','_',linetoparse) # change /_ to _
         results = {}
         for parseinfo in initialtokens:
             if len(line) > 0:
-                regex, groupname, missingiserror, errormsg = parseinfo
+                regex, groupname, errormsg = parseinfo
                 matchresults = re.match(regex,line)
-                if matchresults == None or (missingiserror and matchresults.group(groupname) == None):
+                if matchresults == None:
                     raise ValueError(errormsg)
                 line = matchresults.group('remainder')
                 resultsval = matchresults.group(groupname)
@@ -171,8 +150,8 @@ class CompGlyph(object):
             m = results.pop('metrics')
             matchmetrics = re.match(lsb_rsb,m)
             if matchmetrics == None:
-                raise ValueError('Error in parameters: ' + m)
-            elif matchmetrics.group("rsb"):
+                raise ValueError("Error in parameters: " + m)
+            elif matchmetrics.group('rsb'):
                 metricdic = {'lsb': matchmetrics.group('lsb'), 'rsb': matchmetrics.group('rsb')}
             else:
                 metricdic = {'advance': matchmetrics.group('lsb')}
@@ -200,79 +179,65 @@ class CompGlyph(object):
         prevbase = None
         prevdiac = None
         remainder = line
-        expectingbase = True
         expectingdiac = False
-        warningmsg = []
 
         # top of loop to process remainder of line, breaking off base or diacritics from left to right
-        while remainder != "" and (expectingbase or expectingdiac):
-            if expectingbase:
-                matchresults=re.match(basedef,remainder)
-                if matchresults == None or matchresults.group("basename") == "" :
-                    raise ValueError("Error parsing glyph name: " + remainder)
-                propdic = {}
-                if matchresults.group('params'):
-                    propdic = self._parseparams(matchresults.group('params'))
-                # Create <base> subelement
-                b = ET.SubElement(g, 'base', PSName=matchresults.group("basename"))
-                if 'shift' in propdic:
-                    x,y = propdic.pop('shift').split(',')
-                    shiftattr = {'x': x, 'y': y}
-                    s = ET.SubElement(b, 'shift', attrib=shiftattr)
-                # parameters (now in propdic) become <property> subelements
-                if propdic:
-                    for key in propdic:
-                        p = ET.SubElement(b, 'property', name = key, value = propdic[key])
-                if matchresults.group("position"):
-                    warningmsg += ["Position information on base glyph unsupported: @" + matchresults.group("position")]
-                prevbase = b
-
-            elif expectingdiac:
-                matchresults=re.match(diacdef,remainder)
-                if matchresults == None or matchresults.group("diacname") == "" :
-                    raise ValueError("Error parsing glyph name: " + remainder)
-                propdic = {}
-                if matchresults.group('params'):
-                    propdic = self._parseparams(matchresults.group('params'))
-                atval = matchresults.group("position")
-                if 'with' in propdic:
-                    withval = propdic.pop('with')
-                else:
-                    withval = "_" + atval
-                # Because 'with' is Python reserved word, passing it directly as a parameter
-                # causes Python syntax error, so build dictionary to pass to SubElement
-                att = {'PSName': matchresults.group("diacname"), 'at': atval, 'with': withval}
+        while remainder != "":
+            matchresults=re.match(compdef,remainder)
+            if matchresults == None or matchresults.group('compname') == "" :
+                raise ValueError("Error parsing glyph name: " + remainder)
+            propdic = {}
+            if matchresults.group('params'):
+                propdic = self._parseparams(matchresults.group('params'))
+            base = matchresults.group('base')
+            position = matchresults.group('position')
+            if expectingdiac:
                 # Determine parent element, based on previous base and diacritic glyphs and optional
                 # matchresults.group('base'), indicating diacritic attaches to a different glyph
-                if matchresults.group('base') == None:
+                if base == None:
                     if prevdiac != None:
                         parent = prevdiac
                     else:
                         parent = prevbase
-                elif matchresults.group('base') != prevbase.attrib['PSName']:
-                    return "Error in diacritic alternate base glyph: " + matchresults.group('base'), None
+                elif base != prevbase.attrib['PSName']:
+                    raise ValueError("Error in diacritic alternate base glyph: " + base)
                 else:
                     parent = prevbase
                     if prevdiac == None:
-                        warningmsg += ["Unnecessary diacritic alternate base glyph: " + matchresults.group('base')]
+                        raise ValueError("Unnecessary diacritic alternate base glyph: " + base)
+                if 'with' in propdic:
+                    withval = propdic.pop('with')
+                else:
+                    withval = "_" + position
+                # Because 'with' is Python reserved word, passing it directly as a parameter
+                # causes Python syntax error, so build dictionary to pass to SubElement
+                att = {'PSName': matchresults.group('compname'), 'at': position, 'with': withval}
                 # Create <attach> subelement
-                a = ET.SubElement(parent, 'attach', attrib=att)
-                prevdiac = a
-                if 'shift' in propdic:
-                    x,y = tuple(propdic.pop('shift').split(','))
-                    shiftattr = {'x': x, 'y': y}
-                    s = ET.SubElement(a, 'shift', attrib=shiftattr)
-                if propdic:
-                    for key in propdic:
-                        p = ET.SubElement(a, 'property', name = key, value = propdic[key])
-            remainder = matchresults.group("remainder").lstrip()
+                e = ET.SubElement(parent, 'attach', attrib=att)
+                prevdiac = e
+            elif (base or position):
+                raise ValueError("Position information on base glyph not supported")
+            else:
+                # Create <base> subelement
+                e = ET.SubElement(g, 'base', PSName=matchresults.group('compname'))
+                prevbase = e
+                prevdiac = None
+            if 'shift' in propdic:
+                xval, yval = propdic.pop('shift').split(',')
+                s = ET.SubElement(e, 'shift', x=xval, y=yval)
+            # whatever parameters are left in propdic become <property> subelements
+            for key, val in propdic:
+                p = ET.SubElement(e, 'property', name=key, value=val)
+
+            remainder = matchresults.group('remainder').lstrip()
             nextchar = remainder[:1]
             remainder = remainder[1:]
-            expectingbase = nextchar == "_"
-            expectingdiac = nextchar == "+"
-
-        #if warningmsg:
-        #    return "Warning: " + "; ".join(warningmsg), g
+            if nextchar == '+':
+                expectingdiac = True
+            elif nextchar == '_':
+                expectingdiac = False
+            elif len(remainder) > 0:
+                raise ValueError("Expecting _ or + and found " + nextchar)
         self.CDelement = g
 
     def _diacinfo(self, node, parent, lastglyph):
@@ -296,15 +261,11 @@ class CompGlyph(object):
             elif subelement.tag == 'attach':
                 subattachlist.append(subelement)
             elif subelement.tag == 'shift':
-                propdic['shift'] = subelement.get('x') + ',' + subelement.get('y') 
+                propdic['shift'] = subelement.get('x') + "," + subelement.get('y') 
             # else flag error/warning?
         propstring = ""
         if propdic:
-            paramsep = " ["
-            for k in propdic:
-                propstring += paramsep + k + "=" + propdic[k]
-                paramsep = ";"
-            propstring += "]"
+            propstring += " [" + ";".join( [k + "=" + v for k,v in propdic.items()] ) + "]"
         returnstring = " + " + diacname + "@" + attachglyph + atstring + propstring
         prevglyph = diacname
         for s in subattachlist:
@@ -323,14 +284,9 @@ class CompGlyph(object):
                 string, prevglyph = self._diacinfo(child, basename, prevglyph)
                 returnstring += string
             elif child.tag == 'shift':
-                bpropdic['shift'] = child.get('x') + ',' + child.get('y') 
+                bpropdic['shift'] = child.get('x') + "," + child.get('y') 
         if bpropdic:
-            paramsep = " ["
-            for k in bpropdic:
-                returnstring += paramsep + k + "=" + bpropdic[k]
-                paramsep = ";"
-            returnstring += "]"
-
+            returnstring += " [" + ";".join( [k + "=" + v for k,v in bpropdic.items()] ) + "]"
         return returnstring
 
     def parsefromCDelement(self):
@@ -375,12 +331,12 @@ class CompGlyph(object):
         if resultUID:       outputline.extend([' |', resultUID])
         if markinfo:        outputline.extend([' !', markinfo])
         if paramdic:
-            paramsep = ' &['
+            paramsep = " &["
             for k in paramdic:
-                outputline.extend([paramsep, k, '=', paramdic[k]])
-                paramsep = ';'
-            outputline.append(']')
+                outputline.extend([paramsep, k, "=", paramdic[k]])
+                paramsep = ";"
+            outputline.append("]")
         if note:
-            outputline.extend([' # ', note])
+            outputline.extend([" # ", note])
         self.CDline = "".join(outputline)
 
