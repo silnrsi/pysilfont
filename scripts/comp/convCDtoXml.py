@@ -3,7 +3,7 @@ __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Rowe'
-__version__ = '0.0.2'
+__version__ = '0.0.4'
 
 from silfont.genlib import execute
 from silfont.genlib import ETWriter
@@ -19,17 +19,29 @@ argspec = [
 def doit(args) :
     ofile = args.output
     lfile = args.log
+    filelinecount = 0
+    linecount = 0
+    elementcount = 0
+    cgobj = CompGlyph()
     f = ET.Element('font')
-    for line in args.input.readlines():      ### could use enumerate() to get (zero-based) line number to include with errors
+    for line in args.input.readlines():
+        filelinecount += 1
         testline = line.strip()
 	if len(testline) > 0 and testline[0] != '#':  # not whitespace or comment
+            linecount += 1
+            cgobj.CDline=line
+            cgobj.CDelement=None
             try:
-                cgobj = CompGlyph(CDline=line)
                 cgobj.parsefromCDline()
-                f.append(cgobj.CDelement)
-            except ValueError:
-                pass # log errors
-                #lfile.write(e+'\n')
+                if cgobj.CDelement != None:
+                    f.append(cgobj.CDelement)
+                    elementcount += 1
+            except ValueError, e:
+                lfile.write("Line "+str(filelinecount)+": "+str(e)+'\n')
+    if linecount != elementcount:
+        lfile.write("Lines read from input file: " + str(filelinecount)+'\n')
+        lfile.write("Lines parsed (excluding blank and comment lines): " + str(linecount)+'\n')
+        lfile.write("Valid glyphs found: " + str(elementcount)+'\n')
 #   instead of simple serialization with: ofile.write(ET.tostring(f))
 #   create ETWriter object and specify indentation and attribute order to get normalized output
     etwobj=ETWriter(f, indentFirst='   ', indentIncr='   ', attributeOrder={'PSName':0,'UID':1,'with':2,'at':3,'x':4,'y':5})
