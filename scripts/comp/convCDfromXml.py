@@ -15,16 +15,17 @@ argspec = [
     ('output',{'help': 'Output file of CD in single line format'}, {'type': 'outfile'})]
 
 def doit(args) :
-#    for g in ET.parse(args.input).getroot().findall('glyph'):
-    doctree = ET.parse(args.input)
-    docroot = doctree.getroot()
     cgobj = CompGlyph()
-    for g in docroot.findall('glyph'):
+    glyphcount = 0
+    for g in ET.parse(args.input).getroot().findall('glyph'):
+        glyphcount += 1
         cgobj.CDelement = g
         cgobj.CDline = None
         cgobj.parsefromCDelement()
         if cgobj.CDline != None:
             args.output.write(cgobj.CDline+'\n')
+        else:
+            pass # error in glyph number glyphcount message
     return
     
 execute(None,doit,argspec)
