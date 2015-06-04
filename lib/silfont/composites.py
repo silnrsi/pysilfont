@@ -231,12 +231,12 @@ class CompGlyph(object):
 
             remainder = matchresults.group('remainder').lstrip()
             nextchar = remainder[:1]
-            remainder = remainder[1:]
-            if nextchar == '+':
-                expectingdiac = True
-            elif nextchar == '_':
-                expectingdiac = False
-            elif len(remainder) > 0:
+            remainder = remainder[1:].lstrip()
+            expectingdiac = nextchar == '+'
+            if nextchar == '_' or nextchar == '+':
+                if len(remainder) == 0:
+                    raise ValueError("Expecting glyph name after _ or +")
+            elif len(nextchar) > 0:
                 raise ValueError("Expecting _ or + and found " + nextchar)
         self.CDelement = g
 
