@@ -358,6 +358,8 @@ def execute(tool, fn, argspec) :
             result.write(outfont)
 
 def _splitfn(fn): # Split filename into path, base and extension
+    if fn : # Remove trailing slashes
+        if fn[-1] in ("\\","/") : fn = fn[0:-1] 
     (path,base) = os.path.split(fn)
     (base,ext) = os.path.splitext(base)
     return (path,base,ext)

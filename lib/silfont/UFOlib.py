@@ -97,7 +97,7 @@ class Ufont(object) :
                     print "Glyph directory",layerdir, "missing"
                     sys.exit()
             # Set initial defaults for outparams            
-            self.outparams = { "indentIncr" : "  ", "indentFirst" : "  ", "indentML" : False, "plistIndentFirst" : "", 'sortPlists' : True }
+            self.outparams = { "indentIncr" : "  ", "indentFirst" : "  ", "indentML" : False, "plistIndentFirst" : "", 'sortDicts' : True , 'precision' : 6}
             self.outparams["UFOversion"] = self.UFOversion
             self.outparams["attribOrders"] = {
                 'glif' : makeAttribOrder([
@@ -460,12 +460,46 @@ def writeXMLobject(object, params, dirn, filen) :
     if object.type == "plist" :
         indentFirst = params["plistIndentFirst"]
         object.etree.doctype = 'plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"'
-        if params["sortPlists"] : object.sort()
+        #if params["sortDicts"] : object.sort()
+        
+    # Format ET data if any data parameters are set
+    if params["sortDicts"] or params["precision"] is not None : normETdata(object.etree, params)
 
     etw = ETWriter(object.etree, attributeOrder = attribOrder, indentIncr = params["indentIncr"], indentFirst = indentFirst, indentML = params["indentML"])
     etw.serialize_xml(object.write_to_xml)
     object.write_to_file(dirn,filen)
     
+def normETdata(element,params) :
+    # Recursively normalise the data an an ElementTree element
+    for subelem in list(element) :
+        normETdata(subelem,params)
+    # Process based on tag
+    tag = element.tag
+    val = element.text
+    precision = params["precision"]
+    if tag in ("integer","real") and precision is not None:
+        num = round(float(val),precision)
+        if num ==int(num) :
+            element.tag = "integer"
+            element.text = "{:.0f}".format(num)
+        else :
+            element.tag = "real"
+            element.text = "{}".format(num)
+    if params["sortDicts"] and tag == "dict" :
+        edict={}
+        elist=[]
+        for i in range(0,len(element),2):
+            edict[element[i].text] = [element[i],element[i+1]]
+            elist.append(element[i].text)
+        keylist = sorted(edict.keys())
+        if elist <> keylist :
+            print "sorting"
+            i=0
+            for key in keylist :
+                element[i] = edict[key][0]
+                element[i+1] = edict[key][1]
+                i=i+2
+            
 def getattrib(element,attrib) :
     if attrib in element.attrib :
         return element.attrib[attrib]
