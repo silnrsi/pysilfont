@@ -15,6 +15,11 @@ _glifElements  = ('advance', 'unicode', 'note',   'image',  'guideline', 'anchor
 _glifElemMulti = (False,     True,      False,    False,    True,       True,     False,     False)
 _glifElemF1    = (True,      True,      False,    False,    False,       False,    True,      True)
 
+_illegalChars = "\"*+/:<>?[\]|" + chr(0x7F)
+for i in range(0,32) : _illegalChars += chr(i)
+_illegalChars = list(_illegalChars)
+_reservedNames = "CON PRN AUX CLOCK$ NUL COM1 COM2 COM3 COM4 PT1 LPT2 LPT3".lower().split(" ")
+
 class _Ucontainer(object) :
     # Parent class for other objects (eg Ulayer)
     def __init_(self) :
@@ -493,7 +498,6 @@ def normETdata(element,params) :
             elist.append(element[i].text)
         keylist = sorted(edict.keys())
         if elist <> keylist :
-            print "sorting"
             i=0
             for key in keylist :
                 element[i] = edict[key][0]
@@ -504,3 +508,30 @@ def getattrib(element,attrib) :
     if attrib in element.attrib :
         return element.attrib[attrib]
     else: return None
+
+def makeFileName(name,namelist=[]) :
+    # Replace illegal characters and add _ after UC letters
+    newname=""
+    for x in name :
+        if x in _illegalChars :
+            x = "_"
+        else :
+            if x <> x.lower() : x += "_"
+        newname += x
+    # Replace initial . if present
+    if newname[0] == "." : newname = "_" + newname[1:]
+    parts=[]
+    for part in newname.split(".") :
+        if part in _reservedNames :
+            part = "_" + part
+        parts.append(part)
+    name = ".".join(parts)
+    if name.lower() in namelist : # case-insensitive name already used, so add a suffix
+        newname = None
+        i=1
+        while newname is None :
+            test = name + '{0:015d}'.format(i)
+            if not (test.lower() in namelist) : newname = test
+            i += 1
+        name = newname
+    return name

@@ -94,8 +94,12 @@ class ETWriter(object) :
         if len(base) :
             write('>\n')
             for b in base :
-                incr = self.indentFirst 
-                self.indentFirst = self.indentIncr
+                #incr = self.indentFirst 
+                #self.indentFirst = self.indentIncr
+                if base == self.root:
+                    incr = self.indentFirst
+                else:
+                    incr = self.indentIncr
                 self.serialize_xml(write, base=b, indent=indent + incr, topns=topns, namespaces=namespaces.copy())
             write('{}</{}>\n'.format(indent, tag))
         elif base.text :

@@ -9,13 +9,16 @@ __version__ = '0.0.1'
 from silfont.genlib import *
 
 argspec = [('outfile1',{'help': 'output file 1','default': './xmlDemo.xml','nargs': '?'}, {'type': 'outfile'}),
-            ('outfile2',{'help': 'output file 2','nargs': '?'}, {'type': 'outfile', 'def':'_2.xml'})]
+            ('outfile2',{'help': 'output file 2','nargs': '?'}, {'type': 'outfile', 'def':'_2.xml'}),
+            ('outfile3',{'help': 'output file 3','nargs': '?'}, {'type': 'outfile', 'def':'_3.xml'})]
 
 def doit(args) :
     ofile1 = args.outfile1
     ofile2 = args.outfile2
+    ofile3 = args.outfile3
 
-    xmlstring = "<item name='demo'>\n<value hello='world!'/>\n</item>"
+    xmlstring = "<item>\n<subitem hello='world'>\n<subsub name='moon'>\n<value>lunar</value>\n</subsub>\n</subitem>"
+    xmlstring += "<subitem hello='jupiter'>\n<subsub name='moon'>\n<value>IO</value>\n</subsub>\n</subitem>\n</item>"
 
     # Using genlib's xmlitem class
     
@@ -32,9 +35,17 @@ def doit(args) :
     etwobj = ETWriter( ET.fromstring(xmlstring) )
     etwobj.serialize_xml(ofile2.write)
     
+    # Changing parameters
+    
+    etwobj = ETWriter( ET.fromstring(xmlstring) )
+    etwobj.indentIncr = "    "
+    etwobj.indentFirst = ""
+    etwobj.serialize_xml(ofile3.write)
+    
     # Close files and exit
     ofile1.close()
     ofile2.close()
+    ofile3.close()
     return
 
 execute("",doit, argspec)
