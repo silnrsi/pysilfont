@@ -4,7 +4,7 @@ __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Rowe'
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 
 import re
 from xml.etree import ElementTree as ET
@@ -58,7 +58,7 @@ glyphdef=re.compile(r"""^\s*
 # break tokens off the right hand side from right to left and finally off left hand side (up to =)
 initialtokens=[ (inputline,   'commenttext', ""),  
                 (paraminfo,   'paraminfo',   "Error parsing parameters in [...]"),
-                (markinfo,    'markinfo',    "Error parsing information after ^"),
+                (markinfo,    'markinfo',    "Error parsing information after !"),
                 (uidinfo,     'UID',         "Error parsing information after |"),
                 (metricsinfo, 'metrics',     "Error parsing information after ^"),
                 (glyphdef,    'PSName',      "Error parsing glyph name before =") ]
