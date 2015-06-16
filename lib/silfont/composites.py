@@ -4,7 +4,7 @@ __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Rowe'
-__version__ = '0.0.4'
+__version__ = '0.1.1'
 
 import re
 from xml.etree import ElementTree as ET
@@ -16,25 +16,28 @@ from xml.etree import ElementTree as ET
 # beginning of line, optional whitespace, remainder, optional whitespace, comment to end of line
 inputline=re.compile(r"""^\s*(?P<remainder>.*?)(\s*#\s*(?P<commenttext>.*))?$""")
 
-# Parse optional parameters in [...] (SIL extension)
+# Parse SIL extension parameters in [...], but only after |
 paraminfo=re.compile(r"""^\s*
-    (?P<remainder>[^&]*?)
-    \s*
-    (?:&\s*\[(?P<paraminfo>[^]]*)\])?                   # & [ paraminfo ]
+    (?P<remainder>[^|]*
+        ($|
+        \|[^[]*$|
+        \|[^[]*\[(?P<paraminfo>[^]]*)\]))
     \s*$""",re.VERBOSE)
 
 # Parse markinfo
 markinfo=re.compile(r"""^\s*
     (?P<remainder>[^!]*?)
     \s*
-    (?:!\s*(?P<markinfo>[.0-9]+(?:,[ .0-9]+?){3}))?     # ! markinfo
+    (?:!\s*(?P<markinfo>[.0-9]+(?:,[ .0-9]+){3}))?      # ! markinfo
+    (?P<remainder2>[^!]*?)
     \s*$""",re.VERBOSE)
 
 # Parse uid
 uidinfo=re.compile(r"""^\s*
     (?P<remainder>[^|]*?)
     \s*
-    (?:\|\s*(?P<UID>[0-9A-Za-z]{4,6}))?                 # | UID
+    (?:\|\s*(?P<UID>[^^!]*)?)?                          # | follwed by nothing, or 4- to 6-digit UID 
+    (?P<remainder2>[^|]*?)
     \s*$""",re.VERBOSE)
 
 # Parse metrics
@@ -42,6 +45,7 @@ metricsinfo=re.compile(r"""^\s*
     (?P<remainder>[^^]*?)
     \s*
     (?:\^\s*(?P<metrics>[-0-9]+\s*(?:,\s*[-0-9]+)?))?   # metrics (either ^x,y or ^a)
+    (?P<remainder2>[^^]*?)
     \s*$""",re.VERBOSE)
 
 # Parse glyph information (up to =)
@@ -53,7 +57,7 @@ glyphdef=re.compile(r"""^\s*
 
 # break tokens off the right hand side from right to left and finally off left hand side (up to =)
 initialtokens=[ (inputline,   'commenttext', ""),  
-                (paraminfo,   'paraminfo',   "Error parsing paramters after &:"),
+                (paraminfo,   'paraminfo',   "Error parsing parameters in [...]"),
                 (markinfo,    'markinfo',    "Error parsing information after ^"),
                 (uidinfo,     'UID',         "Error parsing information after |"),
                 (metricsinfo, 'metrics',     "Error parsing information after ^"),
@@ -65,7 +69,7 @@ compdef=re.compile(r"""^\s*
         (?:@                                            # @ preceeds position information
         (?:(?:\s*(?P<base>[^: ]+)):)?                   # optional base glyph followed by :
         \s*
-        (?P<position>(?:[^ +_[])+)                      # position information (delimited by space + _ [ or end of line)
+        (?P<position>(?:[^ +&[])+)                      # position information (delimited by space + & [ or end of line)
         \s*)?                                           # end of @ clause
     \s*
     (?:\[(?P<params>[^]]*)\])?                          # parameters inside [..]
@@ -120,8 +124,7 @@ class CompGlyph(object):
         </glyph>
         Position info after @ can include optional base glyph name followed by colon.
         """
-        linetoparse = self.CDline
-        line = re.sub('/_','_',linetoparse) # change /_ to _
+        line = self.CDline
         results = {}
         for parseinfo in initialtokens:
             if len(line) > 0:
@@ -132,8 +135,10 @@ class CompGlyph(object):
                 line = matchresults.group('remainder')
                 resultsval = matchresults.group(groupname)
                 if resultsval != None:
-                    results[groupname] = resultsval
-
+                    results[groupname] = resultsval.strip()
+                    if groupname == 'paraminfo': # paraminfo match needs to be removed from remainder
+                        line = line.rstrip('['+resultsval+']')
+                if 'remainder2' in matchresults.groupdict().keys(): line += ' ' + matchresults.group('remainder2')
 # At this point results optionally may contain entries for any of 'commenttext', 'paraminfo', 'markinfo', 'UID', or 'metrics', 
 # but it must have 'PSName' if any of 'paraminfo', 'markinfo', 'UID', or 'metrics' present
         note = results.pop('commenttext', None)
@@ -143,8 +148,15 @@ class CompGlyph(object):
             else: # comment only, or blank line
                 return None
         dic = {}
+        UIDpresent = 'UID' in results
+        if UIDpresent and results['UID'] == '':
+            results.pop('UID')
         if 'paraminfo' in results:
-            dic = self._parseparams(results.pop['paraminfo'])
+            paramdata = results.pop('paraminfo')
+            if UIDpresent:
+                dic = self._parseparams(paramdata)
+            else:
+                line += " [" + paramdata + "]"
         mark = results.pop('markinfo', None)
         if 'metrics' in results:
             m = results.pop('metrics')
@@ -226,18 +238,18 @@ class CompGlyph(object):
                 xval, yval = propdic.pop('shift').split(',')
                 s = ET.SubElement(e, 'shift', x=xval, y=yval)
             # whatever parameters are left in propdic become <property> subelements
-            for key, val in propdic:
+            for key, val in propdic.items():
                 p = ET.SubElement(e, 'property', name=key, value=val)
 
             remainder = matchresults.group('remainder').lstrip()
             nextchar = remainder[:1]
             remainder = remainder[1:].lstrip()
             expectingdiac = nextchar == '+'
-            if nextchar == '_' or nextchar == '+':
+            if nextchar == '&' or nextchar == '+':
                 if len(remainder) == 0:
-                    raise ValueError("Expecting glyph name after _ or +")
+                    raise ValueError("Expecting glyph name after & or +")
             elif len(nextchar) > 0:
-                raise ValueError("Expecting _ or + and found " + nextchar)
+                raise ValueError("Expecting & or + and found " + nextchar)
         self.CDelement = g
 
     def _diacinfo(self, node, parent, lastglyph):
@@ -324,14 +336,16 @@ class CompGlyph(object):
             elif child.tag == 'advance':        adv = child.get('width')
             elif child.tag == 'base':
                 outputline.extend([basesep, self._basediacinfo(child)])
-                basesep = " _ "
-        
+                basesep = " & "
+
+        if paramdic and resultUID == None:
+            resultUID = " " # to force output of |
         if adv:             outputline.extend([' ^', adv])
         if lsb and rsb:     outputline.extend([' ^', lsb, ',', rsb])
         if resultUID:       outputline.extend([' |', resultUID])
         if markinfo:        outputline.extend([' !', markinfo])
         if paramdic:
-            paramsep = " &["
+            paramsep = " ["
             for k in paramdic:
                 outputline.extend([paramsep, k, "=", paramdic[k]])
                 paramsep = ";"
