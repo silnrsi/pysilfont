@@ -4,7 +4,7 @@ __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Rowe'
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 import re
 from xml.etree import ElementTree as ET
@@ -217,13 +217,16 @@ class CompGlyph(object):
                     parent = prevbase
                     if prevdiac == None:
                         raise ValueError("Unnecessary diacritic alternate base glyph: " + base)
-                if 'with' in propdic:
-                    withval = propdic.pop('with')
-                else:
-                    withval = "_" + position
                 # Because 'with' is Python reserved word, passing it directly as a parameter
                 # causes Python syntax error, so build dictionary to pass to SubElement
-                att = {'PSName': matchresults.group('compname'), 'at': position, 'with': withval}
+                att = {'PSName': matchresults.group('compname')}
+                if position:
+                    if 'with' in propdic:
+                        withval = propdic.pop('with')
+                    else:
+                        withval = "_" + position
+                    att['at'] = position
+                    att['with'] = withval
                 # Create <attach> subelement
                 e = ET.SubElement(parent, 'attach', attrib=att)
                 prevdiac = e
