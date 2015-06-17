@@ -213,15 +213,6 @@ class Uplist(xmlitem) :
             for i in range(len(pl)) :
                 self._contents[i] = pl[i]
     
-    def sort(self) : # For dict-based plists sort keys alphabetically
-        if self.etree[0].tag == "dict" :
-            self.populate_dict() # Recreate dict in case changes have been made
-            i=0
-            for key in sorted(self.keys()):
-                self.etree[0][i]=self._contents[key][0]
-                self.etree[0][i+1]=self._contents[key][1]
-                i=i+2
-    
 class Uglif(xmlitem) :
     # Unlike plists, glifs can have multiples of some sub-elements (eg anchors) so create lists for those
     
@@ -465,7 +456,6 @@ def writeXMLobject(object, params, dirn, filen) :
     if object.type == "plist" :
         indentFirst = params["plistIndentFirst"]
         object.etree.doctype = 'plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"'
-        #if params["sortDicts"] : object.sort()
         
     # Format ET data if any data parameters are set
     if params["sortDicts"] or params["precision"] is not None : normETdata(object.etree, params)
