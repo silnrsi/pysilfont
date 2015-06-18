@@ -103,6 +103,7 @@ class Ufont(object) :
                     sys.exit()
             # Set initial defaults for outparams            
             self.outparams = { "indentIncr" : "  ", "indentFirst" : "  ", "indentML" : False, "plistIndentFirst" : "", 'sortDicts' : True , 'precision' : 6}
+            self.outparams["renameGlifs"] = True
             self.outparams["UFOversion"] = self.UFOversion
             self.outparams["attribOrders"] = {
                 'glif' : makeAttribOrder([
@@ -164,6 +165,7 @@ class Ulayer(_Ucontainer) :
             glifn = self.contents[glyphn][1].text
             if glifn in layertree :
                 self._contents[glyphn] = Uglif(layer = self, filen = glifn)
+                if glyphn <> self._contents[glyphn].name : print "**** Warning - glyph name mismatch for",glyphn
             else :
                 print "Missing glif ",glifn, "in", fulldir
                 sys.exit()
@@ -182,6 +184,8 @@ class Ulayer(_Ucontainer) :
             sys.exit()
         
         UFOversion = params["UFOversion"]
+        
+        if params["renameGlifs"] : self.renameGlifs()
 
         writeXMLobject(self.contents, params, fulldir, "contents.plist")
         if "layerinfo" in self.__dict__ and UFOversion == "3" : writeXMLobject(self.layerinfo, self.outparams, fulldir, "layerinfo.plist")
@@ -192,6 +196,23 @@ class Ulayer(_Ucontainer) :
             if glyph.rebuildETflag : glyph.rebuildET()
             writeXMLobject(glyph, params, fulldir, glyph.filen)
             
+    def renameGlifs(self) :
+        namelist=[]
+        print "Renaming glifs"
+        for glyphn in sorted(self.keys()) :
+            glyph = self._contents[glyphn]
+            filename = makeFileName(glyphn,namelist)
+            namelist.append(filename.lower())
+            filename += ".glif"
+            if filename <> glyph.filen :
+                self.renameGlif(glyphn,glyph,filename)
+            
+    
+    def renameGlif(self,glyphn,glyph,newname) :
+        print "Renaming glif for " + glyphn + " from " + glyph.filen + " to " + newname
+        glyph.filen = newname
+        self.contents[glyphn][1].text = newname
+        
 class Uplist(xmlitem) :
     
     def __init__(self, font = None, dirn = None, filen = None, parse = True) :
@@ -212,15 +233,6 @@ class Uplist(xmlitem) :
         else : # Assume array of 2 element arrays (eg layercontents.plist)
             for i in range(len(pl)) :
                 self._contents[i] = pl[i]
-    
-    def sort(self) : # For dict-based plists sort keys alphabetically
-        if self.etree[0].tag == "dict" :
-            self.populate_dict() # Recreate dict in case changes have been made
-            i=0
-            for key in sorted(self.keys()):
-                self.etree[0][i]=self._contents[key][0]
-                self.etree[0][i+1]=self._contents[key][1]
-                i=i+2
     
 class Uglif(xmlitem) :
     # Unlike plists, glifs can have multiples of some sub-elements (eg anchors) so create lists for those
@@ -465,7 +477,6 @@ def writeXMLobject(object, params, dirn, filen) :
     if object.type == "plist" :
         indentFirst = params["plistIndentFirst"]
         object.etree.doctype = 'plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"'
-        #if params["sortDicts"] : object.sort()
         
     # Format ET data if any data parameters are set
     if params["sortDicts"] or params["precision"] is not None : normETdata(object.etree, params)

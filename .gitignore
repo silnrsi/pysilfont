@@ -4,3 +4,5 @@
 /dist
 /lib/pysilfont.egg-info
 installed-files.txt
+/pysilfont.egg-info
+/setuptools-*
