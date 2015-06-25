@@ -291,6 +291,8 @@ def execute(tool, fn, argspec) :
     if fppval is None : fppval = "" # For scripts that can be run with no positional parameters
     (fppath,fpbase,fpext)=_splitfn(fppval) # First pos param use for defaulting
     outfont = None
+    infontlist = []
+    logfile = None
     
     for c,ainfo in enumerate(arginfo) :
         aval = getattr(args,ainfo['name'])
@@ -313,13 +315,7 @@ def execute(tool, fn, argspec) :
             if tool is None:
                 print "Can't specify a font without a font tool"
                 sys.exit()
-            print 'Opening font: ',aval
-            try :
-                if ff : aval=fontforge.open(aval)
-                if psfu: aval=Ufont(aval)
-            except Exception as e :
-                print e
-                sys.exit()
+            infontlist.append((ainfo['name'],aval)) # Build list of fonts to open later
         elif atype=='infile' :
             print 'Opening file for input: ',aval
             try :
@@ -327,13 +323,14 @@ def execute(tool, fn, argspec) :
             except Exception as e :
                 print e
                 sys.exit()
-        elif atype=='outfile' :
+        elif atype=='outfile' or atype=='logfile':
             print 'Opening file for output: ',aval
             try :
                 aval=open(aval,"w")
             except Exception as e :
                 print e
                 sys.exit()
+            if atype=='logfile' : logfile = aval # Should be max of one log file!
         elif atype=='outfont' :
             if tool is None:
                 print "Can't specify a font without a font tool"
@@ -350,16 +347,28 @@ def execute(tool, fn, argspec) :
         
         setattr(args,ainfo['name'],aval)
 
+# Open fonts - needs to be done after opening logfile, if present
+    for name,aval in infontlist :
+        try :
+            if ff : aval=fontforge.open(aval)
+            if psfu: aval=Ufont(aval, logfile)
+        except Exception as e :
+            print e
+            sys.exit()
+        setattr(args,name,aval)
+
 # All arguments processed, now call the main function
     result = fn(args)
     if outfont and result is not None:
-        print "Saving font to " + outfont
+
         if ff:
+            print "Saving font to " + outfont
             if outfontext=="ufo":
                 result.generate(outfont)
             else : result.save(outfont)
         else: # Must be Pyslifont Ufont
             result.write(outfont)
+    if logfile : logfile.close()
 
 def _splitfn(fn): # Split filename into path, base and extension
     if fn : # Remove trailing slashes
