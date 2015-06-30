@@ -13,26 +13,12 @@ from silfont.UFOlib import *
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
     ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont', 'def': '_conv'}),
-    ('-l','--log',{'help': 'Log file'}, {'type': 'logfile', 'def': 'UFOconvert.log'}),
+    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_UFOconvert.log'}),
     ('-v','--version',{'help': 'UFO version to output'},{}),
     ('-p','--params',{'help': 'Font output parameters','action': 'append'}, {'type': 'optiondict'})]
 
 def doit(args) :
     font = args.ifont
-    params = args.params
-    if args.version: params["UFOversion"] = args.version
-    # Set output parameters for the font
-    fontparams = font.outparams
-    for param in params:
-        if param in fontparams:
-            if param == "UFOversion" and params[param] not in ("2","3"):
-                print "UFO version must be 2 or 3"
-                sys.exit()
-            fontparams[param] = params[param]
-        else:
-            print "Output parameter invalid:",param
-            sys.exit()
-                
     return args.ifont
     
 execute("PSFU",doit, argspec)

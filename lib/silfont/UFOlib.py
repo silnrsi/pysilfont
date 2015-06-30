@@ -7,7 +7,7 @@ __author__ = 'David Raymond'
 __version__ = '0.0.1'
 
 from xml.etree import ElementTree as ET
-import sys, os, datetime
+import sys, os
 import collections
 from genlib import *
 
@@ -19,9 +19,6 @@ _illegalChars = "\"*+/:<>?[\]|" + chr(0x7F)
 for i in range(0,32) : _illegalChars += chr(i)
 _illegalChars = list(_illegalChars)
 _reservedNames = "CON PRN AUX CLOCK$ NUL COM1 COM2 COM3 COM4 PT1 LPT2 LPT3".lower().split(" ")
-
-_loglevels = { 'S':0,    'E':1,   'P':2,      'W':3,     'I':4 }
-_leveltext = ( 'Severe:   ', 'Error:    ', 'Progress: ', 'Warning:  ', 'Info:     ')
 
 class _Ucontainer(object) :
     # Parent class for other objects (eg Ulayer)
@@ -69,14 +66,14 @@ class Uelement(_Ucontainer) :
 class Ufont(object) :
     """ Object to hold all the data from a UFO"""
     
-    def __init__(self, ufodir = None, logfile = None ) :
-        self.logfile = logfile
-        self.setloglevels("W","P")
+    def __init__(self, ufodir = None, logger = None ) :
+        if not logger : logger = loggerobj() # Will only log message to screen
+        self.logger = logger
         if ufodir:
             self.ufodir = ufodir
-            self.log( 'Opening UFO for input: ' + ufodir, 'P')
+            self.logger.log( 'Opening UFO for input: ' + ufodir, 'P')
             if not os.path.isdir(ufodir) :
-                self.log(ufodir + " not a directory","S")
+                self.logger.log(ufodir + " not a directory","S")
             # Read list of files and folders in top 4 levels; anything at lower levels just needs copying
             self.tree=dirTree(ufodir)
             self.metainfo = self._readPlist("metainfo.plist")
@@ -98,12 +95,12 @@ class Ufont(object) :
             for i in sorted(self.layercontents.keys() ) :
                 layername = self.layercontents[i][0].text
                 layerdir = self.layercontents[i][1].text
-                self.log( "Processing Glyph Layer " + str(i) + ": " + layername + layerdir, "P")
+                self.logger.log( "Processing Glyph Layer " + str(i) + ": " + layername + layerdir, "P")
                 layer = Ulayer(layername, layerdir, self)
                 if layer :
                     self.layers.append( layer )
                 else :
-                    self.log( "Glyph directory " + layerdir + " missing", "S")
+                    self.logger.log( "Glyph directory " + layerdir + " missing", "S")
             # Set initial defaults for outparams            
             self.outparams = { "indentIncr" : "  ", "indentFirst" : "  ", "indentML" : False, "plistIndentFirst" : "", 'sortDicts' : True , 'precision' : 6}
             self.outparams["renameGlifs"] = True
@@ -119,18 +116,19 @@ class Ufont(object) :
         if filen in self.tree :
             return Uplist(font = self, filen = filen)
         else :
-            self.log( ufodir + " " + filen + " does not exist2", "S")
+            self.logger.log( ufodir + " " + filen + " does not exist2", "S")
     
     def write(self, outdir) :
         # Write UFO out to disk, based on values set in self.outparams
-        self.log( "Saving font to " + outdir, "P")
+        self.logger.log( "Saving font to " + outdir, "P")
         if not os.path.exists(outdir) :
             try:
                 os.mkdir(outdir)
             except Exception as e :
-                self.log( e, "S")
+                print e
+                sys.exit()
         if not os.path.isdir(outdir) :
-            self.log( outdir + " not a directory", "S")
+            self.logger.log( outdir + " not a directory", "S")
         UFOversion = self.outparams["UFOversion"]
         # Update metainfo.plist and write out
         self.metainfo["formatVersion"][1].text = str(UFOversion)
@@ -145,31 +143,6 @@ class Ufont(object) :
         # Write out glyph layers
         for layer in self.layers : layer.write(outdir,self.outparams)
         # Copy other files and directories @@@@
-    
-    def setloglevels(self,loglevel, scrlevel) :
-        # Log level may be set to P, W or I (Errors and progress messages are always reported
-        invalid = False
-        level = 0
-        if loglevel in _loglevels : level = _loglevels[loglevel]
-        if level < 2 :
-            invalid=true
-            level = 3
-        self._loglevel=level
-        level = 0
-        if scrlevel in _loglevels : level = _loglevels[scrlevel]
-        if level < 2 :
-            invalid=true
-            level = 2
-        self._scrlevel=level
-        if invalid : self.log("Log levels must be P, W or I - loglevel set to W and scrlevel set to P", "E")
-    
-    def log(self, logmessage, msglevel = "I") :
-        # Write messages to log file and screen unless msglevel is less serious than font's loglevel/scrlevel
-        levelval = _loglevels[msglevel]
-        message = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S ") + _leveltext[levelval] + logmessage
-        if self.logfile and levelval <= self._loglevel : self.logfile.write(message + "\n")
-        if levelval <= self._scrlevel : print message
-        if msglevel == "S" : sys.exit()
 
 class Ulayer(_Ucontainer) :
     
@@ -189,9 +162,9 @@ class Ulayer(_Ucontainer) :
             glifn = self.contents[glyphn][1].text
             if glifn in layertree :
                 self._contents[glyphn] = Uglif(layer = self, filen = glifn)
-                if glyphn <> self._contents[glyphn].name : self.font.log( "Glyph name mismatch for " + glyphn, "W")
+                if glyphn <> self._contents[glyphn].name : self.font.logger.log( "Glyph name mismatch for " + glyphn, "W")
             else :
-                self.font.log( "Missing glif " + glifn + " in " + fulldir, "S")
+                self.font.logger.log( "Missing glif " + glifn + " in " + fulldir, "S")
                 
     def write(self,outdir,params) :
         fulldir = os.path.join(outdir,self.layerdir)
@@ -199,9 +172,10 @@ class Ulayer(_Ucontainer) :
             try:
                 os.mkdir(fulldir)
             except Exception as e :
-                self.font.log( e, "S")
+                print e
+                sys.exit()
         if not os.path.isdir(fulldir) :
-            self.font.log( fulldir + " not a directory", "S")
+            self.font.logger.log( fulldir + " not a directory", "S")
         
         UFOversion = params["UFOversion"]
         
@@ -218,7 +192,7 @@ class Ulayer(_Ucontainer) :
             
     def renameGlifs(self) :
         namelist=[]
-        self.font.log( "Renaming glifs", "I")
+        self.font.logger.log( "Renaming glifs", "I")
         for glyphn in sorted(self.keys()) :
             glyph = self._contents[glyphn]
             filename = makeFileName(glyphn,namelist)
@@ -229,7 +203,7 @@ class Ulayer(_Ucontainer) :
             
     
     def renameGlif(self,glyphn,glyph,newname) :
-        self.font.log( "Renaming glif for " + glyphn + " from " + glyph.filen + " to " + newname, "I")
+        self.font.logger.log( "Renaming glif for " + glyphn + " from " + glyph.filen + " to " + newname, "I")
         glyph.filen = newname
         self.contents[glyphn][1].text = newname
         
@@ -348,9 +322,7 @@ class Uglif(xmlitem) :
         # Check element does not already exist for single elements
         if self._contents[ename] and not multi :
             message = "Already an " + enam + "in glif"
-            if self.layer : self.layer.font.log( message, "S")
-            print mess
-            sys.exit() 
+            if self.layer : self.layer.font.logger.log( message, "S")
         
         # Add new object
         if multi :
