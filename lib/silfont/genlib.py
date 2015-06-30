@@ -7,7 +7,7 @@ __author__ = 'David Raymond'
 __version__ = '0.0.1'
 
 from xml.etree import ElementTree as ET
-import re, sys, os, codecs, argparse
+import re, sys, os, codecs, argparse, datetime
 
 _elementprotect = {
     '&' : '&amp;',
@@ -204,13 +204,40 @@ class xmlitem(object) :
     def keys(self) :
         return self._contents.keys()
 
+class loggerobj(object) :
+    # For handling log messages.  Perhaps should change to use standard logger?
+    
+    def __init__(self, logfile = None, loglevels = "", leveltext = "",  loglevel = "E", scrlevel = "W") :
+        self.logfile = logfile
+        self.loglevels = loglevels
+        self.leveltext = leveltext
+        if not self.loglevels : self.loglevels = { 'S':0,    'E':1,   'P':2,      'W':3,     'I':4 }
+        if not self.leveltext : self.leveltext = ( 'Severe:   ', 'Error:    ', 'Progress: ', 'Warning:  ', 'Info:     ')
+        self.loglevel = self.loglevels[loglevel]
+        self.scrlevel = self.loglevels[scrlevel]
+        
+    def log(self,logmessage,msglevel = "I") :
+        levelval = self.loglevels[msglevel]
+        message = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S ") + self.leveltext[levelval] + logmessage
+        if levelval <= self.scrlevel : print message
+        if self.logfile and levelval <= self.loglevel : self.logfile.write(message + "\n")
+        if msglevel == "S" : sys.exit()
+
+
 def makeAttribOrder(attriblist) : # Turn a list of attrib names into an attributeOrder dict for ETWriter 
         return dict(map(lambda x:(x[1], x[0]), enumerate(attriblist)))
     
 
 def execute(tool, fn, argspec) :
     # Function to handle parameter parsing, font and file opening etc in command-line scripts
-    # Supports opening (and saving) fonts using FontForge (FF) or PysilFont UFOlib (PSFU).
+    # Supports opening (and saving) fonts using FontForge (FF) or PysilFont UFOlib (PSFU)
+    # Special handling for:
+    #   -d        variation on -h to print extra info about defaults
+    #   -l  opens log file and also creates a logger function to write to the log file
+    #   -p  includes loglevel and scrlevel settings for logger
+    #       for UFOlib scripts, also includes all font.outparams keys except for attribOrder
+    #   -v  for UFOlib scripts this sets font.outparams(UFOversion)
+    
     ff = False
     psfu = False
     if tool == "FF" :
@@ -291,6 +318,7 @@ def execute(tool, fn, argspec) :
     if fppval is None : fppval = "" # For scripts that can be run with no positional parameters
     (fppath,fpbase,fpext)=_splitfn(fppval) # First pos param use for defaulting
     outfont = None
+    infontlist = []    
     
     for c,ainfo in enumerate(arginfo) :
         aval = getattr(args,ainfo['name'])
@@ -313,13 +341,7 @@ def execute(tool, fn, argspec) :
             if tool is None:
                 print "Can't specify a font without a font tool"
                 sys.exit()
-            print 'Opening font: ',aval
-            try :
-                if ff : aval=fontforge.open(aval)
-                if psfu: aval=Ufont(aval)
-            except Exception as e :
-                print e
-                sys.exit()
+            infontlist.append((ainfo['name'],aval)) # Build list of fonts to open when other args processed
         elif atype=='infile' :
             print 'Opening file for input: ',aval
             try :
@@ -327,7 +349,7 @@ def execute(tool, fn, argspec) :
             except Exception as e :
                 print e
                 sys.exit()
-        elif atype=='outfile' :
+        elif atype=='outfile':
             print 'Opening file for output: ',aval
             try :
                 aval=open(aval,"w")
@@ -345,21 +367,58 @@ def execute(tool, fn, argspec) :
             if aval is not None:
                 for option in aval:
                     x = option.split("=",1)
+                    if len(x) <> 2 :
+                        print "params must be of the form 'param=value'"
+                        sys.exit()
                     avaldict[x[0]] = x[1]
             aval = avaldict
         
         setattr(args,ainfo['name'],aval)
 
+# Create logger
+
+    logfile = args.log if 'log' in args.__dict__ else None
+    params = args.params if 'params' in args.__dict__ else {}
+    loglevel = params['loglevel'].upper() if 'loglevel' in params else "W"
+    scrlevel = params['scrlevel'].upper() if 'scrlevel' in params else "P"
+    logger = loggerobj(logfile,loglevel=loglevel,scrlevel=scrlevel)
+    setattr(args,'logger',logger)
+
+# Open fonts - needs to be done after processing other arguments so logger and params are defined
+
+    for name,aval in infontlist :
+        try :
+            if ff : aval=fontforge.open(aval)
+            if psfu: aval=Ufont(aval, logger = logger)
+        except Exception as e :
+            print e
+            sys.exit()
+        setattr(args,name,aval)
+        # Process specific parameters for UFOlib fonts
+        if psfu :
+            font = aval
+            params = args.params if 'params' in args.__dict__  else None
+            if 'version' in args.__dict__ : 
+                if args.version : params["UFOversion"] = args.version
+            for param in params:
+                if param in font.outparams:
+                    if param == "UFOversion" and params[param] not in ("2","3") : logger.log("UFO version must be 2 or 3", "S")
+                    if param == "attribOrders" : logger.log("attribOrders can't be set by params", "S")
+                    font.outparams[param] = params[param]
+                elif param not in ('loglevel','scrlevel') : logger.log( "Parameter invalid: " + param, "S")
+
 # All arguments processed, now call the main function
     result = fn(args)
     if outfont and result is not None:
-        print "Saving font to " + outfont
+
         if ff:
+            print "Saving font to " + outfont
             if outfontext=="ufo":
                 result.generate(outfont)
             else : result.save(outfont)
         else: # Must be Pyslifont Ufont
             result.write(outfont)
+    if logfile : logfile.close()
 
 def _splitfn(fn): # Split filename into path, base and extension
     if fn : # Remove trailing slashes
