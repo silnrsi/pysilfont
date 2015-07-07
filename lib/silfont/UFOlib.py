@@ -7,7 +7,7 @@ __author__ = 'David Raymond'
 __version__ = '0.0.1'
 
 from xml.etree import ElementTree as ET
-import sys, os, copy, shutil
+import sys, os, copy, shutil, filecmp
 import collections
 from genlib import *
 
@@ -63,14 +63,37 @@ class Uelement(_Ucontainer) :
         self._contents[subelement.tag][index] = subelement
         self.element[index] = subelement
 
-class Utextfile(object) :
+class UtextFile(object) :
     # Generic object for handling non-xml text files
-    def __init__(self, font = None, dirn = None, filen = None) :
-        if dirn is None and font: dirn = font.ufodir
+    def __init__(self, font, dirn, filen) :
         self.type = "textfile"
         self.font = font
-        if filen and dirn : self.populate_dict()
-    
+        self.filen = filen
+        self.dirn = dirn
+        if dirn == font.ufodir :
+            dtree = font.dtree
+        else :
+            dtree = font.dtree.subtree(dirn)
+            if not dtree : font.logger.log("Missing directory " + dirn, "S")
+        if filen not in dtree:
+            dtree[filen] = dirTreeItem()
+            dtree[filen].setinfo(added = True)
+        dtree[filen].setinfo(read = True)
+        dtree[filen].fileObject = self
+        dtree[filen].fileType = "text"
+        
+    def write(self, dtreeitem,dir, odtreeitem) :
+        # For now just copies source to destination if changed
+        inpath = os.path.join(self.dirn,self.filen)
+        changed = True
+        if odtreeitem : changed = not (filecmp.cmp(inpath, os.path.join(dir,self.filen)))
+        if changed :
+            try :
+                shutil.copy2(inpath, dir)
+            except Exception as e :
+                print e
+                sys.exit(1)
+        dtreeitem.written = True
 
 class Ufont(object) :
     """ Object to hold all the data from a UFO"""
@@ -100,6 +123,9 @@ class Ufont(object) :
                 self.layercontents.populate_dict()
             else :
                 self.layercontents = self._readPlist("layercontents.plist")
+            # Process features.fea
+            if "features.fea" in self.dtree :
+                 self.features = UfeatureFile(self,ufodir,"features.fea")
             # Process the glyphs directories)
             self.layers = []
             for i in sorted(self.layercontents.keys() ) :
@@ -111,6 +137,7 @@ class Ufont(object) :
                     self.layers.append( layer )
                 else :
                     self.logger.log( "Glyph directory " + layerdir + " missing", "S")
+            # Process other files and directories
             # Set initial defaults for outparams            
             self.outparams = { "indentIncr" : "  ", "indentFirst" : "  ", "indentML" : False, "plistIndentFirst" : "", 'sortDicts' : True , 'precision' : 6}
             self.outparams["renameGlifs"] = True
@@ -176,6 +203,7 @@ class Ufont(object) :
         if "kerning" in self.__dict__ : setFileForOutput(dtree, "kerning.plist", self.kerning, "xml")
         if "lib" in self.__dict__ : setFileForOutput(dtree, "lib.plist", self.lib, "xml")
         if UFOversion == "3" : setFileForOutput(dtree, "layercontents.plist", self.layercontents, "xml")
+        if "features" in self.__dict__ : setFileForOutput(dtree, "features.fea", self.features, "text")
         # Set glyph layers for output
         for layer in self.layers : layer.setForOutput()
         
@@ -500,6 +528,11 @@ class Ulib(Uelement) :
     def __init__(self, glif, element) :
         super(Ulib,self).__init__(element)
 
+class UfeatureFile(UtextFile) :
+    
+    def __init__(self, font, dirn, filen) :
+        super(UfeatureFile,self).__init__(font,dirn,filen)
+
 def writeXMLobject(dtreeitem, font, dirn, filen, odtreeitem) :
     params = font.outparams
     object = dtreeitem.fileObject
@@ -565,10 +598,11 @@ def writeToDisk(dtree, outdir, font, odtree = {}, logindent = "") :
             if dtreeitem.towrite :
                 font.logger.log(logindent + filen, "V")
                 if dtreeitem.fileType == "xml" :
-                    writeXMLobject(dtreeitem,font,outdir,filen,odtreeitem)
-                else :
-                    pass #@@@ add code for other file types
-            else :
+                    writeXMLobject(dtreeitem,font,outdir, filen, odtreeitem)
+                elif dtreeitem.fileType == "text" :
+                    dtreeitem.fileObject.write(dtreeitem, outdir, odtreeitem)
+                    #@@@ Need to add code for other file types
+            else : 
                 if not dtreeitem.added : font.logger.log('Skipping invalid file '+ filen + ' from input UFO', "W")
                 if odtreeitem:
                     if not odtreeitem.added : 
