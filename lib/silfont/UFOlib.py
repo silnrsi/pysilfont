@@ -76,8 +76,7 @@ class UtextFile(object) :
             dtree = font.dtree.subtree(dirn)
             if not dtree : font.logger.log("Missing directory " + dirn, "S")
         if filen not in dtree:
-            dtree[filen] = dirTreeItem()
-            dtree[filen].setinfo(added = True)
+            dtree[filen] = dirTreeItem(added = True)
         dtree[filen].setinfo(read = True)
         dtree[filen].fileObject = self
         dtree[filen].fileType = "text"
@@ -128,6 +127,7 @@ class Ufont(object) :
                  self.features = UfeatureFile(self,ufodir,"features.fea")
             # Process the glyphs directories)
             self.layers = []
+            self.deflayer = None
             for i in sorted(self.layercontents.keys() ) :
                 layername = self.layercontents[i][0].text
                 layerdir = self.layercontents[i][1].text
@@ -135,8 +135,10 @@ class Ufont(object) :
                 layer = Ulayer(layername, layerdir, self)
                 if layer :
                     self.layers.append( layer )
+                    if layername == "public.default" : self.deflayer = layer
                 else :
                     self.logger.log( "Glyph directory " + layerdir + " missing", "S")
+            if self.deflayer is None : self.logger.log("No public.default layer", "S")
             # Process other files and directories
             # Set initial defaults for outparams            
             self.outparams = { "indentIncr" : "  ", "indentFirst" : "  ", "indentML" : False, "plistIndentFirst" : "", 'sortDicts' : True , 'precision' : 6}
@@ -218,26 +220,27 @@ class Ulayer(_Ucontainer) :
     
     def __init__(self, layername, layerdir, font) :
         self._contents = {}
-        layerdtree = font.dtree.subTree(layerdir)
-        if not layerdtree : return
+        self.dtree = font.dtree.subTree(layerdir)
+        self.dtree
+        if not self.dtree : return
         font.dtree[layerdir].read = True
         self.layername = layername
         self.layerdir = layerdir
         self.font = font
         fulldir = os.path.join(font.ufodir,layerdir)
         self.contents = Uplist( font = font, dirn = fulldir, filen = "contents.plist" )
-        layerdtree["contents.plist"].setinfo(read = True, fileObject = self.contents, fileType = "xml")
+        self.dtree["contents.plist"].setinfo(read = True, fileObject = self.contents, fileType = "xml")
         
         if font.UFOversion == "3" :
-            if 'layerinfo.plist' in layerdtree : 
+            if 'layerinfo.plist' in self.dtree : 
                 self.layerinfo = Uplist( font = font, dirn = fulldir, filen = "layerinfo.plist" )
-                layerdtree["layerinfo.plist"].setinfo(read = True, fileObject = self.layerinfo, fileType = "xml")
+                self.dtree["layerinfo.plist"].setinfo(read = True, fileObject = self.layerinfo, fileType = "xml")
                 
         for glyphn in sorted(self.contents.keys()) :
             glifn = self.contents[glyphn][1].text
-            if glifn in layerdtree :
+            if glifn in self.dtree :
                 self._contents[glyphn] = Uglif(layer = self, filen = glifn)
-                layerdtree[glifn].setinfo( read = True, fileObject = self._contents[glyphn], fileType = "xml")
+                self.dtree[glifn].setinfo( read = True, fileObject = self._contents[glyphn], fileType = "xml")                
                 if glyphn <> self._contents[glyphn].name : self.font.logger.log( "Glyph name mismatch for " + glyphn, "W")
             else :
                 self.font.logger.log( "Missing glif " + glifn + " in " + fulldir, "S")
@@ -267,11 +270,26 @@ class Ulayer(_Ucontainer) :
             if filename <> glyph.filen :
                 self.renameGlif(glyphn,glyph,filename)
             
-    
     def renameGlif(self,glyphn,glyph,newname) :
         self.font.logger.log( "Renaming glif for " + glyphn + " from " + glyph.filen + " to " + newname, "I")
         glyph.filen = newname
         self.contents[glyphn][1].text = newname
+    
+    def addGlyph(self,glyph) :
+        glyphn = glyph.name
+        if glyphn in self._contents : self.font.logger.log(glyphn + "already in font", "Y")
+        self._contents[glyphn] = glyph
+        # Set glif name
+        glifn = makeFileName(glyphn)
+        names = []
+        while glifn in self.contents : # need to check for duplicate glif names
+            names.append(glfin)
+            glifn = makeFileName(glyphn, names)
+        glifn += ".glif"
+        glyph.filen = glifn
+        # Add to contents.plist and dtree
+        self.contents.addElement(glyphn,"string",glifn)
+        self.dtree[glifn] = dirTreeItem(read = False, added = True, fileObject = glyph, fileType = "xml")
         
 class Uplist(xmlitem) :
     
@@ -293,6 +311,19 @@ class Uplist(xmlitem) :
         else : # Assume array of 2 element arrays (eg layercontents.plist)
             for i in range(len(pl)) :
                 self._contents[i] = pl[i]
+                
+    def addElement(self,key,valuetype,value) : # for dict-based plists
+        dict = self.etree[0]
+
+        keyelem = ET.Element("key")
+        keyelem.text = key
+        dict.append(keyelem)
+
+        valelem = ET.Element(valuetype)
+        valelem.text = value
+        dict.append(valelem)
+
+        self._contents[key] = [keyelem,valelem]
     
 class Uglif(xmlitem) :
     # Unlike plists, glifs can have multiples of some sub-elements (eg anchors) so create lists for those
@@ -379,9 +410,10 @@ class Uglif(xmlitem) :
                         et.append(item.element)
         self.rebuildETflag = False
     
-    def add(self,ename,attrib) :
+    def add(self,ename,attrib = None) :
         # Add an element and corrensponding object to a glif
-        element = ET.Element(ename,attrib)
+        element = ET.Element(ename)
+        if attrib : element.attrib = attrib
         index = _glifElements.index(ename)
         multi = _glifElemMulti[index]
         
