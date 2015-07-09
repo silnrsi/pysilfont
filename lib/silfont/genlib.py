@@ -4,7 +4,7 @@ __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
-__version__ = '0.0.1'
+__version__ = '1.0.0'
 
 from xml.etree import ElementTree as ET
 import re, sys, os, codecs, argparse, datetime
@@ -128,33 +128,29 @@ class dirTree(dict) :
     """ An object to hold list of all files and directories in a directory
         with option to read sub-directory contents into dirTree objects.
         Iterates through readSub levels of subfolders """
-    def __init__(self,dirn,readSub = 3) :
+    def __init__(self,dirn,readSub = 9999) :
         for name in os.listdir(dirn) :
-            item={}
+            if name[-1:] == "~" : continue
+            item=dirTreeItem()
             if os.path.isdir(os.path.join(dirn, name)) :
-                item["type"] = "d"
+                item.type = "d"
                 if readSub :
-                    item["tree"] = dirTree(os.path.join(dirn,name),readSub-1)
-            else :
-                item["type"] = "f"
+                    item.dirtree = dirTree(os.path.join(dirn,name),readSub-1)
             self[name] = item
-        
+            
     def subTree(self,path) : # Returns dirTree object for a subtree based on subfolder name(s)
         # 'path' can be supplied as either a relative path (eg "subf/subsubf") or array (eg ['subf','subsubf']
         if type(path) is str : path = self._split(path)
         subf=path[0]
-        if subf in self:
-            if 'tree' in self[subf] :
-                tree = self[subf]['tree']
-            else :
-                tree = ""
-        else : return ""
+        if subf in self: 
+            dtree =  self[subf].dirtree
+        else : return None
         
         if len(path) == 1 :
-            return tree
+            return dtree
         else :
             path.pop(0)
-            return tree.subTree(path)
+            return dtree.subTree(path)
         
     def _split(self,path) : # Turn a relative path into an array of subfolders
         npath = [os.path.split(path)[1]]
@@ -162,6 +158,32 @@ class dirTree(dict) :
             path = os.path.split(path)[0]
             npath.insert(0,os.path.split(path)[1])
         return npath
+
+class dirTreeItem(object) :
+    
+    def __init__(self, type = "f", dirtree = None, read = False, added = False, changed = False, towrite = False, written = False, fileObject = None, fileType = None, flags = {}) :
+        self.type = type                # "d" or "f"
+        self.dirtree = dirtree          # dirtree for a sub-directory
+        # Remaining properties are for calling scripts to use as they choose to track actions etc
+        self.read = read                # Item has been read by the script
+        self.added = added              # Item has been added to dirtree, so does not exist on disk
+        self.changed = changed          # Item has been changed, so may need updating on disk
+        self.towrite = towrite          # Item should be written out to disk
+        self.written = written          # Item has been written to disk
+        self.fileObject = fileObject    # An object representing the file
+        self.fileType = fileType        # The type of the file object
+        self.flags = {}                 # Any other flags a script might need
+        
+    def setinfo(self, read = None, added = None, changed = None, towrite = None, written = None, fileObject = None, fileType = None, flags = None) :
+        pass
+        if read : self.read = read
+        if added : self.added = added
+        if changed : self.changed = changed
+        if towrite: self.towrite = towrite
+        if written : self.written = written
+        if fileObject is not None : self.fileObject = fileObject
+        if fileType : self.fileType = fileType
+        if flags : self.flags = flags
 
 class xmlitem(object) :
     """ The xml data item for an xml file"""
@@ -179,9 +201,10 @@ class xmlitem(object) :
                 inxml=open(os.path.join( dirn, filen), "r")
             except Exception as e :
                 print e
-                sys.exit()
+                sys.exit(1)
             for line in inxml.readlines() :
                 self.inxmlstr = self.inxmlstr + line
+            inxml.close()
             if parse :
                 self.etree = ET.fromstring(self.inxmlstr)
 
@@ -207,21 +230,23 @@ class xmlitem(object) :
 class loggerobj(object) :
     # For handling log messages.  Perhaps should change to use standard logger?
     
-    def __init__(self, logfile = None, loglevels = "", leveltext = "",  loglevel = "E", scrlevel = "W") :
+    def __init__(self, logfile = None, loglevels = "", leveltext = "",  loglevel = "P", scrlevel = "W") :
         self.logfile = logfile
         self.loglevels = loglevels
         self.leveltext = leveltext
-        if not self.loglevels : self.loglevels = { 'S':0,    'E':1,   'P':2,      'W':3,     'I':4 }
-        if not self.leveltext : self.leveltext = ( 'Severe:   ', 'Error:    ', 'Progress: ', 'Warning:  ', 'Info:     ')
+        if not self.loglevels : self.loglevels = { 'S':0,        'E':1,        'P':2,        'W':3,        'I':4,        'V':5}
+        if not self.leveltext : self.leveltext = ( 'Severe:   ', 'Error:    ', 'Progress: ', 'Warning:  ', 'Info:     ', 'Verbose:  ')
         self.loglevel = self.loglevels[loglevel]
         self.scrlevel = self.loglevels[scrlevel]
         
-    def log(self,logmessage,msglevel = "I") :
+    def log(self, logmessage, msglevel = "I") :
         levelval = self.loglevels[msglevel]
         message = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S ") + self.leveltext[levelval] + logmessage
         if levelval <= self.scrlevel : print message
         if self.logfile and levelval <= self.loglevel : self.logfile.write(message + "\n")
-        if msglevel == "S" : sys.exit()
+        if msglevel == "S" :
+            print "\n **** Fatal error - exiting ****"
+            sys.exit(1)
 
 
 def makeAttribOrder(attriblist) : # Turn a list of attrib names into an attributeOrder dict for ETWriter 
@@ -340,7 +365,7 @@ def execute(tool, fn, argspec) :
         if atype=='infont' :
             if tool is None:
                 print "Can't specify a font without a font tool"
-                sys.exit()
+                sys.exit(1)
             infontlist.append((ainfo['name'],aval)) # Build list of fonts to open when other args processed
         elif atype=='infile' :
             print 'Opening file for input: ',aval
@@ -348,18 +373,18 @@ def execute(tool, fn, argspec) :
                 aval=open(aval,"r")
             except Exception as e :
                 print e
-                sys.exit()
+                sys.exit(1)
         elif atype=='outfile':
             print 'Opening file for output: ',aval
             try :
                 aval=open(aval,"w")
             except Exception as e :
                 print e
-                sys.exit()
+                sys.exit(1)
         elif atype=='outfont' :
             if tool is None:
                 print "Can't specify a font without a font tool"
-                sys.exit() 
+                sys.exit(1) 
             outfont=aval # Can only be one outfont
             outfontext=aext
         elif atype=='optiondict' : # Turn multiple options in the form ['opt1=a','opt2=b'] into a dictionary
@@ -369,7 +394,7 @@ def execute(tool, fn, argspec) :
                     x = option.split("=",1)
                     if len(x) <> 2 :
                         print "params must be of the form 'param=value'"
-                        sys.exit()
+                        sys.exit(1)
                     avaldict[x[0]] = x[1]
             aval = avaldict
         
@@ -387,12 +412,8 @@ def execute(tool, fn, argspec) :
 # Open fonts - needs to be done after processing other arguments so logger and params are defined
 
     for name,aval in infontlist :
-        try :
-            if ff : aval=fontforge.open(aval)
-            if psfu: aval=Ufont(aval, logger = logger)
-        except Exception as e :
-            print e
-            sys.exit()
+        if ff : aval=fontforge.open(aval)
+        if psfu: aval=Ufont(aval, logger = logger)
         setattr(args,name,aval)
         # Process specific parameters for UFOlib fonts
         if psfu :
