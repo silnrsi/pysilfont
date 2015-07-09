@@ -4,7 +4,7 @@ __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
-__version__ = '0.0.1'
+__version__ = '1.0.0'
 
 from xml.etree import ElementTree as ET
 import re, sys, os, codecs, argparse, datetime
@@ -181,7 +181,7 @@ class dirTreeItem(object) :
         if changed : self.changed = changed
         if towrite: self.towrite = towrite
         if written : self.written = written
-        if fileObject : self.fileObject = fileObject
+        if fileObject is not None : self.fileObject = fileObject
         if fileType : self.fileType = fileType
         if flags : self.flags = flags
 

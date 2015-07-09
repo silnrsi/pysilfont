@@ -4,7 +4,7 @@ __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
-__version__ = '0.0.1'
+__version__ = '1.0.0'
 
 from xml.etree import ElementTree as ET
 import sys, os, copy, shutil, filecmp
@@ -567,6 +567,7 @@ class UfeatureFile(UtextFile) :
 
 def writeXMLobject(dtreeitem, font, dirn, filen, odtreeitem) :
     params = font.outparams
+        
     object = dtreeitem.fileObject
     if object.outparams : params = object.outparams # override default params with object-specific ones
     indentFirst = params["indentFirst"]
@@ -629,7 +630,7 @@ def writeToDisk(dtree, outdir, font, odtree = {}, logindent = "") :
         if dtreeitem.type == "f" :
             if dtreeitem.towrite :
                 font.logger.log(logindent + filen, "V")
-                if dtreeitem.fileType == "xml" :
+                if dtreeitem.fileType == "xml" and dtreeitem.fileObject : # Only write if object has items
                     writeXMLobject(dtreeitem,font,outdir, filen, odtreeitem)
                 elif dtreeitem.fileType == "text" :
                     dtreeitem.fileObject.write(dtreeitem, outdir, odtreeitem)

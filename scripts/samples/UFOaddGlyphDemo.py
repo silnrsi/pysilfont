@@ -1,5 +1,5 @@
 #!/usr/bin/env python 
-'''Demo script to add a gylph to a UFO font'''
+'''Demo script for UFOlib to add a gylph to a UFO font'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
@@ -36,7 +36,7 @@ def doit(args) :
     # Create basic glyph
     newglyph = Uglif(layer=font.deflayer)
     newglyph.inxmlstr = '<glyph name="Test" format="2">\n<unicode hex="007D"/>/n</glyph>'
-    newglyph.etree = ET.fromstring(newglyph.inxmlstr)
+    newglyph.etree = ET.fromstring(newglyph.inxmlstr) # Could also be done with ET.Element("glyph") etc
     newglyph.process_etree()
 
     # Add an outline
