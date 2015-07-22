@@ -8,7 +8,7 @@ This action takes a .ufo (Unified Font Object) and converts it to a UFO v2 sourc
 
 To install and use the UFO2 Normalize action:
 
-- install the pysilfont pacakge using the steps in INSTALL.txt (important!)
+- install the pysilfont package using the steps in INSTALL.txt (important!)
 - copy the action to your ~/Library/Services folder
 - right-click on a UFO file, and choose Services>UFO2 Normalize
 
