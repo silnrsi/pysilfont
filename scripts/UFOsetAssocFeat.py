@@ -1,5 +1,6 @@
 #!/usr/bin/env python 
-'''Add associate feature info to glif lib'''
+'''Add associate feature info to glif lib based on a csv file
+  csv format glyphname,featurename[,featurevalue]'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
@@ -22,12 +23,11 @@ def doit(args) :
     csv = args.input
     glyphlist = font.deflayer.keys() # Identify which glifs have not got an AssocFeat set
     
-    for line in csv.readlines() :
-        if line[0] == "#" : continue # Skip comments
-        line = line.strip()
-        if line == "" : continue # Skip blank lines
-        line = line.split(",")
-        if len(line) < 2 or len(line) > 3 : font.logger.log("Invalid line in csv: " + line,"E")
+    for l in csv.readlines() :
+        l = l.strip()
+        if l == "" or l[0] == "#" : continue # Skip blank lines and comments
+        line = l.split(",")
+        if len(line) < 2 or len(line) > 3 : font.logger.log("Invalid line in csv: " + l,"E") ; continue
         glyphn = line[0]
         feature = line[1]
         value = line[2] if len(line) == 3 else ""
@@ -42,7 +42,7 @@ def doit(args) :
                 if "org.sil.assocFeatureValue" in glyph["lib"] : glyph["lib"].remove("org.sil.assocFeatureValue")
             glyphlist.remove(glyphn)
         else :
-            font.logger.log("No glyph in font input file line for " + glyphn,"E")
+            font.logger.log("No glyph in font for " + glyphn,"E")
 
     for glyphn in glyphlist : # Remove any values from remaining glyphs
         glyph = font.deflayer[glyphn]

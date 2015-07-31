@@ -238,9 +238,16 @@ class loggerobj(object) :
         self.leveltext = leveltext
         if not self.loglevels : self.loglevels = { 'X': 0, 'S':1,        'E':2,        'P':3,        'W':4,        'I':5,        'V':6}
         if not self.leveltext : self.leveltext = ( 'Exception ', 'Severe:   ', 'Error:    ', 'Progress: ', 'Warning:  ', 'Info:     ', 'Verbose:  ')
-        self.loglevel = self.loglevels[loglevel]
-        self.scrlevel = self.loglevels[scrlevel]
-        
+        self.loglevel = "2"; self.scrlevel = "2" # Temp values so invalid log levels can be reported
+        if loglevel in self.loglevels :
+            self.loglevel = self.loglevels[loglevel]
+        else:
+            self.log("Invalid loglevel value", "S")
+        if scrlevel in self.loglevels :
+            self.scrlevel = self.loglevels[scrlevel]
+        else:
+            self.log("Invalid scrlevel value", "S")
+
     def log(self, logmessage, msglevel = "I") :
         levelval = self.loglevels[msglevel]
         message = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S ") + self.leveltext[levelval] + logmessage

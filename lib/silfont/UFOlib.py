@@ -54,12 +54,9 @@ class _plist(object) :
 
     def setval(self,key,valuetype,value) :
         if key in self._contents :
-            self.replaceval(key,value)
+            self._contents[key][1].text = value
         else :
             self.addval(key,valuetype,value)
-    
-    def replaceval(self,key,value) :
-        self._contents[key][1].text = value
     
     def remove(self,key) :
         item = self._contents[key]
@@ -79,13 +76,8 @@ class _plist(object) :
         self._contents[key] = [keyelem,element]
 
     def setelem(self,key,element) :
-        if key in self._contents :
-            self.replaceval(key,element)
-        else :
-            self.addval(key,valuetype,element)
-    
-    def replaceelem(self,key,element) :
-        self._contents[key][1] = element
+        if key in self._contents : self.remove(key)
+        self.addelem(key,element)
 
 class Uelement(_Ucontainer) :
     # Class for an etree element. Mainly used as a parent class
@@ -167,7 +159,7 @@ class Ufont(object) :
             if "kerning.plist" in self.dtree : self.kerning = self._readPlist("kerning.plist")
             if "lib.plist" in self.dtree : self.lib = self._readPlist("lib.plist")
             if self.UFOversion == "2" : # Create a dummy layer contents so 2 & 3 can be handled the same
-                self.layercontents = Uplist(font = self)
+                self.layercontents = Uplist(font = self) # #@@@ Need to extend capability of Uplist to do much of this
                 self.dtree['layercontents.plist'] = dirTreeItem(read = True, added = True, fileObject = self.layercontents, fileType = "xml")
                 dummylc = "<plist>\n<array>\n<array>\n<string>public.default</string>\n<string>glyphs</string>\n</array>\n</array>\n</plist>"
                 self.layercontents.etree = ET.fromstring(dummylc)
