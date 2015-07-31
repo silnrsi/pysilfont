@@ -35,6 +35,58 @@ class _Ucontainer(object) :
     def keys(self) :
         return self._contents.keys()
 
+class _plist(object) :
+    # Used for common plist methods inherited by Uplist and Ulib classes
+    
+    def addval(self,key,valuetype,value) :
+        if key in self._contents : self.font.logger.log("Attempt to add duplicate key " + key + " to plist", "X")
+        dict = self.etree[0]
+
+        keyelem = ET.Element("key")
+        keyelem.text = key
+        dict.append(keyelem)
+
+        valelem = ET.Element(valuetype)
+        valelem.text = value
+        dict.append(valelem)
+
+        self._contents[key] = [keyelem,valelem]
+
+    def setval(self,key,valuetype,value) :
+        if key in self._contents :
+            self.replaceval(key,value)
+        else :
+            self.addval(key,valuetype,value)
+    
+    def replaceval(self,key,value) :
+        self._contents[key][1].text = value
+    
+    def remove(self,key) :
+        item = self._contents[key]
+        self.etree[0].remove(item[0])
+        self.etree[0].remove(item[1])
+        del self._contents[key]
+    
+    def addelem(self,key,element) :
+        if key in self._contents : self.font.logger.log("Attempt to add duplicate key " + key + " to plist", "X")
+        dict = self.etree[0]
+
+        keyelem = ET.Element("key")
+        keyelem.text = key
+        dict.append(keyelem)
+        dict.append(element)
+
+        self._contents[key] = [keyelem,element]
+
+    def setelem(self,key,element) :
+        if key in self._contents :
+            self.replaceval(key,element)
+        else :
+            self.addval(key,valuetype,element)
+    
+    def replaceelem(self,key,element) :
+        self._contents[key][1] = element
+
 class Uelement(_Ucontainer) :
     # Class for an etree element. Mainly used as a parent class
     # For each tag in the element, returns list of sub-elements with that tag
@@ -74,7 +126,7 @@ class UtextFile(object) :
             dtree = font.dtree
         else :
             dtree = font.dtree.subtree(dirn)
-            if not dtree : font.logger.log("Missing directory " + dirn, "S")
+            if not dtree : font.logger.log("Missing directory " + dirn, "X")
         if filen not in dtree:
             dtree[filen] = dirTreeItem(added = True)
         dtree[filen].setinfo(read = True)
@@ -241,7 +293,7 @@ class Ulayer(_Ucontainer) :
             if glifn in self.dtree :
                 self._contents[glyphn] = Uglif(layer = self, filen = glifn)
                 self.dtree[glifn].setinfo( read = True, fileObject = self._contents[glyphn], fileType = "xml")                
-                if glyphn <> self._contents[glyphn].name : self.font.logger.log( "Glyph name mismatch for " + glyphn, "W")
+                if glyphn <> self._contents[glyphn].name : self.font.logger.log( "Glyph names in glif and contents.plist don't match for " + glyphn, "W")
             else :
                 self.font.logger.log( "Missing glif " + glifn + " in " + fulldir, "S")
                 
@@ -272,12 +324,13 @@ class Ulayer(_Ucontainer) :
             
     def renameGlif(self,glyphn,glyph,newname) :
         self.font.logger.log( "Renaming glif for " + glyphn + " from " + glyph.filen + " to " + newname, "I")
+        self.dtree[glyph.filen].flags['renamed'] = True # Set flag so old file name does not get reported as invalid
         glyph.filen = newname
         self.contents[glyphn][1].text = newname
     
     def addGlyph(self,glyph) :
         glyphn = glyph.name
-        if glyphn in self._contents : self.font.logger.log(glyphn + "already in font", "Y")
+        if glyphn in self._contents : self.font.logger.log(glyphn + " already in font", "X")
         self._contents[glyphn] = glyph
         # Set glif name
         glifn = makeFileName(glyphn)
@@ -288,10 +341,10 @@ class Ulayer(_Ucontainer) :
         glifn += ".glif"
         glyph.filen = glifn
         # Add to contents.plist and dtree
-        self.contents.addElement(glyphn,"string",glifn)
+        self.contents.addval(glyphn,"string",glifn)
         self.dtree[glifn] = dirTreeItem(read = False, added = True, fileObject = glyph, fileType = "xml")
         
-class Uplist(xmlitem) :
+class Uplist(xmlitem, _plist) :
     
     def __init__(self, font = None, dirn = None, filen = None, parse = True) :
         if dirn is None and font: dirn = font.ufodir
@@ -311,19 +364,6 @@ class Uplist(xmlitem) :
         else : # Assume array of 2 element arrays (eg layercontents.plist)
             for i in range(len(pl)) :
                 self._contents[i] = pl[i]
-                
-    def addElement(self,key,valuetype,value) : # for dict-based plists
-        dict = self.etree[0]
-
-        keyelem = ET.Element("key")
-        keyelem.text = key
-        dict.append(keyelem)
-
-        valelem = ET.Element(valuetype)
-        valelem.text = value
-        dict.append(valelem)
-
-        self._contents[key] = [keyelem,valelem]
     
 class Uglif(xmlitem) :
     # Unlike plists, glifs can have multiples of some sub-elements (eg anchors) so create lists for those
@@ -393,9 +433,8 @@ class Uglif(xmlitem) :
         et = self.etree
         
         # Remove existing sub-elements
-        
         while et.getchildren() : et.remove(et.getchildren()[0])
-
+  
         # Insert new elements
         for i in range(len(_glifElements)) :
             F1 = _glifElemF1[i]
@@ -414,13 +453,14 @@ class Uglif(xmlitem) :
         # Add an element and corrensponding object to a glif
         element = ET.Element(ename)
         if attrib : element.attrib = attrib
+        if ename == "lib" : ET.SubElement(element,"dict")
         index = _glifElements.index(ename)
         multi = _glifElemMulti[index]
         
         # Check element does not already exist for single elements
         if self._contents[ename] and not multi :
             message = "Already an " + enam + "in glif"
-            if self.layer : self.layer.font.logger.log( message, "S")
+            if self.layer : self.layer.font.logger.log( message, "X")
         
         # Add new object
         if multi :
@@ -437,17 +477,13 @@ class Uglif(xmlitem) :
         eindex = _glifElements.index(ename)
         multi = _glifElemMulti[eindex]
         item = self._contents[ename]
-
+        
         # Delete the object
         if multi :
-            if index:
-                object = item[index]
-            else :
-                index = item.index(object)
+            if index is None : index = item.index(object)
             del item[index]
         else :
-            object = item
-            del self._contents[ename]
+            self._contents[ename] = None
 
         self.rebuildETflag = True
     
@@ -555,11 +591,23 @@ class Ucontour(Uelement) :
             if points[0].attrib["type"] == "move" :
                 self.UFO2anchor = points[0].attrib
         
-class Ulib(Uelement) :
+class Ulib(_Ucontainer, _plist) :
     # For glif lib elements; top-level lib files use Uplist
     def __init__(self, glif, element) :
-        super(Ulib,self).__init__(element)
-
+        self.glif = glif
+        self.element = element # needs both element and etree fo compatibility
+        self.etree = element   # with other glif components and _plist methods
+        self._contents = {}
+        self.reindex()
+        
+    def reindex(self) :
+        self._contents.clear() # Clear existing contents, if any
+        pl = self.element[0]
+        if pl.tag == "dict" :
+            for i in range(0,len(pl),2):
+                key = pl[i].text
+                self._contents[key] = [pl[i],pl[i+1]] # The two elements for the item
+    
 class UfeatureFile(UtextFile) :
     
     def __init__(self, font, dirn, filen) :
@@ -631,12 +679,20 @@ def writeToDisk(dtree, outdir, font, odtree = {}, logindent = "") :
             if dtreeitem.towrite :
                 font.logger.log(logindent + filen, "V")
                 if dtreeitem.fileType == "xml" and dtreeitem.fileObject : # Only write if object has items
+                    if dtreeitem.fileObject.type == "glif" : # Delete lib if not items in it
+                        glif = dtreeitem.fileObject
+                        if glif["lib"] is not None :
+                            if glif["lib"].__len__() == 0 : 
+                                glif.remove("lib")
+                                glif.rebuildET()
                     writeXMLobject(dtreeitem,font,outdir, filen, odtreeitem)
                 elif dtreeitem.fileType == "text" :
                     dtreeitem.fileObject.write(dtreeitem, outdir, odtreeitem)
                     #@@@ Need to add code for other file types
             else : 
-                if not dtreeitem.added : font.logger.log('Skipping invalid file '+ filen + ' from input UFO', "W")
+                if not dtreeitem.added : 
+                    if not 'renamed' in dtreeitem.flags :
+                        font.logger.log('Skipping invalid file '+ filen + ' from input UFO', "W")
                 if odtreeitem:
                     if not odtreeitem.added : 
                         font.logger.log('Deleting '+ filen + ' from existing output UFO', "W")

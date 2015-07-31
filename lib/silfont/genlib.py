@@ -229,13 +229,15 @@ class xmlitem(object) :
 
 class loggerobj(object) :
     # For handling log messages.  Perhaps should change to use standard logger?
+    # Use S for severe errors caused by data, parameters supplied by user etc
+    # Use X for severe errors caused by bad code to get traceback exception
     
     def __init__(self, logfile = None, loglevels = "", leveltext = "",  loglevel = "P", scrlevel = "W") :
         self.logfile = logfile
         self.loglevels = loglevels
         self.leveltext = leveltext
-        if not self.loglevels : self.loglevels = { 'S':0,        'E':1,        'P':2,        'W':3,        'I':4,        'V':5}
-        if not self.leveltext : self.leveltext = ( 'Severe:   ', 'Error:    ', 'Progress: ', 'Warning:  ', 'Info:     ', 'Verbose:  ')
+        if not self.loglevels : self.loglevels = { 'X': 0, 'S':1,        'E':2,        'P':3,        'W':4,        'I':5,        'V':6}
+        if not self.leveltext : self.leveltext = ( 'Exception ', 'Severe:   ', 'Error:    ', 'Progress: ', 'Warning:  ', 'Info:     ', 'Verbose:  ')
         self.loglevel = self.loglevels[loglevel]
         self.scrlevel = self.loglevels[scrlevel]
         
@@ -247,7 +249,7 @@ class loggerobj(object) :
         if msglevel == "S" :
             print "\n **** Fatal error - exiting ****"
             sys.exit(1)
-
+        if msglevel == "X" :assert False, message
 
 def makeAttribOrder(attriblist) : # Turn a list of attrib names into an attributeOrder dict for ETWriter 
         return dict(map(lambda x:(x[1], x[0]), enumerate(attriblist)))
