@@ -16,13 +16,14 @@ long_description += "Some of these utilites make use of the FontForge Python mod
 
 setup(
 		name='pysilfont',
-		version='0.0.1',
+		version='1.0.0',
 		description='Python-based font utilities collection',
 		long_description=long_description,
-        maintainer='NRSI - SIL International',
+		maintainer='NRSI - SIL International',
 		maintainer_email='fonts@sil.org',
 		url='http://github.com/silnrsi/pysilfont',
-		packages = ["lib.silfont"],
+		packages = ["silfont"],
+		package_dir = {'':'lib'},
 		scripts=['scripts/UFOconvert'],
 		license='MIT',
 		platforms=['Linux','Win32','Mac OS X'],
