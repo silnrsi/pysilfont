@@ -404,6 +404,7 @@ def execute(tool, fn, argspec) :
                     if len(x) <> 2 :
                         print "params must be of the form 'param=value'"
                         sys.exit(1)
+                    if x[1] == "\\t" : x[1] = "\t" # Special handling for tab characters
                     avaldict[x[0]] = x[1]
             aval = avaldict
         
