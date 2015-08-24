@@ -6,7 +6,7 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'David Raymond'
 __version__ = '1.0.0'
 
-from xml.etree import ElementTree as ET
+from xml.etree import cElementTree as ET
 import re, sys, os, codecs, argparse, datetime
 
 _elementprotect = {
@@ -60,8 +60,9 @@ class ETWriter(object) :
         if base is None :
             base = self.root
             write('<?xml version="1.0" encoding="UTF-8"?>\n')
-            doctype=getattr(base, "doctype", "")
-            if doctype <> "":
+            doctype = base.attrib['_doctype'] if '_doctype' in base.attrib else None
+            if doctype is not None:
+                del base.attrib["_doctype"]
                 write(u'<!DOCTYPE {}>\n'.format(doctype))
         (tag, q, ns) = self._localisens(base.tag)
 
@@ -81,9 +82,12 @@ class ETWriter(object) :
                     namespaces[lns] = q
                     localattribs['xmlns:'+lq] = lns
         self._nsprotectattribs(getattr(base, 'attrib', None), localattribs, namespaces)
-        
-        for c in getattr(base, 'comments', []) :
-            write(u'{}<!--{}-->\n'.format(indent, c))
+
+        if '_comments' in base.attrib :
+            for c in base.attrib['_comments'].split(",") :
+               write(u'{}<!--{}-->\n'.format(indent, c))
+            del base.attrib["_comments"]
+
         write(u'{}<{}'.format(indent, tag))
         if len(localattribs) :
             maxAts = len(self.attributeOrder) + 1
@@ -94,8 +98,6 @@ class ETWriter(object) :
         if len(base) :
             write('>\n')
             for b in base :
-                #incr = self.indentFirst 
-                #self.indentFirst = self.indentIncr
                 if base == self.root:
                     incr = self.indentFirst
                 else:
@@ -106,7 +108,7 @@ class ETWriter(object) :
             if base.text.strip() :
                 if tag not in self.takesCData :
                     t = base.text
-                    
+
                     if self.indentML : t = t.replace('\n', '\n' + indent)
                     t = self._protect(t, base=_elementprotect)
                 else :
@@ -116,8 +118,11 @@ class ETWriter(object) :
                 write('/>\n')
         else :
             write('/>\n')
-        for c in getattr(base, 'commentsafter', []) :
-            write(u'{}<!--{}-->\n'.format(indent, c))
+
+        if '_commentsafter' in base.attrib :
+            for c in base.attrib['_commentsafter'].split(",") :
+               write(u'{}<!--{}-->\n'.format(indent, c))
+            del base.attrib["_commentsafter"]
 
     def add_namespace(self, q, ns) :
         if ns in self.namespaces : return self.namespaces[ns]
@@ -137,21 +142,21 @@ class dirTree(dict) :
                 if readSub :
                     item.dirtree = dirTree(os.path.join(dirn,name),readSub-1)
             self[name] = item
-            
+
     def subTree(self,path) : # Returns dirTree object for a subtree based on subfolder name(s)
         # 'path' can be supplied as either a relative path (eg "subf/subsubf") or array (eg ['subf','subsubf']
         if type(path) is str : path = self._split(path)
         subf=path[0]
-        if subf in self: 
+        if subf in self:
             dtree =  self[subf].dirtree
         else : return None
-        
+
         if len(path) == 1 :
             return dtree
         else :
             path.pop(0)
             return dtree.subTree(path)
-        
+
     def _split(self,path) : # Turn a relative path into an array of subfolders
         npath = [os.path.split(path)[1]]
         while os.path.split(path)[0] :
@@ -160,7 +165,7 @@ class dirTree(dict) :
         return npath
 
 class dirTreeItem(object) :
-    
+
     def __init__(self, type = "f", dirtree = None, read = False, added = False, changed = False, towrite = False, written = False, fileObject = None, fileType = None, flags = {}) :
         self.type = type                # "d" or "f"
         self.dirtree = dirtree          # dirtree for a sub-directory
@@ -173,7 +178,7 @@ class dirTreeItem(object) :
         self.fileObject = fileObject    # An object representing the file
         self.fileType = fileType        # The type of the file object
         self.flags = {}                 # Any other flags a script might need
-        
+
     def setinfo(self, read = None, added = None, changed = None, towrite = None, written = None, fileObject = None, fileType = None, flags = None) :
         pass
         if read : self.read = read
@@ -210,13 +215,13 @@ class xmlitem(object) :
 
     def write_to_xml(self,text) : # Used by ETWriter.serializeXML
         self.outxmlstr = self.outxmlstr + text
-        
+
     def write_to_file(self,dirn,filen) :
         outfile=codecs.open(os.path.join(dirn,filen),'w','utf-8')
         outfile.write(self.outxmlstr)
         outfile.close
-        
-    # Define methods so it acts like an imumtable container - 
+
+    # Define methods so it acts like an imumtable container -
     # changes should be made via object methods
     def __len__(self):
         return len(self._contents)
@@ -231,7 +236,7 @@ class loggerobj(object) :
     # For handling log messages.  Perhaps should change to use standard logger?
     # Use S for severe errors caused by data, parameters supplied by user etc
     # Use X for severe errors caused by bad code to get traceback exception
-    
+
     def __init__(self, logfile = None, loglevels = "", leveltext = "",  loglevel = "P", scrlevel = "W") :
         self.logfile = logfile
         self.loglevels = loglevels
@@ -258,9 +263,9 @@ class loggerobj(object) :
             sys.exit(1)
         if msglevel == "X" :assert False, message
 
-def makeAttribOrder(attriblist) : # Turn a list of attrib names into an attributeOrder dict for ETWriter 
+def makeAttribOrder(attriblist) : # Turn a list of attrib names into an attributeOrder dict for ETWriter
         return dict(map(lambda x:(x[1], x[0]), enumerate(attriblist)))
-    
+
 
 def execute(tool, fn, argspec) :
     # Function to handle parameter parsing, font and file opening etc in command-line scripts
@@ -271,7 +276,7 @@ def execute(tool, fn, argspec) :
     #   -p  includes loglevel and scrlevel settings for logger
     #       for UFOlib scripts, also includes all font.outparams keys except for attribOrder
     #   -v  for UFOlib scripts this sets font.outparams(UFOversion)
-    
+
     ff = False
     psfu = False
     if tool == "FF" :
@@ -296,7 +301,7 @@ def execute(tool, fn, argspec) :
     if hasattr(basemodule, '__version__') : poptions['epilog'] = "Version: " + basemodule.__version__
 
     parser = argparse.ArgumentParser(**poptions)
-    
+
     # Special handling for "-d" to print default value info with help text
     defhelp = False
     if "-d" in sys.argv:
@@ -343,7 +348,7 @@ def execute(tool, fn, argspec) :
             for (param,defv) in defother:
                 deftext = deftext + '    {:<20}{}\n'.format(param,defv)
         parser.epilog = deftext
-        
+
 # Parse the command-line arguments. If errors or -h used, procedure will exit here
     args = parser.parse_args()
 
@@ -352,15 +357,15 @@ def execute(tool, fn, argspec) :
     if fppval is None : fppval = "" # For scripts that can be run with no positional parameters
     (fppath,fpbase,fpext)=_splitfn(fppval) # First pos param use for defaulting
     outfont = None
-    infontlist = []    
-    
+    infontlist = []
+
     for c,ainfo in enumerate(arginfo) :
         aval = getattr(args,ainfo['name'])
         atype = ainfo['type'] if 'type' in ainfo else None
         adef = ainfo['def'] if 'def' in ainfo else None
         if c <> 0 : #Handle defaults for all but first positional parameter
             if adef :
-                if not aval : aval=""               
+                if not aval : aval=""
                 (apath,abase,aext)=_splitfn(aval)
                 (dpath,dbase,dext)=_splitfn(adef) # dpath should be None
                 if not apath : apath=fppath
@@ -393,7 +398,7 @@ def execute(tool, fn, argspec) :
         elif atype=='outfont' :
             if tool is None:
                 print "Can't specify a font without a font tool"
-                sys.exit(1) 
+                sys.exit(1)
             outfont=aval # Can only be one outfont
             outfontext=aext
         elif atype=='optiondict' : # Turn multiple options in the form ['opt1=a','opt2=b'] into a dictionary
@@ -407,7 +412,7 @@ def execute(tool, fn, argspec) :
                     if x[1] == "\\t" : x[1] = "\t" # Special handling for tab characters
                     avaldict[x[0]] = x[1]
             aval = avaldict
-        
+
         setattr(args,ainfo['name'],aval)
 
 # Create logger
@@ -429,7 +434,7 @@ def execute(tool, fn, argspec) :
         if psfu :
             font = aval
             params = args.params if 'params' in args.__dict__  else None
-            if 'version' in args.__dict__ : 
+            if 'version' in args.__dict__ :
                 if args.version : params["UFOversion"] = args.version
             for param in params:
                 if param in font.outparams:
@@ -453,8 +458,8 @@ def execute(tool, fn, argspec) :
 
 def _splitfn(fn): # Split filename into path, base and extension
     if fn : # Remove trailing slashes
-        if fn[-1] in ("\\","/") : fn = fn[0:-1] 
+        if fn[-1] in ("\\","/") : fn = fn[0:-1]
     (path,base) = os.path.split(fn)
     (base,ext) = os.path.splitext(base)
     return (path,base,ext)
-    
+
