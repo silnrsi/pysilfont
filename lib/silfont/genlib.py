@@ -368,7 +368,11 @@ def execute(tool, fn, argspec) :
                 if not aval : aval=""
                 (apath,abase,aext)=_splitfn(aval)
                 (dpath,dbase,dext)=_splitfn(adef) # dpath should be None
-                if not apath : apath=fppath
+                if not apath :
+                    if abase and aext :
+                        apath = ""
+                    else:
+                        apath=fppath
                 if not abase : abase = fpbase + dbase
                 if not aext :
                     if dext :
