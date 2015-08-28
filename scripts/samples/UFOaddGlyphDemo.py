@@ -35,11 +35,8 @@ def doit(args) :
     font = args.ifont
 
     # Create basic glyph
-    newglyph = Uglif(layer=font.deflayer)
-    newglyph.inxmlstr = '<glyph name="Test" format="2">\n<unicode hex="007D"/>/n</glyph>'
-    newglyph.etree = ET.fromstring(newglyph.inxmlstr) # Could also be done with ET.Element("glyph") etc
-    newglyph.process_etree()
-
+    newglyph = Uglif(layer=font.deflayer, name = "Test")
+    newglyph.add("unicode",{"hex": "007D"})
     # Add an outline
     newglyph.add("outline")
     # Create a contour and add to outline

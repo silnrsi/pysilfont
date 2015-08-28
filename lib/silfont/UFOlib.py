@@ -301,7 +301,6 @@ class Ulayer(_Ucontainer) :
         for glyphn in self :
             glyph = self._contents[glyphn]
             if UFOversion == "2" : glyph.convertToFormat1()
-            if glyph.rebuildETflag : glyph.rebuildET()
             setFileForOutput(dtree,glyph.filen, glyph, "xml")
 
     def renameGlifs(self) :
@@ -360,16 +359,17 @@ class Uplist(xmlitem, _plist) :
 class Uglif(xmlitem) :
     # Unlike plists, glifs can have multiples of some sub-elements (eg anchors) so create lists for those
 
-    def __init__(self, layer = None, filen = None, parse = True) :
+    def __init__(self, layer = None, filen = None, parse = True, name = None, format = None) :
         if layer is None :
             dirn = None
         else :
             dirn = os.path.join(layer.font.ufodir, layer.layerdir)
-        xmlitem.__init__(self, dirn, filen, parse)
+        xmlitem.__init__(self, dirn, filen, parse) # Will read item from file if dirn and filen both present
         self.type="glif"
         self.layer = layer
+        self.format = format if format else '2'
+        self.name = name
         self.outparams = None
-        self.rebuildETflag = False # Flag to see if self.etree needs rebuilding, eg if sub-objects are changed
 
         # Set initial values for sub-objects
         for i in range(len(_glifElements)) :
@@ -380,7 +380,7 @@ class Uglif(xmlitem) :
                 self._contents[elementn] = None
 
         if self.etree is not None : self.process_etree()
-        if self.rebuildETflag : self.rebuildET()
+
 
     def process_etree(self) :
         et = self.etree
@@ -391,7 +391,6 @@ class Uglif(xmlitem) :
                 self.format = '2'
             else :
                 self.format = '1'
-        previouselem = 0 # Flag to help check if sub-objects in normalised order
         for i in range(len(et)) :
             element = et[i]
             tag = element.tag
@@ -403,8 +402,6 @@ class Uglif(xmlitem) :
                     self._contents[tag].append(self.makeObject(tag,element))
                 else:
                     self._contents[tag] = self.makeObject(tag,element)
-            if i < previouselem : self.rebuildETflag = True
-            previouselem = i
 
         # Convert UFO2 style anchors to UFO3 anchors
         if self._contents['outline'] is not None and self.format == "1":
@@ -413,21 +410,15 @@ class Uglif(xmlitem) :
                     del contour.UFO2anchor["type"] # remove type="move"
                     self.add('anchor',contour.UFO2anchor)
                     self._contents['outline'].removeobject(contour, "contour")
-                    self.rebuildETflag = True
 
         self.format = "2"
-        et.set("format","2")
 
     def rebuildET(self) :
-        # All sub-elements are duplicated in the sub-objects so the library does not keep the
-        # originals in the glif's etree updated.  The etree also may need rebuilding to normalise
-        # the sub-objects order
+        self.etree = ET.Element("glyph")
         et = self.etree
-
-        # Remove existing sub-elements
-        while et.getchildren() : et.remove(et.getchildren()[0])
-
-        # Insert new elements
+        et.attrib["name"] = self.name
+        et.attrib["format"] = self.format
+        # Insert sub-elements
         for i in range(len(_glifElements)) :
             F1 = _glifElemF1[i]
             if F1 or self.format == "2" : # Check element is valid for glif format
@@ -439,7 +430,6 @@ class Uglif(xmlitem) :
                             et.append(object.element)
                     else :
                         et.append(item.element)
-        self.rebuildETflag = False
 
     def add(self,ename,attrib = None) :
         # Add an element and corrensponding object to a glif
@@ -460,8 +450,6 @@ class Uglif(xmlitem) :
         else:
             self._contents[ename] = self.makeObject(ename,element)
 
-        self.rebuildETflag = True
-
     def remove(self, ename, index = None, object = None ) :
         # Remove object from a glif
         # For multi objects, an index or object must be supplied to identify which
@@ -477,13 +465,9 @@ class Uglif(xmlitem) :
         else :
             self._contents[ename] = None
 
-        self.rebuildETflag = True
-
     def convertToFormat1(self) :
         # Convert to a glif format of 1 (for UFO2) prior to writing out
-        et = self.etree
         self.format = "1"
-        et.set("format","1")
         # Change anchors to UFO2 style anchors
         for anchor in self._contents['anchor'][:] :
             element = anchor.element
@@ -494,8 +478,6 @@ class Uglif(xmlitem) :
             contelement.append(ET.Element("point",element.attrib))
             self._contents['outline'].appendobject(Ucontour(self._contents['outline'],contelement),"contour")
             self.remove('anchor',object=anchor)
-
-        self.rebuildETflag = True
 
     def makeObject(self, type, element) :
         if type == 'advance'   : return Uadvance(self,element)
@@ -671,12 +653,12 @@ def writeToDisk(dtree, outdir, font, odtree = {}, logindent = "") :
             if dtreeitem.towrite :
                 font.logger.log(logindent + filen, "V")
                 if dtreeitem.fileType == "xml" and dtreeitem.fileObject : # Only write if object has items
-                    if dtreeitem.fileObject.type == "glif" : # Delete lib if not items in it
+                    if dtreeitem.fileObject.type == "glif" : # Delete lib if no items in it
                         glif = dtreeitem.fileObject
                         if glif["lib"] is not None :
                             if glif["lib"].__len__() == 0 :
                                 glif.remove("lib")
-                                glif.rebuildET()
+                        glif.rebuildET()
                     writeXMLobject(dtreeitem,font,outdir, filen, odtreeitem)
                 elif dtreeitem.fileType == "text" :
                     dtreeitem.fileObject.write(dtreeitem, outdir, odtreeitem)
