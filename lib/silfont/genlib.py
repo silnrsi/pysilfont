@@ -134,6 +134,7 @@ class dirTree(dict) :
         with option to read sub-directory contents into dirTree objects.
         Iterates through readSub levels of subfolders """
     def __init__(self,dirn,readSub = 9999) :
+        self.renamedfiles = {} # List of files that have been renamed since reading from disk
         for name in os.listdir(dirn) :
             if name[-1:] == "~" : continue
             item=dirTreeItem()
@@ -255,7 +256,8 @@ class loggerobj(object) :
 
     def log(self, logmessage, msglevel = "I") :
         levelval = self.loglevels[msglevel]
-        message = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S ") + self.leveltext[levelval] + logmessage
+        #message = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S ") + self.leveltext[levelval] + logmessage
+        message = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S:%f ") + self.leveltext[levelval] + logmessage #@@@ added milliseconds for timing tests
         if levelval <= self.scrlevel : print message
         if self.logfile and levelval <= self.loglevel : self.logfile.write(message + "\n")
         if msglevel == "S" :

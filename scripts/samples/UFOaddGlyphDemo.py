@@ -35,13 +35,16 @@ def doit(args) :
     font = args.ifont
 
     # Create basic glyph
-    newglyph = Uglif(layer=font.deflayer, name = "Test")
-    newglyph.add("unicode",{"hex": "007D"})
+    newglyph = Uglif(layer = font.deflayer, name = "Test")
+    newglyph.add("unicode", {"hex": "007D"})
     # Add an outline
     newglyph.add("outline")
     # Create a contour and add to outline
-    contour = Ucontour(newglyph["outline"],ET.fromstring('<contour><point x="275" y="1582" type="line"/><point x="275" y="-493" type="line"/></contour>'))
-    newglyph["outline"].appendobject(contour,"contour")
+    element = ET.Element("contour")
+    ET.SubElement(element, "point", {"x": "275", "y": "1582", "type": "line"})
+    ET.SubElement(element, "point", {"x": "275", "y": "-493", "type": "line"})
+    contour =Ucontour(newglyph["outline"],element)
+    newglyph["outline"].appendobject(contour, "contour")
 
     font.deflayer.addGlyph(newglyph)
 
