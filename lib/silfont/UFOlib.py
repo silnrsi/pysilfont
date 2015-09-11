@@ -12,7 +12,7 @@ import collections
 from genlib import *
 
 _glifElements  = ('advance', 'unicode', 'note',   'image',  'guideline', 'anchor', 'outline', 'lib')
-_glifElemMulti = (False,     True,      False,    False,    True,       True,     False,     False)
+_glifElemMulti = (False,     True,      False,    False,    True,        True,     False,     False)
 _glifElemF1    = (True,      True,      False,    False,    False,       False,    True,      True)
 
 _illegalChars = "\"*+/:<>?[\]|" + chr(0x7F)
@@ -140,7 +140,6 @@ class UtextFile(object) :
 
 class Ufont(object) :
     """ Object to hold all the data from a UFO"""
-
     def __init__(self, ufodir = None, logger = None ) :
         if not logger : logger = loggerobj() # Will only log message to screen
         self.logger = logger
@@ -188,11 +187,10 @@ class Ufont(object) :
             self.outparams = { "indentIncr" : "  ", "indentFirst" : "  ", "indentML" : False, "plistIndentFirst" : "", 'sortDicts' : True , 'precision' : 6}
             self.outparams["renameGlifs"] = True
             self.outparams["UFOversion"] = self.UFOversion
+            self.outparams["numAttribs"] = ['pos', 'width', 'height', 'xScale', 'xyScale', 'yxScale', 'yScale', 'xOffset', 'yOffset', 'x', 'y', 'angle', 'format']
             self.outparams["attribOrders"] = {
-                'glif' : makeAttribOrder([
-                    'pos', 'width', 'height', 'fileName', 'base', 'xScale', 'xyScale', 'yxScale',
-                    'yScale', 'xOffset', 'yOffset', 'x', 'y', 'angle', 'type', 'smooth', 'name',
-                    'format', 'color', 'identifier'])
+                'glif' : makeAttribOrder([ 'pos', 'width', 'height', 'fileName', 'base', 'xScale', 'xyScale', 'yxScale', 'yScale',
+                'xOffset', 'yOffset', 'x', 'y', 'angle', 'type', 'smooth', 'name', 'format', 'color', 'identifier'])
                 }
 
     def _readPlist(self, filen) :
@@ -595,10 +593,10 @@ def writeXMLobject(dtreeitem, font, dirn, filen, exists) :
     if object.type in params['attribOrders'] : attribOrder = params['attribOrders'][object.type]
     if object.type == "plist" :
         indentFirst = params["plistIndentFirst"]
-        object.etree.attrib["_doctype"] = 'plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"'
+        object.etree.attrib[".doctype"] = 'plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"'
 
     # Format ET data if any data parameters are set
-    if params["sortDicts"] or params["precision"] is not None : normETdata(object.etree, params)
+    if params["sortDicts"] or params["precision"] is not None : normETdata(object.etree, params, type = object.type)
 
     etw = ETWriter(object.etree, attributeOrder = attribOrder, indentIncr = params["indentIncr"], indentFirst = indentFirst, indentML = params["indentML"])
     etw.serialize_xml(object.write_to_xml)
@@ -732,25 +730,28 @@ def writeToDisk(dtree, outdir, font, odtree = {}, logindent = "") :
             writeToDisk(dtreeitem.dirtree, subdir, font, subodtree, subindent)
             if os.listdir(subdir) == [] : os.rmdir(subdir) # Delete directory if empty
 
-
-
-def normETdata(element,params) :
+def normETdata(element, params, type) :
     # Recursively normalise the data an an ElementTree element
-    for subelem in list(element) :
-        normETdata(subelem,params)
-    # Process based on tag
-    tag = element.tag
-    val = element.text
+    for subelem in element :
+        normETdata(subelem, params, type)
+
     precision = params["precision"]
-    if tag in ("integer","real") and precision is not None:
-        num = round(float(val),precision)
-        if num ==int(num) :
-            element.tag = "integer"
-            element.text = "{:.0f}".format(num)
-        else :
-            element.tag = "real"
-            element.text = "{}".format(num)
-    if params["sortDicts"] and tag == "dict" :
+    if precision is not None:
+        if element.tag in ("integer","real"):
+            num = round(float(element.text),precision)
+            if num ==int(num) :
+                element.tag = "integer"
+                element.text = "{}".format(int(num))
+            else :
+                element.tag = "real"
+                element.text = "{}".format(num)
+        if type == "glif" : # Set precision for numeric attributes
+            for attrib in element.attrib :
+                if attrib in params["numAttribs"] :
+                    num = round(float(element.attrib[attrib]),precision)
+                    element.attrib[attrib] = "{}".format(int(num)) if num == int(num) else "{}".format(num)
+
+    if params["sortDicts"] and element.tag == "dict" :
         edict={}
         elist=[]
         for i in range(0,len(element),2):

@@ -1,4 +1,4 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python
 '''Convert/normalise a UFO.
 - If no options are chosen, the output font will simply be a normalised version of the font.'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
@@ -15,10 +15,10 @@ argspec = [
     ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont', 'def': '_conv'}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_UFOconvert.log'}),
     ('-v','--version',{'help': 'UFO version to output'},{}),
-    ('-p','--params',{'help': 'Font output parameters','action': 'append'}, {'type': 'optiondict'})]
+    ('-p','--params',{'help': 'Other font parameters - see user docs','action': 'append'}, {'type': 'optiondict'})]
 
 def doit(args) :
     font = args.ifont
     return args.ifont
-    
+
 execute("PSFU",doit, argspec)
