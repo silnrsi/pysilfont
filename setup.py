@@ -24,7 +24,7 @@ setup(
 		url='http://github.com/silnrsi/pysilfont',
 		packages = ["silfont"],
 		package_dir = {'':'lib'},
-		scripts=['scripts/UFOconvert'],
+		scripts=['scripts/UFOconvert', 'scripts/anchor/makeGdl'],
 		license='MIT',
 		platforms=['Linux','Win32','Mac OS X'],
 		classifiers=[
