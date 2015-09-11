@@ -4,7 +4,7 @@ __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Rowe'
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 
 from xml.etree import ElementTree as ET
 from silfont.genlib import execute
@@ -54,7 +54,7 @@ def addtwo(a1, a2):
 def doit(args) :
     global glyphlist
     infont = args.ifont
-    ### temp section (these will be passed as optional parameters)
+    ### temp section (these may someday be passed as optional parameters)
     RemoveUsedAnchors = True
     FlattenComponents = True
     ### end of temp section
@@ -96,6 +96,9 @@ def doit(args) :
         targetglyphanchors = {} # dictionary of {name: (xOffset,yOffset)}
         for currglyph, prevglyph, baseAP, diacAP, shiftx, shifty in glyphlist:
             # get current glyph and its anchor names from font
+            if currglyph not in infont.deflayer:
+                infont.logger.log(currglyph + " not found in font", "E")
+                continue
             cg = infont.deflayer[currglyph]
             cganc = [x.element.get('name') for x in cg['anchor']]
             diacAPx = diacAPy = 0
@@ -107,7 +110,7 @@ def doit(args) :
             else:                 	# this is 'attach'
                 if diacAP is not None: # find diacritic Attachment Point in currglyph
                     if diacAP not in cganc:
-                        infont.logger.log(diacAP + " AP does not exist on diacritic glyph " + currglyph, "E")
+                        infont.logger.log("The AP '" + diacAP + "' does not exist on diacritic glyph " + currglyph, "E")
                     else:
                         i = cganc.index(diacAP)
                         diacAPx = int(cg['anchor'][i].element.get('x'))
@@ -116,7 +119,7 @@ def doit(args) :
                     infont.logger.log("No AP specified for diacritic " + currglyph, "E")
                 if baseAP is not None: # find base character Attachment Point in targetglyph
                     if baseAP not in targetglyphanchors.keys():
-                        infont.logger.log(baseAP + " AP does not exist on base glyph", "E")
+                        infont.logger.log("The AP '" + baseAP + "' does not exist on base glyph when building " + targetglyphname, "E")
                     else:
                         baseAPx = targetglyphanchors[baseAP][0]
                         baseAPy = targetglyphanchors[baseAP][1]
@@ -193,6 +196,7 @@ def doit(args) :
         if  targetglyphname in infont.deflayer.keys():
             infont.logger.log("Target glyph, " + targetglyphname + ", already exists in font.", "V")
             g = infont.deflayer[targetglyphname]
+### need to check -w flag; if present, don't replace glyph with contours, but signal error
             if g['outline'] and g['outline'].contours:
                 infont.logger.log("Not replacing existing glyph, " + targetglyphname + ", because it has contours.", "W")
                 continue
