@@ -314,7 +314,7 @@ class Ulayer(_Ucontainer) :
 
     def renameGlif(self,glyphn,glyph,newname) :
         self.font.logger.log( "Renaming glif for " + glyphn + " from " + glyph.filen + " to " + newname, "I")
-        self.dtree.renamedfiles[glyph.filen] = newname # Track so original glif does not get reported as invalid
+        self.dtree.removedfiles[glyph.filen] = newname # Track so original glif does not get reported as invalid
         glyph.filen = newname
         self.contents[glyphn][1].text = newname
 
@@ -333,6 +333,11 @@ class Ulayer(_Ucontainer) :
         # Add to contents.plist and dtree
         self.contents.addval(glyphn,"string",glifn)
         self.dtree[glifn] = dirTreeItem(read = False, added = True, fileObject = glyph, fileType = "xml")
+
+    def delGlyph(self,glyphn) :
+        self.dtree.removedfiles[self[glyphn].filen] = "deleted" # Track so original glif does not get reported as invalid
+        del self._contents[glyphn]
+        self.contents.remove(glyphn)
 
 class Uplist(xmlitem, _plist) :
 
@@ -398,7 +403,7 @@ class Uglif(xmlitem) :
             # Update to contents.plist, filen and dtree
             self.layer.contents.remove(oname)
             self.layer.contents.addval(value,"string",glifn)
-            self.layer.dtree.renamedfiles[self.filen] = glifn # Track so original glif does not get reported as invalid
+            self.layer.dtree.removedfiles[self.filen] = glifn # Track so original glif does not get reported as invalid
             self.filen = glifn
             self.layer.dtree[glifn] = dirTreeItem(read = False, added = True, fileObject = self, fileType = "xml")
         super(Uglif,self).__setattr__(name,value)
@@ -686,7 +691,7 @@ def writeToDisk(dtree, outdir, font, odtree = {}, logindent = "") :
             else:
                 logmess = 'Deleting directory '+ ofilen + ' from existing output UFO', "W"
                 shutil.rmtree(os.path.join(outdir,ofilen))
-            if ofilen not in dtree.renamedfiles : font.logger.log(logmess, "W") # No need to log warning for remaned files
+            if ofilen not in dtree.removedfiles : font.logger.log(logmess, "W") # No need to log warning for remaned files
             okey = odtreelist.pop(0) if odtreelist <> [] else None
 
         if key == okey :
@@ -715,7 +720,7 @@ def writeToDisk(dtree, outdir, font, odtree = {}, logindent = "") :
                     dtreeitem.fileObject.write(dtreeitem, outdir, filen, exists)
                     #@@@ Need to add code for other file types
             else :
-                if filen in dtree.renamedfiles :
+                if filen in dtree.removedfiles :
                     if exists :
                         os.remove(os.path.join(outdir,filen)) # Silently remove old file for renamed files
                         exists = False
@@ -762,7 +767,7 @@ def writeToDisk(dtree, outdir, font, odtree = {}, logindent = "") :
         else:
             logmess = 'Deleting directory '+ ofilen + ' from existing output UFO', "W"
             shutil.rmtree(os.path.join(outdir,ofilen))
-        if ofilen not in dtree.renamedfiles : font.logger.log(logmess, "W") # No need to log warning for remaned files
+        if ofilen not in dtree.removedfiles : font.logger.log(logmess, "W") # No need to log warning for removed files
         okey = odtreelist.pop(0) if odtreelist <> [] else None
 
 def normETdata(element, params, type) :

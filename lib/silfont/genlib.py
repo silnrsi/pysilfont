@@ -180,7 +180,7 @@ class dirTree(dict) :
         with option to read sub-directory contents into dirTree objects.
         Iterates through readSub levels of subfolders """
     def __init__(self,dirn,readSub = 9999) :
-        self.renamedfiles = {} # List of files that have been renamed since reading from disk
+        self.removedfiles = {} # List of files that have been renamed or deleted since reading from disk
         for name in os.listdir(dirn) :
             if name[-1:] == "~" : continue
             item=dirTreeItem()
