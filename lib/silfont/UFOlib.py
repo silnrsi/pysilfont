@@ -279,9 +279,12 @@ class Ulayer(_Ucontainer) :
         for glyphn in sorted(self.contents.keys()) :
             glifn = self.contents[glyphn][1].text
             if glifn in self.dtree :
-                self._contents[glyphn] = Uglif(layer = self, filen = glifn)
-                self.dtree[glifn].setinfo( read = True, fileObject = self._contents[glyphn], fileType = "xml")
-                if glyphn <> self._contents[glyphn].name : self.font.logger.log( "Glyph names in glif and contents.plist don't match for " + glyphn, "W")
+                glyph = Uglif(layer = self, filen = glifn)
+                self._contents[glyphn] = glyph
+                self.dtree[glifn].setinfo( read = True, fileObject = glyph, fileType = "xml")
+                if glyph.name <> glyphn :
+                    super(Uglif,glyph).__setattr__("name",glyphn) # Need to use super to bypass normal glyph renaming logic
+                    self.font.logger.log( "Glyph names in glif and contents.plist did not match for " + glyphn + "; corrected", "W")
             else :
                 self.font.logger.log( "Missing glif " + glifn + " in " + fulldir, "S")
 
@@ -377,6 +380,28 @@ class Uglif(xmlitem) :
 
         if self.etree is not None : self.process_etree()
 
+    def __setattr__(self, name, value) :
+        if name == "name" and getattr(self,"name",None): # Existing glyph name is being changed
+            oname = self.name
+            if value in self.layer._contents : self.layer.font.logger.log(name + " already in font", "X")
+            # Update the _contents disctionary
+            del self.layer._contents[oname]
+            self.layer._contents[value] = self
+            # Set glif name
+            glifn = makeFileName(value)
+            names = []
+            while glifn in self.layer.contents : # need to check for duplicate glif names
+                names.append(glfin)
+                glifn = makeFileName(value, names)
+            glifn += ".glif"
+
+            # Update to contents.plist, filen and dtree
+            self.layer.contents.remove(oname)
+            self.layer.contents.addval(value,"string",glifn)
+            self.layer.dtree.renamedfiles[self.filen] = glifn # Track so original glif does not get reported as invalid
+            self.filen = glifn
+            self.layer.dtree[glifn] = dirTreeItem(read = False, added = True, fileObject = self, fileType = "xml")
+        super(Uglif,self).__setattr__(name,value)
 
     def process_etree(self) :
         et = self.etree
@@ -654,7 +679,6 @@ def writeToDisk(dtree, outdir, font, odtree = {}, logindent = "") :
         dtreeitem = dtree[filen]
 
         while okey and okey < key : # Item in output UFO no longer needed
-
             ofilen = okey[1:]
             if okey[0:1] == "f" :
                 logmess = 'Deleting '+ ofilen + ' from existing output UFO'
@@ -729,6 +753,17 @@ def writeToDisk(dtree, outdir, font, odtree = {}, logindent = "") :
             subindent = logindent + "  "
             writeToDisk(dtreeitem.dirtree, subdir, font, subodtree, subindent)
             if os.listdir(subdir) == [] : os.rmdir(subdir) # Delete directory if empty
+
+    while okey: # Any remaining items in odree list are no longer needed
+        ofilen = okey[1:]
+        if okey[0:1] == "f" :
+            logmess = 'Deleting '+ ofilen + ' from existing output UFO'
+            os.remove(os.path.join(outdir,ofilen))
+        else:
+            logmess = 'Deleting directory '+ ofilen + ' from existing output UFO', "W"
+            shutil.rmtree(os.path.join(outdir,ofilen))
+        if ofilen not in dtree.renamedfiles : font.logger.log(logmess, "W") # No need to log warning for remaned files
+        okey = odtreelist.pop(0) if odtreelist <> [] else None
 
 def normETdata(element, params, type) :
     # Recursively normalise the data an an ElementTree element
