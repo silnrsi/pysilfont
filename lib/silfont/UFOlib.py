@@ -216,7 +216,7 @@ class Ufont(object) :
 
         # If output UFO already exists, need to open so only changed files are updated and redundant files deleted
         if outdir == self.ufodir : # In special case of output and input being the same, simply copy the input font
-            odtree = self.dtree
+            odtree = dirTree(outdir)
         else :
             if not os.path.exists(outdir) : # If outdir does not exist, create it
                 try:
@@ -665,17 +665,16 @@ def writeToDisk(dtree, outdir, font, odtree = {}, logindent = "") :
     for filen in dtree : dtreelist.append(dtree[filen].type+filen)
     dtreelist.sort()
 
-    if dtree == odtree : # Outputting to original UFO
-        odtreelist = dtreelist
-        locationtype = "Same"
-    else: # Outputting to a different location
-        odtreelist = []
-        if odtree == {} :
-            locationtype = "Empty"
-        else:
+    odtreelist = []
+    if odtree == {} :
+        locationtype = "Empty"
+    else:
+        if outdir == font.ufodir :
+            locationtype = "Same"
+        else :
             locationtype = "Different"
-            for filen in odtree : odtreelist.append(odtree[filen].type+filen)
-            odtreelist.sort()
+        for filen in odtree : odtreelist.append(odtree[filen].type+filen)
+        odtreelist.sort()
 
     okey = odtreelist.pop(0) if odtreelist <> [] else None
 

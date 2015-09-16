@@ -352,6 +352,7 @@ def execute(tool, fn, argspec) :
     parser = argparse.ArgumentParser(**poptions)
 
     # Add standard arguments
+    ## Should check that these have not been defined in argspec
     argspec.append(('-d','--defaults', {'help': 'Display help with info on default values', 'action': 'store_true'}, {}))
     argspec.append(('-q','--quiet',{'help': 'Quiet mode - only display/log errors', 'action': 'store_true'}, {}))
 
@@ -416,7 +417,9 @@ def execute(tool, fn, argspec) :
         aval = getattr(args,ainfo['name'])
         atype = ainfo['type'] if 'type' in ainfo else None
         adef = ainfo['def'] if 'def' in ainfo else None
-        if c <> 0 : #Handle defaults for all but first positional parameter
+        if c == 0 :
+            if aval[-1] in ("\\","/") : aval = aval[0:-1] # Remove trailing slashes
+        else : #Handle defaults for all but first positional parameter
             if adef :
                 if not aval : aval=""
                 (apath,abase,aext)=_splitfn(aval)
