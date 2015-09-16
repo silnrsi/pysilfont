@@ -4,7 +4,7 @@ __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Rowe'
-__version__ = '0.0.3'
+__version__ = '0.1.0'
 
 from xml.etree import ElementTree as ET
 from silfont.genlib import execute
@@ -18,8 +18,9 @@ argspec = [
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_CD.log'}),
     ('-v','--version',{'help': 'UFO version to output'},{}),
     ('-a','--analysis',{'help': 'Analysis only; no output font generated', 'action': 'store_true'},{}),
-    ('-p','--params',{'help': 'Font output parameters','action': 'append'}, {'type': 'optiondict'}),
-    ('-r','--report',{'help': 'Set reporting level for log'},{}),
+    # 'choices' for -r should correspond to infont.logger.loglevels.keys()
+    ('-r','--report',{'help': 'Set reporting level for log', 'type':str, 'choices':['X','S','E','P','W','I','V']},{}),
+    ('-p','--params',{'help': 'Font output parameters','action': 'append'}, {'type': 'optiondict'})
     ]
 
 glyphlist = []  # accessed as global by recursive function addtolist() and main function doit()
@@ -55,21 +56,8 @@ def addtwo(a1, a2):
 def doit(args) :
     global glyphlist
     infont = args.ifont
-    
     r = args.report
-    if r:
-        if r.isdigit():
-            n = int(r)
-            if n not in infont.logger.loglevels.values():
-                n = 2
-                infont.logger.log("Invalid report log level","E")
-            infont.logger.loglevel = n
-        else:
-            if r not in infont.logger.loglevels.keys():
-                infont.logger.log("Invalid report log level","E")
-                infont.logger.loglevel = 2
-            else:
-                infont.logger.loglevel = infont.logger.loglevels[r]
+    if r: infont.logger.loglevel = infont.logger.loglevels[r]
     
     ### temp section (these may someday be passed as optional parameters)
     RemoveUsedAnchors = True
@@ -81,7 +69,7 @@ def doit(args) :
     for linenum, rawCDline in enumerate(args.cdfile):
         CDline=rawCDline.strip()
         if len(CDline) == 0 or CDline[0] == "#": continue
-        infont.logger.log("Processing line " + str(linenum+1) + ": " + CDline,"P")
+        infont.logger.log("Processing line " + str(linenum+1) + ": " + CDline,"I")
         cgobj.CDline=CDline
         try:
             cgobj.parsefromCDline()
