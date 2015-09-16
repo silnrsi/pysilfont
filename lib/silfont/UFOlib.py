@@ -38,7 +38,7 @@ class _Ucontainer(object) :
 class _plist(object) :
     # Used for common plist methods inherited by Uplist and Ulib classes
 
-    def addval(self,key,valuetype,value) :
+    def addval(self,key,valuetype,value) : # For simple single-value elements
         if key in self._contents : self.font.logger.log("Attempt to add duplicate key " + key + " to plist", "X")
         dict = self.etree[0]
 
@@ -64,7 +64,7 @@ class _plist(object) :
         self.etree[0].remove(item[1])
         del self._contents[key]
 
-    def addelem(self,key,element) :
+    def addelem(self,key,element) : # For non-simple elements (eg arrays) the calling script needs to build the etree element
         if key in self._contents : self.font.logger.log("Attempt to add duplicate key " + key + " to plist", "X")
         dict = self.etree[0]
 
@@ -158,7 +158,8 @@ class Ufont(object) :
             if "kerning.plist" in self.dtree : self.kerning = self._readPlist("kerning.plist")
             if "lib.plist" in self.dtree : self.lib = self._readPlist("lib.plist")
             if self.UFOversion == "2" : # Create a dummy layer contents so 2 & 3 can be handled the same
-                self.layercontents = Uplist(font = self) # #@@@ Need to extend capability of Uplist to do much of this
+                if "glyphs" not in self.dtree : self.logger.log('No glyphs directory in font', "S")
+                self.layercontents = Uplist(font = self)
                 self.dtree['layercontents.plist'] = dirTreeItem(read = True, added = True, fileObject = self.layercontents, fileType = "xml")
                 dummylc = "<plist>\n<array>\n<array>\n<string>public.default</string>\n<string>glyphs</string>\n</array>\n</array>\n</plist>"
                 self.layercontents.etree = ET.fromstring(dummylc)
@@ -256,7 +257,7 @@ class Ufont(object) :
         self.logger.log("Writing font to " + outdir, "P")
 
         writeToDisk(dtree, outdir, self, odtree,)
-        self.logger.log("All done!", "P") #@@@ Just for timing tests
+        self.logger.log("All done!", "P") ## Just for timing tests
 
 class Ulayer(_Ucontainer) :
 
@@ -689,7 +690,7 @@ def writeToDisk(dtree, outdir, font, odtree = {}, logindent = "") :
                 logmess = 'Deleting '+ ofilen + ' from existing output UFO'
                 os.remove(os.path.join(outdir,ofilen))
             else:
-                logmess = 'Deleting directory '+ ofilen + ' from existing output UFO', "W"
+                logmess = 'Deleting directory '+ ofilen + ' from existing output UFO'
                 shutil.rmtree(os.path.join(outdir,ofilen))
             if ofilen not in dtree.removedfiles : font.logger.log(logmess, "W") # No need to log warning for remaned files
             okey = odtreelist.pop(0) if odtreelist <> [] else None
@@ -718,7 +719,7 @@ def writeToDisk(dtree, outdir, font, odtree = {}, logindent = "") :
                             os.remove(os.path.join(outdir,filen))
                 elif dtreeitem.fileType == "text" :
                     dtreeitem.fileObject.write(dtreeitem, outdir, filen, exists)
-                    #@@@ Need to add code for other file types
+                    ## Need to add code for other file types
             else :
                 if filen in dtree.removedfiles :
                     if exists :

@@ -101,8 +101,8 @@ class ETWriter(object) :
 
     def serialize_nsxml(self, write, base = None, indent = '', topns = True, namespaces = {}) :
         """Output the object using write() in a normalised way:
-                topns if set puts all namespaces in root element else put them as low as possible
-                @@@ Needs amending to mirror changes in serialize_xml for dummy attributes (and efficiency)"""
+                topns if set puts all namespaces in root element else put them as low as possible"""
+        ## Needs amending to mirror changes in serialize_xml for dummy attributes (and efficiency)"""
         if base is None :
             base = self.root
             write('<?xml version="1.0" encoding="UTF-8"?>\n')
@@ -284,7 +284,7 @@ class loggerobj(object) :
     # Use S for severe errors caused by data, parameters supplied by user etc
     # Use X for severe errors caused by bad code to get traceback exception
 
-    def __init__(self, logfile = None, loglevels = "", leveltext = "",  loglevel = "P", scrlevel = "W") :
+    def __init__(self, logfile = None, loglevels = "", leveltext = "",  loglevel = "W", scrlevel = "P") :
         self.logfile = logfile
         self.loglevels = loglevels
         self.leveltext = leveltext
@@ -303,7 +303,7 @@ class loggerobj(object) :
     def log(self, logmessage, msglevel = "I") :
         levelval = self.loglevels[msglevel]
         message = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S ") + self.leveltext[levelval] + logmessage
-        #message = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S:%f ") + self.leveltext[levelval] + logmessage #@@@ added milliseconds for timing tests
+        #message = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S:%f ") + self.leveltext[levelval] + logmessage ## added milliseconds for timing tests
         if levelval <= self.scrlevel : print message
         if self.logfile and levelval <= self.loglevel : self.logfile.write(message + "\n")
         if msglevel == "S" :
