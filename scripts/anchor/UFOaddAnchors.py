@@ -44,7 +44,7 @@ def doit(args) :
             if name and x and y:
                 anchorstoadd.add( (name,x,y) )
             else:
-                infont.logger.log("Incomplete information for anchor " + name + " for glyph " + gname, "E")
+                infont.logger.log("Incomplete information for anchor '" + name + "' for glyph " + gname, "E")
         # compare sets
         if anchorstoadd == anchorsinfont:
             if len(anchorstoadd) > 0:
@@ -55,6 +55,9 @@ def doit(args) :
             infont.logger.log("Anchors in file for glyph " + gname + ": " + str(anchorstoadd), "I")
             infont.logger.log("Anchors in font for glyph " + gname + ": " + str(anchorsinfont), "I")
             for name,x,y in anchorstoadd:
+                # if anchor being added exists in font already, delete it first
+                ancnames = [ i[0] for i in anchorsinfont ]
+                if name in ancnames: glyph.remove('anchor', ancnames.index(name))
                 glyph.add('anchor', {'name': name, 'x': x, 'y': y})
 
     # If analysis only, return without writing output font

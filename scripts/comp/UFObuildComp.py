@@ -4,7 +4,7 @@ __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Rowe'
-__version__ = '0.1.1'
+__version__ = '0.1.3'
 
 from xml.etree import ElementTree as ET
 from silfont.genlib import execute
@@ -18,7 +18,8 @@ argspec = [
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_CD.log'}),
     ('-v','--version',{'help': 'UFO version to output'},{}),
     ('-a','--analysis',{'help': 'Analysis only; no output font generated', 'action': 'store_true'},{}),
-    # 'choices' for -r should correspond to infont.logger.loglevels.keys()
+    ('-f','--force',{'help': 'Force overwrite of glyphs having outlines', 'action': 'store_true'},{}),
+    # 'choices' for -r should correspond to infont.logger.loglevels.keys() ### -r may move to UFOlib eventually
     ('-r','--report',{'help': 'Set reporting level for log', 'type':str, 'choices':['X','S','E','P','W','I','V']},{}),
     ('-p','--params',{'help': 'Font output parameters','action': 'append'}, {'type': 'optiondict'})
     ]
@@ -196,18 +197,16 @@ def doit(args) :
                 for c in componentlist:
                     infont.logger.log(str(c), "V")
 
-        # Check if this new glyph exists in the font already; if so, decide whether to replace, or signal error
-        ### (or possibly keep both by renaming either old or new glyph)
+        # Check if this new glyph exists in the font already; if so, decide whether to replace, or issue warning
         if  targetglyphname in infont.deflayer.keys():
             infont.logger.log("Target glyph, " + targetglyphname + ", already exists in font.", "V")
             g = infont.deflayer[targetglyphname]
-### need to check -w flag; if present, don't replace glyph with contours, but signal error
-            if g['outline'] and g['outline'].contours:
+            if g['outline'] and g['outline'].contours and not args.force: # don't replace glyph with contours, unless -f set
                 infont.logger.log("Not replacing existing glyph, " + targetglyphname + ", because it has contours.", "W")
                 continue
-            else: ### or first check if glyphs are identical (and, if so, don't replace)?
+            else:
                 infont.logger.log("Replacing glyph, " + targetglyphname, "V")
-                ### delete existing glyph
+                infont.deflayer.delGlyph(targetglyphname) ### delete existing glyph
         else:
             infont.logger.log("Adding new glyph, " + targetglyphname, "V")
 
