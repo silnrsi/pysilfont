@@ -26,11 +26,11 @@ def doit(args) :
     r = args.report
     if r: infont.logger.loglevel = infont.logger.loglevels[r]
     glyphcount = 0
-    for g in ET.parse(args.anchorinfo).getroot().findall('glyph'):
+    for g in ET.parse(args.anchorinfo).getroot().findall('glyph'): ### 
         glyphcount += 1
         gname = g.get('PSName')
         if gname not in infont.deflayer.keys():
-            infont.logger.log("glyph element number " + glyphcount + ": " + gname + " not in font, so skipping anchor data", "W")
+            infont.logger.log("glyph element number " + str(glyphcount) + ": " + gname + " not in font, so skipping anchor data", "W")
             continue
         # anchors currently in font for this glyph
         glyph = infont.deflayer[gname]
@@ -56,10 +56,13 @@ def doit(args) :
             infont.logger.log("Anchors in font for glyph " + gname + ": " + str(anchorsinfont), "I")
             for name,x,y in anchorstoadd:
                 # if anchor being added exists in font already, delete it first
-                ancnames = [ i[0] for i in anchorsinfont ]
-                if name in ancnames: glyph.remove('anchor', ancnames.index(name))
+                ancnames = [a.element.get('name') for a in glyph['anchor']]
+                infont.logger.log(str(ancnames), "V") ###
+                if name in ancnames: 
+                    infont.logger.log("removing anchor " + name + ", index " + str(ancnames.index(name)), "V") ###
+                    glyph.remove('anchor', ancnames.index(name))
+                infont.logger.log("adding anchor " + name + ": (" + x + ", " + y + ")", "V") ###
                 glyph.add('anchor', {'name': name, 'x': x, 'y': y})
-
     # If analysis only, return without writing output font
     if args.analysis: return
     # Return changed font and let execute() write it out
