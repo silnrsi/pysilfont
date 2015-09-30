@@ -30,6 +30,54 @@ class ETWriter(object) :
         self.indentFirst = indentFirst          # Indent for first level
         self.indentML = indentML                # Add indent to multi-line strings
 
+    def _protect(self, txt, base=_attribprotect) :
+        return re.sub(ur'['+ur"".join(base.keys())+ur"]", lambda m: base[m.group(0)], txt)
+
+    def serialize_xml(self, write, base = None, indent = '') :
+        """Output the object using write() in a normalised way:
+                If namespaces are used, use serialize_nsxml instead"""
+        outstr=""
+
+        if base is None :
+            base = self.root
+            outstr += '<?xml version="1.0" encoding="UTF-8"?>\n'
+            if '.doctype' in base.attrib : outstr += u'<!DOCTYPE {}>\n'.format(base.attrib['.doctype'])
+
+        tag = base.tag
+        attribs = base.attrib
+
+        if '.comments' in attribs :
+            for c in attribs['.comments'].split(",") : outstr += u'{}<!--{}-->\n'.format(indent, c)
+
+        outstr += u'{}<{}'.format(indent, tag)
+
+        for k in sorted(attribs.keys(), cmp=lambda x,y: cmp(self.attributeOrder.get(x, 999), self.attributeOrder.get(y, 999)) or cmp(x, y)) :
+            if k[0] <> '.' : outstr += u' {}="{}"'.format(k, attribs[k])
+        if base :
+            outstr += '>\n'
+            if base == self.root:
+                incr = self.indentFirst
+            else:
+                incr = self.indentIncr
+            write(outstr); outstr=""
+            for b in base : self.serialize_xml(write, base=b, indent=indent + incr)
+            outstr += '{}</{}>\n'.format(indent, tag)
+        elif base.text and base.text.strip() :
+            if tag not in self.takesCData :
+                t = base.text
+                if self.indentML : t = t.replace('\n', '\n' + indent)
+                t = self._protect(t, base=_elementprotect)
+            else :
+                t = "<![CDATA[\n\t" + indent + base.text.replace('\n', '\n\t' + indent) + "\n" + indent + "]]>"
+            outstr += u'>{}</{}>\n'.format(t, tag)
+        else :
+            outstr += '/>\n'
+
+        if '.commentsafter' in base.attrib :
+            for c in base.attrib['.commentsafter'].split(",") : outstr += u'{}<!--{}-->\n'.format(indent, c)
+
+        write(outstr)
+
     def _localisens(self, tag) :
         if tag[0] == '{' :
             ns, localname = tag[1:].split('}', 1)
@@ -42,9 +90,6 @@ class ETWriter(object) :
         else :
             return (tag, None, None)
 
-    def _protect(self, txt, base=_attribprotect) :
-        return re.sub(ur'['+ur"".join(base.keys())+ur"]", lambda m: base[m.group(0)], txt)
-
     def _nsprotectattribs(self, attribs, localattribs, namespaces) :
         if attribs is not None :
             for k, v in attribs.items() :
@@ -54,9 +99,10 @@ class ETWriter(object) :
                     localattribs['xmlns:'+lq] = lns
                 localattribs[lt] = v
 
-    def serialize_xml(self, write, base = None, indent = '', topns = True, namespaces = {}) :
+    def serialize_nsxml(self, write, base = None, indent = '', topns = True, namespaces = {}) :
         """Output the object using write() in a normalised way:
                 topns if set puts all namespaces in root element else put them as low as possible"""
+        ## Needs amending to mirror changes in serialize_xml for dummy attributes (and efficiency)"""
         if base is None :
             base = self.root
             write('<?xml version="1.0" encoding="UTF-8"?>\n')
@@ -102,7 +148,7 @@ class ETWriter(object) :
                     incr = self.indentFirst
                 else:
                     incr = self.indentIncr
-                self.serialize_xml(write, base=b, indent=indent + incr, topns=topns, namespaces=namespaces.copy())
+                self.serialize_nsxml(write, base=b, indent=indent + incr, topns=topns, namespaces=namespaces.copy())
             write('{}</{}>\n'.format(indent, tag))
         elif base.text :
             if base.text.strip() :
@@ -134,6 +180,7 @@ class dirTree(dict) :
         with option to read sub-directory contents into dirTree objects.
         Iterates through readSub levels of subfolders """
     def __init__(self,dirn,readSub = 9999) :
+        self.removedfiles = {} # List of files that have been renamed or deleted since reading from disk
         for name in os.listdir(dirn) :
             if name[-1:] == "~" : continue
             item=dirTreeItem()
@@ -213,7 +260,7 @@ class xmlitem(object) :
             if parse :
                 self.etree = ET.fromstring(self.inxmlstr)
 
-    def write_to_xml(self,text) : # Used by ETWriter.serializeXML
+    def write_to_xml(self,text) : # Used by ETWriter.serialize_xml()
         self.outxmlstr = self.outxmlstr + text
 
     def write_to_file(self,dirn,filen) :
@@ -233,15 +280,15 @@ class xmlitem(object) :
         return self._contents.keys()
 
 class loggerobj(object) :
-    # For handling log messages.  Perhaps should change to use standard logger?
+    # For handling log messages.
     # Use S for severe errors caused by data, parameters supplied by user etc
     # Use X for severe errors caused by bad code to get traceback exception
 
-    def __init__(self, logfile = None, loglevels = "", leveltext = "",  loglevel = "P", scrlevel = "W") :
+    def __init__(self, logfile = None, loglevels = "", leveltext = "",  loglevel = "W", scrlevel = "P") :
         self.logfile = logfile
         self.loglevels = loglevels
         self.leveltext = leveltext
-        if not self.loglevels : self.loglevels = { 'X': 0, 'S':1,        'E':2,        'P':3,        'W':4,        'I':5,        'V':6}
+        if not self.loglevels : self.loglevels = { 'X': 0,       'S':1,        'E':2,        'P':3,        'W':4,        'I':5,        'V':6}
         if not self.leveltext : self.leveltext = ( 'Exception ', 'Severe:   ', 'Error:    ', 'Progress: ', 'Warning:  ', 'Info:     ', 'Verbose:  ')
         self.loglevel = "2"; self.scrlevel = "2" # Temp values so invalid log levels can be reported
         if loglevel in self.loglevels :
@@ -256,6 +303,7 @@ class loggerobj(object) :
     def log(self, logmessage, msglevel = "I") :
         levelval = self.loglevels[msglevel]
         message = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S ") + self.leveltext[levelval] + logmessage
+        #message = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S:%f ") + self.leveltext[levelval] + logmessage ## added milliseconds for timing tests
         if levelval <= self.scrlevel : print message
         if self.logfile and levelval <= self.loglevel : self.logfile.write(message + "\n")
         if msglevel == "S" :
@@ -272,6 +320,7 @@ def execute(tool, fn, argspec) :
     # Supports opening (and saving) fonts using FontForge (FF) or PysilFont UFOlib (PSFU)
     # Special handling for:
     #   -d        variation on -h to print extra info about defaults
+    #   -q  quiet mode - suppresses progress messages and sets screen logging to errors only
     #   -l  opens log file and also creates a logger function to write to the log file
     #   -p  includes loglevel and scrlevel settings for logger
     #       for UFOlib scripts, also includes all font.outparams keys except for attribOrder
@@ -302,6 +351,11 @@ def execute(tool, fn, argspec) :
 
     parser = argparse.ArgumentParser(**poptions)
 
+    # Add standard arguments
+    ## Should check that these have not been defined in argspec
+    argspec.append(('-d','--defaults', {'help': 'Display help with info on default values', 'action': 'store_true'}, {}))
+    argspec.append(('-q','--quiet',{'help': 'Quiet mode - only display/log errors', 'action': 'store_true'}, {}))
+
     # Special handling for "-d" to print default value info with help text
     defhelp = False
     if "-d" in sys.argv:
@@ -310,8 +364,8 @@ def execute(tool, fn, argspec) :
         sys.argv[pos] = "-h" # Set back to -h for argparse to recognise
         deffiles=[]
         defother=[]
-    if "-h" in sys.argv or "--help" in sys.argv: # Add extra argument to display in help text
-        argspec.insert(0,('-d',{'help': 'Display help with info on default values', 'action': 'store_true'}, {}))
+
+    quiet = True if "-q" in sys.argv else False
 
 # Process the supplied argument specs, add args to parser, store other info in arginfo
     arginfo = []
@@ -338,7 +392,7 @@ def execute(tool, fn, argspec) :
         if not (deffiles or defother):
             deftext = "No defaults for parameters/options"
         else:
-            deftext = "Defaults for parameters/options\n"
+            deftext = "Defaults for parameters/options - see user docs for details\n"
         if deffiles:
             deftext = deftext + "\n  Font/file names\n"
             for (param,defv) in deffiles:
@@ -363,12 +417,18 @@ def execute(tool, fn, argspec) :
         aval = getattr(args,ainfo['name'])
         atype = ainfo['type'] if 'type' in ainfo else None
         adef = ainfo['def'] if 'def' in ainfo else None
-        if c <> 0 : #Handle defaults for all but first positional parameter
+        if c == 0 :
+            if aval[-1] in ("\\","/") : aval = aval[0:-1] # Remove trailing slashes
+        else : #Handle defaults for all but first positional parameter
             if adef :
                 if not aval : aval=""
                 (apath,abase,aext)=_splitfn(aval)
                 (dpath,dbase,dext)=_splitfn(adef) # dpath should be None
-                if not apath : apath=fppath
+                if not apath :
+                    if abase and aext :
+                        apath = ""
+                    else:
+                        apath=fppath
                 if not abase : abase = fpbase + dbase
                 if not aext :
                     if dext :
@@ -382,14 +442,14 @@ def execute(tool, fn, argspec) :
                 sys.exit(1)
             infontlist.append((ainfo['name'],aval)) # Build list of fonts to open when other args processed
         elif atype=='infile' :
-            print 'Opening file for input: ',aval
+            if not quiet : print 'Opening file for input: ',aval
             try :
                 aval=open(aval,"r")
             except Exception as e :
                 print e
                 sys.exit(1)
         elif atype=='outfile':
-            print 'Opening file for output: ',aval
+            if not quiet : print 'Opening file for output: ',aval
             try :
                 aval=open(aval,"w")
             except Exception as e :
@@ -421,6 +481,7 @@ def execute(tool, fn, argspec) :
     params = args.params if 'params' in args.__dict__ else {}
     loglevel = params['loglevel'].upper() if 'loglevel' in params else "W"
     scrlevel = params['scrlevel'].upper() if 'scrlevel' in params else "P"
+    if quiet : scrlevel = "E"
     logger = loggerobj(logfile,loglevel=loglevel,scrlevel=scrlevel)
     setattr(args,'logger',logger)
 
@@ -448,7 +509,7 @@ def execute(tool, fn, argspec) :
     if outfont and result is not None:
 
         if ff:
-            print "Saving font to " + outfont
+            if not quiet : print "Saving font to " + outfont
             if outfontext=="ufo":
                 result.generate(outfont)
             else : result.save(outfont)

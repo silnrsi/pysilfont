@@ -12,7 +12,7 @@ import collections
 from genlib import *
 
 _glifElements  = ('advance', 'unicode', 'note',   'image',  'guideline', 'anchor', 'outline', 'lib')
-_glifElemMulti = (False,     True,      False,    False,    True,       True,     False,     False)
+_glifElemMulti = (False,     True,      False,    False,    True,        True,     False,     False)
 _glifElemF1    = (True,      True,      False,    False,    False,       False,    True,      True)
 
 _illegalChars = "\"*+/:<>?[\]|" + chr(0x7F)
@@ -38,7 +38,7 @@ class _Ucontainer(object) :
 class _plist(object) :
     # Used for common plist methods inherited by Uplist and Ulib classes
 
-    def addval(self,key,valuetype,value) :
+    def addval(self,key,valuetype,value) : # For simple single-value elements
         if key in self._contents : self.font.logger.log("Attempt to add duplicate key " + key + " to plist", "X")
         dict = self.etree[0]
 
@@ -64,7 +64,7 @@ class _plist(object) :
         self.etree[0].remove(item[1])
         del self._contents[key]
 
-    def addelem(self,key,element) :
+    def addelem(self,key,element) : # For non-simple elements (eg arrays) the calling script needs to build the etree element
         if key in self._contents : self.font.logger.log("Attempt to add duplicate key " + key + " to plist", "X")
         dict = self.etree[0]
 
@@ -125,11 +125,11 @@ class UtextFile(object) :
         dtree[filen].fileObject = self
         dtree[filen].fileType = "text"
 
-    def write(self, dtreeitem,dir, odtreeitem) :
+    def write(self, dtreeitem, dir, ofilen, exists) :
         # For now just copies source to destination if changed
         inpath = os.path.join(self.dirn,self.filen)
         changed = True
-        if odtreeitem : changed = not (filecmp.cmp(inpath, os.path.join(dir,self.filen)))
+        if exists : changed = not (filecmp.cmp(inpath, os.path.join(dir,self.filen)))
         if changed :
             try :
                 shutil.copy2(inpath, dir)
@@ -140,7 +140,6 @@ class UtextFile(object) :
 
 class Ufont(object) :
     """ Object to hold all the data from a UFO"""
-
     def __init__(self, ufodir = None, logger = None ) :
         if not logger : logger = loggerobj() # Will only log message to screen
         self.logger = logger
@@ -159,7 +158,8 @@ class Ufont(object) :
             if "kerning.plist" in self.dtree : self.kerning = self._readPlist("kerning.plist")
             if "lib.plist" in self.dtree : self.lib = self._readPlist("lib.plist")
             if self.UFOversion == "2" : # Create a dummy layer contents so 2 & 3 can be handled the same
-                self.layercontents = Uplist(font = self) # #@@@ Need to extend capability of Uplist to do much of this
+                if "glyphs" not in self.dtree : self.logger.log('No glyphs directory in font', "S")
+                self.layercontents = Uplist(font = self)
                 self.dtree['layercontents.plist'] = dirTreeItem(read = True, added = True, fileObject = self.layercontents, fileType = "xml")
                 dummylc = "<plist>\n<array>\n<array>\n<string>public.default</string>\n<string>glyphs</string>\n</array>\n</array>\n</plist>"
                 self.layercontents.etree = ET.fromstring(dummylc)
@@ -188,11 +188,10 @@ class Ufont(object) :
             self.outparams = { "indentIncr" : "  ", "indentFirst" : "  ", "indentML" : False, "plistIndentFirst" : "", 'sortDicts' : True , 'precision' : 6}
             self.outparams["renameGlifs"] = True
             self.outparams["UFOversion"] = self.UFOversion
+            self.outparams["numAttribs"] = ['pos', 'width', 'height', 'xScale', 'xyScale', 'yxScale', 'yScale', 'xOffset', 'yOffset', 'x', 'y', 'angle', 'format']
             self.outparams["attribOrders"] = {
-                'glif' : makeAttribOrder([
-                    'pos', 'width', 'height', 'fileName', 'base', 'xScale', 'xyScale', 'yxScale',
-                    'yScale', 'xOffset', 'yOffset', 'x', 'y', 'angle', 'type', 'smooth', 'name',
-                    'format', 'color', 'identifier'])
+                'glif' : makeAttribOrder([ 'pos', 'width', 'height', 'fileName', 'base', 'xScale', 'xyScale', 'yxScale', 'yScale',
+                'xOffset', 'yOffset', 'x', 'y', 'angle', 'type', 'smooth', 'name', 'format', 'color', 'identifier'])
                 }
 
     def _readPlist(self, filen) :
@@ -217,7 +216,7 @@ class Ufont(object) :
 
         # If output UFO already exists, need to open so only changed files are updated and redundant files deleted
         if outdir == self.ufodir : # In special case of output and input being the same, simply copy the input font
-            ofontOrig = copy.deepcopy(self)
+            odtree = dirTree(outdir)
         else :
             if not os.path.exists(outdir) : # If outdir does not exist, create it
                 try:
@@ -225,15 +224,15 @@ class Ufont(object) :
                 except Exception as e :
                     print e
                     sys.exit(1)
-                ofontOrig = None
+                odtree = {}
             else:
                 if not os.path.isdir(outdir) : self.logger.log( outdir + " not a directory", "S")
                 dirlist = os.listdir(outdir)
                 if dirlist == [] : # Outdir is empty
-                    ofontOrig = None
+                    odtree = {}
                 elif "metainfo.plist" in dirlist :
                     self.logger.log("Output UFO already exists - reading for comparison", "P")
-                    ofontOrig = Ufont(outdir, logger = self.logger)
+                    odtree = dirTree(outdir)
                 else:
                     self.logger.log( outdir + " exists but is not a UFO", "S")
         # Update version info etc
@@ -255,18 +254,16 @@ class Ufont(object) :
 
         # Write files to disk
 
-        odtree = ofontOrig.dtree if ofontOrig else {}
         self.logger.log("Writing font to " + outdir, "P")
 
         writeToDisk(dtree, outdir, self, odtree,)
+        self.logger.log("All done!", "P") ## Just for timing tests
 
 class Ulayer(_Ucontainer) :
 
     def __init__(self, layername, layerdir, font) :
         self._contents = {}
         self.dtree = font.dtree.subTree(layerdir)
-        self.dtree
-        if not self.dtree : return
         font.dtree[layerdir].read = True
         self.layername = layername
         self.layerdir = layerdir
@@ -283,9 +280,12 @@ class Ulayer(_Ucontainer) :
         for glyphn in sorted(self.contents.keys()) :
             glifn = self.contents[glyphn][1].text
             if glifn in self.dtree :
-                self._contents[glyphn] = Uglif(layer = self, filen = glifn)
-                self.dtree[glifn].setinfo( read = True, fileObject = self._contents[glyphn], fileType = "xml")
-                if glyphn <> self._contents[glyphn].name : self.font.logger.log( "Glyph names in glif and contents.plist don't match for " + glyphn, "W")
+                glyph = Uglif(layer = self, filen = glifn)
+                self._contents[glyphn] = glyph
+                self.dtree[glifn].setinfo( read = True, fileObject = glyph, fileType = "xml")
+                if glyph.name <> glyphn :
+                    super(Uglif,glyph).__setattr__("name",glyphn) # Need to use super to bypass normal glyph renaming logic
+                    self.font.logger.log( "Glyph names in glif and contents.plist did not match for " + glyphn + "; corrected", "W")
             else :
                 self.font.logger.log( "Missing glif " + glifn + " in " + fulldir, "S")
 
@@ -301,7 +301,6 @@ class Ulayer(_Ucontainer) :
         for glyphn in self :
             glyph = self._contents[glyphn]
             if UFOversion == "2" : glyph.convertToFormat1()
-            if glyph.rebuildETflag : glyph.rebuildET()
             setFileForOutput(dtree,glyph.filen, glyph, "xml")
 
     def renameGlifs(self) :
@@ -316,7 +315,7 @@ class Ulayer(_Ucontainer) :
 
     def renameGlif(self,glyphn,glyph,newname) :
         self.font.logger.log( "Renaming glif for " + glyphn + " from " + glyph.filen + " to " + newname, "I")
-        self.dtree[glyph.filen].flags['renamed'] = True # Set flag so old file name does not get reported as invalid
+        self.dtree.removedfiles[glyph.filen] = newname # Track so original glif does not get reported as invalid
         glyph.filen = newname
         self.contents[glyphn][1].text = newname
 
@@ -335,6 +334,11 @@ class Ulayer(_Ucontainer) :
         # Add to contents.plist and dtree
         self.contents.addval(glyphn,"string",glifn)
         self.dtree[glifn] = dirTreeItem(read = False, added = True, fileObject = glyph, fileType = "xml")
+
+    def delGlyph(self,glyphn) :
+        self.dtree.removedfiles[self[glyphn].filen] = "deleted" # Track so original glif does not get reported as invalid
+        del self._contents[glyphn]
+        self.contents.remove(glyphn)
 
 class Uplist(xmlitem, _plist) :
 
@@ -360,16 +364,17 @@ class Uplist(xmlitem, _plist) :
 class Uglif(xmlitem) :
     # Unlike plists, glifs can have multiples of some sub-elements (eg anchors) so create lists for those
 
-    def __init__(self, layer = None, filen = None, parse = True) :
+    def __init__(self, layer = None, filen = None, parse = True, name = None, format = None) :
         if layer is None :
             dirn = None
         else :
             dirn = os.path.join(layer.font.ufodir, layer.layerdir)
-        xmlitem.__init__(self, dirn, filen, parse)
+        xmlitem.__init__(self, dirn, filen, parse) # Will read item from file if dirn and filen both present
         self.type="glif"
         self.layer = layer
+        self.format = format if format else '2'
+        self.name = name
         self.outparams = None
-        self.rebuildETflag = False # Flag to see if self.etree needs rebuilding, eg if sub-objects are changed
 
         # Set initial values for sub-objects
         for i in range(len(_glifElements)) :
@@ -380,7 +385,29 @@ class Uglif(xmlitem) :
                 self._contents[elementn] = None
 
         if self.etree is not None : self.process_etree()
-        if self.rebuildETflag : self.rebuildET()
+
+    def __setattr__(self, name, value) :
+        if name == "name" and getattr(self,"name",None): # Existing glyph name is being changed
+            oname = self.name
+            if value in self.layer._contents : self.layer.font.logger.log(name + " already in font", "X")
+            # Update the _contents disctionary
+            del self.layer._contents[oname]
+            self.layer._contents[value] = self
+            # Set glif name
+            glifn = makeFileName(value)
+            names = []
+            while glifn in self.layer.contents : # need to check for duplicate glif names
+                names.append(glfin)
+                glifn = makeFileName(value, names)
+            glifn += ".glif"
+
+            # Update to contents.plist, filen and dtree
+            self.layer.contents.remove(oname)
+            self.layer.contents.addval(value,"string",glifn)
+            self.layer.dtree.removedfiles[self.filen] = glifn # Track so original glif does not get reported as invalid
+            self.filen = glifn
+            self.layer.dtree[glifn] = dirTreeItem(read = False, added = True, fileObject = self, fileType = "xml")
+        super(Uglif,self).__setattr__(name,value)
 
     def process_etree(self) :
         et = self.etree
@@ -391,7 +418,6 @@ class Uglif(xmlitem) :
                 self.format = '2'
             else :
                 self.format = '1'
-        previouselem = 0 # Flag to help check if sub-objects in normalised order
         for i in range(len(et)) :
             element = et[i]
             tag = element.tag
@@ -403,8 +429,6 @@ class Uglif(xmlitem) :
                     self._contents[tag].append(self.makeObject(tag,element))
                 else:
                     self._contents[tag] = self.makeObject(tag,element)
-            if i < previouselem : self.rebuildETflag = True
-            previouselem = i
 
         # Convert UFO2 style anchors to UFO3 anchors
         if self._contents['outline'] is not None and self.format == "1":
@@ -413,21 +437,15 @@ class Uglif(xmlitem) :
                     del contour.UFO2anchor["type"] # remove type="move"
                     self.add('anchor',contour.UFO2anchor)
                     self._contents['outline'].removeobject(contour, "contour")
-                    self.rebuildETflag = True
 
         self.format = "2"
-        et.set("format","2")
 
     def rebuildET(self) :
-        # All sub-elements are duplicated in the sub-objects so the library does not keep the
-        # originals in the glif's etree updated.  The etree also may need rebuilding to normalise
-        # the sub-objects order
+        self.etree = ET.Element("glyph")
         et = self.etree
-
-        # Remove existing sub-elements
-        while et.getchildren() : et.remove(et.getchildren()[0])
-
-        # Insert new elements
+        et.attrib["name"] = self.name
+        et.attrib["format"] = self.format
+        # Insert sub-elements
         for i in range(len(_glifElements)) :
             F1 = _glifElemF1[i]
             if F1 or self.format == "2" : # Check element is valid for glif format
@@ -439,7 +457,6 @@ class Uglif(xmlitem) :
                             et.append(object.element)
                     else :
                         et.append(item.element)
-        self.rebuildETflag = False
 
     def add(self,ename,attrib = None) :
         # Add an element and corrensponding object to a glif
@@ -460,8 +477,6 @@ class Uglif(xmlitem) :
         else:
             self._contents[ename] = self.makeObject(ename,element)
 
-        self.rebuildETflag = True
-
     def remove(self, ename, index = None, object = None ) :
         # Remove object from a glif
         # For multi objects, an index or object must be supplied to identify which
@@ -477,13 +492,9 @@ class Uglif(xmlitem) :
         else :
             self._contents[ename] = None
 
-        self.rebuildETflag = True
-
     def convertToFormat1(self) :
         # Convert to a glif format of 1 (for UFO2) prior to writing out
-        et = self.etree
         self.format = "1"
-        et.set("format","1")
         # Change anchors to UFO2 style anchors
         for anchor in self._contents['anchor'][:] :
             element = anchor.element
@@ -494,8 +505,6 @@ class Uglif(xmlitem) :
             contelement.append(ET.Element("point",element.attrib))
             self._contents['outline'].appendobject(Ucontour(self._contents['outline'],contelement),"contour")
             self.remove('anchor',object=anchor)
-
-        self.rebuildETflag = True
 
     def makeObject(self, type, element) :
         if type == 'advance'   : return Uadvance(self,element)
@@ -605,7 +614,7 @@ class UfeatureFile(UtextFile) :
     def __init__(self, font, dirn, filen) :
         super(UfeatureFile,self).__init__(font,dirn,filen)
 
-def writeXMLobject(dtreeitem, font, dirn, filen, odtreeitem) :
+def writeXMLobject(dtreeitem, font, dirn, filen, exists) :
     params = font.outparams
 
     object = dtreeitem.fileObject
@@ -615,17 +624,31 @@ def writeXMLobject(dtreeitem, font, dirn, filen, odtreeitem) :
     if object.type in params['attribOrders'] : attribOrder = params['attribOrders'][object.type]
     if object.type == "plist" :
         indentFirst = params["plistIndentFirst"]
-        object.etree.attrib["_doctype"] = 'plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"'
+        object.etree.attrib[".doctype"] = 'plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"'
 
     # Format ET data if any data parameters are set
-    if params["sortDicts"] or params["precision"] is not None : normETdata(object.etree, params)
+    if params["sortDicts"] or params["precision"] is not None : normETdata(object.etree, params, type = object.type)
 
     etw = ETWriter(object.etree, attributeOrder = attribOrder, indentIncr = params["indentIncr"], indentFirst = indentFirst, indentML = params["indentML"])
     etw.serialize_xml(object.write_to_xml)
     # Now we have the output xml, need to compare with existing item's xml, if present
     changed = True
-    if odtreeitem:
-        if odtreeitem.fileObject.inxmlstr == object.outxmlstr : changed = False
+
+    if exists: # File already on disk
+        if exists == "same" : # Output and input locations the same
+            oxmlstr = object.inxmlstr
+        else: # Read existing XML from disk
+            oxmlstr=""
+            try :
+                oxml=open(os.path.join( dirn, filen), "r")
+            except Exception as e :
+                print e
+                sys.exit(1)
+            for line in oxml.readlines() :
+                oxmlstr += line
+            oxml.close()
+        if oxmlstr == object.outxmlstr : changed = False
+
     if changed : object.write_to_file(dirn,filen)
     dtreeitem.written = True # Mark as True, even if not changed - the file should still be there!
 
@@ -641,9 +664,18 @@ def writeToDisk(dtree, outdir, font, odtree = {}, logindent = "") :
     dtreelist = []
     for filen in dtree : dtreelist.append(dtree[filen].type+filen)
     dtreelist.sort()
+
     odtreelist = []
-    for filen in odtree : odtreelist.append(odtree[filen].type+filen)
-    odtreelist.sort()
+    if odtree == {} :
+        locationtype = "Empty"
+    else:
+        if outdir == font.ufodir :
+            locationtype = "Same"
+        else :
+            locationtype = "Different"
+        for filen in odtree : odtreelist.append(odtree[filen].type+filen)
+        odtreelist.sort()
+
     okey = odtreelist.pop(0) if odtreelist <> [] else None
 
     for key in dtreelist :
@@ -654,46 +686,59 @@ def writeToDisk(dtree, outdir, font, odtree = {}, logindent = "") :
         while okey and okey < key : # Item in output UFO no longer needed
             ofilen = okey[1:]
             if okey[0:1] == "f" :
-                font.logger.log('Deleting a '+ ofilen + ' from existing output UFO', "W")
+                logmess = 'Deleting '+ ofilen + ' from existing output UFO'
                 os.remove(os.path.join(outdir,ofilen))
             else:
-                font.logger.log('Deleting directory '+ ofilen + ' from existing output UFO', "W")
+                logmess = 'Deleting directory '+ ofilen + ' from existing output UFO'
                 shutil.rmtree(os.path.join(outdir,ofilen))
+            if ofilen not in dtree.removedfiles : font.logger.log(logmess, "W") # No need to log warning for remaned files
             okey = odtreelist.pop(0) if odtreelist <> [] else None
 
         if key == okey :
-            odtreeitem = odtree[filen]
+            exists = locationtype
             okey = odtreelist.pop(0) if odtreelist <> [] else None # Ready for next loop
         else :
-            odtreeitem = None
+            exists = False
 
         if dtreeitem.type == "f" :
             if dtreeitem.towrite :
                 font.logger.log(logindent + filen, "V")
-                if dtreeitem.fileType == "xml" and dtreeitem.fileObject : # Only write if object has items
-                    if dtreeitem.fileObject.type == "glif" : # Delete lib if not items in it
-                        glif = dtreeitem.fileObject
-                        if glif["lib"] is not None :
-                            if glif["lib"].__len__() == 0 :
-                                glif.remove("lib")
-                                glif.rebuildET()
-                    writeXMLobject(dtreeitem,font,outdir, filen, odtreeitem)
+                if dtreeitem.fileType == "xml" :
+                    if dtreeitem.fileObject : # Only write if object has items
+                        if dtreeitem.fileObject.type == "glif" : # Delete lib if no items in it
+                            glif = dtreeitem.fileObject
+                            if glif["lib"] is not None :
+                                if glif["lib"].__len__() == 0 :
+                                    glif.remove("lib")
+                            glif.rebuildET()
+                        writeXMLobject(dtreeitem,font,outdir, filen, exists)
+                    else : # Delete existing item if the current object is empty
+                        if exists :
+                            font.logger.log('Deleting empty item '+ filen + ' from existing output UFO', "I")
+                            os.remove(os.path.join(outdir,filen))
                 elif dtreeitem.fileType == "text" :
-                    dtreeitem.fileObject.write(dtreeitem, outdir, odtreeitem)
-                    #@@@ Need to add code for other file types
+                    dtreeitem.fileObject.write(dtreeitem, outdir, filen, exists)
+                    ## Need to add code for other file types
             else :
-                if not dtreeitem.added :
-                    if not 'renamed' in dtreeitem.flags :
-                        font.logger.log('Skipping invalid file '+ filen + ' from input UFO', "W")
-                if odtreeitem:
-                    if not odtreeitem.added :
-                        font.logger.log('Deleting '+ filen + ' from existing output UFO', "W")
+                if filen in dtree.removedfiles :
+                    if exists :
+                        os.remove(os.path.join(outdir,filen)) # Silently remove old file for renamed files
+                        exists = False
+                else : # File should not have been in original UFO
+                    if exists == "same" :
+                        font.logger.log('Deleting '+ filen + ' from existing UFO', "W")
                         os.remove(os.path.join(outdir,filen))
+                        exists = False
+                    else :
+                        if not dtreeitem.added : font.logger.log('Skipping invalid file '+ filen + ' from input UFO', "W")
+                if exists:
+                    font.logger.log('Deleting '+ filen + ' from existing output UFO', "W")
+                    os.remove(os.path.join(outdir,filen))
 
         else : # Must be directory
             if not dtreeitem.read :
                 font.logger.log(logindent + "Skipping invalid input directory " + filen)
-                if odtreeitem :
+                if exists :
                     font.logger.log('Deleting directory '+ filen + ' from existing output UFO', "W")
                     shutil.rmtree(os.path.join(outdir,filen))
                 continue
@@ -705,30 +750,48 @@ def writeToDisk(dtree, outdir, font, odtree = {}, logindent = "") :
                 except Exception as e :
                     print e
                     sys.exit(1)
-            subodtree = odtreeitem.dirtree if odtreeitem else {}
+
+            if exists :
+                subodtree = odtree[filen].dirtree
+            else :
+                subodtree = {}
             subindent = logindent + "  "
             writeToDisk(dtreeitem.dirtree, subdir, font, subodtree, subindent)
             if os.listdir(subdir) == [] : os.rmdir(subdir) # Delete directory if empty
 
+    while okey: # Any remaining items in odree list are no longer needed
+        ofilen = okey[1:]
+        if okey[0:1] == "f" :
+            logmess = 'Deleting '+ ofilen + ' from existing output UFO'
+            os.remove(os.path.join(outdir,ofilen))
+        else:
+            logmess = 'Deleting directory '+ ofilen + ' from existing output UFO', "W"
+            shutil.rmtree(os.path.join(outdir,ofilen))
+        if ofilen not in dtree.removedfiles : font.logger.log(logmess, "W") # No need to log warning for removed files
+        okey = odtreelist.pop(0) if odtreelist <> [] else None
 
-
-def normETdata(element,params) :
+def normETdata(element, params, type) :
     # Recursively normalise the data an an ElementTree element
-    for subelem in list(element) :
-        normETdata(subelem,params)
-    # Process based on tag
-    tag = element.tag
-    val = element.text
+    for subelem in element :
+        normETdata(subelem, params, type)
+
     precision = params["precision"]
-    if tag in ("integer","real") and precision is not None:
-        num = round(float(val),precision)
-        if num ==int(num) :
-            element.tag = "integer"
-            element.text = "{:.0f}".format(num)
-        else :
-            element.tag = "real"
-            element.text = "{}".format(num)
-    if params["sortDicts"] and tag == "dict" :
+    if precision is not None:
+        if element.tag in ("integer","real"):
+            num = round(float(element.text),precision)
+            if num ==int(num) :
+                element.tag = "integer"
+                element.text = "{}".format(int(num))
+            else :
+                element.tag = "real"
+                element.text = "{}".format(num)
+        if type == "glif" : # Set precision for numeric attributes
+            for attrib in element.attrib :
+                if attrib in params["numAttribs"] :
+                    num = round(float(element.attrib[attrib]),precision)
+                    element.attrib[attrib] = "{}".format(int(num)) if num == int(num) else "{}".format(num)
+
+    if params["sortDicts"] and element.tag == "dict" :
         edict={}
         elist=[]
         for i in range(0,len(element),2):
