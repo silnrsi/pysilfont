@@ -13,9 +13,7 @@ from silfont.UFOlib import *
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
     ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont', 'def': '_conv'}),
-    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_UFOconvert.log'}),
-    ('-v','--version',{'help': 'UFO version to output'},{}),
-    ('-p','--params',{'help': 'Other font parameters - see user docs','action': 'append'}, {'type': 'optiondict'})]
+    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': 'UFOconvert.log'})]
 
 def doit(args) :
     font = args.ifont

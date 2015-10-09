@@ -7,7 +7,8 @@ __author__ = 'David Raymond'
 __version__ = '1.0.0'
 
 from xml.etree import cElementTree as ET
-import re, sys, os, codecs, argparse, datetime
+from glob import glob
+import re, sys, os, codecs, argparse, datetime, shutil
 
 _elementprotect = {
     '&' : '&amp;',
@@ -102,7 +103,7 @@ class ETWriter(object) :
     def serialize_nsxml(self, write, base = None, indent = '', topns = True, namespaces = {}) :
         """Output the object using write() in a normalised way:
                 topns if set puts all namespaces in root element else put them as low as possible"""
-        ## Needs amending to mirror changes in serialize_xml for dummy attributes (and efficiency)"""
+        ## No currently used.  Needs amending to mirror changes in serialize_xml for dummy attributes (and efficiency)"""
         if base is None :
             base = self.root
             write('<?xml version="1.0" encoding="UTF-8"?>\n')
@@ -352,9 +353,24 @@ def execute(tool, fn, argspec) :
     parser = argparse.ArgumentParser(**poptions)
 
     # Add standard arguments
-    ## Should check that these have not been defined in argspec
-    argspec.append(('-d','--defaults', {'help': 'Display help with info on default values', 'action': 'store_true'}, {}))
-    argspec.append(('-q','--quiet',{'help': 'Quiet mode - only display/log errors', 'action': 'store_true'}, {}))
+    standardargs = [
+            ('-d','--defaults', {'help': 'Display help with info on default values', 'action': 'store_true'}, {}),
+            ('-q','--quiet',{'help': 'Quiet mode - only display errors', 'action': 'store_true'}, {})]
+    standardargsindex = ['defaults','quiet']
+    if psfu:
+        standardargs.extend([
+            ('-v','--version',{'help': 'UFO version to output'},{}),
+            ('-p','--params',{'help': 'Other font parameters','action': 'append'}, {'type': 'optiondict'})])
+        standardargsindex.extend(['version','params'])
+
+    suppliedargs = []
+    for a in argspec :
+        argn = a[:-2][-1] # [:-2] will give either 1 or 2, the last of which is the full argument name
+        if argn[0:2] == "--" : argn = argn[2:] # Will start with -- for options
+        suppliedargs.append(argn)
+
+    for i,arg in enumerate(standardargsindex) :
+        if arg not in suppliedargs: argspec.append(standardargs[i])
 
     # Special handling for "-d" to print default value info with help text
     defhelp = False
@@ -369,7 +385,7 @@ def execute(tool, fn, argspec) :
 
 # Process the supplied argument specs, add args to parser, store other info in arginfo
     arginfo = []
-    for c,a in enumerate(argspec) :
+    for a in argspec :
         # Process all but last tuple entry as argparse arguments
         nonkwds = a[:-2]
         kwds = a[-2]
@@ -410,31 +426,48 @@ def execute(tool, fn, argspec) :
     fppval = getattr(args,arginfo[0]['name'])
     if fppval is None : fppval = "" # For scripts that can be run with no positional parameters
     (fppath,fpbase,fpext)=_splitfn(fppval) # First pos param use for defaulting
+
     outfont = None
     infontlist = []
-
     for c,ainfo in enumerate(arginfo) :
         aval = getattr(args,ainfo['name'])
-        atype = ainfo['type'] if 'type' in ainfo else None
-        adef = ainfo['def'] if 'def' in ainfo else None
+        atype = None
+        adef = None
+        if 'type' in ainfo :
+            atype = ainfo['type']
+            if atype <> 'optiondict' : # All other types are file types, so adef must be set, even if just to ""
+                adef = ainfo['def'] if 'def' in ainfo else ""
+
         if c == 0 :
             if aval[-1] in ("\\","/") : aval = aval[0:-1] # Remove trailing slashes
         else : #Handle defaults for all but first positional parameter
-            if adef :
+            if adef is not None:
                 if not aval : aval=""
+                if aval == "" and adef == "" : # Only valid for output font parameter
+                    if atype <> "outfont" :
+                        print "No value suppiled for ", ainfo['name']
+                        sysexit()
                 (apath,abase,aext)=_splitfn(aval)
                 (dpath,dbase,dext)=_splitfn(adef) # dpath should be None
                 if not apath :
-                    if abase and aext :
+                    if abase and aext : # If both specified then use cwd, ie no path
                         apath = ""
                     else:
                         apath=fppath
-                if not abase : abase = fpbase + dbase
+                if not abase :
+                    if dbase == "" :
+                        abase = fpbase
+                    elif dbase[0] == "_" : # Append to font name if starts with _
+                        abase = fpbase + dbase
+                    else:
+                        abase = dbase
                 if not aext :
                     if dext :
                         aext = dext
                     elif (atype=='outfont' or atype=='infont') : aext = fpext
                 aval = os.path.join(apath,abase+aext)
+
+
         # Open files/fonts
         if atype=='infont' :
             if tool is None:
@@ -459,8 +492,11 @@ def execute(tool, fn, argspec) :
             if tool is None:
                 print "Can't specify a font without a font tool"
                 sys.exit(1)
-            outfont=aval # Can only be one outfont
-            outfontext=aext
+            outfont = aval
+            outfontpath = apath
+            outfontbase = abase
+            outfontext = aext
+
         elif atype=='optiondict' : # Turn multiple options in the form ['opt1=a','opt2=b'] into a dictionary
             avaldict={}
             if aval is not None:
@@ -505,16 +541,47 @@ def execute(tool, fn, argspec) :
                 elif param not in ('loglevel','scrlevel') : logger.log( "Parameter invalid: " + param, "S")
 
 # All arguments processed, now call the main function
-    result = fn(args)
-    if outfont and result is not None:
+    newfont = fn(args)
+# If an output font is expected and one is returned, output the font
+    if outfont and newfont is not None:
+        # Backup the font if output is overwriting original input font
+        if outfont == infontlist[0][1] :
+            ## First stab at this based on everything fixed,  Need to think about flexibility...
+            backupdir = os.path.join(outfontpath,"backups")
+            backupmax = 5
+            nobackup = False
 
+            if nobackup :
+                newfont.logger.log("Font backup: 'nobackup' specified","W")
+            else :
+                if not os.path.isdir(backupdir) : # Create backup directory if not present
+                    try:
+                        os.mkdir(backupdir)
+                    except Exception as e :
+                        print e
+                        sys.exit(1)
+                backupbase = os.path.join(backupdir,outfontbase+outfontext)
+                # Work out backup name based on existing backups
+                nums = sorted([ int(i[len(backupbase)+1-len(i):-1]) for i in glob(backupbase+".*~")]) # Extract list of backup numbers from existing backups
+                newnum = max(nums)+1 if nums else 1
+                backupname = backupbase+"."+str(newnum)+"~"
+                # Backup the font
+                newfont.logger.log("Backuping up input font to "+backupname,"P")
+                shutil.copytree(outfont,backupname)
+                # Purge old backups
+                for i in range(0, len(nums) - backupmax + 1) :
+                    backupname = backupbase+"."+str(nums[i])+"~"
+                    newfont.logger.log("Purging old backup "+backupname,"I")
+                    shutil.rmtree(backupname)
+        # Output the font
         if ff:
             if not quiet : print "Saving font to " + outfont
             if outfontext=="ufo":
-                result.generate(outfont)
-            else : result.save(outfont)
+                newfont.generate(outfont)
+            else : newfont.save(outfont)
         else: # Must be Pyslifont Ufont
-            result.write(outfont)
+            newfont.write(outfont)
+
     if logfile : logfile.close()
 
 def _splitfn(fn): # Split filename into path, base and extension
@@ -522,5 +589,9 @@ def _splitfn(fn): # Split filename into path, base and extension
         if fn[-1] in ("\\","/") : fn = fn[0:-1]
     (path,base) = os.path.split(fn)
     (base,ext) = os.path.splitext(base)
+    # Handle special case where just a directory is supplied
+    if ext == "" : # If there's an extension, treat as file name, eg a ufo directory
+        if os.path.isdir(fn) :
+            path = fn
+            base = ""
     return (path,base,ext)
-
