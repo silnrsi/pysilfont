@@ -294,10 +294,16 @@ class loggerobj(object) :
         self.loglevel = "2"; self.scrlevel = "2" # Temp values so invalid log levels can be reported
         if loglevel in self.loglevels :
             self.loglevel = self.loglevels[loglevel]
+            if self.loglevel < 2 :
+                self.loglevel = 2
+                self.log("Loglevel increased to minimum level of Error", "E")
         else:
             self.log("Invalid loglevel value", "S")
         if scrlevel in self.loglevels :
             self.scrlevel = self.loglevels[scrlevel]
+            if self.scrlevel < 1 :
+                self.scrlevel = 1
+                self.log("Scrlevel increased to minimum level of Severe", "E")
         else:
             self.log("Invalid scrlevel value", "S")
 
@@ -516,8 +522,10 @@ def execute(tool, fn, argspec) :
     logfile = args.log if 'log' in args.__dict__ else None
     params = args.params if 'params' in args.__dict__ else {}
     loglevel = params['loglevel'].upper() if 'loglevel' in params else "W"
-    scrlevel = params['scrlevel'].upper() if 'scrlevel' in params else "P"
-    if quiet : scrlevel = "E"
+    if 'scrlevel' in params :
+        scrlevel = params['scrlevel'].upper()
+    else :
+        scrlevel = "E" if quiet else "P"
     logger = loggerobj(logfile,loglevel=loglevel,scrlevel=scrlevel)
     setattr(args,'logger',logger)
 

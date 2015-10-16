@@ -737,7 +737,7 @@ def writeToDisk(dtree, outdir, font, odtree = {}, logindent = "") :
 
         else : # Must be directory
             if not dtreeitem.read :
-                font.logger.log(logindent + "Skipping invalid input directory " + filen)
+                font.logger.log(logindent + "Skipping invalid input directory " + filen,"W")
                 if exists :
                     font.logger.log('Deleting directory '+ filen + ' from existing output UFO', "W")
                     shutil.rmtree(os.path.join(outdir,filen))
