@@ -53,25 +53,31 @@ class ETWriter(object) :
 
         for k in sorted(attribs.keys(), cmp=lambda x,y: cmp(self.attributeOrder.get(x, 999), self.attributeOrder.get(y, 999)) or cmp(x, y)) :
             if k[0] <> '.' : outstr += u' {}="{}"'.format(k, attribs[k])
-        if base :
-            outstr += '>\n'
-            if base == self.root:
-                incr = self.indentFirst
-            else:
-                incr = self.indentIncr
-            write(outstr); outstr=""
-            for b in base : self.serialize_xml(write, base=b, indent=indent + incr)
-            outstr += '{}</{}>\n'.format(indent, tag)
-        elif base.text and base.text.strip() :
-            if tag not in self.takesCData :
-                t = base.text
-                if self.indentML : t = t.replace('\n', '\n' + indent)
-                t = self._protect(t, base=_elementprotect)
-            else :
-                t = "<![CDATA[\n\t" + indent + base.text.replace('\n', '\n\t' + indent) + "\n" + indent + "]]>"
-            outstr += u'>{}</{}>\n'.format(t, tag)
+        if len(base) or (base.text and base.text.strip()) :
+            outstr += '>'
+            if base.text and base.text.strip() :
+                if tag not in self.takesCData :
+                    t = base.text
+                    if self.indentML : t = t.replace('\n', '\n' + indent)
+                    t = self._protect(t, base=_elementprotect)
+                else :
+                    t = "<![CDATA[\n\t" + indent + base.text.replace('\n', '\n\t' + indent) + "\n" + indent + "]]>"
+                outstr += t
+            if len(base) :
+                outstr += '\n'
+                if base == self.root:
+                    incr = self.indentFirst
+                else:
+                    incr = self.indentIncr
+                write(outstr); outstr=""
+                for b in base : self.serialize_xml(write, base=b, indent=indent + incr)
+                outstr += indent
+            outstr += '</{}>'.format(tag)
         else :
-            outstr += '/>\n'
+            outstr += '/>'
+        if base.tail and base.tail.strip() :
+            outstr += self._protect(base.tail, base=_elementprotect)
+        outstr += "\n"
 
         if '.commentsafter' in base.attrib :
             for c in base.attrib['.commentsafter'].split(",") : outstr += u'{}<!--{}-->\n'.format(indent, c)
