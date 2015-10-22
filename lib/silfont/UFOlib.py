@@ -9,12 +9,29 @@ __version__ = '1.0.0'
 from xml.etree import cElementTree as ET
 import sys, os, copy, shutil, filecmp
 import collections
-from genlib import *
+from genlib import xmlitem, dirTree, dirTreeItem,makeAttribOrder, ETWriter, indexParams, baseparams
 
-_glifElements  = ('advance', 'unicode', 'note',   'image',  'guideline', 'anchor', 'outline', 'lib')
-_glifElemMulti = (False,     True,      False,    False,    True,        True,     False,     False)
-_glifElemF1    = (True,      True,      False,    False,    False,       False,    True,      True)
+# Add outparams values to baseparams from genlib
+baseparams['outparams'] = {
+    "glifElements":     ('advance', 'unicode', 'note',   'image',  'guideline', 'anchor', 'outline', 'lib'), # Elements of glif in output order
+    "glifElemMulti":    (False,     True,      False,    False,    True,        True,     False,     False), # Which glif elements can occur multiple times
+    "glifElemF1":       (True,      True,      False,    False,    False,       False,    True,      True),  # Which glif elements are valid in format 1 (UFO2) glifs
+    "indentIncr":       "  ",   # XML Indent increment
+    "indentFirst":      "  ",   # First XML indent
+    "indentML":         False,  # Should multi-line string values be indented?
+    "plistIndentFirst": "",     # First indent amoutn for plists
+    "sortDicts":        True,   # Should dict elements be sorted alphabetically?
+    'precision':        6,      # Decimal precision to use in XML output - both for real values and for attributes if numeric
+    "renameGlifs":      True,   # Rename glifs based on UFO3 suggested algorithm
+    "UFOversion":       None,   # UFOversion - defaults to existing unless a value is supplied
+    "numAttribs":       ['pos', 'width', 'height', 'xScale', 'xyScale', 'yxScale', 'yScale', 'xOffset', 'yOffset', 'x', 'y', 'angle', 'format'],    # Used with precision above
+    "attribOrders.glif":[ 'pos', 'width', 'height', 'fileName', 'base', 'xScale', 'xyScale', 'yxScale', 'yScale',
+                'xOffset', 'yOffset', 'x', 'y', 'angle', 'type', 'smooth', 'name', 'format', 'color', 'identifier'] # See below
+    }
+# attribOrders give the order XML attributes should be output in.  A single list covers all elements in an XML item.  Currently just needed for glif files
+baseparamsindex = indexParams(baseparams)
 
+# Define illegal characters and reserved names for makeFileName
 _illegalChars = "\"*+/:<>?[\]|" + chr(0x7F)
 for i in range(0,32) : _illegalChars += chr(i)
 _illegalChars = list(_illegalChars)
@@ -140,7 +157,7 @@ class UtextFile(object) :
 
 class Ufont(object) :
     """ Object to hold all the data from a UFO"""
-    def __init__(self, ufodir = None, logger = None ) :
+    def __init__(self, ufodir = None, logger = None , cfgparams = None, clparams = None) :
         if not logger : logger = loggerobj() # Will only log message to screen
         self.logger = logger
         if ufodir:
@@ -185,14 +202,7 @@ class Ufont(object) :
             if self.deflayer is None : self.logger.log("No public.default layer", "S")
             # Process other files and directories
             # Set initial defaults for outparams
-            self.outparams = { "indentIncr" : "  ", "indentFirst" : "  ", "indentML" : False, "plistIndentFirst" : "", 'sortDicts' : True , 'precision' : 6}
-            self.outparams["renameGlifs"] = True
-            self.outparams["UFOversion"] = self.UFOversion
-            self.outparams["numAttribs"] = ['pos', 'width', 'height', 'xScale', 'xyScale', 'yxScale', 'yScale', 'xOffset', 'yOffset', 'x', 'y', 'angle', 'format']
-            self.outparams["attribOrders"] = {
-                'glif' : makeAttribOrder([ 'pos', 'width', 'height', 'fileName', 'base', 'xScale', 'xyScale', 'yxScale', 'yScale',
-                'xOffset', 'yOffset', 'x', 'y', 'angle', 'type', 'smooth', 'name', 'format', 'color', 'identifier'])
-                }
+
 
     def _readPlist(self, filen) :
         if filen in self.dtree :

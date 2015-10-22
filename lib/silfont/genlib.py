@@ -15,7 +15,19 @@ _elementprotect = {
     '<' : '&lt;',
     '>' : '&gt;' }
 _attribprotect = dict(_elementprotect)
-_attribprotect['"'] = '&quot;'
+_attribprotect['"'] = '&quot;' # Copy of element protect with double quote added
+
+def indexParams(params): # Index of parameters by name giving value and type
+    index = {}
+    for type in params :
+        for param in params[type] :
+            index[param] = {'type':type, 'value': params[type][param]}
+    return index
+
+baseparams = {}
+baseparams['logging'] = {'scrlevel': 'P', 'loglevel': 'W'}
+baseparams['backups'] = {'backupdir': 'backups', 'backupkeep': 5}
+baseparamsindex = indexParams(baseparams)
 
 class ETWriter(object) :
     """ General purpose ElementTree pretty printer complete with options for attribute order
@@ -43,6 +55,7 @@ class ETWriter(object) :
             base = self.root
             outstr += '<?xml version="1.0" encoding="UTF-8"?>\n'
             if '.doctype' in base.attrib : outstr += u'<!DOCTYPE {}>\n'.format(base.attrib['.doctype'])
+        print base,base.tag,base.text,base.tail
 
         tag = base.tag
         attribs = base.attrib
@@ -54,7 +67,7 @@ class ETWriter(object) :
 
         for k in sorted(attribs.keys(), cmp=lambda x,y: cmp(self.attributeOrder.get(x, 999), self.attributeOrder.get(y, 999)) or cmp(x, y)) :
             if k[0] <> '.' : outstr += u' {}="{}"'.format(k, attribs[k])
-        if base :
+        if len(base) :
             outstr += '>\n'
             if base == self.root:
                 incr = self.indentFirst
@@ -348,7 +361,6 @@ def execute(tool, fn, argspec) :
     else :
         print "Invalid tool in call to execute()"
         return
-
     basemodule = sys.modules[fn.__module__]
     poptions = {}
     poptions['prog'] = _splitfn(sys.argv[0])[1]
@@ -517,15 +529,24 @@ def execute(tool, fn, argspec) :
 
         setattr(args,ainfo['name'],aval)
 
-# Create logger
-
-    logfile = args.log if 'log' in args.__dict__ else None
+# Process parameters
     params = args.params if 'params' in args.__dict__ else {}
-    loglevel = params['loglevel'].upper() if 'loglevel' in params else "W"
-    if 'scrlevel' in params :
-        scrlevel = params['scrlevel'].upper()
-    else :
-        scrlevel = "E" if quiet else "P"
+    if psfu and 'version' in args.__dict__:
+        if args.version : params["UFOversion"] = args.version
+    ## Read config file from disk if it exists
+    #cfgparams = {'scrlevel': 'V', 'indentIncr': '    '} # Dummy values for now
+    cfgparams = {}
+    # Create list of logging and backup parameters from base parameters overdidden by any congif file parameters
+    lbparams={}
+    for param in baseparamsindex :
+        lbparams[param] = cfgparams[param] if param in cfgparams else baseparamsindex[param]['value']
+
+# Create logger
+    loglevel = params['loglevel'].upper() if 'loglevel' in params else lbparams['loglevel']
+    scrlevel = "E" if quiet else lbparams['scrlevel']
+    if 'scrlevel' in params : scrlevel = params['scrlevel'].upper()
+
+    logfile = args.log if 'log' in args.__dict__ else None # If None, just log to screen
     logger = loggerobj(logfile,loglevel=loglevel,scrlevel=scrlevel)
     setattr(args,'logger',logger)
 
@@ -533,9 +554,9 @@ def execute(tool, fn, argspec) :
 
     for name,aval in infontlist :
         if ff : aval=fontforge.open(aval)
-        if psfu: aval=Ufont(aval, logger = logger)
-        setattr(args,name,aval)
-        # Process specific parameters for UFOlib fonts
+        if psfu: aval=Ufont(aval, logger = logger, cfgparams=cfgparams, clparams=params)
+        setattr(args,name,aval) # Assign the font object to args attribute
+        ## This work needs to be moved into UFOlib
         if psfu :
             font = aval
             params = args.params if 'params' in args.__dict__  else None
@@ -546,7 +567,6 @@ def execute(tool, fn, argspec) :
                     if param == "UFOversion" and params[param] not in ("2","3") : logger.log("UFO version must be 2 or 3", "S")
                     if param == "attribOrders" : logger.log("attribOrders can't be set by params", "S")
                     font.outparams[param] = params[param]
-                elif param not in ('loglevel','scrlevel') : logger.log( "Parameter invalid: " + param, "S")
 
 # All arguments processed, now call the main function
     newfont = fn(args)
@@ -554,10 +574,9 @@ def execute(tool, fn, argspec) :
     if outfont and newfont is not None:
         # Backup the font if output is overwriting original input font
         if outfont == infontlist[0][1] :
-            ## First stab at this based on everything fixed,  Need to think about flexibility...
-            backupdir = os.path.join(outfontpath,"backups")
-            backupmax = 5
-            nobackup = False
+            backupdir = os.path.join(outfontpath,lbparams['backupdir'])
+            backupmax = lbparams['backupkeep']
+            nobackup = False ## Need to implement changing this
 
             if nobackup :
                 newfont.logger.log("Font backup: 'nobackup' specified","W")
