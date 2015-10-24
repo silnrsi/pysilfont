@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:output method="html" encoding="utf-8"/>
+<!-- Use with nested <testgroup> elements to create tables with multiple <test> elements per row -->
 
 <!-- set variables from head element -->
 <xsl:variable name="width-comment" select="/ftml/head/columns/@comment"/>
@@ -33,7 +34,7 @@
 	.label { width: <xsl:value-of select="$width-label"/> }
 </xsl:if>
 <xsl:if test="$width-string != ''">
-	.string {width: <xsl:value-of select="$width-string"/>; font-family: TestFont; font-width: <xsl:value-of select="$font-scale"/>%;}
+	.string {width: <xsl:value-of select="$width-string"/>; font-family: TestFont; font-size: <xsl:value-of select="$font-scale"/>%;}
 </xsl:if>
 <xsl:if test="$width-comment != ''">
 	.comment {width: <xsl:value-of select="$width-comment"/>}
@@ -56,7 +57,7 @@
 -->
 <xsl:template match="style">
 	.<xsl:value-of select="@name"/> {
-		font-family: TestFont; font-width: <xsl:value-of select="$font-scale"/>%;
+		font-family: TestFont; font-size: <xsl:value-of select="$font-scale"/>%;
 <xsl:if test="@feats">
 		-moz-font-feature-settings: <xsl:value-of select="@feats"/>;
 		-ms-font-feature-settings: <xsl:value-of select="@feats"/>;
@@ -67,41 +68,42 @@
 </xsl:template>
 
 <!-- 
-	Process a testgroup, emitting a table containing all test records from the group
+	Process a top level testgroup, emitting a table (containing a row for each testgroup subelement)
 -->
-<xsl:template match="testgroup">
+<xsl:template match="/ftml/testgroup">
 	<h2><xsl:value-of select="@label"/></h2>
 	<table>
-		<colgroup>
-			<!-- colgroup is somewhat limited: the only properties that will be picked up from the css
-			     are border, background, width, and visibility; thus class still has to be set in <td> elements -->
-			<xsl:if test="$width-label != ''">
-				<col class="label"/>
-			</xsl:if>
-			<xsl:if test="$width-string != ''">
-				<col class="string"/>
-			</xsl:if>
-			<xsl:if test="$width-comment != ''">
-				<col class="comment"/>
-			</xsl:if>
-		</colgroup>		
-		<thead>
-			<tr>
-				<xsl:if test="$width-label != ''">
-					<th>label</th>
-				</xsl:if>
-				<xsl:if test="$width-string != ''">
-					<th>string</th>
-				</xsl:if>
-				<xsl:if test="$width-comment != ''">
-					<th>comment</th>
-				</xsl:if>
-			</tr>
-		</thead>
 		<tbody>
 			<xsl:apply-templates/>
 		</tbody>
 	</table>
+</xsl:template>
+
+<!-- 
+	Process a second level testgroup record, emitting a table row (containing a cell for each test subelement)
+	Pick up comment, class and background from first test subelement
+-->
+<xsl:template match="/ftml/testgroup/testgroup">
+<tr>
+	<xsl:if test="test/@background">
+		<xsl:attribute name="style">background-color: <xsl:value-of select="test/@background"/>;</xsl:attribute>
+	</xsl:if>
+	<xsl:if test="$width-label != ''">
+		<!-- emit label column -->
+		<td class="label">
+			<xsl:value-of select="@label"/>
+		</td>
+	</xsl:if>
+
+    	<xsl:apply-templates/>
+	<xsl:if test="$width-comment != ''">
+		<td class="comment">
+			<!-- emit comment concatenated with class (if not default) -->
+			<xsl:value-of select="test/comment"/>
+			<xsl:if test="test/@class"> (<xsl:value-of select="test/@class"/>)</xsl:if>
+		</td>
+	</xsl:if>
+</tr>
 </xsl:template>
 
 <!-- 
@@ -123,19 +125,9 @@ font-feature-settings: <xsl:value-of select="@feats"/>;</xsl:attribute>
 </xsl:template>
 
 <!-- 
-	Process a single test record, emitting a table row
+	Process a single test record, emitting a table cell
 -->
 <xsl:template match="test">
-<tr>
-	<xsl:if test="@background">
-		<xsl:attribute name="style">background-color: <xsl:value-of select="@background"/>;</xsl:attribute>
-	</xsl:if>
-	<xsl:if test="$width-label != ''">
-		<!-- emit label column -->
-		<td class="label">
-			<xsl:value-of select="@label"/>
-		</td>
-	</xsl:if>
 	<xsl:if test="$width-string != ''">
 		<!-- emit test data column -->
 		<td class="string">   <!-- assume default string class -->
@@ -156,14 +148,6 @@ font-feature-settings: <xsl:value-of select="@feats"/>;</xsl:attribute>
 			</xsl:choose>
 		</td>
 	</xsl:if>
-	<xsl:if test="$width-comment != ''">
-		<td class="comment">
-			<!-- emit comment concatenated with class (if not default) -->
-			<xsl:value-of select="comment"/>
-			<xsl:if test="@class"> (<xsl:value-of select="@class"/>)</xsl:if>
-		</td>
-	</xsl:if>
-</tr>
 </xsl:template>
 
 <!--  
