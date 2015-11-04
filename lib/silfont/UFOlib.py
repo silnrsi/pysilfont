@@ -200,7 +200,7 @@ class Ufont(object) :
             self.dtree[filen].setinfo(read = True, fileObject = plist, fileType = "xml")
             return plist
         else :
-            self.logger.log( ufodir + " " + filen + " does not exist2", "S")
+            self.logger.log( filen + " does not exist", "S")
 
     def write(self, outdir) :
         # Write UFO out to disk, based on values set in self.outparams
