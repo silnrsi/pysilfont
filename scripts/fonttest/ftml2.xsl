@@ -81,12 +81,12 @@
 
 <!-- 
 	Process a second level testgroup record, emitting a table row (containing a cell for each test subelement)
-	Pick up comment, class and background from first test subelement
+	Pick up comment and class from first test subelement
 -->
 <xsl:template match="/ftml/testgroup/testgroup">
 <tr>
-	<xsl:if test="test/@background">
-		<xsl:attribute name="style">background-color: <xsl:value-of select="test/@background"/>;</xsl:attribute>
+    <xsl:if test="@background">
+		<xsl:attribute name="style">background-color: <xsl:value-of select="@background"/>;</xsl:attribute>
 	</xsl:if>
 	<xsl:if test="$width-label != ''">
 		<!-- emit label column -->
@@ -136,6 +136,9 @@ font-feature-settings: <xsl:value-of select="@feats"/>;</xsl:attribute>
 				<xsl:variable name="styleName" select="@class"/>
 				<xsl:apply-templates select="/ftml/head/styles/style[@name=$styleName]" mode="getLang"/>
 			</xsl:if>
+            <xsl:if test="@background">
+                <xsl:attribute name="style">background-color: <xsl:value-of select="@background"/>;</xsl:attribute>
+            </xsl:if>
 			<!-- and finally the test data -->
 			<xsl:choose>
 				<!-- if the test has an <em> marker, the use a special template -->
