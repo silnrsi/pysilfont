@@ -33,7 +33,7 @@
 	.label { width: <xsl:value-of select="$width-label"/> }
 </xsl:if>
 <xsl:if test="$width-string != ''">
-	.string {width: <xsl:value-of select="$width-string"/>; font-family: TestFont; font-width: <xsl:value-of select="$font-scale"/>%;}
+	.string {width: <xsl:value-of select="$width-string"/>; font-family: TestFont; font-size: <xsl:value-of select="$font-scale"/>%;}
 </xsl:if>
 <xsl:if test="$width-comment != ''">
 	.comment {width: <xsl:value-of select="$width-comment"/>}
@@ -56,7 +56,7 @@
 -->
 <xsl:template match="style">
 	.<xsl:value-of select="@name"/> {
-		font-family: TestFont; font-width: <xsl:value-of select="$font-scale"/>%;
+		font-family: TestFont; font-size: <xsl:value-of select="$font-scale"/>%;
 <xsl:if test="@feats">
 		-moz-font-feature-settings: <xsl:value-of select="@feats"/>;
 		-ms-font-feature-settings: <xsl:value-of select="@feats"/>;
@@ -72,32 +72,6 @@
 <xsl:template match="testgroup">
 	<h2><xsl:value-of select="@label"/></h2>
 	<table>
-		<colgroup>
-			<!-- colgroup is somewhat limited: the only properties that will be picked up from the css
-			     are border, background, width, and visibility; thus class still has to be set in <td> elements -->
-			<xsl:if test="$width-label != ''">
-				<col class="label"/>
-			</xsl:if>
-			<xsl:if test="$width-string != ''">
-				<col class="string"/>
-			</xsl:if>
-			<xsl:if test="$width-comment != ''">
-				<col class="comment"/>
-			</xsl:if>
-		</colgroup>		
-		<thead>
-			<tr>
-				<xsl:if test="$width-label != ''">
-					<th>label</th>
-				</xsl:if>
-				<xsl:if test="$width-string != ''">
-					<th>string</th>
-				</xsl:if>
-				<xsl:if test="$width-comment != ''">
-					<th>comment</th>
-				</xsl:if>
-			</tr>
-		</thead>
 		<tbody>
 			<xsl:apply-templates/>
 		</tbody>
