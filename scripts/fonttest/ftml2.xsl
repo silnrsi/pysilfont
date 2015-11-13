@@ -4,6 +4,7 @@
 <!-- Use with nested <testgroup> elements to create tables with multiple <test> elements per row -->
 
 <!-- set variables from head element -->
+<xsl:variable name="width-class" select="/ftml/head/columns/@class"/>
 <xsl:variable name="width-comment" select="/ftml/head/columns/@comment"/>
 <xsl:variable name="width-label" select="/ftml/head/columns/@label"/>
 <xsl:variable name="width-string" select="/ftml/head/columns/@string"/>
@@ -38,6 +39,9 @@
 </xsl:if>
 <xsl:if test="$width-comment != ''">
 	.comment {width: <xsl:value-of select="$width-comment"/>}
+</xsl:if>
+<xsl:if test="$width-class != ''">
+	.comment {width: <xsl:value-of select="$width-class"/>}
 </xsl:if>
 	.dim {color: silver;}
 	.bright {color: red;}
@@ -94,13 +98,17 @@
 			<xsl:value-of select="@label"/>
 		</td>
 	</xsl:if>
-
-    	<xsl:apply-templates/>
+    <xsl:apply-templates/>
 	<xsl:if test="$width-comment != ''">
 		<td class="comment">
-			<!-- emit comment concatenated with class (if not default) -->
+			<!-- emit comment -->
 			<xsl:value-of select="test/comment"/>
-			<xsl:if test="test/@class"> (<xsl:value-of select="test/@class"/>)</xsl:if>
+		</td>
+	</xsl:if>
+	<xsl:if test="$width-class != ''">
+		<td class="class">
+			<!-- emit class -->
+			<xsl:value-of select="test/@class"/>
 		</td>
 	</xsl:if>
 </tr>

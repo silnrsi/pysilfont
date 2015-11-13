@@ -3,6 +3,7 @@
 <xsl:output method="html" encoding="utf-8"/>
 
 <!-- set variables from head element -->
+<xsl:variable name="width-class" select="/ftml/head/columns/@class"/>
 <xsl:variable name="width-comment" select="/ftml/head/columns/@comment"/>
 <xsl:variable name="width-label" select="/ftml/head/columns/@label"/>
 <xsl:variable name="width-string" select="/ftml/head/columns/@string"/>
@@ -37,6 +38,9 @@
 </xsl:if>
 <xsl:if test="$width-comment != ''">
 	.comment {width: <xsl:value-of select="$width-comment"/>}
+</xsl:if>
+<xsl:if test="$width-class != ''">
+	.comment {width: <xsl:value-of select="$width-class"/>}
 </xsl:if>
 	.dim {color: silver;}
 	.bright {color: red;}
@@ -132,9 +136,14 @@ font-feature-settings: <xsl:value-of select="@feats"/>;</xsl:attribute>
 	</xsl:if>
 	<xsl:if test="$width-comment != ''">
 		<td class="comment">
-			<!-- emit comment concatenated with class (if not default) -->
+			<!-- emit comment -->
 			<xsl:value-of select="comment"/>
-			<xsl:if test="@class"> (<xsl:value-of select="@class"/>)</xsl:if>
+		</td>
+	</xsl:if>
+	<xsl:if test="$width-class != ''">
+		<td class="class">
+			<!-- emit class -->
+			<xsl:value-of select="@class"/>
 		</td>
 	</xsl:if>
 </tr>
