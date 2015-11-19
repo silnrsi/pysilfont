@@ -12,10 +12,8 @@ from silfont.UFOlib import *
 suffix = '_addGlyph'
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
-    ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont', 'def': suffix}),
-    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': suffix+'log'}),
-    ('-v','--version',{'help': 'UFO version to output'},{}),
-    ('-p','--params',{'help': 'Font output parameters','action': 'append'}, {'type': 'optiondict'})]
+    ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
+    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': suffix+'log'})]
 
 def doit(args) :
     ''' This will add the following glyph to the font

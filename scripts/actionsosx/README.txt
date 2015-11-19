@@ -7,10 +7,13 @@ This action takes a .ufo (Unified Font Object) and normalizes the file to standa
   - sorting plists alphabetically
   - uniform handling of capitals & underscores in glif filenames
 
-To install and use the UFO Normalize action:
+To install the UFO Normalize action:
 
 - install the pysilfont package using the steps in INSTALL.txt (important!)
-- copy the action to your ~/Library/Services folder
+- double-click on UFO Normalize.workflow
+
+To use the UFO Normalize action:
+
 - right-click on a UFO file, and choose Services>UFO Normalize
 
 The action first makes a copy of the UFO in a backups subfolder.
