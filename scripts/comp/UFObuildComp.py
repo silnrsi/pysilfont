@@ -4,7 +4,7 @@ __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Rowe'
-__version__ = '0.1.3'
+__version__ = '0.2.0'
 
 from xml.etree import ElementTree as ET
 from silfont.genlib import execute
@@ -13,7 +13,7 @@ from silfont.complib import CompGlyph
 
 argspec = [
     ('ifont',{'help': 'Input UFO'}, {'type': 'infont'}),
-    ('ofont',{'help': 'Output UFO','nargs': '?' }, {'type': 'outfont', 'def': '_out'}),
+    ('ofont',{'help': 'Output UFO','nargs': '?' }, {'type': 'outfont'}),
     ('-i','--cdfile',{'help': 'Composite Definitions input file'}, {'type': 'infile', 'def': '_CD.txt'}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_CD.log'}),
     ('-v','--version',{'help': 'UFO version to output'},{}),
