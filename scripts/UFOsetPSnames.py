@@ -1,4 +1,4 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python
 '''Add public.poscriptname to glif lib based on a csv file
   - csv format glyphname,postscriptname'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
@@ -12,32 +12,28 @@ from silfont.UFOlib import *
 suffix = "_PSnames"
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
-    ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont', 'def': suffix}),
-    ('-i','--input',{'help': 'Input csv file'}, {'type': 'infile', 'def': suffix+'.csv'}),    
-    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': suffix+'.log'}),
-    ('-v','--version',{'help': 'UFO version to output'},{}),
-    ('-p','--params',{'help': 'Font output parameters','action': 'append'}, {'type': 'optiondict'})]
+    ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
+    ('-i','--input',{'help': 'Input csv file'}, {'type': 'incsv', 'def': suffix+'.csv'}),
+    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': suffix+'.log'})]
 
 def doit(args) :
     font = args.ifont
-    csv = args.input
+    incsv = args.input
+    incsv.numfields = 2
+    incsv.logger = font.logger
     glyphlist = font.deflayer.keys() # List to check every glyph has a psname applied
-    
-    for l in csv.readlines() :
-        l = l.strip()
-        if l == "" or l[0] == "#" : continue # Skip blank lines and comments
-        line = l.split(",")
-        if len(line) <> 2 : font.logger.log("Invalid line in csv: " + l,"E"); continue
+
+    for line in incsv :
         glyphn = line[0]
         psname = line[1]
- 
+
         if glyphn in glyphlist :
             glyph = font.deflayer[glyphn]
             if glyph["lib"] is None : glyph.add("lib")
             glyph["lib"].setval("public.postscriptname","string",psname)
             glyphlist.remove(glyphn)
         else :
-            font.logger.log("No glyph in font for " + glyphn,"I")
+            font.logger.log("No glyph in font for " + glyphn  + " on line " + str(incsv.line_num), "I")
 
     for glyphn in glyphlist : # Remaining glyphs for which no psname was supplied
         glyph = font.deflayer[glyphn]
@@ -46,5 +42,5 @@ def doit(args) :
         font.logger.log("No PS name in input file for font glyph " + glyphn,"I")
 
     return font
-    
+
 execute("PSFU",doit, argspec)

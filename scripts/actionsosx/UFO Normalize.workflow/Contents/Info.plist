@@ -8,7 +8,7 @@
 			<key>NSMenuItem</key>
 			<dict>
 				<key>default</key>
-				<string>UFO2 Normalize</string>
+				<string>UFO Normalize</string>
 			</dict>
 			<key>NSMessage</key>
 			<string>runWorkflowAsService</string>

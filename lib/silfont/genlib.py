@@ -7,14 +7,30 @@ __author__ = 'David Raymond'
 __version__ = '1.0.0'
 
 from xml.etree import cElementTree as ET
-import re, sys, os, codecs, argparse, datetime
+from glob import glob
+import re, sys, os, codecs, argparse, datetime, shutil, csv
 
 _elementprotect = {
     '&' : '&amp;',
     '<' : '&lt;',
     '>' : '&gt;' }
 _attribprotect = dict(_elementprotect)
-_attribprotect['"'] = '&quot;'
+_attribprotect['"'] = '&quot;' # Copy of element protect with double quote added
+
+def indexParams(params): # Index of parameters by name giving group (eg logging), type (eg str), listtype (for lists only) and value
+    index = {}
+    for group in params :
+        for param in params[group] :
+            value = params[group][param]
+            typ = type(value)
+            listtype = type(value[0]) if typ is list else None
+            index[param] = {'group': group, 'type': typ, 'listtype': listtype, 'value': value}
+    return index
+
+baseparams = {}
+baseparams['logging'] = {'scrlevel': 'P', 'loglevel': 'W'}
+baseparams['backups'] = {'backup': True, 'backupdir': 'backups', 'backupkeep': 5}
+baseparamsindex = indexParams(baseparams)
 
 class ETWriter(object) :
     """ General purpose ElementTree pretty printer complete with options for attribute order
@@ -106,9 +122,9 @@ class ETWriter(object) :
                 localattribs[lt] = v
 
     def serialize_nsxml(self, write, base = None, indent = '', topns = True, namespaces = {}) :
+        ## Not currently used.  Needs amending to mirror changes in serialize_xml for dummy attributes (and efficiency)"""
         """Output the object using write() in a normalised way:
                 topns if set puts all namespaces in root element else put them as low as possible"""
-        ## Needs amending to mirror changes in serialize_xml for dummy attributes (and efficiency)"""
         if base is None :
             base = self.root
             write('<?xml version="1.0" encoding="UTF-8"?>\n')
@@ -296,13 +312,19 @@ class loggerobj(object) :
         self.leveltext = leveltext
         if not self.loglevels : self.loglevels = { 'X': 0,       'S':1,        'E':2,        'P':3,        'W':4,        'I':5,        'V':6}
         if not self.leveltext : self.leveltext = ( 'Exception ', 'Severe:   ', 'Error:    ', 'Progress: ', 'Warning:  ', 'Info:     ', 'Verbose:  ')
-        self.loglevel = "2"; self.scrlevel = "2" # Temp values so invalid log levels can be reported
+        self.loglevel = "E"; self.scrlevel = "E" # Temp values so invalid log levels can be reported
         if loglevel in self.loglevels :
-            self.loglevel = self.loglevels[loglevel]
+            self.loglevel = loglevel
+            if self.loglevels[loglevel] < 2 :
+                self.loglevel = "E"
+                self.log("Loglevel increased to minimum level of Error", "E")
         else:
             self.log("Invalid loglevel value", "S")
         if scrlevel in self.loglevels :
-            self.scrlevel = self.loglevels[scrlevel]
+            self.scrlevel = scrlevel
+            if self.loglevels[scrlevel] < 1 :
+                self.scrlevel = "S"
+                self.log("Scrlevel increased to minimum level of Severe", "E")
         else:
             self.log("Invalid scrlevel value", "S")
 
@@ -310,12 +332,43 @@ class loggerobj(object) :
         levelval = self.loglevels[msglevel]
         message = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S ") + self.leveltext[levelval] + logmessage
         #message = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S:%f ") + self.leveltext[levelval] + logmessage ## added milliseconds for timing tests
-        if levelval <= self.scrlevel : print message
-        if self.logfile and levelval <= self.loglevel : self.logfile.write(message + "\n")
+        if levelval <= self.loglevels[self.scrlevel] : print message
+        if self.logfile and levelval <= self.loglevels[self.loglevel] : self.logfile.write(message + "\n")
         if msglevel == "S" :
             print "\n **** Fatal error - exiting ****"
             sys.exit(1)
         if msglevel == "X" :assert False, message
+
+class csvreader(object) : # Iterator for csv files, skipping comments and checking number of fields
+    def __init__(self, filename, minfields = 0, maxfields = 999, numfields = None, logger = None) :
+        self.filename = filename
+        self.minfields = minfields
+        self.maxfields = maxfields
+        self.numfields = numfields
+        self.logger = logger if logger else loggerobj() # If no logger supplied, will just log to screen
+        # Open the file and create reader
+        try :
+            file=open(filename,"rb")
+        except Exception as e :
+            print e
+            sys.exit(1)
+        self.reader = csv.reader(file)
+
+    def __setattr__(self, name, value) :
+        if name == "numfields" and value is not None : # If numfields is changed, reset min and max fields
+            self.minfields = value
+            self.maxfields = value
+        super(csvreader,self).__setattr__(name,value)
+
+    def __iter__(self):
+        for row in self.reader :
+            self.line_num = self.reader.line_num
+            if row == [] : continue # Skip blank lines
+            if row[0][0] == "#" : continue # Skip comments - ie lines starting with #
+            if len(row) < self.minfields or len(row) > self.maxfields :
+                self.logger.log("Invalid number of fields on line " + str(self.line_num) + " in "+self.filename, "E" )
+                continue
+            yield row
 
 def makeAttribOrder(attriblist) : # Turn a list of attrib names into an attributeOrder dict for ETWriter
         return dict(map(lambda x:(x[1], x[0]), enumerate(attriblist)))
@@ -332,6 +385,7 @@ def execute(tool, fn, argspec) :
     #       for UFOlib scripts, also includes all font.outparams keys except for attribOrder
     #   -v  for UFOlib scripts this sets font.outparams(UFOversion)
 
+    logger = loggerobj() # Basic screen logger at this stage
     ff = False
     psfu = False
     if tool == "FF" :
@@ -346,9 +400,8 @@ def execute(tool, fn, argspec) :
     elif tool == "" or tool is None :
         tool = None
     else :
-        print "Invalid tool in call to execute()"
+        logger.log( "Invalid tool in call to execute()", "X")
         return
-
     basemodule = sys.modules[fn.__module__]
     poptions = {}
     poptions['prog'] = _splitfn(sys.argv[0])[1]
@@ -359,9 +412,24 @@ def execute(tool, fn, argspec) :
     parser = argparse.ArgumentParser(**poptions)
 
     # Add standard arguments
-    ## Should check that these have not been defined in argspec
-    argspec.append(('-d','--defaults', {'help': 'Display help with info on default values', 'action': 'store_true'}, {}))
-    argspec.append(('-q','--quiet',{'help': 'Quiet mode - only display/log errors', 'action': 'store_true'}, {}))
+    standardargs = [
+            ('-d','--defaults', {'help': 'Display help with info on default values', 'action': 'store_true'}, {}),
+            ('-q','--quiet',{'help': 'Quiet mode - only display errors', 'action': 'store_true'}, {})]
+    standardargsindex = ['defaults','quiet']
+    if psfu:
+        standardargs.extend([
+            ('-v','--version',{'help': 'UFO version to output'},{}),
+            ('-p','--params',{'help': 'Other font parameters','action': 'append'}, {'type': 'optiondict'})])
+        standardargsindex.extend(['version','params'])
+
+    suppliedargs = []
+    for a in argspec :
+        argn = a[:-2][-1] # [:-2] will give either 1 or 2, the last of which is the full argument name
+        if argn[0:2] == "--" : argn = argn[2:] # Will start with -- for options
+        suppliedargs.append(argn)
+
+    for i,arg in enumerate(standardargsindex) :
+        if arg not in suppliedargs: argspec.append(standardargs[i])
 
     # Special handling for "-d" to print default value info with help text
     defhelp = False
@@ -374,9 +442,10 @@ def execute(tool, fn, argspec) :
 
     quiet = True if "-q" in sys.argv else False
 
-# Process the supplied argument specs, add args to parser, store other info in arginfo
+    # Process the supplied argument specs, add args to parser, store other info in arginfo
     arginfo = []
-    for c,a in enumerate(argspec) :
+    logdef = None
+    for a in argspec :
         # Process all but last tuple entry as argparse arguments
         nonkwds = a[:-2]
         kwds = a[-2]
@@ -386,6 +455,8 @@ def execute(tool, fn, argspec) :
         if argn[0:2] == "--" : argn = argn[2:] # Will start with -- for options
         ainfo=a[-1]
         ainfo['name']=argn
+        if argn == 'log' :
+            logdef = ainfo['def'] if 'def' in ainfo else None
         arginfo.append(ainfo)
         if defhelp:
             arg = nonkwds[0]
@@ -394,7 +465,7 @@ def execute(tool, fn, argspec) :
             elif 'default' in kwds:
                 defother.append([arg,kwds['default']])
 
-# if -d specified, change the help epilog to info about argument defaults
+    # if -d specified, change the help epilog to info about argument defaults
     if defhelp:
         if not (deffiles or defother):
             deftext = "No defaults for parameters/options"
@@ -410,53 +481,138 @@ def execute(tool, fn, argspec) :
                 deftext = deftext + '    {:<20}{}\n'.format(param,defv)
         parser.epilog = deftext
 
-# Parse the command-line arguments. If errors or -h used, procedure will exit here
+    # Parse the command-line arguments. If errors or -h used, procedure will exit here
     args = parser.parse_args()
 
-# Process the argument values returned from argparse
+    # Process the first positional parameter to get defaults for file names
     fppval = getattr(args,arginfo[0]['name'])
     if fppval is None : fppval = "" # For scripts that can be run with no positional parameters
     (fppath,fpbase,fpext)=_splitfn(fppval) # First pos param use for defaulting
+
+    # Process command-line parameters and config file
+    clparams = {}
+    if 'params' in args.__dict__ :
+        if args.params is not None :
+            for param in args.params :
+                x = param.split("=",1)
+                if len(x) <> 2 :
+                    logger.log( "params must be of the form 'param=value'", "S")
+                if x[1] == "\\t" : x[1] = "\t" # Special handling for tab characters
+                clparams[x[0]] = x[1]
+
+    if psfu and 'version' in args.__dict__:
+        if args.version : clparams["UFOversion"] = args.version
+
+    args.params = clparams
+
+    # Read config file from disk if it exists
+    cfgparams = {}
+    configname = os.path.join(fppath, "pysilfont.cfg")
+    if os.path.exists(configname) :
+        config = csvreader(configname, logger = logger, numfields = 2)
+        for param,value in config : cfgparams[param] = value
+
+    # Create list of parameters for use with logging and backup from base parameters overdidden by any congif file or command line parameters
+    lbparams={}
+    for param in baseparamsindex :
+        lbparams[param] = cfgparams[param] if param in cfgparams else baseparamsindex[param]['value']
+        if param in clparams : lbparams[param] = clparams[param]
+
+    # Set up logging
+    logfile = None
+    if 'log' in args.__dict__ :
+        logname = args.log if args.log else ""
+        if logdef is not None :
+            (path,base,ext)=_splitfn(logname)
+            (dpath,dbase,dext)=_splitfn(logdef) # dpath should be None
+            if not path :
+                if base and ext : # If both specified then use cwd, ie no path
+                    path = ""
+                else:
+                    path=fppath
+            if not base :
+                if dbase == "" :
+                    base = fpbase
+                elif dbase[0] == "_" : # Append to font name if starts with _
+                    base = fpbase + dbase
+                else:
+                    base = dbase
+            if not ext and dext : ext = dext
+            logname = os.path.join(path,base+ext)
+        if not quiet : logger.log( 'Opening log file for output: '+logname, "P")
+        try :
+            logfile=open(logname,"w")
+        except Exception as e :
+            print e
+            sys.exit(1)
+        args.log = logfile
+    # Set up logger details
+    logger.loglevel = lbparams['loglevel'].upper()
+    logger.scrlevel = "E" if quiet else lbparams['scrlevel'].upper()
+    logger.logfile = logfile
+    setattr(args,'logger',logger)
+
+# Process the argument values returned from argparse
+
     outfont = None
     infontlist = []
-
     for c,ainfo in enumerate(arginfo) :
         aval = getattr(args,ainfo['name'])
-        atype = ainfo['type'] if 'type' in ainfo else None
-        adef = ainfo['def'] if 'def' in ainfo else None
+        if ainfo['name'] in  ('params', 'log') : continue # params and log already processed
+        atype = None
+        adef = None
+        if 'type' in ainfo :
+            atype = ainfo['type']
+            if atype <> 'optiondict' : # All other types are file types, so adef must be set, even if just to ""
+                adef = ainfo['def'] if 'def' in ainfo else ""
+
         if c == 0 :
             if aval[-1] in ("\\","/") : aval = aval[0:-1] # Remove trailing slashes
         else : #Handle defaults for all but first positional parameter
-            if adef :
+            if adef is not None:
                 if not aval : aval=""
+                if aval == "" and adef == "" : # Only valid for output font parameter
+                    if atype <> "outfont" :
+                        logger.log( "No value suppiled for " + ainfo['name'], "S")
+                        sysexit()
                 (apath,abase,aext)=_splitfn(aval)
                 (dpath,dbase,dext)=_splitfn(adef) # dpath should be None
                 if not apath :
-                    if abase and aext :
+                    if abase and aext : # If both specified then use cwd, ie no path
                         apath = ""
                     else:
                         apath=fppath
-                if not abase : abase = fpbase + dbase
+                if not abase :
+                    if dbase == "" :
+                        abase = fpbase
+                    elif dbase[0] == "_" : # Append to font name if starts with _
+                        abase = fpbase + dbase
+                    else:
+                        abase = dbase
                 if not aext :
                     if dext :
                         aext = dext
                     elif (atype=='outfont' or atype=='infont') : aext = fpext
                 aval = os.path.join(apath,abase+aext)
+
+
         # Open files/fonts
         if atype=='infont' :
             if tool is None:
-                print "Can't specify a font without a font tool"
-                sys.exit(1)
+                logger.log( "Can't specify a font without a font tool", "X")
             infontlist.append((ainfo['name'],aval)) # Build list of fonts to open when other args processed
         elif atype=='infile' :
-            if not quiet : print 'Opening file for input: ',aval
+            if not quiet : logger.log( 'Opening file for input: '+aval, "P")
             try :
                 aval=open(aval,"r")
             except Exception as e :
                 print e
                 sys.exit(1)
+        elif atype=='incsv' :
+            if not quiet : logger.log( 'Opening file for input: '+aval, "P")
+            aval = csvreader(aval)
         elif atype=='outfile':
-            if not quiet : print 'Opening file for output: ',aval
+            if not quiet : logger.log( 'Opening file for output: '+aval, "P")
             try :
                 aval=open(aval,"w")
             except Exception as e :
@@ -464,64 +620,73 @@ def execute(tool, fn, argspec) :
                 sys.exit(1)
         elif atype=='outfont' :
             if tool is None:
-                print "Can't specify a font without a font tool"
-                sys.exit(1)
-            outfont=aval # Can only be one outfont
-            outfontext=aext
+                logger.log("Can't specify a font without a font tool", "X")
+            outfont = aval
+            outfontpath = apath
+            outfontbase = abase
+            outfontext = aext
+
         elif atype=='optiondict' : # Turn multiple options in the form ['opt1=a','opt2=b'] into a dictionary
             avaldict={}
             if aval is not None:
                 for option in aval:
                     x = option.split("=",1)
                     if len(x) <> 2 :
-                        print "params must be of the form 'param=value'"
-                        sys.exit(1)
+                        logger.log( "params must be of the form 'param=value'", "S")
                     if x[1] == "\\t" : x[1] = "\t" # Special handling for tab characters
                     avaldict[x[0]] = x[1]
             aval = avaldict
 
         setattr(args,ainfo['name'],aval)
 
-# Create logger
-
-    logfile = args.log if 'log' in args.__dict__ else None
-    params = args.params if 'params' in args.__dict__ else {}
-    loglevel = params['loglevel'].upper() if 'loglevel' in params else "W"
-    scrlevel = params['scrlevel'].upper() if 'scrlevel' in params else "P"
-    if quiet : scrlevel = "E"
-    logger = loggerobj(logfile,loglevel=loglevel,scrlevel=scrlevel)
-    setattr(args,'logger',logger)
-
 # Open fonts - needs to be done after processing other arguments so logger and params are defined
 
     for name,aval in infontlist :
         if ff : aval=fontforge.open(aval)
-        if psfu: aval=Ufont(aval, logger = logger)
-        setattr(args,name,aval)
-        # Process specific parameters for UFOlib fonts
-        if psfu :
-            font = aval
-            params = args.params if 'params' in args.__dict__  else None
-            if 'version' in args.__dict__ :
-                if args.version : params["UFOversion"] = args.version
-            for param in params:
-                if param in font.outparams:
-                    if param == "UFOversion" and params[param] not in ("2","3") : logger.log("UFO version must be 2 or 3", "S")
-                    if param == "attribOrders" : logger.log("attribOrders can't be set by params", "S")
-                    font.outparams[param] = params[param]
-                elif param not in ('loglevel','scrlevel') : logger.log( "Parameter invalid: " + param, "S")
+        if psfu: aval=Ufont(aval, logger = logger, cfgparams=cfgparams, clparams=clparams)
+        setattr(args,name,aval) # Assign the font object to args attribute
 
 # All arguments processed, now call the main function
-    result = fn(args)
-    if outfont and result is not None:
+    newfont = fn(args)
+# If an output font is expected and one is returned, output the font
+    if outfont and newfont is not None:
+        # Backup the font if output is overwriting original input font
+        if outfont == infontlist[0][1] :
+            backupdir = os.path.join(outfontpath,lbparams['backupdir'])
+            backupmax = int(lbparams['backupkeep'])
+            backup = str2bool(lbparams['backup'])
 
+            if backup :
+                if not os.path.isdir(backupdir) : # Create backup directory if not present
+                    try:
+                        os.mkdir(backupdir)
+                    except Exception as e :
+                        print e
+                        sys.exit(1)
+                backupbase = os.path.join(backupdir,outfontbase+outfontext)
+                # Work out backup name based on existing backups
+                nums = sorted([ int(i[len(backupbase)+1-len(i):-1]) for i in glob(backupbase+".*~")]) # Extract list of backup numbers from existing backups
+                newnum = max(nums)+1 if nums else 1
+                backupname = backupbase+"."+str(newnum)+"~"
+                # Backup the font
+                newfont.logger.log("Backing up input font to "+backupname,"P")
+                shutil.copytree(outfont,backupname)
+                # Purge old backups
+                for i in range(0, len(nums) - backupmax + 1) :
+                    backupname = backupbase+"."+str(nums[i])+"~"
+                    newfont.logger.log("Purging old backup "+backupname,"I")
+                    shutil.rmtree(backupname)
+            else:
+                newfont.logger.log("No font backup done due to backup parameter setting","W")
+        # Output the font
         if ff:
-            if not quiet : print "Saving font to " + outfont
+            if not quiet : logger.log( "Saving font to " + outfont, "P")
             if outfontext.lower() == ".ufo" or outfontext.lower() == '.ttf':
-                result.generate(outfont)
-            else : result.save(outfont)
+                newfont.generate(outfont)
+            else : newfont.save(outfont)
         else: # Must be Pyslifont Ufont
-            result.write(outfont)
+            newfont.write(outfont)
+
     if logfile : logfile.close()
 
 def _splitfn(fn): # Split filename into path, base and extension
@@ -529,5 +694,20 @@ def _splitfn(fn): # Split filename into path, base and extension
         if fn[-1] in ("\\","/") : fn = fn[0:-1]
     (path,base) = os.path.split(fn)
     (base,ext) = os.path.splitext(base)
+    # Handle special case where just a directory is supplied
+    if ext == "" : # If there's an extension, treat as file name, eg a ufo directory
+        if os.path.isdir(fn) :
+            path = fn
+            base = ""
     return (path,base,ext)
 
+def str2bool(v): # If v is not a boolean, convert from string to boolean
+    if type(v) == bool : return v
+    v = v.lower()
+    if v in ("yes", "y", "true", "t", "1") :
+        v = True
+    elif v in ("no", "n", "false", "f", "0") :
+        v = False
+    else:
+        v = None
+    return v
