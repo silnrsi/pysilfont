@@ -14,11 +14,9 @@ argspec = [
     ('ofont',{'help': 'Output UFO','nargs': '?' }, {'type': 'outfont'}),
     ('-i','--anchorinfo',{'help': 'XML file with anchor data'}, {'type': 'infile', 'def': '_anc.xml'}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_anc.log'}),
-    ('-v','--version',{'help': 'UFO version to output'},{}),
     ('-a','--analysis',{'help': 'Analysis only; no output font generated', 'action': 'store_true'},{}),
     # 'choices' for -r should correspond to infont.logger.loglevels.keys()
-    ('-r','--report',{'help': 'Set reporting level for log', 'type':str, 'choices':['X','S','E','P','W','I','V']},{}),
-    ('-p','--params',{'help': 'Font output parameters','action': 'append'}, {'type': 'optiondict'})
+    ('-r','--report',{'help': 'Set reporting level for log', 'type':str, 'choices':['X','S','E','P','W','I','V']},{})
     ]
 
 def doit(args) :
@@ -28,7 +26,7 @@ def doit(args) :
     glyphcount = 0
 
     try:
-        for g in ET.parse(args.anchorinfo).getroot().findall('glyph'): ### 
+        for g in ET.parse(args.anchorinfo).getroot().findall('glyph'): ###
             glyphcount += 1
             gname = g.get('PSName')
             if gname not in infont.deflayer.keys():
@@ -60,7 +58,7 @@ def doit(args) :
                     # if anchor being added exists in font already, delete it first
                     ancnames = [a.element.get('name') for a in glyph['anchor']]
                     infont.logger.log(str(ancnames), "V") ###
-                    if name in ancnames: 
+                    if name in ancnames:
                         infont.logger.log("removing anchor " + name + ", index " + str(ancnames.index(name)), "V") ###
                         glyph.remove('anchor', ancnames.index(name))
                     infont.logger.log("adding anchor " + name + ": (" + x + ", " + y + ")", "V") ###
@@ -72,5 +70,5 @@ def doit(args) :
     except ET.ParseError as mess:
         infont.logger.log("Error parsing XML input file: " + str(mess), "S")
         return # but really should terminate after logging Severe error above
-    
+
 execute("PSFU", doit, argspec)

@@ -8,7 +8,7 @@ __version__ = '0.2.0'
 
 from xml.etree import ElementTree as ET
 from silfont.genlib import execute
-from silfont.UFOlib import * ### had error when specifying only: Ufont, Uglif, Ucomponent 
+from silfont.UFOlib import * ### had error when specifying only: Ufont, Uglif, Ucomponent
 from silfont.complib import CompGlyph
 
 argspec = [
@@ -16,12 +16,10 @@ argspec = [
     ('ofont',{'help': 'Output UFO','nargs': '?' }, {'type': 'outfont'}),
     ('-i','--cdfile',{'help': 'Composite Definitions input file'}, {'type': 'infile', 'def': '_CD.txt'}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_CD.log'}),
-    ('-v','--version',{'help': 'UFO version to output'},{}),
     ('-a','--analysis',{'help': 'Analysis only; no output font generated', 'action': 'store_true'},{}),
     ('-f','--force',{'help': 'Force overwrite of glyphs having outlines', 'action': 'store_true'},{}),
     # 'choices' for -r should correspond to infont.logger.loglevels.keys() ### -r may move to UFOlib eventually
-    ('-r','--report',{'help': 'Set reporting level for log', 'type':str, 'choices':['X','S','E','P','W','I','V']},{}),
-    ('-p','--params',{'help': 'Font output parameters','action': 'append'}, {'type': 'optiondict'})
+    ('-r','--report',{'help': 'Set reporting level for log', 'type':str, 'choices':['X','S','E','P','W','I','V']},{})
     ]
 
 glyphlist = []  # accessed as global by recursive function addtolist() and main function doit()
@@ -59,7 +57,7 @@ def doit(args) :
     infont = args.ifont
     r = args.report
     if r: infont.logger.loglevel = infont.logger.loglevels[r]
-    
+
     ### temp section (these may someday be passed as optional parameters)
     RemoveUsedAnchors = True
     FlattenComponents = True
