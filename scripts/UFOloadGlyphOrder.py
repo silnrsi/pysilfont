@@ -1,4 +1,4 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python
 '''Load glyph order data into lib.plist based on a text file'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015, SIL International  (http://www.sil.org)'
@@ -11,26 +11,24 @@ from silfont.UFOlib import *
 suffix = "_Gorder"
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
-    ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont', 'def': suffix}),
-    ('-i','--input',{'help': 'Input csv file'}, {'type': 'infile', 'def': suffix+'.txt'}),    
-    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': suffix+'.log'}),
-    ('-v','--version',{'help': 'UFO version to output'},{}),
-    ('-p','--params',{'help': 'Font output parameters','action': 'append'}, {'type': 'optiondict'})]
+    ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
+    ('-i','--input',{'help': 'Input csv file'}, {'type': 'infile', 'def': suffix+'.txt'}),
+    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': suffix+'.log'})]
 
 def doit(args) :
     font = args.ifont
     infile = args.input
     glyphlist = font.deflayer.keys() # List to check every glyph has a record in the list
-    
+
     array = ET.Element("array")
-    
+
     for glyphn in infile.readlines() :
         glyphn = glyphn.strip()
         if glyphn == "" or glyphn[0] == "#" : continue
         # Add to array
         sub = ET.SubElement(array,"string")
         sub.text = glyphn
-        # Check to see if glyph is in font 
+        # Check to see if glyph is in font
         if glyphn in glyphlist :
             glyphlist.remove(glyphn) # So glyphlist ends up with those without an entry
         else :
@@ -38,7 +36,7 @@ def doit(args) :
 
     for glyphn in glyphlist : # Remaining glyphs were not in the input file
         font.logger.log("No entry in input file for font glyph " + glyphn,"I")
-    
+
     # Add to lib.plist
     if "lib" not in font.__dict__ : #@@@ Need to extend capability of Uplist to do much of this
         font.lib = Uplist(font = font)
@@ -47,5 +45,5 @@ def doit(args) :
     font.lib.setelem("public.glyphOrder",array)
 
     return font
-    
+
 execute("PSFU",doit, argspec)

@@ -9,12 +9,30 @@ __version__ = '1.0.0'
 from xml.etree import cElementTree as ET
 import sys, os, copy, shutil, filecmp
 import collections
-from genlib import *
+from silfont.genlib import *
 
-_glifElements  = ('advance', 'unicode', 'note',   'image',  'guideline', 'anchor', 'outline', 'lib')
-_glifElemMulti = (False,     True,      False,    False,    True,        True,     False,     False)
-_glifElemF1    = (True,      True,      False,    False,    False,       False,    True,      True)
+_glifElemMulti = ('unicode', 'guideline', 'anchor') # glif elements that can occur multiple times
+_glifElemF1 = ('advance','unicode','outline','lib') # glif elements valid in format 1 glifs (ie UFO2 glfis)
 
+# Add outparams values to baseparams from genlib
+baseparams['outparams'] = {
+    "indentIncr":       "  ",   # XML Indent increment
+    "indentFirst":      "  ",   # First XML indent
+    "indentML":         False,  # Should multi-line string values be indented?
+    "plistIndentFirst": "",     # First indent amoutn for plists
+    "sortDicts":        True,   # Should dict elements be sorted alphabetically?
+    'precision':        6,      # Decimal precision to use in XML output - both for real values and for attributes if numeric
+    "renameGlifs":      True,   # Rename glifs based on UFO3 suggested algorithm
+    "UFOversion":       None,   # UFOversion - defaults to existing unless a value is supplied
+    "glifElemOrder":    ['advance', 'unicode', 'note',   'image',  'guideline', 'anchor', 'outline', 'lib'], # Order to output glif elements
+    "numAttribs":       ['pos', 'width', 'height', 'xScale', 'xyScale', 'yxScale', 'yScale', 'xOffset', 'yOffset', 'x', 'y', 'angle', 'format'],    # Used with precision above
+    "attribOrders.glif":[ 'pos', 'width', 'height', 'fileName', 'base', 'xScale', 'xyScale', 'yxScale', 'yScale',
+                'xOffset', 'yOffset', 'x', 'y', 'angle', 'type', 'smooth', 'name', 'format', 'color', 'identifier'] # See below
+    }
+# attribOrders give the order XML attributes should be output in.  A single list covers all elements in an XML item.  Currently just needed for glif files
+baseparamsindex = indexParams(baseparams)
+
+# Define illegal characters and reserved names for makeFileName
 _illegalChars = "\"*+/:<>?[\]|" + chr(0x7F)
 for i in range(0,32) : _illegalChars += chr(i)
 _illegalChars = list(_illegalChars)
@@ -140,7 +158,7 @@ class UtextFile(object) :
 
 class Ufont(object) :
     """ Object to hold all the data from a UFO"""
-    def __init__(self, ufodir = None, logger = None ) :
+    def __init__(self, ufodir = None, logger = None , cfgparams = None, clparams = None) :
         if not logger : logger = loggerobj() # Will only log message to screen
         self.logger = logger
         if ufodir:
@@ -148,15 +166,71 @@ class Ufont(object) :
             self.logger.log( 'Reading UFO: ' + ufodir, 'P')
             if not os.path.isdir(ufodir) :
                 self.logger.log(ufodir + " is not a directory","S")
-            # Read list of files and folders in top 4 levels; anything at lower levels just needs copying
+            # Read list of files and folders
             self.dtree=dirTree(ufodir)
+            # Read metainfo (which must exist)
             self.metainfo = self._readPlist("metainfo.plist")
             self.UFOversion = self.metainfo["formatVersion"][1].text
+            # Read lib.plist then process pysilfont parameters if present
+            libparams = {}
+            if "lib.plist" in self.dtree :
+                self.lib = self._readPlist("lib.plist")
+                if "org.sil.pysilfontparams" in self.lib :
+                    elem = self.lib["org.sil.pysilfontparams"][1]
+                    if elem.tag <> "array" : self.logger.log("Invalid parameter XML lib.plist - org.sil.pysilfontparams must be an array","S")
+                    for param in elem : libparams[param.tag] = param.text
+            # Set up parameters to use - based on command line ones, lib.plist ones, config ones and UFOlib defaults in that order
+            fparams = copy.deepcopy(baseparamsindex) # UFOlib defaults
+            for (paramtype,params) in (("Config file",cfgparams),("lib.plist",libparams),("Command-line",clparams)):
+                if params :
+                    for param in params :
+                        if param not in fparams: self.logger.log ("Invalid "+paramtype+" parameter: "+param,"S")
+                        if fparams[param]["group"] == "outparams" : # only params relevant to a font
+                            ptyp = fparams[param]["type"]
+                            value = params[param]
+                            if ptyp is list : value = value.split(",") # Convert csv string into list
+                            if ptyp is bool : value = str2bool(value)
+                            if type(value) <> ptyp :
+                                if param == "UFOversion" : # Default is None, so type does not match if value given
+                                    if value not in ("2","3") : self.logger.log ("UFO version must be 2 or 3","S")
+                                else:
+                                    self.logger.log ("Invalid "+paramtype+" parameter type for "+param+": "+params[param],"S")
+                            if ptyp is list :
+                                if len(value) < 2 : self.logger.log (paramtype+" parameter "+param+" must have a list of values: "+params[param],"S")
+                                valuesOK = True
+                                listtype = fparams[param]["listtype"]
+                                for i,val in enumerate(value) :
+                                    if listtype is bool :
+                                        val = str2bool(val)
+                                        value[i] = val
+                                    if type(val) <> listtype : valuesOK = False
+                                if not valuesOK : self.logger.log ("Invalid "+paramtype+" parameter type for "+param+": "+params[param],"S")
+                            currentval = fparams[param]["value"]
+                            if value <> currentval :
+                                if param == "glifElemOrder" : # Must be the standard elements with just the order changed
+                                    if sorted(value) <> sorted(currentval) : self.logger.log("Invalid "+paramtype+ " values for glifElemOrder", "S")
+                                old = str(currentval)
+                                new = str(value)
+                                if old <> old.strip() or new <> new.strip() : # Add quotes if there are leading or trailing spaces
+                                    old = '"'+old+'"'
+                                    new = '"'+new+'"'
+                                self.logger.log(paramtype + " parameters: changing "+param+" from " + old  + " to " + new,"I")
+                                fparams[param]["value"] = value
+            self.outparams = {"attribOrders": {}}
+            for paramname in fparams :
+                param = fparams[paramname]
+                if param["group"] == 'outparams' :
+                    if paramname[0:12] == 'attribOrders' :
+                        elemname = paramname.split(".")[1]
+                        self.outparams["attribOrders"][elemname] = makeAttribOrder(param["value"])
+                    else:
+                        self.outparams[paramname] = param["value"]
+            if self.outparams["UFOversion"] is None : self.outparams["UFOversion"] = self.UFOversion
+
             # Read other top-level plists
             if "fontinfo.plist" in self.dtree : self.fontinfo = self._readPlist("fontinfo.plist")
             if "groups.plist" in self.dtree : self.groups = self._readPlist("groups.plist")
             if "kerning.plist" in self.dtree : self.kerning = self._readPlist("kerning.plist")
-            if "lib.plist" in self.dtree : self.lib = self._readPlist("lib.plist")
             if self.UFOversion == "2" : # Create a dummy layer contents so 2 & 3 can be handled the same
                 if "glyphs" not in self.dtree : self.logger.log('No glyphs directory in font', "S")
                 self.layercontents = Uplist(font = self)
@@ -183,16 +257,8 @@ class Ufont(object) :
                 else :
                     self.logger.log( "Glyph directory " + layerdir + " missing", "S")
             if self.deflayer is None : self.logger.log("No public.default layer", "S")
-            # Process other files and directories
-            # Set initial defaults for outparams
-            self.outparams = { "indentIncr" : "  ", "indentFirst" : "  ", "indentML" : False, "plistIndentFirst" : "", 'sortDicts' : True , 'precision' : 6}
-            self.outparams["renameGlifs"] = True
-            self.outparams["UFOversion"] = self.UFOversion
-            self.outparams["numAttribs"] = ['pos', 'width', 'height', 'xScale', 'xyScale', 'yxScale', 'yScale', 'xOffset', 'yOffset', 'x', 'y', 'angle', 'format']
-            self.outparams["attribOrders"] = {
-                'glif' : makeAttribOrder([ 'pos', 'width', 'height', 'fileName', 'base', 'xScale', 'xyScale', 'yxScale', 'yScale',
-                'xOffset', 'yOffset', 'x', 'y', 'angle', 'type', 'smooth', 'name', 'format', 'color', 'identifier'])
-                }
+            ## Process other files and directories
+
 
     def _readPlist(self, filen) :
         if filen in self.dtree :
@@ -364,26 +430,21 @@ class Uplist(xmlitem, _plist) :
 class Uglif(xmlitem) :
     # Unlike plists, glifs can have multiples of some sub-elements (eg anchors) so create lists for those
 
-    def __init__(self, layer = None, filen = None, parse = True, name = None, format = None) :
-        if layer is None :
-            dirn = None
-        else :
-            dirn = os.path.join(layer.font.ufodir, layer.layerdir)
+    def __init__(self, layer, filen = None, parse = True, name = None, format = None) :
+        dirn = os.path.join(layer.font.ufodir, layer.layerdir)
         xmlitem.__init__(self, dirn, filen, parse) # Will read item from file if dirn and filen both present
         self.type="glif"
         self.layer = layer
         self.format = format if format else '2'
         self.name = name
         self.outparams = None
-
+        self.glifElemOrder = self.layer.font.outparams["glifElemOrder"]
         # Set initial values for sub-objects
-        for i in range(len(_glifElements)) :
-            elementn = _glifElements[i]
-            if _glifElemMulti[i] :
-                self._contents[elementn] = []
+        for elem in self.glifElemOrder :
+            if elem in _glifElemMulti :
+                self._contents[elem] = []
             else :
-                self._contents[elementn] = None
-
+                self._contents[elem] = None
         if self.etree is not None : self.process_etree()
 
     def __setattr__(self, name, value) :
@@ -421,11 +482,9 @@ class Uglif(xmlitem) :
         for i in range(len(et)) :
             element = et[i]
             tag = element.tag
-            index  = _glifElements.index(tag)
-            multi  = _glifElemMulti[index]
-            F1elem = _glifElemF1[index]
-            if F1elem or self.format == '2' :
-                if multi :
+            if not tag in self.glifElemOrder : self.layer.font.logger.log("Invalid element "+tag+" in glif "+self.name, "E")
+            if tag in _glifElemF1 or self.format == '2' :
+                if tag in _glifElemMulti :
                     self._contents[tag].append(self.makeObject(tag,element))
                 else:
                     self._contents[tag] = self.makeObject(tag,element)
@@ -446,13 +505,11 @@ class Uglif(xmlitem) :
         et.attrib["name"] = self.name
         et.attrib["format"] = self.format
         # Insert sub-elements
-        for i in range(len(_glifElements)) :
-            F1 = _glifElemF1[i]
-            if F1 or self.format == "2" : # Check element is valid for glif format
-                elementn = _glifElements[i]
-                item = self._contents[elementn]
+        for elem in self.glifElemOrder :
+            if elem in _glifElemF1 or self.format == "2" : # Check element is valid for glif format
+                item = self._contents[elem]
                 if item is not None :
-                    if _glifElemMulti[i] :
+                    if elem in _glifElemMulti :
                         for object in item :
                             et.append(object.element)
                     else :
@@ -463,13 +520,10 @@ class Uglif(xmlitem) :
         element = ET.Element(ename)
         if attrib : element.attrib = attrib
         if ename == "lib" : ET.SubElement(element,"dict")
-        index = _glifElements.index(ename)
-        multi = _glifElemMulti[index]
+        multi = True if ename in _glifElemMulti else False
 
         # Check element does not already exist for single elements
-        if self._contents[ename] and not multi :
-            message = "Already an " + enam + "in glif"
-            if self.layer : self.layer.font.logger.log( message, "X")
+        if self._contents[ename] and not multi : self.layer.font.logger.log( "Already an " + enam + "in glif", "X")
 
         # Add new object
         if multi :
@@ -481,12 +535,8 @@ class Uglif(xmlitem) :
         # Remove object from a glif
         # For multi objects, an index or object must be supplied to identify which
         # to delete
-        eindex = _glifElements.index(ename)
-        multi = _glifElemMulti[eindex]
-        item = self._contents[ename]
-
-        # Delete the object
-        if multi :
+        if ename in _glifElemMulti :
+            item = self._contents[ename]
             if index is None : index = item.index(object)
             del item[index]
         else :
@@ -737,7 +787,7 @@ def writeToDisk(dtree, outdir, font, odtree = {}, logindent = "") :
 
         else : # Must be directory
             if not dtreeitem.read :
-                font.logger.log(logindent + "Skipping invalid input directory " + filen)
+                font.logger.log(logindent + "Skipping invalid input directory " + filen,"W")
                 if exists :
                     font.logger.log('Deleting directory '+ filen + ' from existing output UFO', "W")
                     shutil.rmtree(os.path.join(outdir,filen))

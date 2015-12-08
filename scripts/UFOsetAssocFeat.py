@@ -1,4 +1,4 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python
 '''Add associate feature info to glif lib based on a csv file
   csv format glyphname,featurename[,featurevalue]'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
@@ -12,26 +12,23 @@ from silfont.UFOlib import *
 suffix = "_AssocFeat"
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
-    ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont', 'def': suffix}),
-    ('-i','--input',{'help': 'Input csv file'}, {'type': 'infile', 'def': suffix+'.csv'}),    
-    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': suffix+'.log'}),
-    ('-v','--version',{'help': 'UFO version to output'},{}),
-    ('-p','--params',{'help': 'Font output parameters','action': 'append'}, {'type': 'optiondict'})]
+    ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
+    ('-i','--input',{'help': 'Input csv file'}, {'type': 'incsv', 'def': suffix+'.csv'}),
+    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': suffix+'.log'})]
 
 def doit(args) :
     font = args.ifont
-    csv = args.input
+    incsv = args.input
+    incsv.minfields = 2
+    incsv.maxfields = 3
+    incsv.logger = font.logger
     glyphlist = font.deflayer.keys() # Identify which glifs have not got an AssocFeat set
-    
-    for l in csv.readlines() :
-        l = l.strip()
-        if l == "" or l[0] == "#" : continue # Skip blank lines and comments
-        line = l.split(",")
-        if len(line) < 2 or len(line) > 3 : font.logger.log("Invalid line in csv: " + l,"E") ; continue
+
+    for line in incsv :
         glyphn = line[0]
         feature = line[1]
         value = line[2] if len(line) == 3 else ""
-        
+
         if glyphn in glyphlist :
             glyph = font.deflayer[glyphn]
             if glyph["lib"] is None : glyph.add("lib")
@@ -42,7 +39,7 @@ def doit(args) :
                 if "org.sil.assocFeatureValue" in glyph["lib"] : glyph["lib"].remove("org.sil.assocFeatureValue")
             glyphlist.remove(glyphn)
         else :
-            font.logger.log("No glyph in font for " + glyphn,"E")
+            font.logger.log("No glyph in font for " + glyphn + " on line " + str(incsv.line_num),"E")
 
     for glyphn in glyphlist : # Remove any values from remaining glyphs
         glyph = font.deflayer[glyphn]
@@ -51,7 +48,7 @@ def doit(args) :
             if "org.sil.assocFeature" in glyph["lib"] :
                 glyph["lib"].remove("org.sil.assocFeature")
                 font.logger.log("Feature info removed for " + glyphn,"I")
- 
+
     return font
-    
+
 execute("PSFU",doit, argspec)
