@@ -393,6 +393,7 @@ def execute(tool, fn, argspec) :
         import fontforge
         if fontforge.hasUserInterface() :
             return # Execute is for command-line use
+        fontforge.loadPrefs()
     elif tool == "PSFU" :
         psfu = True
         from UFOlib import Ufont
@@ -680,7 +681,7 @@ def execute(tool, fn, argspec) :
         # Output the font
         if ff:
             if not quiet : logger.log( "Saving font to " + outfont, "P")
-            if outfontext=="ufo":
+            if outfontext.lower() == ".ufo" or outfontext.lower() == '.ttf':
                 newfont.generate(outfont)
             else : newfont.save(outfont)
         else: # Must be Pyslifont Ufont
