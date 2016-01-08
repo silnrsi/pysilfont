@@ -71,60 +71,54 @@
 </xsl:template>
 
 <!-- 
-	Process a testgroup, emitting a table containing all test records from the group
+	Process a testgroup, emitting a waterfall display for each test element
 -->
 <xsl:template match="testgroup">
 	<h2><xsl:value-of select="@label"/></h2>
-	<table>
-		<tbody>
-			<xsl:apply-templates/>
-		</tbody>
-	</table>
+   	<xsl:apply-templates/>
 </xsl:template>
 
 <!-- 
-	Emit html lang and font-feature-settings for a test 
+	Process a single test record, emitting a series of waterfall lines (<p> elements with increasing point sizes)
 -->
-<xsl:template match="style" mode="getLang">
-	<xsl:if test="@lang">
-		<xsl:attribute name="lang">
-			<xsl:value-of select="@lang"/>
-		</xsl:attribute>
-	</xsl:if>
-	<xsl:if test="@feats">
-		<xsl:attribute name="style">
--moz-font-feature-settings: <xsl:value-of select="@feats"/>;
--ms-font-feature-settings: <xsl:value-of select="@feats"/>;
--webkit-font-feature-settings: <xsl:value-of select="@feats"/>;
-font-feature-settings: <xsl:value-of select="@feats"/>;</xsl:attribute>
-	</xsl:if>
+<xsl:template match="test">http://on.aol.com/video/-sliders--stealing-from-gas-station-customers-in-plain-sight-517891804
+    <h3><xsl:value-of select="@label"/></h3>
+    <xsl:call-template name="waterfallline"><xsl:with-param name="ptsize">8</xsl:with-param></xsl:call-template>
+    <xsl:call-template name="waterfallline"><xsl:with-param name="ptsize">9</xsl:with-param></xsl:call-template>
+    <xsl:call-template name="waterfallline"><xsl:with-param name="ptsize">10</xsl:with-param></xsl:call-template>
+    <xsl:call-template name="waterfallline"><xsl:with-param name="ptsize">11</xsl:with-param></xsl:call-template>
+    <xsl:call-template name="waterfallline"><xsl:with-param name="ptsize">12</xsl:with-param></xsl:call-template>
+    <xsl:call-template name="waterfallline"><xsl:with-param name="ptsize">13</xsl:with-param></xsl:call-template>
+    <xsl:call-template name="waterfallline"><xsl:with-param name="ptsize">14</xsl:with-param></xsl:call-template>
+    <xsl:call-template name="waterfallline"><xsl:with-param name="ptsize">16</xsl:with-param></xsl:call-template>
+    <xsl:call-template name="waterfallline"><xsl:with-param name="ptsize">18</xsl:with-param></xsl:call-template>
+    <xsl:call-template name="waterfallline"><xsl:with-param name="ptsize">20</xsl:with-param></xsl:call-template>
+    <xsl:call-template name="waterfallline"><xsl:with-param name="ptsize">22</xsl:with-param></xsl:call-template>
+    <xsl:call-template name="waterfallline"><xsl:with-param name="ptsize">24</xsl:with-param></xsl:call-template>
 </xsl:template>
 
+
 <!-- 
-	Process a single test record, emitting a table row
+	Emit html for one line of waterfall data
 -->
-<xsl:template match="test">
-<tr>
-	<xsl:if test="@background">
-		<xsl:attribute name="style">background-color: <xsl:value-of select="@background"/>;</xsl:attribute>
-	</xsl:if>
-	<xsl:if test="$width-label != ''">
-		<!-- emit label column -->
-		<td class="label">
-			<xsl:value-of select="@label"/>
-		</td>
-	</xsl:if>
-	<xsl:if test="$width-string != ''">
-		<!-- emit test data column -->
-		<td class="string">   <!-- assume default string class -->
-			<xsl:if test="@class">
-				<!-- emit features and lang attributes -->
-				<xsl:variable name="styleName" select="@class"/>
-				<xsl:apply-templates select="/ftml/head/styles/style[@name=$styleName]" mode="getLang"/>
+<xsl:template name="waterfallline">
+    <xsl:param name="ptsize">8</xsl:param>
+		<p class="string">   <!-- assume default string class -->
+			<xsl:variable name="styleName" select="@class"/>
+			<xsl:if test="$styleName != ''">
+    			<!-- emit lang attribute -->
+			    <xsl:apply-templates select="/ftml/head/styles/style[@name=$styleName]" mode="getLang"/>
 			</xsl:if>
 			<xsl:if test="@rtl='True' ">
                 <xsl:attribute name="dir">RTL</xsl:attribute>
 			</xsl:if>
+			<!-- emit style attribute with features and font-size -->
+        	<xsl:attribute name="style">
+			<xsl:if test="$styleName != ''">
+                <xsl:apply-templates select="/ftml/head/styles/style[@name=$styleName]" mode="getFeats"/>
+			</xsl:if>
+font-size: <xsl:value-of select="$ptsize * $font-scale div 100"/>pt; line-height: 0.9;
+            </xsl:attribute>
 			<!-- and finally the test data -->
 			<xsl:choose>
 				<!-- if the test has an <em> marker, the use a special template -->
@@ -135,21 +129,30 @@ font-feature-settings: <xsl:value-of select="@feats"/>;</xsl:attribute>
 					<xsl:apply-templates select="string"/>
 				</xsl:otherwise>
 			</xsl:choose>
-		</td>
+		</p>
+</xsl:template>
+
+<!-- 
+	Emit html lang attribute
+-->
+<xsl:template match="style" mode="getLang">
+	<xsl:if test="@lang">
+		<xsl:attribute name="lang">
+			<xsl:value-of select="@lang"/>
+		</xsl:attribute>
 	</xsl:if>
-	<xsl:if test="$width-comment != ''">
-		<td class="comment">
-			<!-- emit comment -->
-			<xsl:value-of select="comment"/>
-		</td>
+</xsl:template>
+
+<!-- 
+	Emit html feature-settings (to add to style attribute)
+-->
+<xsl:template match="style" mode="getFeats">
+	<xsl:if test="@feats">
+-moz-font-feature-settings: <xsl:value-of select="@feats"/>;
+-ms-font-feature-settings: <xsl:value-of select="@feats"/>;
+-webkit-font-feature-settings: <xsl:value-of select="@feats"/>;
+font-feature-settings: <xsl:value-of select="@feats"/>;
 	</xsl:if>
-	<xsl:if test="$width-class != ''">
-		<td class="class">
-			<!-- emit class -->
-			<xsl:value-of select="@class"/>
-		</td>
-	</xsl:if>
-</tr>
 </xsl:template>
 
 <!--  

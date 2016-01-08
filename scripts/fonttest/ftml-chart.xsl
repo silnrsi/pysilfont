@@ -22,7 +22,7 @@
 		<meta charset="utf-8"/>
 		<meta name="description">
 			<xsl:attribute name="content">
-				<xsl:value-of select="ftml/head/description"/>
+				<xsl:value-of select="ftml/head/comment"/>
 			</xsl:attribute>
 		</meta>
 		<style>
@@ -41,7 +41,7 @@
 	.comment {width: <xsl:value-of select="$width-comment"/>}
 </xsl:if>
 <xsl:if test="$width-class != ''">
-	.comment {width: <xsl:value-of select="$width-class"/>}
+	.class {width: <xsl:value-of select="$width-class"/>}
 </xsl:if>
 	.dim {color: silver;}
 	.bright {color: red;}
@@ -143,6 +143,9 @@ font-feature-settings: <xsl:value-of select="@feats"/>;</xsl:attribute>
 				<!-- emit features and lang attributes -->
 				<xsl:variable name="styleName" select="@class"/>
 				<xsl:apply-templates select="/ftml/head/styles/style[@name=$styleName]" mode="getLang"/>
+			</xsl:if>
+			<xsl:if test="@rtl='True' ">
+                <xsl:attribute name="dir">RTL</xsl:attribute>
 			</xsl:if>
             <xsl:if test="@background">
                 <xsl:attribute name="style">background-color: <xsl:value-of select="@background"/>;</xsl:attribute>

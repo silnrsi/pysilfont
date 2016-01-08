@@ -1,14 +1,14 @@
 <!ELEMENT ftml (head, (testgroup)+) >
 <!ATTLIST ftml
     version CDATA "1.0">
-<!ELEMENT head (columns, description, fontscale, fontsrc, styles, title)>
+<!ELEMENT head (columns, comment, fontscale, fontsrc, styles, title)>
 <!ELEMENT columns EMPTY>
 <!ATTLIST columns
     class   CDATA #IMPLIED
     comment CDATA #IMPLIED
     label   CDATA #IMPLIED
     string  CDATA #IMPLIED>
-<!ELEMENT description (#PCDATA)>
+<!ELEMENT comment (#PCDATA)>
 <!ELEMENT fontscale (#PCDATA)>
 <!ELEMENT fontsrc (#PCDATA)>
 <!ELEMENT styles (style)*>
@@ -18,13 +18,15 @@
     lang    CDATA #IMPLIED
     name    CDATA #IMPLIED>
 <!ELEMENT title (#PCDATA)>
-<!ELEMENT testgroup ((comment)?, (test)*) >
+<!ELEMENT testgroup (comment?, testgroup*, test*)>
 <!ATTLIST testgroup
+    background CDATA #IMPLIED
     label   CDATA #IMPLIED>
-<!ELEMENT comment (#PCDATA)>
-<!ELEMENT test ((comment)?, string)>
+<!ELEMENT test (string, comment?)>
 <!ATTLIST test
     background CDATA #IMPLIED
     class   CDATA #IMPLIED
-    label   CDATA #IMPLIED>
-<!ELEMENT string (#PCDATA)>
+    label   CDATA #IMPLIED
+    rtl     CDATA #IMPLIED>
+<!ELEMENT string (#PCDATA|em)*>
+<!ELEMENT em (#PCDATA)>
