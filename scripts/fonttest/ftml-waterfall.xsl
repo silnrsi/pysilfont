@@ -81,7 +81,7 @@
 <!-- 
 	Process a single test record, emitting a series of waterfall lines (<p> elements with increasing point sizes)
 -->
-<xsl:template match="test">http://on.aol.com/video/-sliders--stealing-from-gas-station-customers-in-plain-sight-517891804
+<xsl:template match="test">
     <h3><xsl:value-of select="@label"/></h3>
     <xsl:call-template name="waterfallline"><xsl:with-param name="ptsize">8</xsl:with-param></xsl:call-template>
     <xsl:call-template name="waterfallline"><xsl:with-param name="ptsize">9</xsl:with-param></xsl:call-template>
