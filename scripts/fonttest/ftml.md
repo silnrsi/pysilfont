@@ -7,7 +7,7 @@
 | ftml.xsl  | one test string per line
 | ftml-chart.xsl | multiple test strings per line (using nested testgroup elements)
 | ftml-waterfall.xsl | each test string repeated on successive lines at increasing point sizes
-| ftml-wf4col.xsl | each test string repeated on successive lines at increasing point sizes
+| ftml-wf4col.xsl | each test string repeated in four horizontal cells at increasing point sizes
 
 The .xsl file can be specified in the .xml file using (for example):
 
