@@ -15,10 +15,20 @@
 <xsl:template match="/">
 <html>
 	<head>
+        <script>
+            function regtochar(match, p1) {
+                return String.fromCharCode(parseInt(p1, 16));
+            };
+            function init() {
+                var tw = document.createTreeWalker(document.body , NodeFilter.SHOW_TEXT, null, false);
+                while (tw.nextNode()) {
+                    tw.currentNode.textContent = tw.currentNode.textContent.replace(/\\u([0-9A-F]{4,6})/gi, regtochar);
+                };
+            };
+        </script>
 		<title>
 			<xsl:value-of select="ftml/head/title"/>
 		</title>
-		<meta charset="utf-8"/>
 		<meta name="description">
 			<xsl:attribute name="content">
 				<xsl:value-of select="ftml/head/comment"/>
@@ -48,7 +58,7 @@
 	<!-- <xsl:apply-templates select="/ftml/head/styles/*" /> -->
 		</style>
 	</head>
-	<body>
+	<body onload='init()'>
 		<h1><xsl:value-of select="/ftml/head/title"/></h1>
 		<xsl:apply-templates select="/ftml/testgroup"/>
 	</body>
