@@ -48,22 +48,22 @@
 	table,th,td { padding: 2px; border: 1px solid #111111; border-collapse: collapse; }
 	.string {font-family: TestFont; font-size: <xsl:value-of select="$font-scale"/>%; }
 <xsl:if test="$width-table != ''">
-	table { width: <xsl:value-of select="$width-table"/> }
+	table { width: <xsl:value-of select="$width-table"/>; }
 </xsl:if>
 <xsl:if test="$width-label != ''">
-	.label { width: <xsl:value-of select="$width-label"/> }
+	.label { width: <xsl:value-of select="$width-label"/>; }
 </xsl:if>
 <xsl:if test="$width-string != ''">
-	.string {width: <xsl:value-of select="$width-string"/>;}
+	.string {width: <xsl:value-of select="$width-string"/>; }
 </xsl:if>
 <xsl:if test="$width-comment != ''">
-	.comment {width: <xsl:value-of select="$width-comment"/>}
+	.comment {width: <xsl:value-of select="$width-comment"/>; }
 </xsl:if>
 <xsl:if test="$width-stylename != ''">
-	.stylename {width: <xsl:value-of select="$width-stylename"/>}
+	.stylename {width: <xsl:value-of select="$width-stylename"/>; }
 </xsl:if>
-	.dim {color: silver;}
-	.bright {color: red;}
+	.dim {color: silver; }
+	.bright {color: red; }
 <xsl:if test="$useCSSstyles != ''">
 	<xsl:apply-templates select="/ftml/head/styles/*" />
 </xsl:if>
@@ -87,12 +87,12 @@
 		-moz-font-feature-settings: <xsl:value-of select="@feats"/>;
 		-ms-font-feature-settings: <xsl:value-of select="@feats"/>;
 		-webkit-font-feature-settings: <xsl:value-of select="@feats"/>;
-		font-feature-settings: <xsl:value-of select="@feats"/> ; 
+		font-feature-settings: <xsl:value-of select="@feats"/>;
 <xsl:if test="$width-string != ''">
-		width: <xsl:value-of select="$width-string"/>
+		width: <xsl:value-of select="$width-string"/>;
 </xsl:if>
 	}
-</xsl:if>			
+</xsl:if>
 </xsl:template>
 
 <!-- 

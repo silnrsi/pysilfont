@@ -24,3 +24,4 @@ This will make the enclosed text normal and text before and after lighter colore
 
 Including the attribute background="#CCCCCC" in the test element will change the background
 color. #CCCCCC represents the six hex digits that define the color.
+Lower case hex digits (abcdef rather than ABCDEF) are used in the canonical representation.

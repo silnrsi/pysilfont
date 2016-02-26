@@ -4,11 +4,18 @@
 <!-- Use with nested <testgroup> elements to create tables with multiple <test> elements per row -->
 
 <!-- set variables from head element -->
-<xsl:variable name="width-class" select="/ftml/head/columns/@class"/>
-<xsl:variable name="width-comment" select="/ftml/head/columns/@comment"/>
-<xsl:variable name="width-label" select="/ftml/head/columns/@label"/>
-<xsl:variable name="width-string" select="/ftml/head/columns/@string"/>
+<xsl:variable name="width-comment" select="/ftml/head/widths/@comment"/>
+<xsl:variable name="width-label" select="/ftml/head/widths/@label"/>
+<xsl:variable name="width-string" select="/ftml/head/widths/@string"/>
+<xsl:variable name="width-stylename" select="/ftml/head/widths/@stylename"/>
+<xsl:variable name="width-table" select="/ftml/head/widths/@table"/>
 <xsl:variable name="font-scale" select="concat(/ftml/head/fontscale, substring('100', 1 div not(/ftml/head/fontscale)))"/>
+
+<!-- hard-coded processing options: -->
+
+<!-- if $useCSSstyles is non-empty then emit and use CSS styles for font feature settings;
+     otherwise font feature settings are output with the test strings  -->
+<xsl:variable name="useCSSstyles"></xsl:variable>	
 
 <!-- 
 	Process the root node to construct the html page
@@ -39,46 +46,54 @@
 	body, td { font-family: sans-serif; }
 	@font-face {font-family: TestFont; src: <xsl:value-of select="ftml/head/fontsrc"/>; }
 	th { text-align: left; }
-	table { width: 100%; table-layout: fixed; }
 	table,th,td { padding: 2px; border: 1px solid #111111; border-collapse: collapse; }
+	.string {font-family: TestFont; font-size: <xsl:value-of select="$font-scale"/>%; }
+<xsl:if test="$width-table != ''">
+	table { width: <xsl:value-of select="$width-table"/>; }
+</xsl:if>
 <xsl:if test="$width-label != ''">
-	.label { width: <xsl:value-of select="$width-label"/> }
+	.label { width: <xsl:value-of select="$width-label"/>; }
 </xsl:if>
 <xsl:if test="$width-string != ''">
-	.string {width: <xsl:value-of select="$width-string"/>; font-family: TestFont; font-size: <xsl:value-of select="$font-scale"/>%;}
+	.string {width: <xsl:value-of select="$width-string"/>; }
 </xsl:if>
 <xsl:if test="$width-comment != ''">
-	.comment {width: <xsl:value-of select="$width-comment"/>}
+	.comment {width: <xsl:value-of select="$width-comment"/>; }
 </xsl:if>
-<xsl:if test="$width-class != ''">
-	.class {width: <xsl:value-of select="$width-class"/>}
+<xsl:if test="$width-stylename != ''">
+	.stylename {width: <xsl:value-of select="$width-stylename"/>; }
 </xsl:if>
-	.dim {color: silver;}
-	.bright {color: red;}
-	<!-- NB: Uncomment the following to build separate css styles for each item in /ftml/head/styles -->
-	<!-- <xsl:apply-templates select="/ftml/head/styles/*" /> -->
+	.dim {color: silver; }
+	.bright {color: red; }
+<xsl:if test="$useCSSstyles != ''">
+	<xsl:apply-templates select="/ftml/head/styles/*" />
+</xsl:if>
 		</style>
 	</head>
 	<body onload='init()'>
 		<h1><xsl:value-of select="/ftml/head/title"/></h1>
+		<p><xsl:value-of select="/ftml/head/comment"/></p>		
 		<xsl:apply-templates select="/ftml/testgroup"/>
 	</body>
 </html>
 </xsl:template>
 
 <!-- 
-	Build CSS style for FTML style element
+	Build CSS style for FTML style element, but only for non-empty @feats
 -->
 <xsl:template match="style">
-	.<xsl:value-of select="@name"/> {
-		font-family: TestFont; font-size: <xsl:value-of select="$font-scale"/>%;
 <xsl:if test="@feats">
+	.string_<xsl:value-of select="@name"/> {
+		font-family: TestFont; font-size: <xsl:value-of select="$font-scale"/>%;
 		-moz-font-feature-settings: <xsl:value-of select="@feats"/>;
 		-ms-font-feature-settings: <xsl:value-of select="@feats"/>;
 		-webkit-font-feature-settings: <xsl:value-of select="@feats"/>;
-		font-feature-settings: <xsl:value-of select="@feats"/> ; 
-</xsl:if>			
+		font-feature-settings: <xsl:value-of select="@feats"/>; 
+<xsl:if test="$width-string != ''">
+		width: <xsl:value-of select="$width-string"/>;
+</xsl:if>
 	}
+</xsl:if>			
 </xsl:template>
 
 <!-- 
@@ -102,30 +117,28 @@
     <xsl:if test="@background">
 		<xsl:attribute name="style">background-color: <xsl:value-of select="@background"/>;</xsl:attribute>
 	</xsl:if>
-	<xsl:if test="$width-label != ''">
-		<!-- emit label column -->
-		<td class="label">
-			<xsl:value-of select="@label"/>
-		</td>
-	</xsl:if>
+	<!-- emit label column -->
+	<td class="label">
+		<xsl:value-of select="@label"/>
+	</td>
     <xsl:apply-templates/>
-	<xsl:if test="$width-comment != ''">
+	<xsl:if test="/ftml/testgroup/testgroup/test/comment">
 		<td class="comment">
 			<!-- emit comment -->
 			<xsl:value-of select="test/comment"/>
 		</td>
 	</xsl:if>
-	<xsl:if test="$width-class != ''">
-		<td class="class">
-			<!-- emit class -->
-			<xsl:value-of select="test/@class"/>
+	<xsl:if test="/ftml/testgroup/testgroup/test/@stylename">
+		<td class="stylename">
+			<!-- emit style name -->
+			<xsl:value-of select="test/@stylename"/>
 		</td>
 	</xsl:if>
 </tr>
 </xsl:template>
 
 <!-- 
-	Emit html lang and font-feature-settings for a test 
+	Emit html lang and either css class or font-feature-settings for a test 
 -->
 <xsl:template match="style" mode="getLang">
 	<xsl:if test="@lang">
@@ -134,11 +147,18 @@
 		</xsl:attribute>
 	</xsl:if>
 	<xsl:if test="@feats">
-		<xsl:attribute name="style">
--moz-font-feature-settings: <xsl:value-of select="@feats"/>;
--ms-font-feature-settings: <xsl:value-of select="@feats"/>;
--webkit-font-feature-settings: <xsl:value-of select="@feats"/>;
-font-feature-settings: <xsl:value-of select="@feats"/>;</xsl:attribute>
+		<xsl:choose>
+			<xsl:when test="$useCSSstyles != ''">	
+				<xsl:attribute name="class">string_<xsl:value-of select="@name"/></xsl:attribute>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:attribute name="style">
+	-moz-font-feature-settings: <xsl:value-of select="@feats"/>;
+	-ms-font-feature-settings: <xsl:value-of select="@feats"/>;
+	-webkit-font-feature-settings: <xsl:value-of select="@feats"/>;
+	font-feature-settings: <xsl:value-of select="@feats"/>;</xsl:attribute>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:if>
 </xsl:template>
 
@@ -146,32 +166,30 @@ font-feature-settings: <xsl:value-of select="@feats"/>;</xsl:attribute>
 	Process a single test record, emitting a table cell
 -->
 <xsl:template match="test">
-	<xsl:if test="$width-string != ''">
-		<!-- emit test data column -->
-		<td class="string">   <!-- assume default string class -->
-			<xsl:if test="@class">
-				<!-- emit features and lang attributes -->
-				<xsl:variable name="styleName" select="@class"/>
-				<xsl:apply-templates select="/ftml/head/styles/style[@name=$styleName]" mode="getLang"/>
-			</xsl:if>
-			<xsl:if test="@rtl='True' ">
-                <xsl:attribute name="dir">RTL</xsl:attribute>
-			</xsl:if>
-            <xsl:if test="@background">
-                <xsl:attribute name="style">background-color: <xsl:value-of select="@background"/>;</xsl:attribute>
-            </xsl:if>
-			<!-- and finally the test data -->
-			<xsl:choose>
-				<!-- if the test has an <em> marker, the use a special template -->
-				<xsl:when test="string[em]">
-					<xsl:apply-templates select="string" mode="hasEM"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="string"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</td>
-	</xsl:if>
+	<!-- emit test data column -->
+	<td class="string">   <!-- assume default string class -->
+		<xsl:if test="@stylename">
+			<!-- emit features and lang attributes -->
+			<xsl:variable name="styleName" select="@stylename"/>
+			<xsl:apply-templates select="/ftml/head/styles/style[@name=$styleName]" mode="getLang"/>
+		</xsl:if>
+		<xsl:if test="@rtl='True' ">
+               <xsl:attribute name="dir">RTL</xsl:attribute>
+		</xsl:if>
+        <xsl:if test="@background">
+            <xsl:attribute name="style">background-color: <xsl:value-of select="@background"/>;</xsl:attribute>
+        </xsl:if>
+		<!-- and finally the test data -->
+		<xsl:choose>
+			<!-- if the test has an <em> marker, the use a special template -->
+			<xsl:when test="string[em]">
+				<xsl:apply-templates select="string" mode="hasEM"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="string"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</td>
 </xsl:template>
 
 <!--  
