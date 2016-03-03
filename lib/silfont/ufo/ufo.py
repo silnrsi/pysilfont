@@ -9,12 +9,14 @@ __version__ = '1.0.0'
 from xml.etree import cElementTree as ET
 import sys, os, copy, shutil, filecmp
 import collections
-from silfont.genlib import *
+import silfont.util as UT
+import silfont.xml as XML
 
 _glifElemMulti = ('unicode', 'guideline', 'anchor') # glif elements that can occur multiple times
 _glifElemF1 = ('advance','unicode','outline','lib') # glif elements valid in format 1 glifs (ie UFO2 glfis)
 
 # Add outparams values to baseparams from genlib
+baseparams = UT.basparams
 baseparams['outparams'] = {
     "indentIncr":       "  ",   # XML Indent increment
     "indentFirst":      "  ",   # First XML indent
@@ -30,7 +32,7 @@ baseparams['outparams'] = {
                 'xOffset', 'yOffset', 'x', 'y', 'angle', 'type', 'smooth', 'name', 'format', 'color', 'identifier'] # See below
     }
 # attribOrders give the order XML attributes should be output in.  A single list covers all elements in an XML item.  Currently just needed for glif files
-baseparamsindex = indexParams(baseparams)
+baseparamsindex = UT.indexParams(baseparams)
 
 # Define illegal characters and reserved names for makeFileName
 _illegalChars = "\"*+/:<>?[\]|" + chr(0x7F)
@@ -667,7 +669,7 @@ class UfeatureFile(UtextFile) :
 def writeXMLobject(dtreeitem, font, dirn, filen, exists) :
     params = font.outparams
 
-    object = dtreeitem.fileObject
+    object = UT.dtreeitem.fileObject
     if object.outparams : params = object.outparams # override default params with object-specific ones
     indentFirst = params["indentFirst"]
     attribOrder = {}
@@ -700,7 +702,7 @@ def writeXMLobject(dtreeitem, font, dirn, filen, exists) :
         if oxmlstr == object.outxmlstr : changed = False
 
     if changed : object.write_to_file(dirn,filen)
-    dtreeitem.written = True # Mark as True, even if not changed - the file should still be there!
+    UT.dtreeitem.written = True # Mark as True, even if not changed - the file should still be there!
 
 def setFileForOutput(dtree, filen, fileObject, fileType) : # Put details in dtree, creating item if needed
     if not filen in dtree :
