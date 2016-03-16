@@ -71,7 +71,7 @@
 	</head>
 	<body onload='init()'>
 		<h1><xsl:value-of select="/ftml/head/title"/></h1>
-		<p><xsl:value-of select="/ftml/head/comment"/></p>		
+		<p><xsl:value-of select="/ftml/head/comment"/></p>
 		<xsl:apply-templates select="/ftml/testgroup"/>
 	</body>
 </html>
@@ -100,6 +100,7 @@
 -->
 <xsl:template match="testgroup">
 	<h2><xsl:value-of select="@label"/></h2>
+	<p><xsl:value-of select="comment"/></p>
 	<table>
 		<tbody>
 			<xsl:apply-templates/>

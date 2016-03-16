@@ -102,6 +102,7 @@
 -->
 <xsl:template match="testgroup">
 	<h2><xsl:value-of select="@label"/></h2>
+	<p><xsl:value-of select="comment"/></p>
 	<table>
 		<tbody>
 			<xsl:apply-templates/>
