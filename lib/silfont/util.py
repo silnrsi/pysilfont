@@ -7,22 +7,46 @@ __author__ = 'David Raymond'
 __version__ = '1.0.0'
 
 from glob import glob
-import re, sys, os, codecs, argparse, datetime, shutil, csv
+import silfont.param
+import re, sys, os, codecs, argparse, datetime, shutil, csv, copy, ConfigParser
 
-def indexParams(params): # Index of parameters by name giving group (eg logging), type (eg str), listtype (for lists only) and value
-    index = {}
-    for group in params :
-        for param in params[group] :
-            value = params[group][param]
-            typ = type(value)
-            listtype = type(value[0]) if typ is list else None
-            index[param] = {'group': group, 'type': typ, 'listtype': listtype, 'value': value}
-    return index
+class loggerobj(object) :
+    # For handling log messages.
+    # Use S for severe errors caused by data, parameters supplied by user etc
+    # Use X for severe errors caused by bad code to get traceback exception
 
-baseparams = {}
-baseparams['logging'] = {'scrlevel': 'P', 'loglevel': 'W'}
-baseparams['backups'] = {'backup': True, 'backupdir': 'backups', 'backupkeep': 5}
-baseparamsindex = indexParams(baseparams)
+    def __init__(self, logfile = None, loglevels = "", leveltext = "",  loglevel = "W", scrlevel = "P") :
+        self.logfile = logfile
+        self.loglevels = loglevels
+        self.leveltext = leveltext
+        if not self.loglevels : self.loglevels = { 'X': 0,       'S':1,        'E':2,        'P':3,        'W':4,        'I':5,        'V':6}
+        if not self.leveltext : self.leveltext = ( 'Exception ', 'Severe:   ', 'Error:    ', 'Progress: ', 'Warning:  ', 'Info:     ', 'Verbose:  ')
+        self.loglevel = "E"; self.scrlevel = "E" # Temp values so invalid log levels can be reported
+        if loglevel in self.loglevels :
+            self.loglevel = loglevel
+            if self.loglevels[loglevel] < 2 :
+                self.loglevel = "E"
+                self.log("Loglevel increased to minimum level of Error", "E")
+        else:
+            self.log("Invalid loglevel value", "S")
+        if scrlevel in self.loglevels :
+            self.scrlevel = scrlevel
+            if self.loglevels[scrlevel] < 1 :
+                self.scrlevel = "S"
+                self.log("Scrlevel increased to minimum level of Severe", "E")
+        else:
+            self.log("Invalid scrlevel value", "S")
+
+    def log(self, logmessage, msglevel = "I") :
+        levelval = self.loglevels[msglevel]
+        message = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S ") + self.leveltext[levelval] + logmessage
+        #message = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S:%f ") + self.leveltext[levelval] + logmessage ## added milliseconds for timing tests
+        if levelval <= self.loglevels[self.scrlevel] : print message
+        if self.logfile and levelval <= self.loglevels[self.loglevel] : self.logfile.write(message + "\n")
+        if msglevel == "S" :
+            print "\n **** Fatal error - exiting ****"
+            sys.exit(1)
+        if msglevel == "X" :assert False, message
 
 class dirTree(dict) :
     """ An object to hold list of all files and directories in a directory
@@ -86,44 +110,6 @@ class dirTreeItem(object) :
         if fileType : self.fileType = fileType
         if flags : self.flags = flags
 
-class loggerobj(object) :
-    # For handling log messages.
-    # Use S for severe errors caused by data, parameters supplied by user etc
-    # Use X for severe errors caused by bad code to get traceback exception
-
-    def __init__(self, logfile = None, loglevels = "", leveltext = "",  loglevel = "W", scrlevel = "P") :
-        self.logfile = logfile
-        self.loglevels = loglevels
-        self.leveltext = leveltext
-        if not self.loglevels : self.loglevels = { 'X': 0,       'S':1,        'E':2,        'P':3,        'W':4,        'I':5,        'V':6}
-        if not self.leveltext : self.leveltext = ( 'Exception ', 'Severe:   ', 'Error:    ', 'Progress: ', 'Warning:  ', 'Info:     ', 'Verbose:  ')
-        self.loglevel = "E"; self.scrlevel = "E" # Temp values so invalid log levels can be reported
-        if loglevel in self.loglevels :
-            self.loglevel = loglevel
-            if self.loglevels[loglevel] < 2 :
-                self.loglevel = "E"
-                self.log("Loglevel increased to minimum level of Error", "E")
-        else:
-            self.log("Invalid loglevel value", "S")
-        if scrlevel in self.loglevels :
-            self.scrlevel = scrlevel
-            if self.loglevels[scrlevel] < 1 :
-                self.scrlevel = "S"
-                self.log("Scrlevel increased to minimum level of Severe", "E")
-        else:
-            self.log("Invalid scrlevel value", "S")
-
-    def log(self, logmessage, msglevel = "I") :
-        levelval = self.loglevels[msglevel]
-        message = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S ") + self.leveltext[levelval] + logmessage
-        #message = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S:%f ") + self.leveltext[levelval] + logmessage ## added milliseconds for timing tests
-        if levelval <= self.loglevels[self.scrlevel] : print message
-        if self.logfile and levelval <= self.loglevels[self.loglevel] : self.logfile.write(message + "\n")
-        if msglevel == "S" :
-            print "\n **** Fatal error - exiting ****"
-            sys.exit(1)
-        if msglevel == "X" :assert False, message
-
 class csvreader(object) : # Iterator for csv files, skipping comments and checking number of fields
     def __init__(self, filename, minfields = 0, maxfields = 999, numfields = None, logger = None) :
         self.filename = filename
@@ -163,10 +149,11 @@ def execute(tool, fn, argspec) :
     #   -q  quiet mode - suppresses progress messages and sets screen logging to errors only
     #   -l  opens log file and also creates a logger function to write to the log file
     #   -p  includes loglevel and scrlevel settings for logger
-    #       for UFOlib scripts, also includes all font.outparams keys except for attribOrder
+    #       for UFOlib scripts, also includes all font.outparams keys
     #   -v  for UFOlib scripts this sets font.outparams(UFOversion)
 
-    logger = loggerobj() # Basic screen logger at this stage
+    params = silfont.param.params()
+    logger = params.logger # paramset has already created a basic logger
     ff = False
     psfu = False
     if tool == "FF" :
@@ -177,7 +164,7 @@ def execute(tool, fn, argspec) :
         fontforge.loadPrefs()
     elif tool == "PSFU" :
         psfu = True
-        from UFOlib import Ufont
+        from silfont.ufo.ufo import Ufont
     elif tool == "" or tool is None :
         tool = None
     else :
@@ -185,7 +172,7 @@ def execute(tool, fn, argspec) :
         return
     basemodule = sys.modules[fn.__module__]
     poptions = {}
-    poptions['prog'] = _splitfn(sys.argv[0])[1]
+    poptions['prog'] = splitfn(sys.argv[0])[1]
     poptions['description'] = basemodule.__doc__
     poptions['formatter_class'] = argparse.RawDescriptionHelpFormatter
     if hasattr(basemodule, '__version__') : poptions['epilog'] = "Version: " + basemodule.__version__
@@ -268,7 +255,14 @@ def execute(tool, fn, argspec) :
     # Process the first positional parameter to get defaults for file names
     fppval = getattr(args,arginfo[0]['name'])
     if fppval is None : fppval = "" # For scripts that can be run with no positional parameters
-    (fppath,fpbase,fpext)=_splitfn(fppval) # First pos param use for defaulting
+    (fppath,fpbase,fpext)=splitfn(fppval) # First pos param use for defaulting
+
+    # Read config file from disk if it exists
+    configname = os.path.join(fppath, "pysilfont.cfg")
+    if os.path.exists(configname) :
+        params.addset("config file", configname, configfile = configname)
+    else:
+        params.addset("config file") # Create empty set
 
     # Process command-line parameters and config file
     clparams = {}
@@ -285,27 +279,19 @@ def execute(tool, fn, argspec) :
         if args.version : clparams["UFOversion"] = args.version
 
     args.params = clparams
+    params.addset("command line", "command line", inputdict = clparams)
 
-    # Read config file from disk if it exists
-    cfgparams = {}
-    configname = os.path.join(fppath, "pysilfont.cfg")
-    if os.path.exists(configname) :
-        config = csvreader(configname, logger = logger, numfields = 2)
-        for param,value in config : cfgparams[param] = value
-
-    # Create list of parameters for use with logging and backup from base parameters overdidden by any congif file or command line parameters
-    lbparams={}
-    for param in baseparamsindex :
-        lbparams[param] = cfgparams[param] if param in cfgparams else baseparamsindex[param]['value']
-        if param in clparams : lbparams[param] = clparams[param]
+    # Create main set of parameters based on defaults then update with config file values and command line values
+    params.addset("main",copyset = "default", updatewith = ["config file", "command line"])
+    mainparams = params.sets["main"]
 
     # Set up logging
     logfile = None
     if 'log' in args.__dict__ :
         logname = args.log if args.log else ""
         if logdef is not None :
-            (path,base,ext)=_splitfn(logname)
-            (dpath,dbase,dext)=_splitfn(logdef) # dpath should be None
+            (path,base,ext)=splitfn(logname)
+            (dpath,dbase,dext)=splitfn(logdef) # dpath should be None
             if not path :
                 if base and ext : # If both specified then use cwd, ie no path
                     path = ""
@@ -328,8 +314,8 @@ def execute(tool, fn, argspec) :
             sys.exit(1)
         args.log = logfile
     # Set up logger details
-    logger.loglevel = lbparams['loglevel'].upper()
-    logger.scrlevel = "E" if quiet else lbparams['scrlevel'].upper()
+    logger.loglevel = mainparams['loglevel'].upper()
+    logger.scrlevel = "E" if quiet else mainparams['scrlevel'].upper()
     logger.logfile = logfile
     setattr(args,'logger',logger)
 
@@ -356,8 +342,8 @@ def execute(tool, fn, argspec) :
                     if atype <> "outfont" :
                         logger.log( "No value suppiled for " + ainfo['name'], "S")
                         sysexit()
-                (apath,abase,aext)=_splitfn(aval)
-                (dpath,dbase,dext)=_splitfn(adef) # dpath should be None
+                (apath,abase,aext)=splitfn(aval)
+                (dpath,dbase,dext)=splitfn(adef) # dpath should be None
                 if not apath :
                     if abase and aext : # If both specified then use cwd, ie no path
                         apath = ""
@@ -413,7 +399,7 @@ def execute(tool, fn, argspec) :
                 for option in aval:
                     x = option.split("=",1)
                     if len(x) <> 2 :
-                        logger.log( "params must be of the form 'param=value'", "S")
+                        logger.log( "options must be of the form 'param=value'", "S")
                     if x[1] == "\\t" : x[1] = "\t" # Special handling for tab characters
                     avaldict[x[0]] = x[1]
             aval = avaldict
@@ -424,7 +410,7 @@ def execute(tool, fn, argspec) :
 
     for name,aval in infontlist :
         if ff : aval=fontforge.open(aval)
-        if psfu: aval=Ufont(aval, logger = logger, cfgparams=cfgparams, clparams=clparams)
+        if psfu: aval=Ufont(aval, params = params)
         setattr(args,name,aval) # Assign the font object to args attribute
 
 # All arguments processed, now call the main function
@@ -433,9 +419,9 @@ def execute(tool, fn, argspec) :
     if outfont and newfont is not None:
         # Backup the font if output is overwriting original input font
         if outfont == infontlist[0][1] :
-            backupdir = os.path.join(outfontpath,lbparams['backupdir'])
-            backupmax = int(lbparams['backupkeep'])
-            backup = str2bool(lbparams['backup'])
+            backupdir = os.path.join(outfontpath,mainparams['backupdir'])
+            backupmax = int(mainparams['backupkeep'])
+            backup = str2bool(mainparams['backup'])
 
             if backup :
                 if not os.path.isdir(backupdir) : # Create backup directory if not present
@@ -470,7 +456,7 @@ def execute(tool, fn, argspec) :
 
     if logfile : logfile.close()
 
-def _splitfn(fn): # Split filename into path, base and extension
+def splitfn(fn): # Split filename into path, base and extension
     if fn : # Remove trailing slashes
         if fn[-1] in ("\\","/") : fn = fn[0:-1]
     (path,base) = os.path.split(fn)
