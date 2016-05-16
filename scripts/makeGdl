@@ -1,4 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+'Analyse a font and generate GDL to help with the creation of graphite fonts'
+__url__ = 'http://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2014-2016 SIL International (http://www.sil.org)'
+__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 
 from silfont.makegdl.font import Font
 import silfont.makegdl.ot

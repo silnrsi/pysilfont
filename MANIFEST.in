@@ -1,6 +1,0 @@
-include INSTALL.txt
-include ez_setup.py
-include PysilfontUserDocs.pdf
-recursive-include scripts/actionsosx *
-include LICENSE
-

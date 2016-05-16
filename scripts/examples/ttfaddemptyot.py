@@ -1,4 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+'Add empty Opentype tables to ttf font'
+__url__ = 'http://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2014-2016 SIL International (http://www.sil.org)'
+__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 
 from fontTools import ttLib
 from fontTools.ttLib.tables import otTables

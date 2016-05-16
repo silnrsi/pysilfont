@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 'General classes and functions for use in pysilfont scripts'
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2015, SIL International  (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2014-2016, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
-__version__ = '1.0.0'
+__version__ = '2.0.0'
 
 from glob import glob
 import silfont.param
@@ -175,20 +175,19 @@ def execute(tool, fn, argspec) :
     poptions['prog'] = splitfn(sys.argv[0])[1]
     poptions['description'] = basemodule.__doc__
     poptions['formatter_class'] = argparse.RawDescriptionHelpFormatter
-    if hasattr(basemodule, '__version__') : poptions['epilog'] = "Version: " + basemodule.__version__
+    poptions['epilog'] = "Version: " + params.sets['default']['version'] + "\n" + params.sets['default']['copyright']
 
     parser = argparse.ArgumentParser(**poptions)
 
     # Add standard arguments
     standardargs = [
             ('-d','--defaults', {'help': 'Display help with info on default values', 'action': 'store_true'}, {}),
-            ('-q','--quiet',{'help': 'Quiet mode - only display errors', 'action': 'store_true'}, {})]
-    standardargsindex = ['defaults','quiet']
+            ('-q','--quiet',{'help': 'Quiet mode - only display errors', 'action': 'store_true'}, {}),
+            ('-p','--params',{'help': 'Other parameters','action': 'append'}, {'type': 'optiondict'})]
+    standardargsindex = ['defaults','quiet','params']
     if psfu:
-        standardargs.extend([
-            ('-v','--version',{'help': 'UFO version to output'},{}),
-            ('-p','--params',{'help': 'Other font parameters','action': 'append'}, {'type': 'optiondict'})])
-        standardargsindex.extend(['version','params'])
+        standardargs.extend([('-v','--version',{'help': 'UFO version to output'},{})])
+        standardargsindex.extend(['version'])
 
     suppliedargs = []
     for a in argspec :
@@ -209,6 +208,7 @@ def execute(tool, fn, argspec) :
         defother=[]
 
     quiet = True if "-q" in sys.argv else False
+    if quiet : logger.scrlevel = "E"
 
     # Process the supplied argument specs, add args to parser, store other info in arginfo
     arginfo = []
@@ -263,8 +263,9 @@ def execute(tool, fn, argspec) :
         params.addset("config file", configname, configfile = configname)
     else:
         params.addset("config file") # Create empty set
+    if not quiet and "scrlevel" in params.sets["config file"] : logger.scrlevel = params.sets["config file"]["scrlevel"]
 
-    # Process command-line parameters and config file
+    # Process command-line parameters
     clparams = {}
     if 'params' in args.__dict__ :
         if args.params is not None :
@@ -280,10 +281,14 @@ def execute(tool, fn, argspec) :
 
     args.params = clparams
     params.addset("command line", "command line", inputdict = clparams)
+    if not quiet and "scrlevel" in params.sets["command line"] : logger.scrlevel = params.sets["command line"]["scrlevel"]
 
     # Create main set of parameters based on defaults then update with config file values and command line values
-    params.addset("main",copyset = "default", updatewith = ["config file", "command line"])
-    mainparams = params.sets["main"]
+    params.addset("main",copyset = "default")
+    params.sets["main"].updatewith("config file")
+    params.sets["main"].updatewith("command line")
+    execparams = params.sets["main"]
+
 
     # Set up logging
     logfile = None
@@ -314,8 +319,8 @@ def execute(tool, fn, argspec) :
             sys.exit(1)
         args.log = logfile
     # Set up logger details
-    logger.loglevel = mainparams['loglevel'].upper()
-    logger.scrlevel = "E" if quiet else mainparams['scrlevel'].upper()
+    logger.loglevel = execparams['loglevel'].upper()
+    if not quiet : logger.scrlevel = execparams['scrlevel'].upper()
     logger.logfile = logfile
     setattr(args,'logger',logger)
 
@@ -414,14 +419,15 @@ def execute(tool, fn, argspec) :
         setattr(args,name,aval) # Assign the font object to args attribute
 
 # All arguments processed, now call the main function
+    setattr(args,"paramsobj",params)
     newfont = fn(args)
 # If an output font is expected and one is returned, output the font
     if outfont and newfont is not None:
         # Backup the font if output is overwriting original input font
         if outfont == infontlist[0][1] :
-            backupdir = os.path.join(outfontpath,mainparams['backupdir'])
-            backupmax = int(mainparams['backupkeep'])
-            backup = str2bool(mainparams['backup'])
+            backupdir = os.path.join(outfontpath,execparams['backupdir'])
+            backupmax = int(execparams['backupkeep'])
+            backup = str2bool(execparams['backup'])
 
             if backup :
                 if not os.path.isdir(backupdir) : # Create backup directory if not present

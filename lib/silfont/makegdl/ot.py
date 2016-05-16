@@ -1,21 +1,8 @@
-#    Copyright 2012, SIL International
-#    All rights reserved.
-#
-#    This library is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU Lesser General Public License as published
-#    by the Free Software Foundation; either version 2.1 of License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#    Lesser General Public License for more details.
-#
-#    You should also have received a copy of the GNU Lesser General Public
-#    License along with this library in the file named "LICENSE".
-#    If not, write to the Free Software Foundation, 51 Franklin Street,
-#    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
-#    internet at http://www.fsf.org/licenses/lgpl.html.
+#!/usr/bin/env python
+'OpenType analysis for GDL conversion'
+__url__ = 'http://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2014-2016 SIL International (http://www.sil.org)'
+__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 
 import re, traceback, logging
 from fontTools.ttLib.tables import otTables
@@ -308,7 +295,7 @@ def process(self, font, index) :
         for i, g in enumerate(map(font.glyph, mark_names)) :
             rec = self.MarkArray.MarkRecord[i]
             g.setAnchor(font.alias(apname+"_{}M".format(rec.Class)),
-                        rec.MarkAnchor.XCoordinate, rec.MarkAnchor.YCoordinate) 
+                        rec.MarkAnchor.XCoordinate, rec.MarkAnchor.YCoordinate)
         base_names = self.BaseCoverage.glyphs
         for i, g in enumerate(map(font.glyph, base_names)) :
             for j,b in enumerate(self.BaseArray.BaseRecord[i].BaseAnchor) :
@@ -324,7 +311,7 @@ def process(self, font, index) :
         for i, g in enumerate(map(font.glyph, mark_names)) :
             rec = self.Mark1Array.MarkRecord[i]
             g.setAnchor(font.alias(apname+"_{}M".format(rec.Class)),
-                        rec.MarkAnchor.XCoordinate, rec.MarkAnchor.YCoordinate) 
+                        rec.MarkAnchor.XCoordinate, rec.MarkAnchor.YCoordinate)
         base_names = self.Mark2Coverage.glyphs
         for i, g in enumerate(map(font.glyph, base_names)) :
             for j,b in enumerate(self.Mark2Array.Mark2Record[i].Mark2Anchor) :

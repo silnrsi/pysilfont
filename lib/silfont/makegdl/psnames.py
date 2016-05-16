@@ -1,21 +1,8 @@
-#    Copyright 2012, SIL International
-#    All rights reserved.
-#
-#    This library is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU Lesser General Public License as published
-#    by the Free Software Foundation; either version 2.1 of License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#    Lesser General Public License for more details.
-#
-#    You should also have received a copy of the GNU Lesser General Public
-#    License along with this library in the file named "LICENSE".
-#    If not, write to the Free Software Foundation, 51 Franklin Street,
-#    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
-#    internet at http://www.fsf.org/licenses/lgpl.html.
+#!/usr/bin/env python
+'Glyph name analyser to create GDL names from AGL type names'
+__url__ = 'http://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2014-2016 SIL International (http://www.sil.org)'
+__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 
 import re
 import traceback  # Debug
@@ -4366,7 +4353,7 @@ class Name(object) :
         # Determine the components for any glyph that represents multiple USVs.
         for comp in name.split("_") :
             base, dot, mod = comp.partition(".")
-            if not base and mod : 
+            if not base and mod :
                 base = dot + mod
                 mod = None
             else :
@@ -4451,17 +4438,17 @@ class Name(object) :
         return cname
 
     def GDL(self) :
-        if self.GDLName : 
+        if self.GDLName :
             return self.GDLName
         res = ""
         if not len(self.components) :
-            if not self.psname : 
+            if not self.psname :
                 return None
-                
+
             res = "g_" + self.psname.replace('.', '_')
             self.GDLName = re.sub(r"([A-Z])", lambda x : "_" + x.group(1).lower(), res)
             return self.GDLName
-            
+
         for k in self.components :
             u = k[0]
             if not isinstance(u, basestring) and u :
@@ -4481,17 +4468,17 @@ class Name(object) :
             if res and k[1] :
                 res += "_" + "_".join(k[1])
             res += "_"
-            
+
         self.GDLName = res[0:-1]
-        
+
         if self.ext :
             self.GDLName += "_" + self.ext.lower().replace('.', '_')
-            
+
         if self.GDLName == "" : # last resort for some names
             self.GDLName = "g" + self.psname
         if self.GDLName[0:1] == "_" :
             self.GDLName = "g" + self.GDLName
-        
+
         return self.GDLName
 
     def head(self) :

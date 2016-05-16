@@ -1,21 +1,8 @@
-#    Copyright 2012, SIL International
-#    All rights reserved.
-#
-#    This library is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU Lesser General Public License as published
-#    by the Free Software Foundation; either version 2.1 of License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#    Lesser General Public License for more details.
-#
-#    You should also have received a copy of the GNU Lesser General Public
-#    License along with this library in the file named "LICENSE".
-#    If not, write to the Free Software Foundation, 51 Franklin Street,
-#    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
-#    internet at http://www.fsf.org/licenses/lgpl.html.
+#!/usr/bin/env python
+'The main font object for GDL creation. Depends on fonttools'
+__url__ = 'http://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2014-2016 SIL International (http://www.sil.org)'
+__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 
 import os, re, traceback
 from silfont.makegdl.glyph import Glyph
@@ -53,7 +40,7 @@ class PointClass(object) :
     def isNotInClass(self, g, isDia = False) :
         if not g : return False
         if not g.isDia : return False
-            
+
         if isDia :
             return g not in self.dias
         else :
@@ -74,7 +61,7 @@ class FontClass(object) :
 
 
 class Font(object) :
-    
+
     def __init__(self, fontfile) :
         self.glyphs = []
         self.psnames = {}
@@ -133,7 +120,7 @@ class Font(object) :
         g = factory(psName, index) # create a new glyph of the given class
         self.renameGlyph(g, psName, gdlName)
         if index is None :  # give it the next available index
-            index = len(self.glyphs) 
+            index = len(self.glyphs)
             self.glyphs.append(g)
         elif index >= len(self.glyphs) :
             self.glyphs.extend([None] * (len(self.glyphs) - index + 1))
@@ -273,11 +260,11 @@ class Font(object) :
                 genericName = apName[:-1] # without the M or S
                 if genericName not in self.points :
                     self.points[genericName] = PointClass(genericName)
-                if apName.endswith('S') : 
+                if apName.endswith('S') :
                     self.points[genericName].addBaseGlyph(g)
                 else :
                     self.points[genericName].addDiaGlyph(g)
-    
+
     def calculateOTLookups(self) :
         if self.font :
             for t in ('GSUB', 'GPOS') :
@@ -389,8 +376,8 @@ pass(%d);
         sep = ""
         for g in glyphs :
             if not g : continue
-                
-                
+
+
             if isinstance(g, basestring) :
                 fh.write(sep + g)
             else :

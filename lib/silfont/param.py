@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 'Parameter handling for use in pysilfont scripts'
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2016, SIL International  (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2014-2016 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
-__version__ = '1.0.0'
+__version__ = '2.0.0'
 
 import silfont.util as UT
 import ConfigParser
@@ -15,6 +15,7 @@ import ConfigParser
 
 # Default parameters for all modules
 defparams = {}
+defparams['main']   = {'version' : __version__, 'copyright' : __copyright__}
 defparams['logging']   = {'scrlevel': 'P', 'loglevel': 'W'}
 defparams['backups']   = {'backup': True, 'backupdir': 'backups', 'backupkeep': 5}
 # Default parameters for UFO module
@@ -26,11 +27,11 @@ defparams['outparams'] = {
     "sortDicts":        True,   # Should dict elements be sorted alphabetically?
     'precision':        6,      # Decimal precision to use in XML output - both for real values and for attributes if numeric
     "renameGlifs":      True,   # Rename glifs based on UFO3 suggested algorithm
-    "UFOversion":       "",   # UFOversion - defaults to existing unless a value is supplied
+    "UFOversion":       "",     # UFOversion - defaults to existing unless a value is supplied
     "glifElemOrder":    ['advance', 'unicode', 'note',   'image',  'guideline', 'anchor', 'outline', 'lib'], # Order to output glif elements
     "numAttribs":       ['pos', 'width', 'height', 'xScale', 'xyScale', 'yxScale', 'yScale', 'xOffset', 'yOffset', 'x', 'y', 'angle', 'format'],    # Used with precision above
-    "attribOrders.glif":[ 'pos', 'width', 'height', 'fileName', 'base', 'xScale', 'xyScale', 'yxScale', 'yScale',
-                'xOffset', 'yOffset', 'x', 'y', 'angle', 'type', 'smooth', 'name', 'format', 'color', 'identifier']
+    "attribOrders.glif":[ 'pos', 'width', 'height', 'fileName', 'base', 'xScale', 'xyScale', 'yxScale', 'yScale', 'xOffset', 'yOffset',
+                          'x', 'y', 'angle', 'type', 'smooth', 'name', 'format', 'color', 'identifier']
     }
 
 class params(object) :
@@ -41,8 +42,9 @@ class params(object) :
         self.types = {} # Python type for each parameter deduced from initial values supplied
         self.listtypes = {} # If type is dict, the type of values in the dict
         self.logger = UT.loggerobj()
-        self.sets = {"default": _paramset(self, "default", "defaults")}
-        self.lcase = {} # Lower case index ot parameters names
+        defset = _paramset(self, "default", "defaults")
+        self.sets = {"default": defset}
+        self.lcase = {} # Lower case index of parameters names
         for classn in defparams :
             self.classes[classn] = []
             for parn in defparams[classn] :
@@ -51,10 +53,10 @@ class params(object) :
                 self.paramclass[parn] = classn
                 self.types[parn] = type(value)
                 if type(value) is list : self.listtypes[parn] = type(value[0])
-                self.sets["default"][parn] = value
+                super(_paramset,defset).__setitem__(parn,value) # __setitem__ in paramset does not allow new values!
                 self.lcase[parn.lower()] = parn
 
-    def addset(self, name, sourcedesc = None, inputdict = None, configfile = None, copyset = None, updatewith = []) :
+    def addset(self, name, sourcedesc = None, inputdict = None, configfile = None, copyset = None) :
         # Create a subset from one of a dict, config file or existing set
         # Only one option should used per call
         # sourcedesc should be added for user-supplied data (eg config file) for reporting purposes
@@ -76,8 +78,6 @@ class params(object) :
             dict = inputdict
         if sourcedesc is None : sourcedesc = "unspecified source"
         self.sets[name] = _paramset(self, name, sourcedesc, dict)
-        if type(updatewith) is not list : updatewith = [updatewith]
-        for update in updatewith : self.sets[name].updatewith(update)
 
 class _paramset(dict) :
     # Set of parameter values
@@ -85,30 +85,51 @@ class _paramset(dict) :
         self.name = name
         self.sourcedesc = sourcedesc # Description of source for reporting
         self.params = params # Parent paraminfo object
-        for parn in inputdict : self.add(parn,inputdict[parn])
+        for parn in inputdict : self[parn] = inputdict[parn]
 
-    def add(self,parn,value) :
-        parn = self.params.lcase[parn.lower()]
-        if parn not in self.params.sets["default"] :
-            self.params.logger.log("Invalid parameter " + parn + " from " + self.sourcedesc, "S")
+    def __setitem__(self, parn, value) :
+        origvalue=value
+        origparn=parn
+        parn = parn.lower()
+        if parn not in self.params.lcase :
+            self.params.logger.log("Invalid parameter " + origparn + " from " + self.sourcedesc, "S")
+        else :
+            parn = self.params.lcase[parn]
         ptyp = self.params.types[parn]
-        if ptyp is list and type(value) is not list :value = value.split(",") # Convert csv string into list
-        if ptyp is bool : value = UT.str2bool(value)
+        if ptyp is bool :
+            value = UT.str2bool(value)
+            if value is None : self.params.logger.log (self.sourcedesc+" parameter "+origparn+" must be boolean: " + origvalue,"S")
         if ptyp is list :
-            if len(value) < 2 : self.logger.log (paramsource+" parameter "+parn+" must have a list of values: "+newpars[parn],"S")
+            if type(value) is not list : value = value.split(",") # Convert csv string into list
+            if len(value) < 2 : self.params.logger.log (self.sourcedesc+" parameter "+origparn+" must have a list of values: " + origvalue,"S")
             valuesOK = True
             listtype = self.params.listtypes[parn]
             for i,val in enumerate(value) :
                 if listtype is bool :
                     val = str2bool(val)
+                    if val is None : self.params.logger.log (self.sourcedesc+" parameter "+origparn+" must contain boolean values: " + origvalue,"S")
                     value[i] = val
                 if type(val) <> listtype : valuesOK = False
-            if not valuesOK : self.logger.log ("Invalid "+paramsource+" parameter type for "+parn+": "+params.types[parn],"S")
-        self[parn] = value ### Need to validate types, including within lists
+            if not valuesOK : self.logger.log ("Invalid "+paramsource+" parameter type for "+origparn+": "+self.params.types[parn],"S")
+        if parn in ("loglevel", "scrlevel") : # Need to check log level is valid before setting it since otherwise logging will fail
+            value = value.upper()
+            if value not in self.params.logger.loglevels : self.params.logger.log (self.sourcedesc+" parameter "+parn+" invalid","S")
+        super(_paramset,self).__setitem__(parn,value)
 
-    def updatewith(self,update) :
+    def updatewith(self,update, sourcedesc = None, log = True) :
         # Update a set with values from another set
-        for parn in self.params.sets[update] : self[parn] = self.params.sets[update][parn] ### Log changes in values
+        if sourcedesc is None : sourcedesc = self.params.sets[update].sourcedesc
+        for parn in self.params.sets[update] :
+            oldval = self[parn] if parn in self else ""
+            self[parn] = self.params.sets[update][parn]
+            if log and oldval <> "" and self[parn] <> oldval :
+                old = str(oldval)
+                new = str(self[parn])
+                if old <> old.strip() or new <> new.strip() : # Add quotes if there are leading or trailing spaces
+                    old = '"'+old+'"'
+                    new = '"'+new+'"'
+                self.params.logger.log(sourcedesc + " parameters: changing "+parn+" from " + old  + " to " + new,"I")
+
 
 
 

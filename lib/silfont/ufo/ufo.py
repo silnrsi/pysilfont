@@ -165,15 +165,20 @@ class Ufont(object) :
             if "org.sil.pysilfontparams" in self.lib :
                 elem = self.lib["org.sil.pysilfontparams"][1]
                 if elem.tag <> "array" : self.logger.log("Invalid parameter XML lib.plist - org.sil.pysilfontparams must be an array","S")
-                for param in elem : libparams[param.tag] = param.text
+                for param in elem :
+                    parn = param.tag
+                    if not(parn in params.paramclass) or params.paramclass[parn] <> "outparams" : self.logger.log("lib.plist org.sil.pysilfontparams must only contain outparams values: " + parn + " invalid", "S")
+                    libparams[parn] = param.text
         # Create font-specific parameter set (with updates from lib.plist)  Prepend names with ufodir to ensure uniquemess if multiple fonts open
-        params.addset(ufodir+"lib","lib.plist in "+ufodir,inputdict = libparams, updatewith = "command line") # Only valeus not overridden by command line should be used
-        params.addset(ufodir, copyset = "main", updatewith = ufodir+"lib")
+        params.addset(ufodir+"lib","lib.plist in "+ufodir,inputdict = libparams)
+        params.sets[ufodir+"lib"].updatewith("command line", log = False) # Command line parameters override lib.plist ones
+        params.addset(ufodir, copyset = "main")
+        params.sets[ufodir].updatewith(ufodir+"lib",sourcedesc = "lib.plist")
         self.paramset = params.sets[ufodir]
+        # Validate specific parameters
+        if self.paramset["UFOversion"] not in ("","2","3") : self.logger.log ("UFO version must be 2 or 3","S")
+        if sorted(self.paramset["glifElemOrder"]) <> sorted(self.params.sets["default"]["glifElemOrder"]) : self.logger.log("Invalid values for glifElemOrder", "S")
 
-        #Update parameters based on command line ones, lib.plist ones and config ones in that order
-        UFOversion = self.paramset["UFOversion"]
-        if UFOversion not in ("","2","3") : self.logger.log ("UFO version must be 2 or 3","S")
 
         # Create outparams based on values in paramset, building attriborders from separate attriborders.<type> parameters.
         self.outparams = {"attribOrders": {}}

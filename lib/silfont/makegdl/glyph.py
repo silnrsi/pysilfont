@@ -1,21 +1,8 @@
-#    Copyright 2012, SIL International
-#    All rights reserved.
-#
-#    This library is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU Lesser General Public License as published
-#    by the Free Software Foundation; either version 2.1 of License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#    Lesser General Public License for more details.
-#
-#    You should also have received a copy of the GNU Lesser General Public
-#    License along with this library in the file named "LICENSE".
-#    If not, write to the Free Software Foundation, 51 Franklin Street,
-#    suite 500, Boston, MA 02110-1335, USA or visit their web page on the 
-#    internet at http://www.fsf.org/licenses/lgpl.html.
+#!/usr/bin/env python
+'Corresponds to a glyph, for analysis purposes, for GDL generation'
+__url__ = 'http://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2014-2016 SIL International (http://www.sil.org)'
+__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 
 import re, traceback
 from silfont.makegdl.psnames import Name
@@ -74,7 +61,7 @@ class Glyph(object) :
         return send
         # if not name.startswith("_") and t != 'basemark' :
         #     self.isBase = True
-        
+
     def parseNames(self) :
         if self.psname :
             for name in self.psname.split("/") :
@@ -125,7 +112,7 @@ class Glyph(object) :
         if 'classes' in self.properties and self.properties['classes'].strip() :
             tempClasses = self.properties['classes']
             self.properties['classes'] = " ".join(font.filterAutoClasses(self.properties['classes'].split(), autoGdlFile))
-            
+
         for k in sorted(self.anchors.keys()) :
             v = self.anchors[k]
             p = SubElement(e, 'point')
@@ -137,10 +124,10 @@ class Glyph(object) :
             l.tail = "\n    "
             if ce is not None : ce.tail = "\n    "
             ce = p
-            
+
         for k in sorted(self.gdl_properties.keys()) :
             if k == "*skipPasses*" : continue  # not set in GDL
-                
+
             v = self.gdl_properties[k]
             if v :
                 p = SubElement(e, 'property')
@@ -148,14 +135,14 @@ class Glyph(object) :
                 p.set('value', v)
                 if ce is not None : ce.tail = "\n    "
                 ce = p
-                
+
         if self.gdl and (not self.name or self.gdl != self.name.GDL()) :
             p = SubElement(e, 'property')
             p.set('name', 'GDLName')
             p.set('value', self.GDLName())
             if ce is not None : ce.tail = "\n    "
             ce = p
-            
+
         for k in sorted(self.properties.keys()) :
             v = self.properties[k]
             if v :
@@ -164,13 +151,13 @@ class Glyph(object) :
                 p.set('value', v)
                 if ce is not None : ce.tail = "\n    "
                 ce = p
-                
+
         if self.comment :
             p = SubElement(e, 'note')
             p.text = self.comment
             if ce is not None : ce.tail = "\n    "
             ce = p
-            
+
         if 'classes' in self.properties and self.properties['classes'].strip() :
             self.properties['classes'] = tempClasses
         if ce is not None :
@@ -178,7 +165,7 @@ class Glyph(object) :
             e.text = "\n    "
         e.tail = "\n"
         return e
-      
+
 def isMakeGDLSpecialClass(name) :
 #    if re.match(r'^cn?(Takes)?.*?Dia$', name) : return True
 #    if name.startswith('clig') : return True
