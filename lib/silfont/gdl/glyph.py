@@ -5,7 +5,7 @@ __copyright__ = 'Copyright (c) 2014-2016 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 
 import re, traceback
-from silfont.makegdl.psnames import Name
+from silfont.gdl.psnames import Name
 from xml.etree.cElementTree import SubElement
 
 # Convert from Graphite AP name to the standard name, eg upperM -> _upper

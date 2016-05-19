@@ -4,8 +4,8 @@ __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2014-2016 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 
-from silfont.makegdl.font import Font
-import silfont.makegdl.ot
+from silfont.gdl.font import Font
+import silfont.gdl.ot
 from argparse import ArgumentParser
 
 parser = ArgumentParser()

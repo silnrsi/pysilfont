@@ -5,8 +5,8 @@ __copyright__ = 'Copyright (c) 2014-2016 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 
 import os, re, traceback
-from silfont.makegdl.glyph import Glyph
-from silfont.makegdl.psnames import Name
+from silfont.gdl.glyph import Glyph
+from silfont.gdl.psnames import Name
 from xml.etree.cElementTree import ElementTree, parse, Element
 from fontTools.ttLib import TTFont
 

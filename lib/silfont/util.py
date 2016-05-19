@@ -296,12 +296,14 @@ def execute(tool, fn, argspec) :
         logname = args.log if args.log else ""
         if logdef is not None :
             (path,base,ext)=splitfn(logname)
-            (dpath,dbase,dext)=splitfn(logdef) # dpath should be None
+            (dpath,dbase,dext)=splitfn(logdef)
             if not path :
                 if base and ext : # If both specified then use cwd, ie no path
                     path = ""
                 else:
-                    path=fppath
+                    path = (fppath if dpath is "" else os.path.join(fppath,dpath))
+                    print path
+                    print fppath,dpath
             if not base :
                 if dbase == "" :
                     base = fpbase

@@ -12,7 +12,7 @@ import os,sys
 
 argspec = [
     ('action',{'help': 'Action - report or update', 'nargs': '?', 'default': 'report', 'choices': ('report','update')},{}),
-    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': 'update_headers.log'})]
+    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': 'local/update_headers.log'})]
 
 def doit(args) :
     global file
