@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 '''Add associate feature info to glif lib based on a csv file
-  csv format glyphname,featurename[,featurevalue]'''
+csv format glyphname,featurename[,featurevalue]'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2015, SIL International  (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
-__version__ = '0.0.1'
 
 from silfont.UFOlib import *
 

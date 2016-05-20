@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 'Checks for standard headers and update version and copyright info in python files'
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2014-2016, SIL International  (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2016 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
-__version__ = '2.0.0'
+
+cyear = "2016" # Year to use if no other copyright year present
 
 import silfont.param
 from silfont.util import execute
@@ -21,9 +22,13 @@ def doit(args) :
     logger=params.logger
 
     varlist = ['url', 'copyright', 'license', 'author', 'version']
+
+    copyrightpre = 'Copyright (c) '
+    copyrightpost =  ' SIL International (http://www.sil.org)'
+
     standards = {
+        'copyright': copyrightpre + cyear + copyrightpost,
         'version': params.sets['default']['version'],
-        'copyright': params.sets['default']['copyright'],
         'url': 'http://github.com/silnrsi/pysilfont',
         'license': 'Released under the MIT License (http://opensource.org/licenses/MIT)'}
 
@@ -32,11 +37,13 @@ def doit(args) :
 
     for subdir, dirs, files in os.walk("."):
         if not (subdir=="." or subdir[0:5] in ("./lib","./scr")) : continue
-        lib = (True if subdir[0:5] == "./lib" else False)
+        if subdir[0:] == "./lib/pysilfont.egg-info" : continue
+
         for filen in files:
             if filen[-1:]=="~" : continue
             if filen[-3:]=="pyc" : continue
             if filen in ("__init__.py", "ez_setup.py") : continue
+            needver = (True if filen in ('setup.py', 'param.py') else False)
             fulln = os.path.join(subdir,filen)
             file = open(fulln,"r")
             line1 = nextline()
@@ -75,17 +82,49 @@ def doit(args) :
                     author = None
                     for varn in varlist :
                         if varn in headvar:
-                            if varn == 'author' :
-                                author = headvar[varn]
-                            elif varn == "version" and not lib :
+                            headval = headvar[varn]
+                            if varn == 'author' : # Simply use existing author
+                                author = headval
+                            elif varn == "version" and not needver :
                                 updatevars[varn] = "deleted"
+                            elif varn == "copyright" : # Need to check dates and use oldest
+                                # Find existing dates, assuming format 20nn and one or two dates
+                                cdate = cyear
+                                valid = True
+                                datpos = headval.find("20")
+                                if datpos <> -1 :
+                                    # read any more digits
+                                    cdate='20'
+                                    nextpos = datpos+2
+                                    while headval[nextpos] in '0123456789' and nextpos < len(headval) :
+                                        cdate = cdate + headval[nextpos]
+                                        nextpos += 1
+                                    # Look for second date
+                                    rest = headval[nextpos:]
+                                    datpos = rest.find("20")
+                                    date2 = ""
+                                    if datpos <> -1 :
+                                        date2 = '20'
+                                        nextpos = datpos+2
+                                        while rest[nextpos] in '0123456789' and nextpos < len(rest) :
+                                            date2 = date2 + rest[nextpos]
+                                            nextpos += 1
+                                    cval=int(cdate)
+                                    if cval < 2000 or cval > int(cyear) : valid = False
+                                    if date2 <> "" :
+                                        val2 = int(date2)
+                                        if val2 < cval or val2 > int(cyear) : valid = False
+                                    if not valid : cdate = cyear
+                                copyright = copyrightpre + cdate + copyrightpost
+                                if headval <> copyright :
+                                    updatevars[varn] = ("updated" if valid else "update (invalid dates)")
                             else :
-                                if headvar[varn] <> standards[varn] :
+                                if headval <> standards[varn] :
                                     updatevars[varn] = "updated"
                         else :
                             if varn == 'author' :
                                 reportvars[varn] = "no author"
-                            elif varn == "version" and not lib :
+                            elif varn == "version" and not needver :
                                 pass
                             else:
                                 updatevars[varn] ="added"
@@ -101,14 +140,15 @@ def doit(args) :
             # Now have python file with no errors, so can update headers
             if action == 'update' and updatevars :
                 logger.log("Updating "+fulln,"P")
-                if filen <> 'dwr.py' : continue
                 outfile = open("update_headers_temp.txt", "w")
                 outfile.write(headers + "\n")
                 for varn in varlist :
-                    if varn == "version" and not lib :
+                    if varn == "version" and not needver :
                         pass
                     elif varn == "author" :
                         if author : outfile.write("__author__ = '" + author + "'\n")
+                    elif varn == "copyright" :
+                        outfile.write("__copyright__ = '" + copyright + "'\n")
                     else:
                         outfile.write("__" + varn + "__ = '" + standards[varn] + "'\n")
                     if varn in updatevars :
@@ -141,11 +181,9 @@ def doit(args) :
                     else:
                         logger.log(fulln + ": No author header variable", "I")
 
-    '''print "\n"+"Non-python files"+"\n"
+    print "\n"+"Non-python files"+"\n"
     for filen in otherfiles:
         print filen
-    '''
-
 
     return
 

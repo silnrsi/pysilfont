@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 'Parameter handling for use in pysilfont scripts'
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2014-2016 SIL International (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2014 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
-__version__ = '2.0.0'
+__version__ = '1.1.0'
 
 import silfont.util as UT
 import ConfigParser
@@ -129,42 +129,3 @@ class _paramset(dict) :
                     old = '"'+old+'"'
                     new = '"'+new+'"'
                 self.params.logger.log(sourcedesc + " parameters: changing "+parn+" from " + old  + " to " + new,"I")
-
-
-
-
-'''for (paramsource,newpars) in (("Config file",cfgparams),("lib.plist",libparams),("Command-line",clparams)):
-            if newpars :
-                for parn in newpars :
-                    if parn not in params: self.logger.log ("Invalid "+paramsource+" parameter: "+parn,"S")
-                    if parn in params.groups["outparams"] : # only parameters relevant to a font
-                        ptyp = params.types[parn]
-                        value = newpars[parn]
-                        if ptyp is list : value = value.split(",") # Convert csv string into list
-                        if ptyp is bool : value = str2bool(value)
-                        if type(value) <> ptyp :
-                            if param == "UFOversion" : # Default is None, so type does not match if value given
-                                if value not in ("2","3") : self.logger.log ("UFO version must be 2 or 3","S")
-                            else:
-                                self.logger.log ("Invalid "+paramsource+" parameter type for "+parn+": "+newpars[parn],"S")
-                        if ptyp is list :
-                            if len(value) < 2 : self.logger.log (paramsource+" parameter "+parn+" must have a list of values: "+newpars[parn],"S")
-                            valuesOK = True
-                            listtype = params.listtypes[parn]
-                            for i,val in enumerate(value) :
-                                if listtype is bool :
-                                    val = str2bool(val)
-                                    value[i] = val
-                                if type(val) <> listtype : valuesOK = False
-                            if not valuesOK : self.logger.log ("Invalid "+paramsource+" parameter type for "+parn+": "+params.types[parn],"S")
-                        currentval = params[parn]
-                        if value <> currentval :
-                            if parn == "glifElemOrder" : # Must be the standard elements with just the order changed
-                                if sorted(value) <> sorted(currentval) : self.logger.log("Invalid "+paramsource+ " values for glifElemOrder", "S")
-                            old = str(currentval)
-                            new = str(value)
-                            if old <> old.strip() or new <> new.strip() : # Add quotes if there are leading or trailing spaces
-                                old = '"'+old+'"'
-                                new = '"'+new+'"'
-                            self.logger.log(paramsource + " parameters: changing "+parn+" from " + old  + " to " + new,"I")
-                            params[parn] = value'''

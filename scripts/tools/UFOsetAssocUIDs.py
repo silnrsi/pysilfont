@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 '''Add associate UID info to glif lib based on a csv file
-  - Could be one value for variant UIDs and multiple for ligatures'''
+- Could be one value for variant UIDs and multiple for ligatures'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2015, SIL International  (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
-__version__ = '0.0.1'
 
-from silfont.UFOlib import *
+import silfont.param
+from silfont.util import execute
 
 suffix = "_AssocUIDs"
 argspec = [

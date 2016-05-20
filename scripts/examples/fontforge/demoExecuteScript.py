@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 'FontForge: Demo code to paste into the "Execute Script" dialog'
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2013, SIL International  (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2013 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
-__version__ = '0.0.1'
 
 import sys, os, fontforge
 sys.path.append(os.path.join(os.environ['HOME'], 'src/pysilfont/scripts'))
