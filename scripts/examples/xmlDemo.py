@@ -5,7 +5,9 @@ __copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
-from silfont.genlib import *
+from silfont.core import execute
+import silfont.etutil as etutil
+from xml.etree import cElementTree as ET
 
 argspec = [('outfile1',{'help': 'output file 1','default': './xmlDemo.xml','nargs': '?'}, {'type': 'outfile'}),
             ('outfile2',{'help': 'output file 2','nargs': '?'}, {'type': 'outfile', 'def':'_2.xml'}),
@@ -19,24 +21,24 @@ def doit(args) :
     xmlstring = "<item>\n<subitem hello='world'>\n<subsub name='moon'>\n<value>lunar</value>\n</subsub>\n</subitem>"
     xmlstring += "<subitem hello='jupiter'>\n<subsub name='moon'>\n<value>IO</value>\n</subsub>\n</subitem>\n</item>"
 
-    # Using genlib's xmlitem class
+    # Using etutil's xmlitem class
     
-    xmlobj = xmlitem()
+    xmlobj = etutil.xmlitem()
     xmlobj.etree = ET.fromstring(xmlstring)
     
-    etwobj = ETWriter(xmlobj.etree)
+    etwobj = etutil.ETWriter(xmlobj.etree)
     etwobj.serialize_xml(xmlobj.write_to_xml)
     
     ofile1.write(xmlobj.outxmlstr)
     
     # Just using ETWriter
     
-    etwobj = ETWriter( ET.fromstring(xmlstring) )
+    etwobj = etutil.ETWriter( ET.fromstring(xmlstring) )
     etwobj.serialize_xml(ofile2.write)
     
     # Changing parameters
     
-    etwobj = ETWriter( ET.fromstring(xmlstring) )
+    etwobj = etutil.ETWriter( ET.fromstring(xmlstring) )
     etwobj.indentIncr = "    "
     etwobj.indentFirst = ""
     etwobj.serialize_xml(ofile3.write)

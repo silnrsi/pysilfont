@@ -8,7 +8,7 @@ __author__ = 'David Raymond'
 from xml.etree import cElementTree as ET
 import sys, os, copy, shutil, filecmp
 import collections
-import silfont.param
+import silfont.core
 import silfont.util as UT
 import silfont.etutil as ETU
 
@@ -144,7 +144,7 @@ class Ufont(object) :
     def __init__(self, ufodir, logger = None , params = None) :
         if logger is not None and params is not none : params.logger.log("Only supply a logger if params not set (since that has one)", "X")
         if params is None :
-            params = silfont.param.params()
+            params = silfont.core.params()
             if logger is not None: params.logger = logger
         self.params = params
         self.logger = params.logger

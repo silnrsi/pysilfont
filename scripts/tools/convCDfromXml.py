@@ -5,8 +5,8 @@ __copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Rowe'
 
-from silfont.genlib import execute
-from silfont.complib import CompGlyph
+from silfont.core import execute
+from silfont.comp.comp import CompGlyph
 from xml.etree import ElementTree as ET
 
 # specify two parameters: input file (XML format), output file (single line format).

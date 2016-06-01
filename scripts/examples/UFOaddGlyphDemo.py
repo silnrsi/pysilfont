@@ -5,8 +5,9 @@ __copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
-from silfont.genlib import *
-from silfont.UFOlib import *
+from silfont.core import execute
+import silfont.ufo.ufo as ufo
+from xml.etree import cElementTree as ET
 
 suffix = '_addGlyph'
 argspec = [
@@ -32,7 +33,7 @@ def doit(args) :
     font = args.ifont
 
     # Create basic glyph
-    newglyph = Uglif(layer = font.deflayer, name = "Test")
+    newglyph = ufo.Uglif(layer = font.deflayer, name = "Test")
     newglyph.add("unicode", {"hex": "007D"})
     # Add an outline
     newglyph.add("outline")
@@ -40,7 +41,7 @@ def doit(args) :
     element = ET.Element("contour")
     ET.SubElement(element, "point", {"x": "275", "y": "1582", "type": "line"})
     ET.SubElement(element, "point", {"x": "275", "y": "-493", "type": "line"})
-    contour =Ucontour(newglyph["outline"],element)
+    contour =ufo.Ucontour(newglyph["outline"],element)
     newglyph["outline"].appendobject(contour, "contour")
 
     font.deflayer.addGlyph(newglyph)

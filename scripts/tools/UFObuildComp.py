@@ -6,9 +6,9 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'David Rowe'
 
 from xml.etree import ElementTree as ET
-from silfont.genlib import execute
-from silfont.UFOlib import * ### had error when specifying only: Ufont, Uglif, Ucomponent
-from silfont.complib import CompGlyph
+from silfont.core import execute
+import silfont.ufo.ufo as ufo
+from silfont.comp.comp import CompGlyph
 
 argspec = [
     ('ifont',{'help': 'Input UFO'}, {'type': 'infont'}),
@@ -17,7 +17,7 @@ argspec = [
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_CD.log'}),
     ('-a','--analysis',{'help': 'Analysis only; no output font generated', 'action': 'store_true'},{}),
     ('-f','--force',{'help': 'Force overwrite of glyphs having outlines', 'action': 'store_true'},{}),
-    # 'choices' for -r should correspond to infont.logger.loglevels.keys() ### -r may move to UFOlib eventually
+cd     # 'choices' for -r should correspond to infont.logger.loglevels.keys() ### -r may move to core.py eventually
     ('-r','--report',{'help': 'Set reporting level for log', 'type':str, 'choices':['X','S','E','P','W','I','V']},{})
     ]
 
@@ -208,13 +208,13 @@ def doit(args) :
             infont.logger.log("Adding new glyph, " + targetglyphname, "V")
 
         # create glyph, using targetglyphname, targetglyphunicode
-        targetglyph = Uglif(layer=infont.deflayer, name=targetglyphname)
+        targetglyph = ufo.Uglif(layer=infont.deflayer, name=targetglyphname)
         targetglyph.add('advance',{'width': str(xbase)} )
         if targetglyphunicode: targetglyph.add('unicode',{'hex': targetglyphunicode} )
         targetglyph.add('outline')
         # add to the outline element, a component element for every entry in componentlist
         for compdic in componentlist:
-            comp = Ucomponent(targetglyph['outline'],ET.Element('component',compdic))
+            comp = ufo.Ucomponent(targetglyph['outline'],ET.Element('component',compdic))
             targetglyph['outline'].appendobject(comp,'component')
         # copy anchors to new glyph from targetglyphanchors which has {'U': (500,1000), 'L': (500,0)}
         for a in targetglyphanchors:
