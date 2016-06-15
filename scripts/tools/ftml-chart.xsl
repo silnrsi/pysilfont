@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:output method="html" encoding="utf-8"/>
+
+<!-- http://github.com/silnrsi/pysilfont -->
+<!-- Copyright (c) 2015 SIL International (http://www.sil.org) -->
+<!-- Released under the MIT License (http://opensource.org/licenses/MIT) -->
+
 <!-- Use with nested <testgroup> elements to create tables with multiple <test> elements per row -->
 
 <!-- set variables from head element -->

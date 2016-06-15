@@ -2,6 +2,10 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:output method="html" encoding="utf-8"/>
 
+<!-- http://github.com/silnrsi/pysilfont -->
+<!-- Copyright (c) 2015 SIL International (http://www.sil.org) -->
+<!-- Released under the MIT License (http://opensource.org/licenses/MIT) -->
+
 <!-- set variables from head element -->
 <xsl:variable name="width-comment" select="/ftml/head/widths/@comment"/>
 <xsl:variable name="width-label" select="/ftml/head/widths/@label"/>
