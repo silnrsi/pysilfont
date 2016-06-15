@@ -17,7 +17,7 @@ argspec = [
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_CD.log'}),
     ('-a','--analysis',{'help': 'Analysis only; no output font generated', 'action': 'store_true'},{}),
     ('-f','--force',{'help': 'Force overwrite of glyphs having outlines', 'action': 'store_true'},{}),
-cd     # 'choices' for -r should correspond to infont.logger.loglevels.keys() ### -r may move to core.py eventually
+     # 'choices' for -r should correspond to infont.logger.loglevels.keys() ### -r may move to core.py eventually
     ('-r','--report',{'help': 'Set reporting level for log', 'type':str, 'choices':['X','S','E','P','W','I','V']},{})
     ]
 
