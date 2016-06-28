@@ -394,6 +394,8 @@ def execute(tool, fn, argspec) :
         adef = None
         if 'type' in ainfo :
             atype = ainfo['type']
+            if atype not in ('infont','outfont','infile','outfile','incsv','filename','optiondict') :
+                logger.log("Invalid type of " + atype + " supplied in argspec", "X")
             if atype <> 'optiondict' : # All other types are file types, so adef must be set, even if just to ""
                 adef = ainfo['def'] if 'def' in ainfo else ""
 
@@ -405,7 +407,6 @@ def execute(tool, fn, argspec) :
                 if aval == "" and adef == "" : # Only valid for output font parameter
                     if atype <> "outfont" :
                         logger.log( "No value suppiled for " + ainfo['name'], "S")
-                        sysexit()
                 (apath,abase,aext)=splitfn(aval)
                 (dpath,dbase,dext)=splitfn(adef) # dpath should be None
                 if not apath :
