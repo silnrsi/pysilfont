@@ -6,6 +6,7 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'Martin Hosken'
 
 from silfont.genlib import execute
+import psMat
 
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
@@ -13,21 +14,32 @@ argspec = [
     ('-i','--input',{'help': 'Font to get glyphs from', 'required' : True}, {'type': 'infont'}),
     ('-r','--range',{'help': 'StartUnicode..EndUnicode no spaces, e.g. 20..7E', 'action' : 'append'}, {}),
     ('-n','--name',{'help': 'Include glyph named name', 'action' : 'append'}, {}),
-    ('-a','--anchors',{'help' : 'Copy across anchor points', 'action' : 'store_true'}, {})
+    ('-a','--anchors',{'help' : 'Copy across anchor points', 'action' : 'store_true'}, {}),
+    ('-f','--force',{'help' : 'Overwrite existing glyphs in the font', 'action' : 'store_true'}, {}),
+    ('-s','--scale',{'type' : float, 'help' : 'Scale glyphs by this factor'}, {})
 ]
 
 def copyglyph(font, infont, g, u, args) :
-    glyph = font.createChar(u, g.glyphname)
+    if args.scale is None :
+        scale = psMat.identity()
+    else :
+        scale = psMat.scale(args.scale)
+    o = font.findEncodingSlot(u)
+    if o == -1 :
+        glyph = font.createChar(u, g.glyphname)
+    else :
+        glyph = font[o]
     font.selection.select(glyph)
     pen = glyph.glyphPen()
     g.draw(pen)
-    glyph.width = g.width
+    glyph.transform(scale)
+    glyph.width = g.width * scale[0]
     if args.anchors :
         for a in g.anchorPoints :
             try :
                 l = font.getSubtableOfAnchor(a[1])
             except EnvironmentError :
-                font.addAnchorClass("", a[0], a[1])
+                font.addAnchorClass("", a[0]*scale[0], a[1]*scale[0])
         glyph.anchorPoints = g.anchorPoints
 
 def doit(args) :
@@ -40,7 +52,7 @@ def doit(args) :
         (rstart, rend) = map(lambda x: int(x,16), r.split('..'))
         for u in range(rstart, rend + 1) :
             o = font.findEncodingSlot(u)
-            if o != -1 :
+            if o != -1 and not args.force :
                 print "Glyph for %x already present. Skipping" % u
                 continue
             e = infont.findEncodingSlot(u)
