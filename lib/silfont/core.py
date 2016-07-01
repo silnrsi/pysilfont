@@ -221,6 +221,7 @@ def execute(tool, fn, argspec) :
         if fontforge.hasUserInterface() :
             return # Execute is for command-line use
         fontforge.loadPrefs()
+        fontforge.setPrefs("PreserveTables","DSIG,Feat,Glat,Gloc,LTSH,Silf,Sill,Silt,VDMX,hdmx") ## Perhaps should be a parameter and check for existing values
     elif tool == "PSFU" :
         psfu = True
         from silfont.ufo.ufo import Ufont
