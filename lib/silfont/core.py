@@ -398,6 +398,9 @@ def execute(tool, fn, argspec) :
                 logger.log("Invalid type of " + atype + " supplied in argspec", "X")
             if atype <> 'optiondict' : # All other types are file types, so adef must be set, even if just to ""
                 adef = ainfo['def'] if 'def' in ainfo else ""
+            if adef is None and aval is None : # If def explicitly set to None then this is optional
+                setattr(args,ainfo['name'],None)
+                continue
 
         if c == 0 :
             if aval[-1] in ("\\","/") : aval = aval[0:-1] # Remove trailing slashes
@@ -480,6 +483,7 @@ def execute(tool, fn, argspec) :
 
 # All arguments processed, now call the main function
     setattr(args,"paramsobj",params)
+    setattr(args,"cmdlineargs",sys.argv)
     newfont = fn(args)
 # If an output font is expected and one is returned, output the font
     if outfont and newfont is not None:

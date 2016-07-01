@@ -7,8 +7,7 @@ __author__ = 'David Raymond'
 
 cyear = "2016" # Year to use if no other copyright year present
 
-import silfont.param
-from silfont.util import execute
+from silfont.core import execute
 import os,sys
 
 argspec = [
