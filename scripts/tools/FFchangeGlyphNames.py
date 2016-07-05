@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-'''Update gylph names in a ttf font post table'''
+'''Update gylph names in a font based on csv file
+   - Using FontForge rather than UFOlib so it can work with ttf (or sfd) files'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2016 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
@@ -16,10 +17,6 @@ argspec = [
 
 def doit(args) :
     logger = args.paramsobj.logger
-    # Check input font is a ttf
-    fontfile = args.cmdlineargs[1]
-    if fontfile[-3:] <> "ttf" :
-        logger.log("Input font needs to be a ttf file", "S")
 
     font = args.ifont
 

@@ -77,7 +77,7 @@ def doit(args) :
             n1 = line[0]
             n2 = line[1]
             if n1 in names and n2 <> names[n1] :
-                logger.log(n1 + "in both names and names2 with different values","E")
+                logger.log(n1 + " in both names and names2 with different values","E")
             else :
                 names[n1] = n2
 
@@ -89,16 +89,19 @@ def doit(args) :
     missed = []
     psmissed = []
     for filen in gdlfiles:
+        dbg = True if filen == 'main.gdh' else False ##
         file = open(os.path.join(indir,filen),"r")
         if outappend :
             base,ext = os.path.splitext(filen)
             outfilen = base+outappend+ext
-            print base,ext,outfilen
         else :
             outfilen = filen
         outfile = open(os.path.join(outdir,outfilen),"w")
         commentblock = False
+        cnt = 0 ##
         for line in file:
+            cnt += 1 ##
+            #if cnt > 150 : break ##
             line = line.rstrip()
             # Skip comment blocks
             if line[0:2] == "/*" :
@@ -110,11 +113,38 @@ def doit(args) :
                 if line.find("*/") <> -1 : commentblock = False
                 continue
             # Scan for graphite names
-            scan = line[0:line.find("//")] if line.find("//") <> -1 else line
+            cpos = line.find("//")
+            if cpos == -1 :
+                scan = line
+                comment = ""
+            else :
+                scan = line[0:cpos]
+                comment = line[cpos:]
             tmpline = ""
-            lastend = 0
-            for m in re.finditer('[\s(\[,]g\w+?[ )\],?]'," "+scan) :
+            #if dbg :
+            #    print line
+            #    print scan + comment
+            while re.search('[\s(\[,]g\w+?[\s)\],?:;=]'," "+scan+" ") :
+                m = re.search('[\s(\[,]g\w+?[\s)\],?:;=]'," "+scan+" ")
                 gname = m.group(0)[1:-1]
+                #if dbg : print gname
+                if gname in names :
+                    gname = names[gname]
+                else :
+                    if gname not in missed and gname not in exceptions :
+                        logger.log(gname + " from '" + line.strip() + "' in " + filen + " missing from csv", "W")
+                        missed.append(gname) # only log each missed name once
+                tmpline = tmpline + scan[lastend:m.start()] + gname
+                scan = scan[m.end()-2:]
+            tmpline = tmpline + scan + comment
+
+            '''dbg=False ##
+            for m in re.finditer('[\s(\[,]g\w+?[\s)\],?]'," "+scan) :
+                gname = m.group(0)[1:-1]
+                if gname.find("gcommaaccent") <> -1 :
+                    print scan
+                    dbg=True ##
+                if dbg : print gname ##
                 if gname in names :
                     gname = names[gname]
                 else :
@@ -124,6 +154,7 @@ def doit(args) :
                 tmpline = tmpline + line[lastend:m.start()] + gname
                 lastend = m.end()-2
             tmpline = tmpline + line[lastend:]
+            '''
             # Scan for postscript statements
             scan = tmpline[0:tmpline.find("//")] if tmpline.find("//") <> -1 else tmpline
             newline = ""

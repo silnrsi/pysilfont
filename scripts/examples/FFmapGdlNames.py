@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 '''Write mapping of graphite names to new graphite names based on:
-   - an original ttf font
-   - the gdl file produced by makeGdl when original font was produced
+   - two ttf files
+   - the gdl files produced by makeGdl run against those fonts
+        This could be different versions of makeGdl
    - a csv mapping glyph names used in original ttf to those in the new font '''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2016 SIL International (http://www.sil.org)'
@@ -9,13 +10,14 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'David Raymond'
 
 from silfont.core import execute
-import silfont.gdl.psnames as ps
 import datetime
 
-suffix = "_mapGDLnames"
+suffix = "_mapGDLnames2"
 argspec = [
-    ('ifont',{'help': 'Input ttf font file'}, {'type': 'infont'}),
-    ('-g','--gdl',{'help': 'Input gdl file'}, {'type': 'infile', 'def': '.gdl'}),
+    ('ifont1',{'help': 'First ttf font file'}, {'type': 'infont'}),
+    ('ifont2',{'help': 'Second ttf font file'}, {'type': 'infont'}),
+    ('gdl1',{'help': 'Original make_gdl file'}, {'type': 'infile'}),
+    ('gdl2',{'help': 'Updated make_gdl file'}, {'type': 'infile'}),
     ('-m','--mapping',{'help': 'Mapping csv file'}, {'type': 'incsv', 'def': '_map.csv'}),
     ('-o','--output',{'help': 'Ouput csv file'}, {'type': 'outfile', 'def': suffix+'.csv'}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': suffix+'.log'}),
@@ -23,13 +25,17 @@ argspec = [
 
 def doit(args) :
     logger = args.paramsobj.logger
-    # Check input font is a ttf
-    fontfile = args.cmdlineargs[1]
-    if fontfile[-3:] <> "ttf" :
-        logger.log("Input font needs to be a ttf file", "S")
+    # Check input fonts are ttf
+    fontfile1 = args.cmdlineargs[1]
+    fontfile2 = args.cmdlineargs[2]
 
-    font = args.ifont
-    gdlfile = args.gdl
+    if fontfile1[-3:] <> "ttf" or fontfile2[-3:] <> "ttf" :
+        logger.log("Input fonts needs to be ttf files", "S")
+
+    font1 = args.ifont1
+    font2 = args.ifont2
+    gdlfile1 = args.gdl1
+    gdlfile2 = args.gdl2
     mapping = args.mapping
     outfile = args.output
 
@@ -38,9 +44,9 @@ def doit(args) :
         outfile.write("# " + datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S ") + args.cmdlineargs[0] + "\n")
         outfile.write("# "+" ".join(args.cmdlineargs[1:])+"\n\n")
 
-    # Process gdl file
+    # Process gdl files
     oldgrnames = {}
-    for line in args.gdl :
+    for line in gdlfile1 :
         # Look for lines of format <grname> = glyphid(nnn)...
         pos = line.find(" = glyphid(")
         if pos == -1 : continue
@@ -48,22 +54,44 @@ def doit(args) :
         gid = line[pos+11:line.find(")")]
         oldgrnames[int(gid)]=grname
 
-    # Create map from AGL name to new graphite name
     newgrnames = {}
-    mapping.numfields = 2
-    for line in mapping :
-        AGLname = line[1]
-        SILname = line[0]
-        grname = ps.Name(SILname).GDL()
-        newgrnames[AGLname] = grname
+    for line in gdlfile2 :
+        # Look for lines of format <grname> = glyphid(nnn)...
+        pos = line.find(" = glyphid(")
+        if pos == -1 : continue
+        grname = line[0:pos]
+        gid = line[pos+11:line.find(")")]
+        newgrnames[int(gid)]=grname
 
-    # Find glyph names in ttf font
-    for glyph in font.glyphs():
-        gid = glyph.originalgid
-        gname = glyph.glyphname
-        oldgrname = oldgrnames[gid] if gid in oldgrnames else None
-        newgrname = newgrnames[gname] if gname in newgrnames else None
-        outfile.write(oldgrname + "," + newgrname+"\n")
+    # Process mapping file
+    SILnames = {}
+    mapping.numfields = 2
+    for line in mapping : SILnames[line[1]] = line[0]
+
+    # Map SIL name to gids in font 2
+    SILtogid2={}
+    for glyph in font2.glyphs(): SILtogid2[glyph.glyphname] = glyph.originalgid
+
+    # Combine all the mappings via ttf1!
+    cnt1 = 0
+    cnt2 = 0
+    for glyph in font1.glyphs():
+        gid1 = glyph.originalgid
+        gname1 = glyph.glyphname
+        gname2 = SILnames[gname1]
+        gid2 = SILtogid2[gname2]
+        oldgrname = oldgrnames[gid1] if gid1 in oldgrnames else None
+        newgrname = newgrnames[gid2] if gid2 in newgrnames else None
+        if oldgrname is None or newgrname is None :
+            print type(gid1), gname1, oldgrname
+            print gid2, gname2, newgrname
+            cnt2 += 1
+            if cnt2 > 10 : break
+        else:
+            outfile.write(oldgrname + "," + newgrname+"\n")
+            cnt1 += 1
+
+    print cnt1,cnt2
 
     outfile.close()
     return
