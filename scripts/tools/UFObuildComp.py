@@ -54,8 +54,7 @@ def addtwo(a1, a2):
 def doit(args) :
     global glyphlist
     infont = args.ifont
-    r = args.report
-    if r: infont.logger.loglevel = infont.logger.loglevels[r]
+    if args.report: infont.logger.loglevel = args.report
 
     ### temp section (these may someday be passed as optional parameters)
     RemoveUsedAnchors = True

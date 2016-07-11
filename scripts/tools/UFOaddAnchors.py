@@ -20,8 +20,7 @@ argspec = [
 
 def doit(args) :
     infont = args.ifont
-    r = args.report
-    if r: infont.logger.loglevel = infont.logger.loglevels[r]
+    if args.report: infont.logger.loglevel = args.report
     glyphcount = 0
 
     try:
