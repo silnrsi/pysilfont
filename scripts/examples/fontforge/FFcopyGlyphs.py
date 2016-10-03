@@ -13,6 +13,7 @@ argspec = [
     ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont', 'def': 'new'}),
     ('-i','--input',{'help': 'Font to get glyphs from', 'required' : True}, {'type': 'infont'}),
     ('-r','--range',{'help': 'StartUnicode..EndUnicode no spaces, e.g. 20..7E', 'action' : 'append'}, {}),
+    ('--rangefile',{'help': 'File with USVs e.g. 20 or a range e.g. 20..7E or both', 'action' : 'append'}, {}),
     ('-n','--name',{'help': 'Include glyph named name', 'action' : 'append'}, {}),
     ('-a','--anchors',{'help' : 'Copy across anchor points', 'action' : 'store_true'}, {}),
     ('-f','--force',{'help' : 'Overwrite existing glyphs in the font', 'action' : 'store_true'}, {}),
@@ -48,19 +49,53 @@ def doit(args) :
     font.encoding = "Original"
     infont.encoding = "Original"    # compact the font so findEncodingSlot will work
     infont.layers["Fore"].is_quadratic = font.layers["Fore"].is_quadratic
-    for r in args.range :
+    ulist = list()
+
+    # characters specified on the command line
+    for r in args.range or [] :
         (rstart, rend) = map(lambda x: int(x,16), r.split('..'))
         for u in range(rstart, rend + 1) :
-            o = font.findEncodingSlot(u)
-            if o != -1 and not args.force :
-                print "Glyph for %x already present. Skipping" % u
+            ulist.append(u)
+
+    # characters specified in a file
+    for filename in args.rangefile or [] :
+        rangefile = file(filename, 'r')
+        for line in rangefile :
+            # ignore comments
+            line = line.partition('#')[0]
+            line = line.strip()
+
+            # ignore blank lines
+            if (line == ''):
                 continue
-            e = infont.findEncodingSlot(u)
-            if e == -1 :
-                print "Can't find glyph for %04X" % u
-                continue
-            g = infont[e]
-            copyglyph(font, infont, g, u, args)
+
+            # obtain USVs
+            try:
+                (rstart, rend) = line.split('..')
+            except ValueError:
+                rstart = line
+                rend = line
+
+            rstart = int(rstart, 16)
+            rend = int(rend, 16)
+
+            for u in range(rstart, rend + 1):
+                ulist.append(u)
+
+    # copy the characters from the generated list
+    for u in ulist:
+        o = font.findEncodingSlot(u)
+        if o != -1 and not args.force :
+            print "Glyph for %x already present. Skipping" % u
+            continue
+        e = infont.findEncodingSlot(u)
+        if e == -1 :
+            print "Can't find glyph for %04X" % u
+            continue
+        g = infont[e]
+        copyglyph(font, infont, g, u, args)
+
+    # copy glyphs by name
     for n in args.name or [] :
         if n in font :
             print "Glyph %s already present. Skipping" % n
