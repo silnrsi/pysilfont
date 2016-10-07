@@ -51,6 +51,17 @@ def doit(args) :
     infont.layers["Fore"].is_quadratic = font.layers["Fore"].is_quadratic
     ulist = list()
 
+    # copy glyphs by name
+    for n in args.name or [] :
+        if n in font :
+            print "Glyph %s already present. Skipping" % n
+            continue
+        if n not in infont :
+            print "Can't find glyph %s" % n
+            continue
+        g = infont[n]
+        copyglyph(font, infont, g, -1, args)
+
     # characters specified on the command line
     for r in args.range or [] :
         (rstart, rend) = map(lambda x: int(x,16), r.split('..'))
@@ -95,16 +106,6 @@ def doit(args) :
         g = infont[e]
         copyglyph(font, infont, g, u, args)
 
-    # copy glyphs by name
-    for n in args.name or [] :
-        if n in font :
-            print "Glyph %s already present. Skipping" % n
-            continue
-        if n not in infont :
-            print "Can't find glyph %s" % n
-            continue
-        g = infont[n]
-        copyglyph(font, infont, g, -1, args)
     return font
 
 execute("FF",doit, argspec)
