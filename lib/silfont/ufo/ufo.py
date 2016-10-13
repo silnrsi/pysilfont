@@ -818,10 +818,7 @@ def normETdata(element, params, type) :
                 element[i+1] = edict[key][1]
                 i=i+2
 
-def getattrib(element,attrib) :
-    if attrib in element.attrib :
-        return element.attrib[attrib]
-    else: return None
+def getattrib(element,attrib) : return element.attrib[attrib] if attrib in element.attrib else None
 
 def makeFileName(name,namelist=[]) :
     # Replace illegal characters and add _ after UC letters

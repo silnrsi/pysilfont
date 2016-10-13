@@ -7,7 +7,9 @@ __author__ = 'David Raymond'
 
 from xml.etree import cElementTree as ET
 from glob import glob
-import re, sys, os, codecs, argparse, datetime, shutil, csv
+import silfont.core
+
+import re, sys, os, codecs, argparse, datetime, shutil, csv, collections
 
 _elementprotect = {
     '&' : '&amp;',
@@ -181,7 +183,22 @@ class ETWriter(object) :
         self.namespaces[ns] = q
         return q
 
-class xmlitem(object) :
+class _container(object) :
+    # Parent class for other objects (eg Ulayer)
+    def __init_(self) :
+        self._contents = {}
+    # Define methods so it acts like an imutable container
+    # (changes should be made via object functions etc)
+    def __len__(self):
+        return len(self._contents)
+    def __getitem__(self, key):
+        return self._contents[key]
+    def __iter__(self):
+        return iter(self._contents)
+    def keys(self) :
+        return self._contents.keys()
+
+class xmlitem(_container) :
     """ The xml data item for an xml file"""
 
     def __init__(self, dirn = None, filen = None, parse = True ) :
@@ -212,16 +229,118 @@ class xmlitem(object) :
         outfile.write(self.outxmlstr)
         outfile.close
 
-    # Define methods so it acts like an imumtable container -
-    # changes should be made via object methods
-    def __len__(self):
-        return len(self._contents)
-    def __getitem__(self, key):
-        return self._contents[key]
-    def __iter__(self):
-        return iter(self._contents)
-    def keys(self) :
-        return self._contents.keys()
+class ETelement(_container) :
+    # Class for an etree element. Mainly used as a parent class
+    # For each tag in the element, ETelement[tag] returns a list of sub-elements with that tag
+    # process_subelements can set attributes for each tag based on a supplied spec
+    def __init__(self,element) :
+        self.element = element
+        self._contents = {}
+        self.reindex()
+
+    def reindex(self) :
+        self._contents = collections.defaultdict(list)
+        for e in self.element :
+            self._contents[e.tag].append(e)
+
+    def remove(self,subelement) :
+        self._contents[subelement.tag].remove(subelement)
+        self.element.remove(subelement)
+
+    def append(self,subelement) :
+        self._contents[subelement.tag].append(subelement)
+        self.element.append(subelement)
+
+    def insert(self,index,subelement) :
+        self._contents[subelement.tag].insert(index,subelement)
+        self.element.insert(index,subelement)
+
+    def replace(self,index,subelement) :
+        self._contents[subelement.tag][index] = subelement
+        self.element[index] = subelement
+
+    def process_attributes(self, attrspec, others = False) :
+        # Process attributes based on list of attributes in the format:
+        #   (element attr name, object attr name, required)
+        # If attr does not exist and is not required, set to None
+        # If others is True, attributes not in the list are allowed
+        # Attributes should be listed in the order they should be output if writing xml out
+
+        if not hasattr(self,"parseerrors") or self.parseerrors is None: self.parseerrors=[]
+
+        speclist = {}
+        for (i,spec) in enumerate(attrspec) : speclist[spec[0]] = attrspec[i]
+
+        for eaname in speclist :
+            (eaname,oaname,req) = speclist[eaname]
+            setattr(self, oaname, getattrib(self.element,eaname))
+            if req and getattr(self, oaname) is None : self.parseerrors.append("Required attribute " + eaname + " missing")
+
+        # check for any other attributes
+        for att in self.element.attrib :
+            if att not in speclist :
+                if others:
+                    setattr(self, att, getattrib(self.element,att))
+                else :
+                    self.parseerrors.append("Invalid attribute " + att)
+
+    def process_subelements(self,subspec, offspec = False) :
+        # Process all subelements based on spec of expected elements
+        # subspec is a list of elements, with each list in the format:
+        #    (element name, attribute name, class name, required, multiple valeus allowed)
+        # If class name is set, attribute is set to an object made with that class; otherwise just text of the element
+
+        if not hasattr(self,"parseerrors")  or self.parseerrors is None : self.parseerrors=[]
+
+        def make_obj(self,cl,element) : # Create object from element and cascade parse errors down
+            if cl is None : return element.text
+            obj = cl(element)
+            if hasattr(obj,"parseerrors") and obj.parseerrors != [] :
+                if hasattr(obj,"name") and obj.name is not None : # Try to find a name for error reporting
+                    name = obj.name
+                elif hasattr(obj,"label") and obj.label is not None  :
+                    name = obj.label
+                else :
+                    name = ""
+
+                self.parseerrors.append("Errors parsing " + element.tag + " element: " + name)
+                for error in obj.parseerrors :
+                    self.parseerrors.append("  " + error)
+            return obj
+
+        speclist = {}
+        for (i,spec) in enumerate(subspec) : speclist[spec[0]] = subspec[i]
+
+        for ename in speclist :
+            (ename,aname,cl,req,multi) = speclist[ename]
+            initval = [] if multi else None
+            setattr(self,aname,initval)
+
+        for ename in self : # Process all elements
+            if ename in speclist :
+                (ename,aname,cl,req,multi) = speclist[ename]
+                elements = self[ename]
+                if multi :
+                    for elem in elements : getattr(self,aname).append(make_obj(self,cl,elem))
+                else :
+                    setattr(self,aname,make_obj(self,cl,elements[0]))
+                    if len(elements) > 1 : self.parseerrors.append("Multiple " + ename + " elements not allowed")
+            else:
+                if offspec: # Elements not in spec are allowed so create list of sub-elemente.
+                    setattr(self,ename,[])
+                    for elem in elements : getattr(self,ename).append(ETelement(elem))
+                else :
+                    self.parseerrors.append("Invalid element: " + ename)
+
+        for ename in speclist : # Check values exist for required elements etc
+            (ename,aname,cl,req,multi) = speclist[ename]
+
+            val = getattr(self,aname)
+            if req :
+                if multi and val == [] : self.parseerrors.append("No " + ename + " elements ")
+                if not multi and val == None : self.parseerrors.append("No " + ename + " element")
 
 def makeAttribOrder(attriblist) : # Turn a list of attrib names into an attributeOrder dict for ETWriter
         return dict(map(lambda x:(x[1], x[0]), enumerate(attriblist)))
+
+def getattrib(element,attrib) : return element.attrib[attrib] if attrib in element.attrib else None
