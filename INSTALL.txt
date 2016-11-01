@@ -10,4 +10,4 @@ sudo pip uninstall pysilfont
 to get rid of all the files installed : (careful with rm)
 cat installed-files.txt | xargs sudo rm --verbose -vr
 
-For OSX users, see also pysilfont/scripts/actionsosx/README.txt
+For OSX users, see also scripts/tools/actionsosx/README.txt

@@ -15,6 +15,7 @@ argspec = [
     ('-r','--range',{'help': 'StartUnicode..EndUnicode no spaces, e.g. 20..7E', 'action' : 'append'}, {}),
     ('--rangefile',{'help': 'File with USVs e.g. 20 or a range e.g. 20..7E or both', 'action' : 'append'}, {}),
     ('-n','--name',{'help': 'Include glyph named name', 'action' : 'append'}, {}),
+    ('--namefile',{'help': 'File with glyph names', 'action' : 'append'}, {}),
     ('-a','--anchors',{'help' : 'Copy across anchor points', 'action' : 'store_true'}, {}),
     ('-f','--force',{'help' : 'Overwrite existing glyphs in the font', 'action' : 'store_true'}, {}),
     ('-s','--scale',{'type' : float, 'help' : 'Scale glyphs by this factor'}, {})
@@ -49,6 +50,40 @@ def doit(args) :
     font.encoding = "Original"
     infont.encoding = "Original"    # compact the font so findEncodingSlot will work
     infont.layers["Fore"].is_quadratic = font.layers["Fore"].is_quadratic
+
+    # list of glyphs to copy
+    glist = list()
+
+    # glyphs specified on the command line
+    for n in args.name or [] :
+        glist.append(n)
+
+    # glyphs specified in a file
+    for filename in args.namefile or [] :
+        namefile = file(filename, 'r')
+        for line in namefile :
+            # ignore comments
+            line = line.partition('#')[0]
+            line = line.strip()
+
+            # ignore blank lines
+            if (line == ''):
+                continue
+
+            glist.append(line)
+
+    # copy glyphs by name
+    for n in glist:
+        if n in font and not args.force :
+            print "Glyph %s already present. Skipping" % n
+            continue
+        if n not in infont :
+            print "Can't find glyph %s" % n
+            continue
+        g = infont[n]
+        copyglyph(font, infont, g, -1, args)
+
+    # list of characters to copy
     ulist = list()
 
     # characters specified on the command line
@@ -95,16 +130,6 @@ def doit(args) :
         g = infont[e]
         copyglyph(font, infont, g, u, args)
 
-    # copy glyphs by name
-    for n in args.name or [] :
-        if n in font :
-            print "Glyph %s already present. Skipping" % n
-            continue
-        if n not in infont :
-            print "Can't find glyph %s" % n
-            continue
-        g = infont[n]
-        copyglyph(font, infont, g, -1, args)
     return font
 
 execute("FF",doit, argspec)
