@@ -24,7 +24,7 @@ from odf.text import H, P, SequenceDecl, SequenceDecls, Span
 argspec = [
     ('input',{'help': 'Input file in FTML format'}, {'type': 'infile'}),
     ('output',{'help': 'Output file (LO writer .odt)'}, {'type': 'filename', 'def': '_out.odt'}),
-    ('-l','--log',{'help': 'Log file', 'required': False},{'type': 'outfile', 'def': '_ftml-LO_log.txt'}),
+    ('-l','--log',{'help': 'Log file', 'required': False},{'type': 'outfile', 'def': '_ftml2odt_log.txt'}),
     ('-r','--report',{'help': 'Set reporting level for log', 'type':str, 'choices':['X','S','E','P','W','I','V']},{}),
     ('-f','--font',{'help': 'font specification','action': 'append', 'required': False}, {}),
     ]
