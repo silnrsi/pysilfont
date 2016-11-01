@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from __future__ import unicode_literals
 #'read FTML file and generate LO writer .odt file'
 __url__ = 'http://github.com/silnrsi/pysilfont'
