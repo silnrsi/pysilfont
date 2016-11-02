@@ -31,7 +31,7 @@ setup(
         "silfont.ufo",
         ],
     package_dir = {'':'lib'},
-    scripts = ['scripts/UFOconvert', 'scripts/makeGdl'],
+    scripts = ['scripts/UFOconvert', 'scripts/makeGdl', 'scripts/ftml2odt'],
     license = 'MIT',
     platforms = ['Linux','Win32','Mac OS X'],
     classifiers = [
