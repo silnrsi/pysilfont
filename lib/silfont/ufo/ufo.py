@@ -508,8 +508,9 @@ class Uglif(ETU.xmlitem) :
     def convertToFormat1(self) :
         # Convert to a glif format of 1 (for UFO2) prior to writing out
         self.format = "1"
-        # Change anchors to UFO2 style anchors
-        for anchor in self._contents['anchor'][:] :
+        # Change anchors to UFO2 style anchors.  Sort anchors by anchor name first
+        anchororder = sorted(self._contents['anchor'], key=lambda x: x.element.attrib['name'])
+        for anchor in anchororder :
             element = anchor.element
             for attrn in ('colour', 'indentifier') : # Remove format 2 attributes
                 if attrn in element.attrib : del element.attrib[attrn]
