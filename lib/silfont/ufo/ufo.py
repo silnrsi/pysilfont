@@ -534,30 +534,59 @@ class Uadvance(Uelement) :
 
     def __init__(self, glif, element) :
         super(Uadvance,self).__init__(element)
+        self.glif = glif
+        if 'width' in element.attrib :
+            self.width = element.attrib[str('width')]
+        else :
+            self.width = None
+        if 'height' in element.attrib :
+            self.height = element.attrib[str('height')]
+        else :
+            self.height = None
+
+    def __setattr__(self, name, value) :
+        if name in ('width', 'height') and value is not None:
+            value = str(value)
+            self.element.attrib[name] = value
+        super(Uadvance,self).__setattr__(name,value)
 
 class Uunicode(Uelement) :
 
     def __init__(self, glif, element) :
         super(Uunicode,self).__init__(element)
+        self.glif = glif
+        if 'hex' in element.attrib :
+            self.hex = element.attrib['hex']
+        else :
+            self.hex = ""
+            self.glif.logger.log("No unicode hex attribute for " + glif.name, "E")
+
+    def __setattr__(self, name, value) :
+        if name == "hex" : self.element.attrib['hex'] = value
+        super(Uunicode,self).__setattr__(name,value)
 
 class Unote(Uelement) :
 
     def __init__(self, glif, element) :
+        self.glif = glif
         super(Unote,self).__init__(element)
 
 class Uimage(Uelement) :
 
     def __init__(self, glif, element) :
+        self.glif = glif
         super(Uimage,self).__init__(element)
 
 class Uguideline(Uelement) :
 
     def __init__(self, glif, element) :
+        self.glif = glif
         super(Uguideline,self).__init__(element)
 
 class Uanchor(Uelement) :
 
     def __init__(self, glif, element) :
+        self.glif = glif
         super(Uanchor,self).__init__(element)
 
 class Uoutline(Uelement) :

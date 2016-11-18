@@ -184,7 +184,7 @@ class ETWriter(object) :
         return q
 
 class _container(object) :
-    # Parent class for other objects (eg Ulayer)
+    # Parent class for other objects
     def __init_(self) :
         self._contents = {}
     # Define methods so it acts like an imutable container

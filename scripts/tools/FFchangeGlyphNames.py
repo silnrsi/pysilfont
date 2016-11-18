@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-'''Update gylph names in a font based on csv file
+'''Update glyph names in a font based on csv file
    - Using FontForge rather than UFOlib so it can work with ttf (or sfd) files'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2016 SIL International (http://www.sil.org)'

@@ -40,7 +40,7 @@ def doit(args) :
         else :
             font.logger("No psname for " + glyphn, "W")
             missingnames = True
-    if missingnames : font.logger("Some gylphs had no psnames - see log file","E")
+    if missingnames : font.logger("Some glyphs had no psnames - see log file","E")
     return
 
 execute("PSFU",doit, argspec)
