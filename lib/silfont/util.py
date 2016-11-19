@@ -11,7 +11,7 @@ class dirTree(dict) :
     """ An object to hold list of all files and directories in a directory
         with option to read sub-directory contents into dirTree objects.
         Iterates through readSub levels of subfolders
-        Flags to keep track fo changes to files etc"""
+        Flags to keep track of changes to files etc"""
     def __init__(self,dirn,readSub = 9999) :
         self.removedfiles = {} # List of files that have been renamed or deleted since reading from disk
         for name in os.listdir(dirn) :

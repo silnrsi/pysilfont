@@ -25,7 +25,7 @@ class _Ucontainer(object) :
     # Parent class for other objects (eg Ulayer)
     def __init_(self) :
         self._contents = {}
-    # Define methods so it acts like an imutable container
+    # Define methods so it acts like an immutable container
     # (changes should be made via object functions etc)
     def __len__(self):
         return len(self._contents)
@@ -168,7 +168,7 @@ class Ufont(object) :
                     parn = param.tag
                     if not(parn in params.paramclass) or params.paramclass[parn] <> "outparams" : self.logger.log("lib.plist org.sil.pysilfontparams must only contain outparams values: " + parn + " invalid", "S")
                     libparams[parn] = param.text
-        # Create font-specific parameter set (with updates from lib.plist)  Prepend names with ufodir to ensure uniquemess if multiple fonts open
+        # Create font-specific parameter set (with updates from lib.plist)  Prepend names with ufodir to ensure uniqueness if multiple fonts open
         params.addset(ufodir+"lib","lib.plist in "+ufodir,inputdict = libparams)
         params.sets[ufodir+"lib"].updatewith("command line", log = False) # Command line parameters override lib.plist ones
         params.addset(ufodir, copyset = "main")
