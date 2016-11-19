@@ -65,7 +65,7 @@ class parameters(object) :
             "indentIncr":       "  ",   # XML Indent increment
             "indentFirst":      "  ",   # First XML indent
             "indentML":         False,  # Should multi-line string values be indented?
-            "plistIndentFirst": "",     # First indent amoutn for plists
+            "plistIndentFirst": "",     # First indent amount for plists
             "sortDicts":        True,   # Should dict elements be sorted alphabetically?
             'precision':        6,      # Decimal precision to use in XML output - both for real values and for attributes if numeric
             "renameGlifs":      True,   # Rename glifs based on UFO3 suggested algorithm
