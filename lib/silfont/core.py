@@ -8,7 +8,7 @@ __version__ = '1.1.0'
 
 from glob import glob
 #import re, sys, os, codecs, argparse, datetime, shutil, csv, copy, ConfigParser
-import sys, os, argparse, datetime, shutil, csv, ConfigParser
+import sys, os, argparse, datetime, shutil, csv, ConfigParser, codecs
 
 class loggerobj(object) :
     # For handling log messages.
@@ -450,7 +450,7 @@ def execute(tool, fn, argspec) :
         elif atype=='outfile':
             if not quiet : logger.log( 'Opening file for output: '+aval, "P")
             try :
-                aval=open(aval,"w")
+                aval=codecs.open(aval,'w','utf-8')
             except Exception as e :
                 print e
                 sys.exit(1)

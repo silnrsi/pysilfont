@@ -22,7 +22,7 @@ class ETWriter(object) :
     """ General purpose ElementTree pretty printer complete with options for attribute order
         beyond simple sorting, and which elements should use cdata """
 
-    def __init__(self, etree, namespaces = None, attributeOrder = {}, takesCData = set(), indentIncr = "  ", indentFirst = "  ", indentML = False):
+    def __init__(self, etree, namespaces = None, attributeOrder = {}, takesCData = set(), indentIncr = "  ", indentFirst = "  ", indentML = False, inlineelem=[]):
         self.root = etree
         if namespaces is None : namespaces = {}
         self.namespaces = namespaces
@@ -31,6 +31,7 @@ class ETWriter(object) :
         self.indentIncr = indentIncr            # Incremental increase in indent
         self.indentFirst = indentFirst          # Indent for first level
         self.indentML = indentML                # Add indent to multi-line strings
+        self.inlineelem = inlineelem            # For supporting in-line elements.  Does not work with mix of inline and other subelements in same element
 
     def _protect(self, txt, base=_attribprotect) :
         return re.sub(ur'['+ur"".join(base.keys())+ur"]", lambda m: base[m.group(0)], txt)
@@ -43,6 +44,9 @@ class ETWriter(object) :
         if base is None :
             base = self.root
             outstr += '<?xml version="1.0" encoding="UTF-8"?>\n'
+            if '.pi' in base.attrib : # Processing instructions
+                for pi in base.attrib['.pi'].split(",") : outstr += u'<?{}?>\n'.format(pi)
+
             if '.doctype' in base.attrib : outstr += u'<!DOCTYPE {}>\n'.format(base.attrib['.doctype'])
 
         tag = base.tag
@@ -51,7 +55,8 @@ class ETWriter(object) :
         if '.comments' in attribs :
             for c in attribs['.comments'].split(",") : outstr += u'{}<!--{}-->\n'.format(indent, c)
 
-        outstr += u'{}<{}'.format(indent, tag)
+        i = indent if tag not in self.inlineelem else ""
+        outstr += u'{}<{}'.format(i, tag)
 
         for k in sorted(attribs.keys(), cmp=lambda x,y: cmp(self.attributeOrder.get(x, 999), self.attributeOrder.get(y, 999)) or cmp(x, y)) :
             if k[0] <> '.' : outstr += u' {}="{}"'.format(k, attribs[k])
@@ -66,20 +71,20 @@ class ETWriter(object) :
                     t = "<![CDATA[\n\t" + indent + base.text.replace('\n', '\n\t' + indent) + "\n" + indent + "]]>"
                 outstr += t
             if len(base) :
-                outstr += '\n'
+                if base[0].tag not in self.inlineelem : outstr += '\n'
                 if base == self.root:
                     incr = self.indentFirst
                 else:
                     incr = self.indentIncr
                 write(outstr); outstr=""
                 for b in base : self.serialize_xml(write, base=b, indent=indent + incr)
-                outstr += indent
+                if base[-1].tag not in self.inlineelem : outstr += indent
             outstr += '</{}>'.format(tag)
         else :
             outstr += '/>'
         if base.tail and base.tail.strip() :
             outstr += self._protect(base.tail, base=_elementprotect)
-        outstr += "\n"
+        if tag not in self.inlineelem : outstr += "\n"
 
         if '.commentsafter' in base.attrib :
             for c in base.attrib['.commentsafter'].split(",") : outstr += u'{}<!--{}-->\n'.format(indent, c)
@@ -288,13 +293,16 @@ class ETelement(_container) :
         # Process all subelements based on spec of expected elements
         # subspec is a list of elements, with each list in the format:
         #    (element name, attribute name, class name, required, multiple valeus allowed)
-        # If class name is set, attribute is set to an object made with that class; otherwise just text of the element
+        # If cl is set, attribute is set to an object made with that class; otherwise just text of the element
 
         if not hasattr(self,"parseerrors")  or self.parseerrors is None : self.parseerrors=[]
 
         def make_obj(self,cl,element) : # Create object from element and cascade parse errors down
             if cl is None : return element.text
-            obj = cl(element)
+            if cl is ETelement :
+                obj = cl(element) # ETelement does not require parent object, ie self
+            else :
+                obj = cl(self,element)
             if hasattr(obj,"parseerrors") and obj.parseerrors != [] :
                 if hasattr(obj,"name") and obj.name is not None : # Try to find a name for error reporting
                     name = obj.name

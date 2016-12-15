@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+'Normalize an FTML file'
+__url__ = 'http://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2016 SIL International (http://www.sil.org)'
+__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__author__ = 'David Raymond'
+
+from silfont.core import execute
+import silfont.ftml.ftml as ftml
+from xml.etree import cElementTree as ET
+
+argspec = [
+    ('infile',{'help': 'Input ftml file'}, {'type': 'infile'}),
+    ('outfile',{'help': 'Output ftml file', 'nargs': '?'}, {'type': 'outfile', 'def': '_new.xml'}),
+    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_ftmltest.log'})
+    ]
+
+def doit(args) :
+    f = ftml.Fxml(args.infile)
+    f.save(args.outfile)
+
+execute("", doit, argspec)
+
