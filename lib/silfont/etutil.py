@@ -22,7 +22,8 @@ class ETWriter(object) :
     """ General purpose ElementTree pretty printer complete with options for attribute order
         beyond simple sorting, and which elements should use cdata """
 
-    def __init__(self, etree, namespaces = None, attributeOrder = {}, takesCData = set(), indentIncr = "  ", indentFirst = "  ", indentML = False, inlineelem=[]):
+    def __init__(self, etree, namespaces = None, attributeOrder = {}, takesCData = set(),
+            indentIncr = "  ", indentFirst = "  ", indentML = False, inlineelem=[], precision = None, numAttribs = []):
         self.root = etree
         if namespaces is None : namespaces = {}
         self.namespaces = namespaces
@@ -32,6 +33,8 @@ class ETWriter(object) :
         self.indentFirst = indentFirst          # Indent for first level
         self.indentML = indentML                # Add indent to multi-line strings
         self.inlineelem = inlineelem            # For supporting in-line elements.  Does not work with mix of inline and other subelements in same element
+        self.precision = precision              # Precision to use outputting numeric attribute values
+        self.numAttribs = numAttribs            # List of numeric attributes used with precision
 
     def _protect(self, txt, base=_attribprotect) :
         return re.sub(ur'['+ur"".join(base.keys())+ur"]", lambda m: base[m.group(0)], txt)
@@ -59,7 +62,13 @@ class ETWriter(object) :
         outstr += u'{}<{}'.format(i, tag)
 
         for k in sorted(attribs.keys(), cmp=lambda x,y: cmp(self.attributeOrder.get(x, 999), self.attributeOrder.get(y, 999)) or cmp(x, y)) :
-            if k[0] <> '.' : outstr += u' {}="{}"'.format(k, attribs[k])
+            if k[0] <> '.' :
+                att = attribs[k]
+                if self.precision is not None and k in self.numAttribs :
+                    num = round(float(attribs[k]), self.precision)
+                    att = "{}".format(int(num)) if num == int(num) else "{}".format(num)
+                outstr += u' {}="{}"'.format(k, att)
+
         if len(base) or (base.text and base.text.strip()) :
             outstr += '>'
             if base.text and base.text.strip() :

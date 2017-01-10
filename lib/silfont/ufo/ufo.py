@@ -222,7 +222,6 @@ class Ufont(object) :
         if self.deflayer is None : self.logger.log("No public.default layer", "S")
         ## Process other files and directories
 
-
     def _readPlist(self, filen) :
         if filen in self.dtree :
             plist = Uplist(font = self, filen = filen)
@@ -672,7 +671,8 @@ def writeXMLobject(dtreeitem, font, dirn, filen, exists) :
     # Format ET data if any data parameters are set
     if params["sortDicts"] or params["precision"] is not None : normETdata(object.etree, params, type = object.type)
 
-    etw = ETU.ETWriter(object.etree, attributeOrder = attribOrder, indentIncr = params["indentIncr"], indentFirst = indentFirst, indentML = params["indentML"])
+    etw = ETU.ETWriter(object.etree, attributeOrder = attribOrder, indentIncr = params["indentIncr"],
+        indentFirst = indentFirst, indentML = params["indentML"], precision = params["precision"], numAttribs = params["numAttribs"])
     etw.serialize_xml(object.write_to_xml)
     # Now we have the output xml, need to compare with existing item's xml, if present
     changed = True
@@ -828,11 +828,6 @@ def normETdata(element, params, type) :
             else :
                 element.tag = "real"
                 element.text = "{}".format(num)
-        if type == "glif" : # Set precision for numeric attributes
-            for attrib in element.attrib :
-                if attrib in params["numAttribs"] :
-                    num = round(float(element.attrib[attrib]),precision)
-                    element.attrib[attrib] = "{}".format(int(num)) if num == int(num) else "{}".format(num)
 
     if params["sortDicts"] and element.tag == "dict" :
         edict={}
