@@ -5,7 +5,7 @@ __copyright__ = 'Copyright (c) 2016 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
-from xml.etree import cElementTree as ET ## Apparently cElementTree is now depracated
+from xml.etree import cElementTree as ET ## Apparently cElementTree is now deprecated
 import os
 #import sys, os, copy, shutil, filecmp
 import silfont.core
@@ -139,15 +139,14 @@ class Fhead(ETU.ETelement) :
         if not self.widths is None :
             x = ET.SubElement(element, 'widths')
             for width in sorted(self.widths) :
-                x.set(width, self.widths[width])
+                if self.widths[width] is not None: x.set(width, self.widths[width])
 
         # Add any non-spec elements
-        for el in self.elements :
-            if el not in ("comment", "fontscale", "fontsrc", "styles", "title", "widths") : element.append(self.elements[el])
+        for el in sorted(self.elements) :
+            if el not in ("comment", "fontscale", "fontsrc", "styles", "title", "widths") :
+                for elem in self.elements[el] : element.append(elem)
 
         return element
-
-
 
 class Ffontsrc(ETU.ETelement) : ## Needs methods for parsing text
     def __init__(self, parent, element = None, text = None) :
@@ -191,7 +190,8 @@ class Fstyle(ETU.ETelement) :
 
     def dict_to_string(self, dict) :
         str=""
-        for name in sorted(dict) : str += "'" + name + "' " + dict[name] + ", "
+        for name in sorted(dict) :
+            if dict[name] is not None : str += "'" + name + "' " + dict[name] + ", "
         str = str[0:-2] # remove final ", "
         return str
 
@@ -282,8 +282,19 @@ class Ftest(ETU.ETelement) :
 
         self.process_subelements((
             ("comment",    "comment",    None,       False, False),
-            ("string",     "string",     Fstring,    True,  False)),
+            ("string",     "string",     _Fstring,    True,  False)),
             offspec = False)
+
+        self.string = self.string.string # self.string initially a temporary _Fstring element
+        print self.string
+        print self.str(noems = True)
+
+    def str(self, noems = False) : # Return formatted version of string
+        string = self.string
+        if noems :
+            string = string.replace("<em>","")
+            string = string.replace("</em>","")
+        return string ## Other formatting options to be added as needed
 
     def create_element(self) :
         element = ET.Element("test")
@@ -292,25 +303,20 @@ class Ftest(ETU.ETelement) :
         if self.rtl :        element.set("rtl",        self.rtl)
         if self.stylename :  element.set("stylename",  self.stylename)
         if self.comment : x = ET.SubElement(element, 'comment') ; x.text = self.comment
-        element.append(self.string.create_element())
+        element.append(ET.fromstring("<string>" + self.string.encode('utf-8') + "</string>"))
+
         return element
 
-class Fstring(ETU.ETelement) :
-    def __init__(self, parent, element = None, string = None) :
+class _Fstring(ETU.ETelement) : # Only used temporarily whilst parsing xml
+    def __init__(self, parent, element = None) :
         self.parent = parent
         self.logger = parent.logger
-        if not exactlyoneof(element, string) : self.logger.log("Must supply exactly one of element and string","X")
-        if string : element = ET.fromstring("<string>" + string + "</string>")
-        super(Fstring,self).__init__(element)
+        super(_Fstring,self).__init__(element)
         self.process_subelements((("em", "em", ETU.ETelement,False, True),), offspec = False)
-        self.string = self.element.text
-
-    def create_element(self) : ## Needs to recreate element
-        #element = ET.Element("string")
-        #element.text = self.string
-        element = self.element
-        return element
-
+        # Need to build text of string to include <em> subelements
+        self.string = element.text
+        for em in self.em :
+            self.string += "<em>{}</em>{}".format(em.element.text, em.element.tail)
 
 def getattrib(element,attrib) :
     return element.attrib[attrib] if attrib in element.attrib else None
