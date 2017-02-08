@@ -6,10 +6,19 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'David Raymond'
 
 from xml.etree import cElementTree as ET ## Apparently cElementTree is now deprecated
-import os
+from fontTools import ttLib
+import os, re
 #import sys, os, copy, shutil, filecmp
 import silfont.core
 import silfont.etutil as ETU
+
+# Regular expression for parsing font name
+fontspec =          re.compile(r"""^        # beginning of string
+                    (?P<rest>[A-Za-z ]+?)   # Font Family Name
+                    \s*(?P<bold>Bold)?      # Bold
+                    \s*(?P<italic>Italic)?  # Italic
+                    \s*(?P<regular>Regular)? # Regular
+                    $""", re.VERBOSE)       # end of string
 
 class Fxml(ETU.ETelement) :
     def __init__(self, file = None, xmlstring = None, testgrouplabel = None, logger = None, params = None) :
@@ -20,6 +29,8 @@ class Fxml(ETU.ETelement) :
 
         if testgrouplabel : # Create minimal valid ftml
             xmlstring = '<ftml version="1.0"><head></head><testgroup label="' + testgrouplabel +'"></testgroup></ftml>'
+
+        if file and not hasattr(file, 'read') : self.logger.log("'file' is not a file object", "X") # ET.parse would also work on file name, but other code assumes file object
 
         try :
             if file :
@@ -72,7 +83,7 @@ class Fxml(ETU.ETelement) :
         element = ET.Element('ftml', version = str(self.version))
         if self.stylesheet : # Create dummy .pi attribute for style sheet processing instruction
             pi = "xml-stylesheet"
-            for attrib in sorted(self.stylesheet) : pi = pi + ' ' + attrib + '="' + self.stylesheet[attrib] + '"'
+            for attrib in sorted(self.stylesheet) : pi = pi + ' ' + attrib + '="' + self.stylesheet[attrib] + '"' ## Spec is not clear about what order attributes should be in
             element.attrib['.pi'] = pi
         element.append(self.head.create_element())
         for testgroup in self.testgroups : element.append(testgroup.create_element())
@@ -148,17 +159,41 @@ class Fhead(ETU.ETelement) :
 
         return element
 
-class Ffontsrc(ETU.ETelement) : ## Needs methods for parsing text
+class Ffontsrc(ETU.ETelement) :
+    # This library only supports a single font in the fontsrc as recommended by the FTML spec
+    # Currently it only supports simple url() and local() values
+
     def __init__(self, parent, element = None, text = None) :
         self.parent = parent
         self.logger = parent.logger
+        self.parseerrors = []
 
         if not exactlyoneof(element, text) : self.logger.log("Must supply exactly one of element and text","X")
 
-        if text : element = "<fontsrc>" + text + "</fontsrc>"
-        super(Ffontsrc,self).__init__(element)
-        self.text = self.element.text
+        try:
+            (txt, url, local) = parsefontsrc(text, allowplain=True) if text else parsefontsrc(element.text)
+        except ValueError as e :
+            txt = text if text else element.text
+            self.parseerrors.append(str(e) + ": " + txt)
+        else :
+            if text : element = ET.fromstring("<fontsrc>" + txt + "</fontsrc>")
+            super(Ffontsrc,self).__init__(element)
+            self.text = txt
+            self.url = url
+            self.local = local
+            if self.local : # Parse font name to find if bold, italic etc
+                results = re.match(fontspec, self.local) ## Does not cope with -, eg Gentium-Bold. Should it?"
+                self.fontfamily = results.group('rest')
+                self.bold = results.group('bold') != None
+                self.italic = results.group('italic') != None
+            else :
+                self.fontfamily = None # If details are needed call getweights()
 
+    def addfontinfo(self) : # set fontfamily, bold and italic by looking inside font
+        (ff, bold, italic) = getfontinfo(self.url)
+        self.fontfamily = ff
+        self.bold = bold
+        self.italic = italic
 
 class Fstyle(ETU.ETelement) :
     def __init__(self, parent, element = None, name = None, feats = None, lang = None) :
@@ -286,15 +321,13 @@ class Ftest(ETU.ETelement) :
             offspec = False)
 
         self.string = self.string.string # self.string initially a temporary _Fstring element
-        print self.string
-        print self.str(noems = True)
 
     def str(self, noems = False) : # Return formatted version of string
         string = self.string
         if noems :
             string = string.replace("<em>","")
             string = string.replace("</em>","")
-        return string ## Other formatting options to be added as needed
+        return string ## Other formatting options to be added as needed cf ftml2odt
 
     def create_element(self) :
         element = ET.Element("test")
@@ -314,7 +347,7 @@ class _Fstring(ETU.ETelement) : # Only used temporarily whilst parsing xml
         super(_Fstring,self).__init__(element)
         self.process_subelements((("em", "em", ETU.ETelement,False, True),), offspec = False)
         # Need to build text of string to include <em> subelements
-        self.string = element.text
+        self.string = element.text if element.text else ""
         for em in self.em :
             self.string += "<em>{}</em>{}".format(em.element.text, em.element.tail)
 
@@ -338,7 +371,40 @@ def exactlyoneof( *args ) : # Check one and only one of args is not None
     if one : return True
     return False
 
+def parsefontsrc(text, allowplain = False) : # Check fontsrc text is valid and return normalised text, url and local values
+    ''' - if multiple (fallback) fonts are specified, just process the first one
+        - just handles simple url() or local() formats
+        - if allowplain is set, allows text without url() or local() and decides which based on "." in text '''
+    text = text.split(",")[0] # If multiple (fallback) fonts are specified, just process the first one
+    #if allowplain and not re.match(r"^(url|local)[(][^)]+[)]",text) : # Allow for text without url() or local() form
+    if allowplain and not "(" in text : # Allow for text without url() or local() form
+        plain = True
+        if "." in text :
+            type = "url"
+        else :
+            type = "local"
+    else :
+        type = text.split("(")[0]
+        if type == "url" :
+            text = text.split("(")[1][:-1].strip()
+        elif type == "local" :
+            text = text.split("(")[1][:-1].strip()
+        else : raise ValueError("Invalid fontsrc string")
+    if type == "url" :
+        return ("url("+text+")", text, None)
+    else :
+        return ("local("+text+")", None , text)
 
+    return (text,url,local)
 
-
+def getfontinfo(filename) : # peek inside the font for the name, weight, style
+        f = ttLib.TTFont(filename)
+        # take name from name table, NameID 1, platform ID 3, Encoding ID 1 (possible fallback platformID 1, EncodingID =0)
+        n = f['name'] # name table from font
+        fontname = n.getName(1,3,1).toUnicode() # nameID 1 = Font Family name
+        # take bold and italic info from OS/2 table, fsSelection bits 0 and 5
+        o = f['OS/2'] # OS/2 table
+        italic = (o.fsSelection & 1) > 0
+        bold = (o.fsSelection & 32) > 0
+        return (fontname, bold, italic)
 
