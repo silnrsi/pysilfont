@@ -22,6 +22,7 @@ argspec = [
 ]
 
 def copyglyph(font, infont, g, u, args) :
+    extras = set()
     if args.scale is None :
         scale = psMat.identity()
     else :
@@ -31,18 +32,26 @@ def copyglyph(font, infont, g, u, args) :
         glyph = font.createChar(u, g.glyphname)
     else :
         glyph = font[o]
-    font.selection.select(glyph)
-    pen = glyph.glyphPen()
-    g.draw(pen)
-    glyph.transform(scale)
+    if len(g.references) == 0 :
+        font.selection.select(glyph)
+        pen = glyph.glyphPen()
+        g.draw(pen)
+        glyph.transform(scale)
+    else :
+        for r in g.references :
+            t = psMat.compose(r[1], scale)
+            newt = psMat.compose(psMat.identity(), psMat.translate(t[4], t[5]))
+            glyph.addreference(r[0], newt)
+            extras.add(r[0])
     glyph.width = g.width * scale[0]
     if args.anchors :
         for a in g.anchorPoints :
             try :
                 l = font.getSubtableOfAnchor(a[1])
             except EnvironmentError :
-                font.addAnchorClass("", a[0]*scale[0], a[1]*scale[0])
+                font.addAnchorClass("", a[0]*scale[0], a[1]*scale[3])
         glyph.anchorPoints = g.anchorPoints
+    return list(extras)
 
 def doit(args) :
     font = args.ifont
@@ -73,15 +82,21 @@ def doit(args) :
             glist.append(line)
 
     # copy glyphs by name
-    for n in glist:
-        if n in font and not args.force :
-            print "Glyph %s already present. Skipping" % n
-            continue
-        if n not in infont :
-            print "Can't find glyph %s" % n
-            continue
-        g = infont[n]
-        copyglyph(font, infont, g, -1, args)
+    reportErrors = True
+    while len(glist) :
+        tglist = glist[:]
+        glist = []
+        for n in tglist:
+            if n in font and not args.force :
+                if reportErrors :
+                    print "Glyph %s already present. Skipping" % n
+                continue
+            if n not in infont :
+                print "Can't find glyph %s" % n
+                continue
+            g = infont[n]
+            glist.extend(copyglyph(font, infont, g, -1, args))
+        reportErrors = False
 
     # list of characters to copy
     ulist = list()
