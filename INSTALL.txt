@@ -2,12 +2,15 @@ On OSX or Ubuntu
 ================
 
 to install the module and the scripts:
-sudo python setup.py install --record installed-files.txt
+  sudo python setup.py install --record installed-files.txt
+
+setup.py uses setuptools, so if not already installed you can install with
+  sudo apt-get install python-setuptools
 
 to uninstall the module (you need a recent version of pip):
-sudo pip uninstall pysilfont
+  sudo pip uninstall pysilfont
 
 to get rid of all the files installed : (careful with rm)
-cat installed-files.txt | xargs sudo rm --verbose -vr
+  cat installed-files.txt | xargs sudo rm --verbose -vr
 
 For OSX users, see also scripts/tools/actionsosx/README.txt

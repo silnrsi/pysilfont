@@ -16,4 +16,6 @@ argspec = [
 def doit(args) :
     return args.ifont
 
-execute("PSFU",doit, argspec)
+def cmd() : execute("PSFU",doit, argspec)
+
+if __name__ == "__main__": cmd()

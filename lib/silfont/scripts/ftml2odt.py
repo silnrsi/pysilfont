@@ -21,7 +21,7 @@ from odf.table import Table, TableCell, TableColumn, TableRow
 from odf.text import H, P, SequenceDecl, SequenceDecls, Span
 
 # specify two parameters: input file (FTML/XML format), output file (ODT format)
-# preceded by optional log file plus zero or more font strings 
+# preceded by optional log file plus zero or more font strings
 argspec = [
     ('input',{'help': 'Input file in FTML format'}, {'type': 'infile'}),
     ('output',{'help': 'Output file (LO writer .odt)'}, {'type': 'filename', 'def': '_out.odt'}),
@@ -133,7 +133,7 @@ def getfonts(fontsourcestrings, logfile, fromcommandline=True):
                 # take bold and italic info from OS/2 table, fsSelection bits 0 and 5
                 o = f['OS/2'] # OS/2 table
                 italic = (o.fsSelection & 1) > 0
-                bold = (o.fsSelection & 32) > 0            
+                bold = (o.fsSelection & 32) > 0
                 fontlist.append( (fontname, bold, italic, fontstring) )
                 if (fontname, bold, italic) in checkfontfamily:
                     logfile.log("Duplicate font specification: " + fs + BoldItalic(bold, italic), "W") ### or more severe?
@@ -153,7 +153,7 @@ def getfonts(fontsourcestrings, logfile, fromcommandline=True):
 
 def init(LOdoc, numfonts=1):
     totalwid = 6800 #6.8inches
-    
+
     #compute column widths
     f = min(numfonts,4)
     ashare = 4*(6-f)
@@ -191,11 +191,11 @@ def init(LOdoc, numfonts=1):
     ststyle = Style(name="Subtitle", family="paragraph")
     ststyle.addElement(TextProperties(attributes={'fontfamily':"Arial",'fontsize':"18pt",'fontweight':"bold" }))
     LOdoc.styles.addElement(ststyle)
-    
+
 def doit(args) :
     logfile = args.logger
     if args.report: logfile.loglevel = args.report
-    
+
     try:
         root = ET.parse(args.input).getroot()
     except:
@@ -227,7 +227,7 @@ def doit(args) :
         except ValueError:
             # any problem leaves pointsize 12
             logfile.log("Problem with fontscale value; defaulting to 12 point", "W")
-    
+
     # Get FTML styles and generate LO writer styles
     # P2 is paragraph style for string element when no features specified
     # each Px (for P3...) corresponds to an FTML style, which specifies lang or feats or both
@@ -236,7 +236,7 @@ def doit(args) :
     LOstyles = {}
     ftmlstyles = {}
     Pstylenum = 2
-    LOstyles["P2"] = ("", None, None) 
+    LOstyles["P2"] = ("", None, None)
     ftmlstyles[0] = "P2"
     for s in root.findall("./head/styles/style"):
         Pstylenum += 1
@@ -253,7 +253,7 @@ def doit(args) :
             countryname = x.group('countryname')
         # FTML <test> element @stylename attribute references this <style> element @name attribute
         ftmlstyles[s.get('name')] = Pnum
-        LOstyles[Pnum] = (featstring, langname, countryname) 
+        LOstyles[Pnum] = (featstring, langname, countryname)
 
     # create LOwriter file and construct styles for tables, column widths, etc.
     LOdoc = OpenDocumentText()
@@ -356,7 +356,7 @@ def doit(args) :
         if tgcommentel != None:
             #print("commentel found")
             LOdoc.text.addElement(P(text=tgcommentel.text))
-        
+
         tgbg = tg.get('background') # background attribute of testgroup element
         tablenum += 1
         table = Table(name="Table" + str(tablenum), stylename="Table1")
@@ -385,7 +385,7 @@ def doit(args) :
                     tb1style.addElement(TableCellProperties(attributes={'padding':"0.0382in", 'border':"0.05pt solid #000000", 'backgroundcolor':tbg}))
                     LOdoc.automaticstyles.addElement(tb1style)
                 colBstyle = colordic[tbg]
-            
+
             row = TableRow()
             table.addElement(row)
             # fill cells
@@ -448,4 +448,7 @@ def doit(args) :
     LOdoc.save(unicode(args.output))
     return
 
-execute(None,doit,argspec)
+def cmd() : execute("PSFU",doit, argspec)
+
+if __name__ == "__main__": cmd()
+
