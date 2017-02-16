@@ -202,7 +202,7 @@ class csvreader(object) : # Iterator for csv files, skipping comments and checki
 
 def execute(tool, fn, argspec, chain = None) :
     # Function to handle parameter parsing, font and file opening etc in command-line scripts
-    # Supports opening (and saving) fonts using FontForge (FF) or PysilFont UFOlib (PSFU)
+    # Supports opening (and saving) fonts using FontForge (FF), PysilFont UFO (UFO) or fontTools (FT)
     # Special handling for:
     #   -d        variation on -h to print extra info about defaults
     #   -q  quiet mode - suppresses progress messages and sets screen logging to errors only
@@ -216,18 +216,19 @@ def execute(tool, fn, argspec, chain = None) :
     logger = chain["logger"] if chain else params.logger # paramset has already created a basic logger
     argv   = chain["argv"]   if chain else sys.argv
 
-    ff = False
-    psfu = False
+    if tool == "PSFU" : ## Temp until scripts are updated
+        print "****************************** script needs updating to set tool to 'UFO' *******************************************"
+        tool = "UFO"
     if tool == "FF" :
-        ff=True
         import fontforge
         if fontforge.hasUserInterface() :
             return # Execute is for command-line use
         fontforge.loadPrefs()
         fontforge.setPrefs("PreserveTables","DSIG,Feat,Glat,Gloc,LTSH,Silf,Sill,Silt,VDMX,hdmx") ## Perhaps should be a parameter and check for existing values
-    elif tool == "PSFU" :
-        psfu = True
+    elif tool == "UFO" :
         from silfont.ufo.ufo import Ufont
+    elif tool == "FT" :
+        from fontTools import ttLib
     elif tool == "" or tool is None :
         tool = None
     else :
@@ -248,7 +249,7 @@ def execute(tool, fn, argspec, chain = None) :
             ('-q','--quiet',{'help': 'Quiet mode - only display errors', 'action': 'store_true'}, {}),
             ('-p','--params',{'help': 'Other parameters','action': 'append'}, {'type': 'optiondict'})]
     standardargsindex = ['defaults','quiet','params']
-    if psfu:
+    if tool == "UFO":
         standardargs.extend([('-v','--version',{'help': 'UFO version to output'},{})])
         standardargsindex.extend(['version'])
 
@@ -344,7 +345,7 @@ def execute(tool, fn, argspec, chain = None) :
                     if x[1] == "\\t" : x[1] = "\t" # Special handling for tab characters
                     clparams[x[0]] = x[1]
 
-        if psfu and 'version' in args.__dict__:
+        if tool == "UFO" and 'version' in args.__dict__:
             if args.version : clparams["UFOversion"] = args.version
 
         args.params = clparams
@@ -492,8 +493,9 @@ def execute(tool, fn, argspec, chain = None) :
         if chain and name == 'ifont' :
             aval = chain["font"]
         else :
-            if ff : aval=fontforge.open(aval)
-            if psfu: aval=Ufont(aval, params = params)
+            if tool == "FF"  : aval=fontforge.open(aval)
+            if tool == "UFO" : aval=Ufont(aval, params = params)
+            if tool == "FT"  : aval=ttLib.TTFont(aval)
         setattr(args,name,aval) # Assign the font object to args attribute
 
 # All arguments processed, now call the main function
@@ -534,11 +536,14 @@ def execute(tool, fn, argspec, chain = None) :
                 else:
                     newfont.logger.log("No font backup done due to backup parameter setting","W")
             # Output the font
-            if ff:
+            if tool == "FF":
                 if not quiet : logger.log( "Saving font to " + outfont, "P")
                 if outfontext.lower() == ".ufo" or outfontext.lower() == '.ttf':
                     newfont.generate(outfont)
                 else : newfont.save(outfont)
+            elif tool == "FT":
+                if not quiet : logger.log( "Saving font to " + outfont, "P")
+                newfont.save(outfont)
             else: # Must be Pyslifont Ufont
                 newfont.write(outfont)
 
@@ -550,7 +555,7 @@ def chain(argv, function, argspec, font, params, logger, quiet) : # Chain multpl
     font object is used. Similarly logfile and -params settings in argv are not used by execute() when chaining is used'''
     if quiet and "-q" not in argv : argv.append("-q")
     if not quiet : logger.log("Chaining to " + argv[0], "P")
-    font = execute("PSFU", function, argspec,
+    font = execute("UFO", function, argspec,
         {'argv'  : argv,
         'font'   : font,
         'params' : params,
