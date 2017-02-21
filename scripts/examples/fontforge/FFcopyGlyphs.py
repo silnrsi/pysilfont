@@ -5,7 +5,7 @@ __copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Martin Hosken'
 
-from silfont.genlib import execute
+from silfont.core import execute
 import psMat
 
 argspec = [
@@ -41,7 +41,7 @@ def copyglyph(font, infont, g, u, args) :
         for r in g.references :
             t = psMat.compose(r[1], scale)
             newt = psMat.compose(psMat.identity(), psMat.translate(t[4], t[5]))
-            glyph.addreference(r[0], newt)
+            glyph.addReference(r[0], newt)
             extras.add(r[0])
     glyph.width = g.width * scale[0]
     if args.anchors :
