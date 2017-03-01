@@ -4,14 +4,14 @@
 
 | .xsl file | Description
 | :-------- | :-----------
-| ftml.xsl  | one test string per line
-| ftml-chart.xsl | multiple test strings per line (using nested testgroup elements)
-| ftml-waterfall.xsl | each test string repeated on successive lines at increasing point sizes
-| ftml-wf4col.xsl | each test string repeated in four horizontal cells at increasing point sizes
+| FTMLcreateList.xsl  | one test string per line
+| FTMLcreateChart.xsl | multiple test strings per line (using nested testgroup elements)
+| FTMLcreateWaterfall.xsl | each test string repeated on successive lines at increasing point sizes
+| FTMLcreateWaterfall4col.xsl | each test string repeated in four horizontal cells at increasing point sizes
 
 The .xsl file can be specified in the .xml file using (for example):
 
-```<?xml-stylesheet type="text/xsl" href="ftml.xsl"?>```
+```<?xml-stylesheet type="text/xsl" href="FTMLcreateList.xsl"?>```
 
 For nested testgroup elements, those at the outer level are successive rows,
 whereas those at the inner level are successive cells in the row.
