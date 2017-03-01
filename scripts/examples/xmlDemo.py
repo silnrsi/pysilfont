@@ -49,4 +49,5 @@ def doit(args) :
     ofile3.close()
     return
 
-execute("",doit, argspec)
+def cmd() : execute("",doit,argspec) 
+if __name__ == "__main__": cmd()

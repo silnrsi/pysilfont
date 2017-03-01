@@ -6,7 +6,7 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'David Raymond'
 
 from silfont.core import execute
-import silfont.ufo.ufo as ufo
+import silfont.ufo as ufo
 from xml.etree import cElementTree as ET
 
 suffix = '_addGlyph'
@@ -48,4 +48,6 @@ def doit(args) :
 
     return args.ifont
 
-execute("PSFU",doit, argspec)
+def cmd() : execute("UFO",doit,argspec) 
+if __name__ == "__main__": cmd()
+

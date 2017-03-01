@@ -5,7 +5,7 @@ __copyright__ = 'Copyright (c) 2014 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __version__ = '1.1.1'
 
-import sys
+import sys, os
 
 try:
 	from setuptools import setup
@@ -26,6 +26,13 @@ long_description =  "A growing collection of font utilities mainly written in Py
 long_description += "Developed and maintained by SIL International's Non-Roman Script Initiative (NRSI).\n"
 long_description += "Some of these utilites make use of the FontForge Python module."
 
+
+# Create entry_points console scripts entry
+cscripts = []
+for file in os.listdir("lib/silfont/scripts/") :
+    (base,ext) = os.path.splitext(file)
+    if ext == ".py" and base != "__init__" : cscripts.append(base + " = silfont.scripts." + base + ":cmd")
+
 setup(
     name = 'pysilfont',
     version = __version__,
@@ -34,20 +41,9 @@ setup(
     maintainer = 'NRSI - SIL International',
     maintainer_email = 'fonts@sil.org',
     url = 'http://github.com/silnrsi/pysilfont',
-    packages = ["silfont",
-        "silfont.comp",
-        "silfont.ftml",
-        "silfont.gdl",
-        "silfont.ufo",
-        "silfont.scripts"
-        ],
+    packages = ["silfont", "silfont.scripts"],
     package_dir = {'':'lib'},
-    entry_points={
-        'console_scripts': [
-            'UFOconvert = silfont.scripts.UFOconvert:cmd',
-            'ftml2odt = silfont.scripts.ftml2odt:cmd',
-            ],
-        },
+    entry_points={'console_scripts': cscripts},
     license = 'MIT',
     platforms = ['Linux','Win32','Mac OS X'],
     classifiers = [

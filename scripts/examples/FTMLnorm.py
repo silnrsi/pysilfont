@@ -6,7 +6,7 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'David Raymond'
 
 from silfont.core import execute
-import silfont.ftml.ftml as ftml
+import silfont.ftml as ftml
 from xml.etree import cElementTree as ET
 
 argspec = [
@@ -19,5 +19,6 @@ def doit(args) :
     f = ftml.Fxml(args.infile)
     f.save(args.outfile)
 
-execute("", doit, argspec)
+def cmd() : execute("",doit,argspec) 
+if __name__ == "__main__": cmd()execute("", doit, argspec)
 

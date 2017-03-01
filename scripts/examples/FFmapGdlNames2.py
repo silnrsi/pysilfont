@@ -36,7 +36,7 @@ def doit(args) :
 
     # Add initial comments to outfile
     if not args.nocomments :
-        outfile.write("# " + datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S ") + args.cmdlineargs[0] + "\n")
+        outfile.write("# " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S ") + args.cmdlineargs[0] + "\n")
         outfile.write("# "+" ".join(args.cmdlineargs[1:])+"\n\n")
 
     # Process gdl file

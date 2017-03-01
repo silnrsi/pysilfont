@@ -39,8 +39,8 @@ class loggerobj(object) :
 
     def log(self, logmessage, msglevel = "I") :
         levelval = self.loglevels[msglevel]
-        message = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S ") + self.leveltext[levelval] + logmessage
-        #message = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S:%f ") + self.leveltext[levelval] + logmessage ## added milliseconds for timing tests
+        message = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S ") + self.leveltext[levelval] + logmessage
+        #message = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f ") + self.leveltext[levelval] + logmessage ## added milliseconds for timing tests
         if levelval <= self.loglevels[self.scrlevel] : print message
         if self.logfile and levelval <= self.loglevels[self.loglevel] : self.logfile.write(message + "\n")
         if msglevel == "S" :
@@ -123,7 +123,7 @@ class _paramset(dict) :
     def __init__(self, params, name, sourcedesc, inputdict = {}) :
         self.name = name
         self.sourcedesc = sourcedesc # Description of source for reporting
-        self.params = params # Parent paraminfo object
+        self.params = params # Parent parameters object
         for parn in inputdict : self[parn] = inputdict[parn]
 
     def __setitem__(self, parn, value) :
@@ -216,9 +216,6 @@ def execute(tool, fn, argspec, chain = None) :
     logger = chain["logger"] if chain else params.logger # paramset has already created a basic logger
     argv   = chain["argv"]   if chain else sys.argv
 
-    if tool == "PSFU" : ## Temp until scripts are updated
-        print "****************************** script needs updating to set tool to 'UFO' *******************************************"
-        tool = "UFO"
     if tool == "FF" :
         import fontforge
         if fontforge.hasUserInterface() :
@@ -226,7 +223,7 @@ def execute(tool, fn, argspec, chain = None) :
         fontforge.loadPrefs()
         fontforge.setPrefs("PreserveTables","DSIG,Feat,Glat,Gloc,LTSH,Silf,Sill,Silt,VDMX,hdmx") ## Perhaps should be a parameter and check for existing values
     elif tool == "UFO" :
-        from silfont.ufo.ufo import Ufont
+        from silfont.ufo import Ufont
     elif tool == "FT" :
         from fontTools import ttLib
     elif tool == "" or tool is None :
