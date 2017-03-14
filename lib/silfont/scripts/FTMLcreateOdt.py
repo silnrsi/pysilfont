@@ -448,7 +448,7 @@ def doit(args) :
     LOdoc.save(unicode(args.output))
     return
 
-def cmd() : execute("PSFU",doit, argspec)
+def cmd() : execute("",doit, argspec)
 
 if __name__ == "__main__": cmd()
 
