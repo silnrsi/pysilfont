@@ -57,7 +57,7 @@ class parameters(object) :
     def __init__(self) :
         # Default parameters for all modules
         defparams = {}
-        defparams['main']   = {'version' : __version__, 'copyright' : __copyright__}
+        defparams['main']   = {'version' : __version__, 'copyright' : __copyright__} ## Need to make these read-only somehow
         defparams['logging']   = {'scrlevel': 'P', 'loglevel': 'W'}
         defparams['backups']   = {'backup': True, 'backupdir': 'backups', 'backupkeep': 5}
         # Default parameters for UFO module
@@ -549,7 +549,7 @@ def execute(tool, fn, argspec, chain = None) :
 def chain(argv, function, argspec, font, params, logger, quiet) : # Chain multple command-line scripts using UFO module together without writing font to disk
     ''' argv is a command-line call to a script in sys.argv format.  function and argspec are from the script being called.
     Although input font name must be supplied for the command line to be parsed correctly by execute() it is not used - instead the supplied
-    font object is used. Similarly logfile and -params settings in argv are not used by execute() when chaining is used'''
+    font object is used. Similarly -params, logfile and quiet settings in argv are not used by execute() when chaining is used'''
     if quiet and "-q" not in argv : argv.append("-q")
     if not quiet : logger.log("Chaining to " + argv[0], "P")
     font = execute("UFO", function, argspec,

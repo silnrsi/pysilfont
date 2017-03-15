@@ -38,4 +38,5 @@ def doit(args) :
 
     return font
 
-execute("PSFU",doit, argspec)
+def cmd() : execute("UFO",doit,argspec) 
+if __name__ == "__main__": cmd()

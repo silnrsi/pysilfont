@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-'''Add public.poscriptname to glif lib based on a csv file
+'''Add public.postscriptname to glif lib based on a csv file
 - csv format glyphname,postscriptname'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
