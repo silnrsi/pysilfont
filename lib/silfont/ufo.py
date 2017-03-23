@@ -144,7 +144,7 @@ class Ufont(object) :
     def __init__(self, ufodir, logger = None , params = None) :
         if logger is not None and params is not none : params.logger.log("Only supply a logger if params not set (since that has one)", "X")
         if params is None :
-            params = silfont.core.params()
+            params = silfont.core.parameters()
             if logger is not None: params.logger = logger
         self.params = params
         self.logger = params.logger
@@ -170,8 +170,9 @@ class Ufont(object) :
                     libparams[parn] = param.text
         # Create font-specific parameter set (with updates from lib.plist)  Prepend names with ufodir to ensure uniqueness if multiple fonts open
         params.addset(ufodir+"lib","lib.plist in "+ufodir,inputdict = libparams)
-        params.sets[ufodir+"lib"].updatewith("command line", log = False) # Command line parameters override lib.plist ones
-        params.addset(ufodir, copyset = "main")
+        if "command line" in params.sets : params.sets[ufodir+"lib"].updatewith("command line", log = False) # Command line parameters override lib.plist ones
+        copyset = "main" if "main" in params.sets else "default"
+        params.addset(ufodir, copyset = copyset)
         params.sets[ufodir].updatewith(ufodir+"lib",sourcedesc = "lib.plist")
         self.paramset = params.sets[ufodir]
         # Validate specific parameters
@@ -656,10 +657,9 @@ class UfeatureFile(UtextFile) :
     def __init__(self, font, dirn, filen) :
         super(UfeatureFile,self).__init__(font,dirn,filen)
 
-def writeXMLobject(dtreeitem, font, dirn, filen, exists) :
+def writeXMLobject(dtreeitem, font, dirn, filen, exists, fobject = False) :
     params = font.outparams
-
-    object = dtreeitem.fileObject
+    object = dtreeitem if fobject else dtreeitem.fileObject # Set fobject to True if a file object is passed ratehr than dtreeitem
     if object.outparams : params = object.outparams # override default params with object-specific ones
     indentFirst = params["indentFirst"]
     attribOrder = {}
@@ -693,7 +693,7 @@ def writeXMLobject(dtreeitem, font, dirn, filen, exists) :
         if oxmlstr == object.outxmlstr : changed = False
 
     if changed : object.write_to_file(dirn,filen)
-    dtreeitem.written = True # Mark as True, even if not changed - the file should still be there!
+    if not fobject : dtreeitem.written = True # Mark as True, even if not changed - the file should still be there!
 
 def setFileForOutput(dtree, filen, fileObject, fileType) : # Put details in dtree, creating item if needed
     if not filen in dtree :
@@ -707,7 +707,6 @@ def writeToDisk(dtree, outdir, font, odtree = {}, logindent = "") :
     dtreelist = []
     for filen in dtree : dtreelist.append(dtree[filen].type+filen)
     dtreelist.sort()
-
     odtreelist = []
     if odtree == {} :
         locationtype = "Empty"
