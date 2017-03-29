@@ -623,17 +623,22 @@ class Ucomponent(Uelement) :
 
     def __init__(self, outline, element) :
         super(Ucomponent,self).__init__(element)
+        self.outline = outline
 
 class Ucontour(Uelement) :
 
     def __init__(self, outline, element) :
         super(Ucontour,self).__init__(element)
+        self.outline = outline
         self.UFO2anchor = None
         points = self._contents['point']
         # Identify UFO2-style anchor points
         if len(points) == 1 and "type" in points[0].attrib :
             if points[0].attrib["type"] == "move" :
-                self.UFO2anchor = points[0].attrib
+                if "name" in points[0].attrib :
+                    self.UFO2anchor = points[0].attrib
+                else :
+                    self.outline.glif.layer.font.logger.log("Glyph " + self.outline.glif.name + " contains a single-point contour with no anchor name", "E")
 
 class Ulib(_Ucontainer, _plist) :
     # For glif lib elements; top-level lib files use Uplist
