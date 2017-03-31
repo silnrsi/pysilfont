@@ -1,5 +1,6 @@
-# Sample script for calling UFOsyncData against a font family.  Will be extended as other pre-flight steps are added
-
-# Create this in root of project then set to be executable (chmod +x preflight)
+#!/bin/sh
+# Sample script for calling multiple routines on a project, typically prior to committing to a repository.
+# Place this in root of a project, adjust the font path, then set it to be executable by typing:
+# chmod +x preflight
 
 UFOsyncMeta source/font.ufo --normalize
