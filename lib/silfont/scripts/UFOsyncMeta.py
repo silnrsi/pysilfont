@@ -24,7 +24,7 @@ argspec = [
 
 def doit(args) :
     standardstyles = ["Regular", "Italic", "Bold", "BoldItalic"]
-    finfoignore = ["openTypeHeadCreated", "openTypeNamePreferredSubfamilyName", "openTypeOS2Panose",
+    finfoignore = ["openTypeHeadCreated", "openTypeOS2Panose",
         "postscriptBlueScale", "postscriptBlueShift", "postscriptBlueValues", "postscriptOtherBlues", "postscriptStemSnapH", "postscriptStemSnapV", "postscriptForceBold"]
 
     font = args.ifont
@@ -166,7 +166,7 @@ def doit(args) :
                     newval = spacedstyle.lower()
                     issue = "Incorrect value"
                     action = "Update"
-            elif field == "styleName" :
+            elif field in ("styleName", "openTypeNamePreferredSubfamilyName") :
                 if text != spacedstyle :
                     newval = spacedstyle
                     issue = "Incorrect value"
@@ -210,7 +210,7 @@ def doit(args) :
                 changed = True
                 message = field + updatemessage
                 if action == "Update" :
-                    message = message + issue + " Old: '" + text + "' New: '" + newval + "'"
+                    message = message + issue + " Old: '" + text + "' New: '" + str(newval) + "'"
                     elem.text = newval
                 elif action == "FlipBoolean" :
                     newval = "true" if tag == "false" else "false"
