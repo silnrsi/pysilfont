@@ -11,7 +11,7 @@ class Glyph(object) :
         self.is_mark = False
 
     def add_anchor(self, info) :
-        self.anchors{info['name']} = complex(info['x'], info['y'])
+        self.anchors[info['name']] = complex(info['x'], info['y'])
 
     def decide_if_mark(self) :
         for a in self.anchors.keys() :
@@ -73,7 +73,7 @@ class Font(object) :
             count += 1
         return count
 
-    def prepend_positions(self, parser, count = 0)
+    def prepend_positions(self, parser, count = 0):
         # baseclasses and markclasses
         doc = parser.doc_
         for name, c in self.baseclasses.items() :
@@ -110,6 +110,7 @@ if args.input :
     p = feaplus_parser(args.input)
     doc = p.parse() # doc is an ast.FeatureFile
 else :
+    pass
     # make an empty doc here
 # output as doc.asFea()
 
