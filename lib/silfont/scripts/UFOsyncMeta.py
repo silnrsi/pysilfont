@@ -7,13 +7,11 @@ __author__ = 'David Raymond'
 
 from silfont.core import execute
 import silfont.ufo as UFO
-import silfont.etutil as ETU
 import os
 from xml.etree import cElementTree as ET
 
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
-    ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_sync.log'}),
     ('-s','--single', {'help': 'Sync single UFO against master', 'action': 'store_true', 'default': False},{}),
     ('-m','--master', {'help': 'Master UFO to sync  single UFO against', 'nargs': '?' },{'type': 'infont', 'def': None}),
@@ -257,5 +255,4 @@ def processnum(text, precision) : # Apply same processing to numbers that normal
     return text
 
 def cmd() : execute("UFO",doit, argspec)
-
 if __name__ == "__main__": cmd()
