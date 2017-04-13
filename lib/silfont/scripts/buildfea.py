@@ -11,7 +11,7 @@ class Glyph(object) :
         self.is_mark = False
 
     def add_anchor(self, info) :
-        self.anchors[info['name']] = complex(info['x'], info['y'])
+        self.anchors[info['name']] = complex(int(info['x']), int(info['y']))
 
     def decide_if_mark(self) :
         for a in self.anchors.keys() :
@@ -29,10 +29,11 @@ class Font(object) :
         if filename.endswith('.ufo') :
             f = ufo.Ufont(filename)
             for g in f.deflayer :
-                glyph = Glyph(g.name)
-                self.glyphs[g.name] = glyph
-                if 'anchor' in g._contents :
-                    for a in g._contents['anchor'] :
+                glyph = Glyph(g)
+                self.glyphs[g] = glyph
+                ufo_g = f.deflayer[g]
+                if 'anchor' in ufo_g._contents :
+                    for a in ufo_g._contents['anchor'] :
                         glyph.add_anchor(a.element.attrib)
         elif filename.endswith('.xml') :
             pass # read AP.xml into etree and process to extract anchors
