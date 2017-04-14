@@ -57,5 +57,5 @@ def doit(args) :
     etwobj=ETWriter(fontElement, indentFirst=indentFirst, indentIncr=indentIncr, attributeOrder=attributeOrder)
     etwobj.serialize_xml(ofile.write)
 
-execute("PSFU", doit, argspec)
-
+def cmd() : execute("UFO",doit,argspec) 
+if __name__ == "__main__": cmd()
