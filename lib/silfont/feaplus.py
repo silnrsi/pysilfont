@@ -1,6 +1,6 @@
-from fonttools.fontTools.feaLib import ast
-from fonttools.fontTools.feaLib.parser import Parser
-from fonttools.fontTools.feaLib.builder import Builder
+from fontTools.feaLib import ast
+from fontTools.feaLib.parser import Parser
+from fontTools.feaLib.builder import Builder
 
 class ast_BaseClass(ast.MarkClass) :
     def asFea(self, indent="") :

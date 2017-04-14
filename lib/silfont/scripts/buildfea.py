@@ -3,6 +3,8 @@
 from argparse import ArgumentParser
 import silfont.ufo as ufo
 from collections import OrderedDict
+from silfont.feaplus import feaplus_parser
+import fontTools.feaLib.ast as ast
 
 class Glyph(object) :
     def __init__(self, name) :
@@ -23,7 +25,6 @@ class Font(object) :
     def __init__(self):
         self.glyphs = OrderedDict()
         self.classes = {}
-        self.is_mark = False
 
     def readaps(self, filename) :
         if filename.endswith('.ufo') :
@@ -51,25 +52,30 @@ class Font(object) :
                 ext = name[pos+1:]
                 base = name[:pos]
                 if base in self.glyphs :
-                    self.classes["c_" + ext].append(name)
-                    self.classes["cno_" + ext].append(base)
+                    try: self.classes["c_" + ext].append(name)
+                    except KeyError: self.classes["c_" + ext] = [name]
+                    try: self.classes["cno_" + ext].append(base)
+                    except KeyError: self.classes["cno_" + ext] = [base]
             if g.is_mark :
-                self.classes['GDEF_marks'].append(name)
+                try: self.classes['GDEF_marks'].append(name)
+                except KeyError: self.classes['GDEF_marks'] = [name]
             else :
-                self.classes['GDEF_bases'].append(name)
+                try: self.classes['GDEF_bases'].append(name)
+                except KeyError: self.classes['GDEF_bases'] = [name]
 
     def make_marks(self) :
         for name, g in self.glyphs.items() :
             g.decide_if_mark()
 
-    def prepend_classes(self, parser, count = 0) :
+#    def prepend_classes(self, parser, count = 0) :
+    def prepend_classes(self, doc, count = 0) :
         # normal classes
-        doc = parser.doc_
+        #doc = parser.doc_
         for name, c in self.classes.items() :
-            gc = self.ast.GlyphClass(0)
+            gc = ast.GlyphClass(0)
             for g in c :
                 gc.append(g)
-            gcd = self.ast.GlyphClassDefinition(0, name, gc)
+            gcd = ast.GlyphClassDefinition(0, name, gc)
             doc.statements.insert(count, gcd)
             count += 1
         return count
@@ -111,14 +117,16 @@ if args.input :
     p = feaplus_parser(args.input)
     doc = p.parse() # doc is an ast.FeatureFile
 else :
-    pass
     # make an empty doc here
-# output as doc.asFea()
+    doc = ast.FeatureFile()
 
-first_index = font.prepend_classes(p)
+first_index = font.prepend_classes(doc)
+
 # prepend baseclasses and markclasses
-first_index = font.prepend_positions(p, count=first_index)
+if args.input :
+    first_index = font.prepend_positions(p, count=first_index)
 
+# output as doc.asFea()
 if args.output :
     with open(args.output, "w") as of :
         of.write(doc.asFea())
