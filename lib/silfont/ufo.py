@@ -142,7 +142,7 @@ class UtextFile(object) :
 class Ufont(object) :
     """ Object to hold all the data from a UFO"""
     def __init__(self, ufodir, logger = None , params = None) :
-        if logger is not None and params is not none : params.logger.log("Only supply a logger if params not set (since that has one)", "X")
+        if logger is not None and params is not None : params.logger.log("Only supply a logger if params not set (since that has one)", "X")
         if params is None :
             params = silfont.core.parameters()
             if logger is not None: params.logger = logger
