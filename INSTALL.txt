@@ -1,13 +1,26 @@
+********* NOTE ********** We are experiencing issues with upgrades to existing installations and with uninstalling, so these notes are under review...
+
 On OSX or Ubuntu
 ================
 
 To install the module and the scripts run:
 
+  python setup.py install --user --record installed-files.txt
+or
   sudo python setup.py install --record installed-files.txt
-
+  
 setup.py uses setuptools, so if not already installed, you can install with "sudo apt-get install python-setuptools"
 
 For OSX users, see also scripts/tools/actionsosx/README.txt
+
+Upgrading
+---------
+
+Prior to running the install as above, clean up from previous installations using
+
+  python setup.py clean --all
+
+(If you get them, ignore warning message about some modules requiring certain packages)
 
 Uninstalling
 ------------
@@ -15,6 +28,8 @@ Uninstalling
 To uninstall the module run:
 
   sudo -H pip uninstall pysilfont
+
+This gives an error about an egg file missing, but does do at least some uninstalling!
 
 (If you don't have pip installed, you can install with "sudo apt install python-pip") 
 

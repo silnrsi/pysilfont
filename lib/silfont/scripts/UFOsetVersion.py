@@ -65,10 +65,13 @@ def doit(args) :
             else :
                 (otmaj,otmin,otextrainfo) = parseotnv(newversion)
         newotnv = "Version " + otmaj + "." + otmin + otextrainfo # Extrainfo already as leading space
-        logger.log("Version updated from '" + otnv + "' to '" + newotnv + "'","P")
+        logger.log("Updating version from '" + otnv + "' to '" + newotnv + "'","P")
 
-
-##    UFO.writeXMLobject(fi,font,font.ufodir, "fontinfo.plist" , True, fobject = True)
+        # Update and write to disk
+        otelem.text = newotnv
+        majelem.text = otmaj
+        minelem.text = otmin
+        UFO.writeXMLobject(fi,font,font.ufodir, "fontinfo.plist" , True, fobject = True)
 
     return
 
