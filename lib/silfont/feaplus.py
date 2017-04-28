@@ -8,7 +8,7 @@ class ast_BaseClass(ast.MarkClass) :
 
 class ast_BaseClassDefinition(ast.MarkClassDefinition) :
     def asFea(self, indent="") :
-        return "# BaseClass @{}".format(self.markClass.name)
+        return "# BaseClass @{} {} {}".format(self.markClass.name, self.glyphs.asFea(), self.anchor.asFea())
 
 class ast_MarkBasePosStatement(ast.MarkBasePosStatement):
     def asFea(self, indent=""):
@@ -34,6 +34,9 @@ class ast_MarkBasePosStatement(ast.MarkBasePosStatement):
 
 class feaplus_ast(object) :
     MarkBasePosStatement = ast_MarkBasePosStatement
+    BaseClass = ast_BaseClass
+    BaseClassDefinition = ast_BaseClassDefinition
+
     def __getattr__(self, name):
         return getattr(ast, name)
 
