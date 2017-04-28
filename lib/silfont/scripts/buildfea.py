@@ -93,10 +93,16 @@ class Font(object) :
             doc.baseClasses[name] = gc
             parser.glyphclasses_.define(name, gc)
             # p is a tuple(glyph_name, pos)
+            anchor_cache = {}
             for g in c :
                 p = g.anchors[name]
+                anchor_cache.setdefault(p, []).append(g.name)
+            for p, gs in anchor_cache.items() :
                 anchor = parser.ast.Anchor(0, None, p.real, p.imag, None, None, None)
-                bcd = parser.ast.BaseClassDefinition(0, gc, anchor, parser.ast.GlyphName(0, g.name))
+                if len(gs) > 1 :
+                    bcd = parser.ast.BaseClassDefinition(0, gc, anchor, parser.ast.GlyphClass(0, gs))
+                else :
+                    bcd = parser.ast.BaseClassDefinition(0, gc, anchor, parser.ast.GlyphName(0, gs[0]))
                 doc.statements.insert(count, bcd)
                 count += 1
         # repeat for markClasses
