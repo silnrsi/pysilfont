@@ -121,7 +121,17 @@ Pysilfont is developed and maintained by SIL International’s [Non-Roman Script
 
 # Installed tools
 
-#### FTMLcreateOdt
+#### FTMLcreateOdt [-h] [-d] [-l LOG] [-f FONT] [-p PARAMS] input output
+
+This creates a LibreOffice writer document based on input test data in [Font Test Markup Language](https://github.com/silnrsi/ftml) format and font information specified with command line parameters.
+
+Example that uses FTML input contained in the file `test-ss.xml` and creates a LibreOffice writer document named `test-ss.odt`. There will be two columns in the output document, one for the installed font `Andika New Basic` and one for the font contained in the file `AndikaNewBasic-Regular.ttf`. (This compares a newly built font with an installed reference.)
+
+```
+FTMLcreateOdt -f "Andika New Basic" -f "AndikaNewBasic-Regular.ttf" test-ss.xml test-ss.odt
+```
+
+If the font specified with the -f parameter contains a '.' it is assumed to be a file name, otherwise it is assumed to be the name of an installed font. In the former case, the font is embedded in the .odt document, in the latter case the font is expected to be installed on the machine that views the .odt document.
 
 #### UFOconvert [-h] [-d] [-v VERSION] [-p PARAMS] ifont [ofont]
 
