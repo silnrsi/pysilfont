@@ -164,9 +164,21 @@ If you are a macOS user, see _scripts/tools/actionsosx/README.txt_ to install an
 
 
 
-#### UFOexportAnchors
+#### UFOexportAnchors [-h] [-g] [-s] [-u] ifont output
 
+This exports anchor data from a UFO font to an XML file. (An "anchor" is also called an "attachment point" which is sometimes abbreviated to "AP".)
 
+Example that exports the anchors contained in the UFO font `CharisSIL-Regular.ufo`, sorts the resulting glyph elements by name (PSName) rather than glyph ID (GID), and writes them to an XML file `CharisSIL-Regular_ap.xml`.
+
+```
+UFOexportAnchors -s font-charis/source/CharisSIL-Regular.ufo CharisSIL-Regular_ap.xml
+```
+
+If the command line includes
+
+- -g, then the GID attribute will be present in the glyph element.
+- -s, then the glyph elements will be sorted by PSName attribute (rather than by GID attribute).
+- -u, then the UID attribute will include a "U+" prefix
 
 #### UFOsetVersion
 
