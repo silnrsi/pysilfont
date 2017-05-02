@@ -11,7 +11,7 @@ from xml.etree import ElementTree as ET  ### NB: using cElementTree gives bad re
 
 argspec = [
     ('ifont',{'help': 'Input UFO'}, {'type': 'infont'}),
-    ('output',{'help': 'Output file exported anchor data in XML format'}, {'type': 'outfile', 'def': '_anc.xml'}),
+    ('output',{'help': 'Output file exported anchor data in XML format', 'nargs': '?'}, {'type': 'outfile', 'def': '_anc.xml'}),
     ('-g','--gid',{'help': 'Include GID attribute in <glyph> elements', 'action': 'store_true'},{}),
     ('-s','--sort',{'help': 'Sort by PSName attribute in <glyph> elements', 'action': 'store_true'},{}),
     ('-u','--Uprefix',{'help': 'Include U+ prefix on UID attribute in <glyph> elements', 'action': 'store_true'},{}),
@@ -57,5 +57,5 @@ def doit(args) :
     etwobj=ETWriter(fontElement, indentFirst=indentFirst, indentIncr=indentIncr, attributeOrder=attributeOrder)
     etwobj.serialize_xml(ofile.write)
 
-def cmd() : execute("UFO",doit,argspec) 
+def cmd() : execute("UFO",doit,argspec)
 if __name__ == "__main__": cmd()

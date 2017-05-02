@@ -124,7 +124,7 @@ Pysilfont is developed and maintained by SIL International’s [Non-Roman Script
 
 # Installed tools
 
-#### FTMLcreateOdt [-h] [-d] [-l LOG] [-f FONT] [-p PARAMS] input output
+#### FTMLcreateOdt [-h] [-d] [-l LOG] [-f FONT] [-p PARAMS] input [output]
 
 This creates a LibreOffice writer document based on input test data in [Font Test Markup Language](https://github.com/silnrsi/ftml) format and font information specified with command line parameters.
 
@@ -136,7 +136,7 @@ FTMLcreateOdt -f "Andika New Basic" -f "AndikaNewBasic-Regular.ttf" test-ss.xml 
 
 If the font specified with the -f parameter contains a '.' it is assumed to be a file name, otherwise it is assumed to be the name of an installed font. In the former case, the font is embedded in the .odt document, in the latter case the font is expected to be installed on the machine that views the .odt document.
 
-#### UFOconvert [-h] [-d] [-v VERSION] [-p PARAMS] ifont [ofont]
+#### UFOconvert [-h] [-l LOG] [-d] [-q] [-p PARAMS] [-v VERSION] ifont [ofont]
 
 This converts UFO fonts from one version to another (such as UFO2 to UFO3), but if no version is specified it will only normalize the font without converting it. _Note that most pysilfont scripts automatically output normalized UFOs, so UFOconvert is normally only needed after fonts have been processed by external font tools._
 
@@ -163,7 +163,7 @@ Known limitations that will be addressed in the future:
 
 If you are a macOS user, see _scripts/tools/actionsosx/README.txt_ to install an action that will enable you to run UFOconvert without using the command line.
 
-#### UFOcopyMeta
+#### UFOcopyMeta [-h] [-l LOG] [-d] [-q] [-p PARAMS] [-r] fromfont tofont
 
 This copies selected fontlist.plist metadata (eg copyright, openTypeNameVersion, decender) between fonts in different (related) families. It is usually run against the master (regular) font in each family then data synced within family afterwards using UFOsyncMeta.
 
@@ -172,10 +172,11 @@ Example usage:
 ```
 UFOcopyMeta GentiumPlus-Regular.ufo GentiumBookPlus-Bold
 ```
+With the -r option, it reports changes that would be made but does no updates.
 
 Look in UFOcopyMeta.py for a full list of metadata copied.  Note that only fontinfo.plist is updated; the target font is not normalized.
 
-#### UFOexportAnchors
+#### UFOexportAnchors [-h] [-g] [-s] [-u] [-p PARAMS] [-d] [-q] ifont [output]
 
 This exports anchor data from a UFO font to an XML file. (An "anchor" is also called an "attachment point" which is sometimes abbreviated to "AP".)
 
@@ -191,7 +192,7 @@ If the command line includes
 - -s, then the glyph elements will be sorted by PSName attribute (rather than by GID attribute).
 - -u, then the UID attribute will include a "U+" prefix
 
-#### UFOsetVersion
+#### UFOsetVersion [-h] [-l LOG] [-d] [-q] [-p PARAMS] font [newversion]
 
 This updates various font version fields within a font.  Fields updated are openTypeNameVersion, versionMajor and versionMinor.  It works assuming that openTypeNameVersion is of the form:
 
@@ -207,18 +208,27 @@ Examples:
 UFOsetVersion GentiumPlus.UFO "5.950 Alpha1"
 UFOsetVersion GentiumPlus.ufo +1
 ```
+If no new version is psecified, it simply reports the current version - and verifies that versionMajor and versionMinor match the values in openTypeNameVersion
 
-#### UFOsyncMeta
+#### UFOsyncMeta [-h] [-l LOG] [-d] [-q] [-p PARAMS] [-s] [-m [MASTER]] [-r] [-n] [--normalize] ifont
 
-Verifies and synchronises fontinfo.plist metatdata across a faimily of fonts.  By default it uses the regular font as the master and updates any other fonts that exist assuming standard name endings of -Regular, -Italic, -Bold and -BoldItalic.  Optionally a single font file can be synced against any other font as master, regardless of file naming.
+Verifies and synchronises fontinfo.plist metatdata across a family of fonts.  By default it uses the regular font as the master and updates any other fonts that exist assuming standard name endings of -Regular, -Italic, -Bold and -BoldItalic.  Optionally a single font file can be synced against any other font as master, regardless of file naming.
 
-Example usage:
+Example usage for family of fonts:
 
 ```
 UFOsyncMeta CharisSIL-Regular.ufo
 ```
 
 This will sync the metadata in CharisSIL-Italic, CharisSIL-Bold and CharisSIL-BoldItalic against values in CharisSIL-Regular.  In addition it will verify certain field in all fonts (including Regular) are valid and follow best-pactice standards.
+
+Example usages for a single font:
+
+```
+UFOsyncMeta -s font-Italic.ufo
+UFOsyncMeta -s font-Italic.ufo -m otherfont.ufo
+```
+The first will sync font-Italic against font-Regular and the second against otherfont.
 
 Look in UFOsyncMeta.py for a full details of metadata actions.  Note that by default only fontinfo.plist is updated so fonts are not normalized.  Use --normalize to additionally normalize all fonts in the family.
 
