@@ -6,7 +6,7 @@ In addition, all scripts will output UFO in a normalized form, designed to work 
 
 ## Installation
 
-Pysilfont requires Python version 2.7.x and python-setuptools. Some scripts also need FontForge or FontTools.
+Pysilfont requires Python version 2.7.x and python-setuptools. Some scripts also need Fontforge, FontTools or odtpy.
 
 _Note: We are experiencing issues with upgrades to existing installations and with uninstalling, so these notes are under review._
 
@@ -18,13 +18,17 @@ To install the module and the scripts for the current user only run:
 
 ```
 python setup.py install --user --record installed-files.txt
-sudo apt-get install python-setuptools
 ```
 
-or to install for all users run:
+or, if multiple users use your system and you want to install for all users, run:
 
 ```
 sudo python setup.py install --record installed-files.txt
+```
+
+If setup.py fails with a message that python-setuptools is missing, run the following to install it, then run setup.py again.
+
+```
 sudo apt-get install python-setuptools
 ```
 
@@ -34,7 +38,6 @@ If upgrading an existing installation you will need to clean up from previous in
 python setup.py clean --all
 ```
 
-_If you get warning messages about some modules requiring certain packages you can safely ignore them. We're working on it._
 
 ### Windows
 
@@ -53,7 +56,7 @@ _This gives an error about an egg file missing, but does successfully complete. 
 To get rid of all the files installed run:
 
 ```
-cat installed-files.txt | xargs sudo rm --verbose -vr
+cat installed-files.txt | xargs sudo rm -vr
 ```
 
 ## Using the command-line tools
@@ -162,9 +165,17 @@ If you are a macOS user, see _scripts/tools/actionsosx/README.txt_ to install an
 
 #### UFOcopyMeta
 
+This copies selected fontlist.plist metadata (eg copyright, openTypeNameVersion, decender) between fonts in different (related) families. It is usually run against the master (regular) font in each family then data synced within family afterwards using UFOsyncMeta.
 
+Example usage:
 
-#### UFOexportAnchors [-h] [-g] [-s] [-u] ifont output
+```
+UFOcopyMeta GentiumPlus-Regular.ufo GentiumBookPlus-Bold
+```
+
+Look in UFOcopyMeta.py for a full list of metadata copied.  Note that only fontinfo.plist is updated; the target font is not normalized.
+
+#### UFOexportAnchors
 
 This exports anchor data from a UFO font to an XML file. (An "anchor" is also called an "attachment point" which is sometimes abbreviated to "AP".)
 
@@ -182,14 +193,34 @@ If the command line includes
 
 #### UFOsetVersion
 
+This updates various font version fields within a font.  Fields updated are openTypeNameVersion, versionMajor and versionMinor.  It works assuming that openTypeNameVersion is of the form:
 
+	"Version M.mpp" or "Version M.mpp extrainfo", eg "Version 1.323 Beta2"
+	
+Where M is the major versionnumber of the font, m the minor version and pp the patch number, with M corresponding to versionMajor and mpp to versionMinor.
+
+The versions can be updated by either specifying a new value for "M.mpp extrainfo" or specifying +1 to increment the patch version number (pp).
+
+Examples:
+
+```
+UFOsetVersion GentiumPlus.UFO "5.950 Alpha1"
+UFOsetVersion GentiumPlus.ufo +1
+```
 
 #### UFOsyncMeta
 
+Verifies and synchronises fontinfo.plist metatdata across a faimily of fonts.  By default it uses the regular font as the master and updates any other fonts that exist assuming standard name endings of -Regular, -Italic, -Bold and -BoldItalic.  Optionally a single font file can be synced against any other font as master, regardless of file naming.
 
+Example usage:
 
+```
+UFOsyncMeta CharisSIL-Regular.ufo
+```
 
+This will sync the metadata in CharisSIL-Italic, CharisSIL-Bold and CharisSIL-BoldItalic against values in CharisSIL-Regular.  In addition it will verify certain field in all fonts (including Regular) are valid and follow best-pactice standards.
 
+Look in UFOsyncMeta.py for a full details of metadata actions.  Note that by default only fontinfo.plist is updated so fonts are not normalized.  Use --normalize to additionally normalize all fonts in the family.
 
 ---
 

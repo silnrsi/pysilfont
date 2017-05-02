@@ -28,7 +28,7 @@ def doit(args) :
     fi = font.fontinfo
     otelem = fi["openTypeNameVersion"][1] if "openTypeNameVersion" in fi else None
     majelem = fi["versionMajor"][1] if "versionMajor" in fi else None
-    minelem = fi["versionMinor"][1] if "versionMajor" in fi else None
+    minelem = fi["versionMinor"][1] if "versionMinor" in fi else None
     otnv = None if otelem is None else otelem.text
     vmaj = None if majelem is None else majelem.text
     vmin = None if minelem is None else minelem.text
