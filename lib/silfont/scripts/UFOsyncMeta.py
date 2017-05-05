@@ -107,6 +107,7 @@ def doit(args) :
                 elem = finfo[field][1]
                 tag = elem.tag
                 text = elem.text
+                if text is None : text = ""
                 if tag == "real" : text = processnum(text,precision)
             # Field-specific actions
 
@@ -180,6 +181,7 @@ def doit(args) :
                 melem = mfinfo[field][1]
                 mtag = melem.tag
                 mtext = melem.text
+                if mtext is None : mtext = ""
                 if mtag is 'real' : mtext = processnum(mtext,precision)
                 if tag in ("real", "integer", "string") :
                     if mtext != text :
