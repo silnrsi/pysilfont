@@ -237,7 +237,7 @@ def doit(args) :
                     UFO.writeXMLobject(finfo,font,font.ufodir, filen, exists, fobject = True)
 
     if fieldscopied :
-        message = "After updating, UFOsyncdata will need to be re-run to validate these fields" if reportonly else "Re-run UFOsyncdata to validate these fields"
+        message = "After updating, UFOsyncMeta will need to be re-run to validate these fields" if reportonly else "Re-run UFOsyncMeta to validate these fields"
         logger.log("*** Some fields were missing and so copied from " + mastertext + ". " + message, "P")
 
     return
