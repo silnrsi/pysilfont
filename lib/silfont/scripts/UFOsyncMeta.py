@@ -219,7 +219,7 @@ def doit(args) :
                 elif action == "Copyfield" :
                     message = message + "is missing so will be copied from " + mastertext
                     fieldscopied = True
-                    finfo.addelem(field, ET.fromstring(ET.tostring(melem)))
+                    finfo.addelem(field, ET.fromstring(ET.tostring(mfinfo[field][1])))
                 elif action == "CopyArray" :
                     message = message + "Some values different Old: " + str(array) + " New: " + str(marray)
                     finfo.setelem(field, ET.fromstring(ET.tostring(melem)))
