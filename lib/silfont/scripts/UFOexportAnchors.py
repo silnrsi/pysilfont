@@ -12,6 +12,8 @@ from xml.etree import ElementTree as ET  ### NB: using cElementTree gives bad re
 argspec = [
     ('ifont',{'help': 'Input UFO'}, {'type': 'infont'}),
     ('output',{'help': 'Output file exported anchor data in XML format', 'nargs': '?'}, {'type': 'outfile', 'def': '_anc.xml'}),
+    ('-r','--report',{'help': 'Set reporting level for log', 'type':str, 'choices':['X','S','E','P','W','I','V']},{}),
+    ('-l','--log',{'help': 'Set log file name'}, {'type': 'outfile', 'def': '_anc.log'}),
     ('-g','--gid',{'help': 'Include GID attribute in <glyph> elements', 'action': 'store_true'},{}),
     ('-s','--sort',{'help': 'Sort by PSName attribute in <glyph> elements', 'action': 'store_true'},{}),
     ('-u','--Uprefix',{'help': 'Include U+ prefix on UID attribute in <glyph> elements', 'action': 'store_true'},{}),
@@ -19,18 +21,37 @@ argspec = [
     ]
 
 def doit(args) :
+    logfile = args.logger
+    if args.report: logfile.loglevel = args.report
     infont = args.ifont
     prefix = "U+" if args.Uprefix else ""
 
-    fontElement= ET.Element('font', upem=infont.fontinfo['unitsPerEm'][1].text, name=infont.fontinfo['postscriptFontName'][1].text)
+    glyphorderlist = [s.text for s in infont.lib['public.glyphOrder'][1].findall('string')]
+    glyphorderset = set(glyphorderlist)
+    if len(glyphorderlist) != len(glyphorderset):
+        logfile.log("At least one duplicate name in public.glyphOrder", "W")
+        # count of duplicate names is len(glyphorderlist) - len(glyphorderset)
+    actualglyphlist = [g for g in infont.deflayer.keys()]
+    actualglyphset = set(actualglyphlist)
     listorder = []
-    for i, e in enumerate(infont.lib['public.glyphOrder'][1]):
-        listorder.append( (e.text, i) )
+    gid = 0
+    for g in glyphorderlist:
+        if g in actualglyphset:
+            listorder.append( (g, gid) )
+            gid += 1
+            actualglyphset.remove(g)
+            glyphorderset.remove(g)
+        else:
+            logfile.log(g + " in public.glyphOrder list but absent from UFO", "W")
     if args.sort: listorder.sort()
+    for g in sorted(actualglyphset):    # if any glyphs remaining
+        listorder.append( (g, None) )
+        logfile.log(g + " in UFO but not in public.glyphOrder list", "W")
 
+    fontElement= ET.Element('font', upem=infont.fontinfo['unitsPerEm'][1].text, name=infont.fontinfo['postscriptFontName'][1].text)
     for g, i in listorder:
         attrib = {'PSName': g}
-        if args.gid: attrib['GID'] = str(i)
+        if args.gid and i != None: attrib['GID'] = str(i)
         u = infont.deflayer[g]['unicode']
         if len(u)>0: attrib['UID'] = prefix + u[0].element.get('hex')
         glyphElement = ET.SubElement(fontElement, 'glyph', attrib)
