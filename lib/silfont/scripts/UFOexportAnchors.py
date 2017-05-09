@@ -26,7 +26,10 @@ def doit(args) :
     infont = args.ifont
     prefix = "U+" if args.Uprefix else ""
 
-    glyphorderlist = [s.text for s in infont.lib['public.glyphOrder'][1].findall('string')]
+    if 'public.glyphOrder' in infont.lib:
+        glyphorderlist = [s.text for s in infont.lib['public.glyphOrder'][1].findall('string')]
+    else:
+        glyphorderlist = []
     glyphorderset = set(glyphorderlist)
     if len(glyphorderlist) != len(glyphorderset):
         logfile.log("At least one duplicate name in public.glyphOrder", "W")
