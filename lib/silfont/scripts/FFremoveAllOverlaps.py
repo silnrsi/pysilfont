@@ -17,4 +17,5 @@ def doit(args) :
         font[glyph].removeOverlap()
     return font
 
-execute("FF",doit,argspec)
+def cmd() : execute("FF",doit,argspec) 
+if __name__ == "__main__": cmd()
