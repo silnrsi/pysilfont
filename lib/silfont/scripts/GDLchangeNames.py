@@ -17,7 +17,7 @@ argspec = [
     ('-n','--names',{'help': 'Names csv file'}, {'type': 'incsv', 'def': 'gdlmap.csv'}),
     ('--names2',{'help': '2nd names csv file', 'nargs': '?'}, {'type': 'incsv', 'def': None}),
     ('--psnames',{'help': 'PS names csv file'}, {'type': 'incsv', 'def': 'psnames.csv'}),
-    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': 'GDLnameSwitch.log'})]
+    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': 'GDLchangeNames.log'})]
 
 def doit(args) :
     logger = args.paramsobj.logger
