@@ -10,27 +10,27 @@ There are further example scripts supplied with Pysilfont, and some of these are
 
 | Command | Description |
 | ------- | ----------- |
-| [CDconvFromXml](#CDconvFromXml) | Convert composite definition file from XML format |
-| [CDconvToXml](#CDconvToXml) | Convert composite definition file to XML format |
-| [FFchangeGlyphNames](#FFchangeGlyphNames) | Update glyph names in a ttf font based on csv file |
-| [FFcopyGlyphs](#FFcopyGlyphs) | Copy glyphs from one font to another, without using ffbuilder |
-| [FFremoveAllOverlaps](#FFremoveAllOverlaps) | Remove overlap on all glyphs in a ttf font |
-| [FTMLcreateOdt](#FTMLcreateOdt) | Create a LibreOffice Writer file from an FTML test description |
-| [GDLchangeNames](#GDLchangeNames) | Change graphite names within GDL based on mappings files |
-| [UFOaddAnchors](#UFOaddAnchors) | Read anchor data from XML file and apply to UFO |
-| [UFObuildComp](#UFObuildComp) | Add composite glyphs to UFO based on a Composite Definitions file |
-| [UFOconvert](#UFOconvert) | Normalize a UFO and optionally converts it between UFO2 and UFO3 versions |
-| [UFOcopyMeta](#UFOcopyMeta) | Copy basic metadata from one UFO to another, for fonts in related families |
-| [UFOexportAnchors](#UFOexportAnchors) | Export UFO anchor data to a separate XML file |
-| [UFOexportPSnames](#UFOexportPSnames) | Export a map of gylph name to PS name to a csv file |
-| [UFOexportUnicodes](#UFOexportUnicodes) | Export a map of gylph name to unicode value to a csv file |
-| [UFOloadGlyphOrder](#UFOloadGlyphOrder) | Load glyph order data into public.glyphOrder based on a text file |
-| [UFOsetAssocFeat](#UFOsetAssocFeat) | Add associate feature info to glif lib based on a csv file |
-| [UFOsetAssocUIDs](#UFOsetAssocUIDs) | Add associate UID info to glif lib based on a csv file |
-| [UFOsetPSnames](#UFOsetPSnames) | Add public.postscriptname to glif lib based on a csv file |
-| [UFOsetUnicodes](#UFOsetUnicodes) | Set unicode values for a glif based on a csv file |
-| [UFOsetVersion](#UFOsetVersion) | Change all the version-related info in a UFO's fontinfo.plist |
-| [UFOsyncMeta](#UFOsyncMeta) | Copy basic metadata from one member of a font family to other family members |
+| [CDconvFromXml](#cdconvfromxml) | Convert composite definition file from XML format |
+| [CDconvToXml](#cdconvtoxml) | Convert composite definition file to XML format |
+| [FFchangeGlyphNames](#ffchangeglyphnames) | Update glyph names in a ttf font based on csv file |
+| [FFcopyGlyphs](#ffcopyGlyphs) | Copy glyphs from one font to another, without using ffbuilder |
+| [FFremoveAllOverlaps](#ffremovealloverlaps) | Remove overlap on all glyphs in a ttf font |
+| [FTMLcreateOdt](#ftmlcreateOdt) | Create a LibreOffice Writer file from an FTML test description |
+| [GDLchangeNames](#gdlchangenames) | Change graphite names within GDL based on mappings files |
+| [UFOaddAnchors](#ufoaddanchors) | Read anchor data from XML file and apply to UFO |
+| [UFObuildComp](#ufobuildcomp) | Add composite glyphs to UFO based on a Composite Definitions file |
+| [UFOconvert](#ufoconvert) | Normalize a UFO and optionally converts it between UFO2 and UFO3 versions |
+| [UFOcopyMeta](#ufocopymeta) | Copy basic metadata from one UFO to another, for fonts in related families |
+| [UFOexportAnchors](#ufoexportanchors) | Export UFO anchor data to a separate XML file |
+| [UFOexportPSnames](#ufoexportpsnames) | Export a map of gylph name to PS name to a csv file |
+| [UFOexportUnicodes](#ufoexportunicodes) | Export a map of gylph name to unicode value to a csv file |
+| [UFOloadGlyphOrder](#ufoloadglyphorder) | Load glyph order data into public.glyphOrder based on a text file |
+| [UFOsetAssocFeat](#ufosetassocfeat) | Add associate feature info to glif lib based on a csv file |
+| [UFOsetAssocUIDs](#ufosetassocuids) | Add associate UID info to glif lib based on a csv file |
+| [UFOsetPSnames](#ufosetpsnames) | Add public.postscriptname to glif lib based on a csv file |
+| [UFOsetUnicodes](#ufosetunicodes) | Set unicode values for a glif based on a csv file |
+| [UFOsetVersion](#ufosetversion) | Change all the version-related info in a UFO's fontinfo.plist |
+| [UFOsyncMeta](#ufosyncmeta) | Copy basic metadata from one member of a font family to other family members |
 
 
 ---
