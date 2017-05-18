@@ -13,9 +13,9 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [CDconvFromXml](#cdconvfromxml) | Convert composite definition file from XML format |
 | [CDconvToXml](#cdconvtoxml) | Convert composite definition file to XML format |
 | [FFchangeGlyphNames](#ffchangeglyphnames) | Update glyph names in a ttf font based on csv file |
-| [FFcopyGlyphs](#ffcopyGlyphs) | Copy glyphs from one font to another, without using ffbuilder |
+| [FFcopyGlyphs](#ffcopyglyphs) | Copy glyphs from one font to another, without using ffbuilder |
 | [FFremoveAllOverlaps](#ffremovealloverlaps) | Remove overlap on all glyphs in a ttf font |
-| [FTMLcreateOdt](#ftmlcreateOdt) | Create a LibreOffice Writer file from an FTML test description |
+| [FTMLcreateOdt](#ftmlcreateodt) | Create a LibreOffice Writer file from an FTML test description |
 | [GDLchangeNames](#gdlchangenames) | Change graphite names within GDL based on mappings files |
 | [UFOaddAnchors](#ufoaddanchors) | Read anchor data from XML file and apply to UFO |
 | [UFObuildComp](#ufobuildcomp) | Add composite glyphs to UFO based on a Composite Definitions file |
@@ -190,6 +190,7 @@ optional arguments:
                         XML file with anchor data
 
   -a, --analysis        Analysis only; no output font generated
+  
   -r {X,S,E,P,W,I,V}, --report {X,S,E,P,W,I,V}
                         Set reporting level for log
 
@@ -216,7 +217,9 @@ optional arguments:
                         Composite Definitions input file
 
   -a, --analysis        Analysis only; no output font generated
+  
   -f, --force           Force overwrite of glyphs having outlines
+  
   -r {X,S,E,P,W,I,V}, --report {X,S,E,P,W,I,V}
                         Set reporting level for log
                         Set reporting level for log
