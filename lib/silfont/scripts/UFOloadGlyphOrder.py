@@ -12,6 +12,7 @@ suffix = "_Gorder"
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
     ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
+    ('--GlyphsApp',{'help': 'Load display order for Glyphs app rather than public.glyphOrder', 'action': 'store_true'},{}),
     ('-i','--input',{'help': 'Input text file, one glyphname per line'}, {'type': 'infile', 'def': suffix+'.txt'}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': suffix+'.log'})]
 
@@ -42,7 +43,10 @@ def doit(args) :
         font.lib = Uplist(font = font)
         font.dtree['lib.plist'] = dirTreeItem(read = True, added = True, fileObject = font.lib, fileType = "xml")
         font.lib.etree = ET.fromstring("<plist>\n<dict/>\n</plist>")
-    font.lib.setelem("public.glyphOrder",array)
+    if args.GlyphsApp:
+        font.lib.setelem("com.schriftgestaltung.glyphOrder",array)
+    else:
+        font.lib.setelem("public.glyphOrder",array)
 
     return font
 
