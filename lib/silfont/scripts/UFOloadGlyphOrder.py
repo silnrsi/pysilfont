@@ -6,13 +6,13 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'David Raymond'
 
 from silfont.core import execute
-from xml.etree import ElementTree as ET
+from xml.etree import cElementTree as ET
 
 suffix = "_Gorder"
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
     ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
-    ('-i','--input',{'help': 'Input csv file'}, {'type': 'infile', 'def': suffix+'.txt'}),
+    ('-i','--input',{'help': 'Input text file, one glyphname per line'}, {'type': 'infile', 'def': suffix+'.txt'}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': suffix+'.log'})]
 
 def doit(args) :

@@ -7,13 +7,11 @@ __author__ = 'David Raymond'
 
 from silfont.core import execute
 import silfont.ufo as UFO
-import silfont.etutil as ETU
 import os
 from xml.etree import cElementTree as ET
 
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
-    ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_sync.log'}),
     ('-s','--single', {'help': 'Sync single UFO against master', 'action': 'store_true', 'default': False},{}),
     ('-m','--master', {'help': 'Master UFO to sync  single UFO against', 'nargs': '?' },{'type': 'infont', 'def': None}),
@@ -109,6 +107,7 @@ def doit(args) :
                 elem = finfo[field][1]
                 tag = elem.tag
                 text = elem.text
+                if text is None : text = ""
                 if tag == "real" : text = processnum(text,precision)
             # Field-specific actions
 
@@ -182,6 +181,7 @@ def doit(args) :
                 melem = mfinfo[field][1]
                 mtag = melem.tag
                 mtext = melem.text
+                if mtext is None : mtext = ""
                 if mtag is 'real' : mtext = processnum(mtext,precision)
                 if tag in ("real", "integer", "string") :
                     if mtext != text :
@@ -219,7 +219,7 @@ def doit(args) :
                 elif action == "Copyfield" :
                     message = message + "is missing so will be copied from " + mastertext
                     fieldscopied = True
-                    finfo.addelem(field, ET.fromstring(ET.tostring(melem)))
+                    finfo.addelem(field, ET.fromstring(ET.tostring(mfinfo[field][1])))
                 elif action == "CopyArray" :
                     message = message + "Some values different Old: " + str(array) + " New: " + str(marray)
                     finfo.setelem(field, ET.fromstring(ET.tostring(melem)))
@@ -239,7 +239,7 @@ def doit(args) :
                     UFO.writeXMLobject(finfo,font,font.ufodir, filen, exists, fobject = True)
 
     if fieldscopied :
-        message = "After updating, UFOsyncdata will need to be re-run to validate these fields" if reportonly else "Re-run UFOsyncdata to validate these fields"
+        message = "After updating, UFOsyncMeta will need to be re-run to validate these fields" if reportonly else "Re-run UFOsyncMeta to validate these fields"
         logger.log("*** Some fields were missing and so copied from " + mastertext + ". " + message, "P")
 
     return
@@ -257,5 +257,4 @@ def processnum(text, precision) : # Apply same processing to numbers that normal
     return text
 
 def cmd() : execute("UFO",doit, argspec)
-
 if __name__ == "__main__": cmd()

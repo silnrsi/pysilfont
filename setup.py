@@ -7,20 +7,27 @@ __version__ = '1.1.2'
 
 import sys, os
 
+print sys.argv
+
 try:
 	from setuptools import setup
 except ImportError :
-    print "pysilfont requires setuptools - see INSTALL.txt"
+    print "pysilfont requires setuptools - see installation notes in README.md"
     sys.exit(1)
 
 warnings = []
-try:
-	import fontTools
-except ImportError : warnings.append("- Some modules require the python fonttools package which is not currently installed")
+if sys.argv[1] in ('develop', 'install') :
+    try:
+        import fontforge
+    except ImportError : warnings.append("- Some modules require the python fontforge package which is not currently installed")
 
-try:
-	import odf
-except ImportError : warnings.append("- Some modules require the python odfpy package which is not currently installed")
+    try:
+        import fontTools
+    except ImportError : warnings.append("- Some modules require the python fonttools package which is not currently installed")
+
+    try:
+        import odf
+    except ImportError : warnings.append("- Some modules require the python odfpy package which is not currently installed")
 
 long_description =  "A growing collection of font utilities mainly written in Python designed to help with various aspects of font design and production.\n"
 long_description += "Developed and maintained by SIL International's Non-Roman Script Initiative (NRSI).\n"
