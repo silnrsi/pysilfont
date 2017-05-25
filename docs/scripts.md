@@ -315,11 +315,13 @@ _[Return to table of scripts](#table-of-scripts)_
 
 ---
 ####  UFOloadGlyphOrder
-usage: ```UFOloadGlyphOrder [-i INPUT] ifont [ofont]```
+usage: ```UFOloadGlyphOrder [--GlyphsApp] [-i INPUT] ifont [ofont]```
 
 _([Standard options](#standard-options) [-h] [-d] [-q] [-l LOG] [-p PARAMS] also apply)_
 
-Load glyph order data into public.glyphOrder in lib.plist based on a text file with one glyph name per line.
+From the INPUT file, read an ordered list of glyph names (one per line) and load the list into public.glyphOrder in lib.plist to control the order of glyphs in generated TTF files.
+If \-\-GlyphsApp is specified, the glyph list is loaded into com.schriftgestaltung.glyphOrder instead, which
+controls of the glyph display order in GlyphsApp.
 
 _[Return to table of scripts](#table-of-scripts)_
 
