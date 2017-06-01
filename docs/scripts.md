@@ -15,7 +15,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [FFchangeGlyphNames](#ffchangeglyphnames) | Update glyph names in a ttf font based on csv file |
 | [FFcopyGlyphs](#ffcopyglyphs) | Copy glyphs from one font to another, without using ffbuilder |
 | [FFremoveAllOverlaps](#ffremovealloverlaps) | Remove overlap on all glyphs in a ttf font |
-| [FTgrCompress](#FTgrCompress) | Compress Graphite tables in a ttf font |
+| [FTgrCompress](#ftgrcompress) | Compress Graphite tables in a ttf font |
 | [FTMLcreateOdt](#ftmlcreateodt) | Create a LibreOffice Writer file from an FTML test description |
 | [GDLchangeNames](#gdlchangenames) | Change graphite names within GDL based on mappings files |
 | [UFOaddAnchors](#ufoaddanchors) | Read anchor data from XML file and apply to UFO |
