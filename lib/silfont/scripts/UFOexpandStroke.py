@@ -5,10 +5,10 @@ __copyright__ = 'Copyright (c) 2017 SIL International (http://www.sil.org), base
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Victor Gaultney'
 
-'''
-To Do
-- Simplify to assume round caps and corners
-'''
+# Usage: UFOexpandStroke ifont ofont thickness
+
+# To Do
+# - Simplify to assume round caps and corners
 
 # main input, output, and execution handled by pysilfont framework
 from silfont.core import execute
