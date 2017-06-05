@@ -1,27 +1,17 @@
 #!/usr/bin/env python
 '''Expands an unclosed UFO stroke font into monoline forms with a fixed width'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2017 SIL International (http://www.sil.org), based on outlinerRoboFont Extension Copyright (c) 2016 Frederik Berlaen'
+__copyright__ = 'Copyright (c) 2017 SIL International (http://www.sil.org), based on outlinerRoboFontExtension Copyright (c) 2016 Frederik Berlaen'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Victor Gaultney'
 
 '''
 To Do
-- Make 'tickness' a parameter
-- Make input a parameter
-- Make output a parameter
 - Simplify to assume round caps and corners
-- Make work with pysilfont framework
 '''
 
-#from silfont.core import execute
-#import silfont.ufo as ufo
-
-#suffix = '_inflated'
-#argspec = [
-#    ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
-#    ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
-#    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': suffix+'log'})]
+# main input, output, and execution handled by pysilfont framework
+from silfont.core import execute
 
 from fontTools.pens.basePen import BasePen
 from robofab.world import OpenFont, CurrentGlyph, CurrentFont
@@ -33,9 +23,13 @@ from defcon import Glyph
 
 from math import sqrt, cos, sin, acos, asin, degrees, radians, pi
 
-infont = OpenFont("/Tools/vgtooldev/inflate/AHand.ufo")
-outfontpath = "/Tools/vgtooldev/inflate/AHand-out25.ufo"
-strokewidth = 60
+suffix = '_expanded'
+argspec = [
+   ('ifont',{'help': 'Input font file'}, {'type': 'filename'}),
+   ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'filename', 'def': "_"+suffix}),
+   ('thickness',{'help': 'Stroke thickness'}, {}),
+   ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': suffix+'log'})]
+
 
 # The following functions are straight from outlinerRoboFontExtension
 
@@ -173,8 +167,8 @@ class MathPoint(object):
         if sinAngle < 0:
             cosAngle = 360 - cosAngle
         return radians(cosAngle + add)
-
-
+        
+        
 class CleanPointPen(AbstractPointPen):
 
     def __init__(self, pointPen):
@@ -572,11 +566,11 @@ class OutlinePen(BasePen):
         pointPen = glyph.getPointPen()
         self.drawPoints(pointPen)
         return glyph
-
+        
 # The following functions have been decoupled from the outlinerRoboFontExtension and
 # effectively de-parameterized, with built-in assumptions
 
-def calculate(glyph):
+def calculate(glyph, strokewidth):
     tickness = strokewidth
     contrast = 0
     contrastAngle = 0
@@ -607,30 +601,33 @@ def calculate(glyph):
     result = pen.getGlyph()
 
     return result
-
-
-def expandGlyph(glyph):
+        
+        
+def expandGlyph(glyph, strokewidth):
     defconGlyph = glyph
-    outline = calculate(defconGlyph)
+    outline = calculate(defconGlyph, strokewidth)
 
     glyph.clearContours()
     outline.drawPoints(glyph.getPointPen())
 
     glyph.round()
 
-def expandFont(targetfont):
+def expandFont(targetfont, strokewidth):
     font = targetfont
     for glyph in font:
-        expandGlyph(glyph)
+        expandGlyph(glyph, strokewidth)
 
-def doit(status) :
-    expandFont(infont)
-    infont.save(outfontpath)
+def doit(args):
+    infont = OpenFont(args.ifont)
+    outfont = args.ofont
+    # add try to catch bad input
+    strokewidth = int(args.thickness)
+    expandFont(infont, strokewidth)
+    infont.save(outfont)
+    
+    return infont
+    
+def cmd() : execute(None,doit,argspec) 
+if __name__ == "__main__": cmd()
 
-    return status
 
-scriptresult = doit("done")
-print scriptresult
-
-#def cmd() : execute("UFO",doit,argspec)
-#if __name__ == "__main__": cmd()
