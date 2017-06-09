@@ -150,7 +150,7 @@ _([Standard options](#standard-options) also apply)_
 
 Changes the graphite names within GDL files(s) based on mappings file(s). It can work on an individual file or on all the gdl/gdh files within a folder. It also updates postscript names in postscript() statements
 
-Two mappings files are required (NAMES and PSNAMES).  Optionally a second mapping file, NAMES2 can be supplied.
+Two mappings files are required (NAMES and PSNAMES).  Optionally a second GDL names mapping file, NAMES2 can be supplied.
 
 The mapping files are csv files of the format "`old name, new name`". It logs if any graphite names are in the GDL but not found in the mapping files.
 
@@ -241,7 +241,7 @@ If run with -r or \-\-reportonly it just reports what values would be updated.
 
 Look in UFOcopyMeta.py for a full list of metadata copied.  Note that only fontinfo.plist is updated; the target font is not normalized.
 
-Also UFOsyncMeta does not use Pysilfont's backup mechanism for fonts.
+Also UFOcopyMeta does not use Pysilfont's backup mechanism for fonts.
 
 ---
 ####  UFOexportAnchors
