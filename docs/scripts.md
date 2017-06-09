@@ -33,31 +33,28 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [UFOsetVersion](#ufosetversion) | Change all the version-related info in a UFO's fontinfo.plist |
 | [UFOsyncMeta](#ufosyncmeta) | Copy basic metadata from one member of a font family to other family members |
 
-
 ---
 #### CDconvFromXml
-Usage: ```CDconvFromXml input output```
+Usage: **`CDconvFromXml input output`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
 Convert composite definition file from XML format
 
-_This section is WIP!_
+_This section is Work In Progress!_
 
 - input                 Input file of CD in XML format
 - output                Output file of CD in single line format
 
-_[Return to table of scripts](#table-of-scripts)_
-
 ---
 #### CDconvToXml
-Usage: ```CDconvToXml [-p PARAMS] input output log```
+Usage: **`CDconvToXml [-p PARAMS] input output log`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] also apply)_
+_([Standard options](#standard-options) also apply)_
 
 Convert composite definition file from XML format
 
-_This section is WIP!_
+_This section is Work In Progress!_
 
   input                 Input file of CD in single line format
   output                Output file of CD in XML format
@@ -70,13 +67,11 @@ _This section is WIP!_
  Defaults    output              _out.xml
     log                 _log.txt
 
-_[Return to table of scripts](#table-of-scripts)_
-
 ---
 #### FFchangeGlyphNames 
-Usage: ```FFchangeGlyphNames [-i INPUT] [--reverse] ifont [ofont]```
+Usage: **`FFchangeGlyphNames [-i INPUT] [--reverse] ifont [ofont]`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-l LOG] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
 Update the glyph names in a ttf font based on csv file.
 
@@ -89,15 +84,13 @@ will update the glyph names in the font based on mapping file glyphmap.csv
 
 If \-\-reverse  is used, it change names in reverse.
 
-_[Return to table of scripts](#table-of-scripts)_
-
 ---
 ####  FFcopyGlyphs
-Usage: ```-i INPUT [-r RANGE] [--rangefile RANGEFILE] [-n NAME] [--namefile NAMEFILE] [-a] [-f] [-s SCALE] ifont [ofont]```
+Usage: **`FFcopyGlyphs -i INPUT [-r RANGE] [--rangefile RANGEFILE] [-n NAME] [--namefile NAMEFILE] [-a] [-f] [-s SCALE] ifont [ofont]`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
-_This section is WIP!_
+_This section is Work In Progress!_
 
 optional arguments:
 
@@ -117,33 +110,27 @@ optional arguments:
                         Scale glyphs by this factor
 ```
 
-_[Return to table of scripts](#table-of-scripts)_
-
 ---
 #### FFremoveAllOverlaps
-Usage: ```FFremoveAllOverlaps ifont [ofont]```
+Usage: **`FFremoveAllOverlaps ifont [ofont]`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
 Remove overlap on all glyphs in a ttf font
 
-_[Return to table of scripts](#table-of-scripts)_
-
 ---
 #### FTgrCompress
-Usage: ```FTgrCompress ifont [ofont]```
+Usage: **`FTgrCompress ifont [ofont]`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
 Compress Graphite tables in a font
 
-_[Return to table of scripts](#table-of-scripts)_
-
 ---
 #### FTMLcreateOdt
-Usage: ```FTMLcreateOdt [-f FONT] input [output]```
+Usage: **`FTMLcreateOdt [-f FONT] input [output]`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-l LOG] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
 This creates a LibreOffice writer document based on input test data in [Font Test Markup Language](https://github.com/silnrsi/ftml) format and font information specified with command line parameters.
 
@@ -155,19 +142,17 @@ FTMLcreateOdt -f "Andika New Basic" -f "AndikaNewBasic-Regular.ttf" test-ss.xml 
 
 If the font specified with the -f parameter contains a '.' it is assumed to be a file name, otherwise it is assumed to be the name of an installed font. In the former case, the font is embedded in the .odt document, in the latter case the font is expected to be installed on the machine that views the .odt document.
 
-_[Return to table of scripts](#table-of-scripts)_
-
 ---
 #### GDLchangeNames
-Usage: ```GDLchangeNames [-n NAMES] [--names2 [NAMES2]] [--psnames PSNAMES] input [output]```
+Usage: **`GDLchangeNames [-n NAMES] [--names2 [NAMES2]] [--psnames PSNAMES] input [output]`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-l LOG] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
 Changes the graphite names within GDL files(s) based on mappings file(s). It can work on an individual file or on all the gdl/gdh files within a folder. It also updates postscript names in postscript() statements
 
 Two mappings files are required (NAMES and PSNAMES).  Optionally a second mapping file, NAMES2 can be supplied.
 
-The mapping files are csv files of the format "```old name, new name```". It logs if any graphite names are in the GDL but not found in the mapping files.
+The mapping files are csv files of the format "`old name, new name`". It logs if any graphite names are in the GDL but not found in the mapping files.
 
 Example usage:
 
@@ -176,15 +161,13 @@ GDLchangeNames -n gdlmap.csv --psnames psnames.csv source/graphite
 ```
 will update all the .gdl and.gdh files within the source/graphite folder.
 
-_[Return to table of scripts](#table-of-scripts)_
-
 ---
 ####  UFOaddAnchors
-Usage: ```UFOaddAnchors [-i ANCHORINFO]  [-a] [-r {X,S,E,P,W,I,V}] ifont [ofont]```
+Usage: **`UFOaddAnchors [-i ANCHORINFO]  [-a] [-r {X,S,E,P,W,I,V}] ifont [ofont]`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-l LOG] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
-_This section is WIP!_
+_This section is Work In Progress!_
 
 Read anchor data from XML file and apply to UFO
 
@@ -197,16 +180,15 @@ optional arguments:
   -r {X,S,E,P,W,I,V}, --report {X,S,E,P,W,I,V}
                         Set reporting level for log file
 ```
-_[Return to table of scripts](#table-of-scripts)_
 
 ---
 
 ####  UFObuildComp
-Usage: ```UFObuildComp [-i CDFILE] [-a] [-f] [-r {X,S,E,P,W,I,V}] ifont [ofont]```
+Usage: **`UFObuildComp [-i CDFILE] [-a] [-f] [-r {X,S,E,P,W,I,V}] ifont [ofont]`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-l LOG] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
-_This section is WIP!_
+_This section is Work In Progress!_
 
 Read Composite Definitions and add glyphs to a UFO font
 
@@ -221,13 +203,11 @@ optional arguments:
                         Set reporting level for log
 ```
 
-_[Return to table of scripts](#table-of-scripts)_
-
 ---
 ####  UFOconvert
-usage: ```UFOconvert [-v VERSION] ifont [ofont]```
+Usage: **`UFOconvert [-v VERSION] ifont [ofont]`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-l LOG] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
 This converts UFO fonts from one version to another (such as UFO2 to UFO3), but if no version is specified it will simply normalize the font without converting it. _Note that most pysilfont scripts automatically output normalized UFOs, so UFOconvert is normally only needed after fonts have been processed by external font tools._
 
@@ -241,13 +221,11 @@ The normalization follows the [default behaviours](#link-to-be-set), but these c
 
 If you are a macOS user, see _pysilfont/actionsosx/README.txt_ to install an action that will enable you to run UFOconvert without using the command line.
 
-_[Return to table of scripts](#table-of-scripts)_
-
 ---
 ####  UFOcopyMeta
-usage: ```UFOcopyMeta [-r] fromfont tofont```
+Usage: **`UFOcopyMeta [-r] fromfont tofont`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-l LOG] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
 This copies selected fontlist.plist metadata (eg copyright, openTypeNameVersion, decender) between fonts in different (related) families. 
 
@@ -255,19 +233,21 @@ It is usually run against the master (regular) font in each family then data syn
 
 Example usage:
 
-```UFOcopyMeta GentiumPlus-Regular.ufo GentiumBookPlus-Bold```
+```
+UFOcopyMeta GentiumPlus-Regular.ufo GentiumBookPlus-Bold
+```
 
 If run with -r or \-\-reportonly it just reports what values would be updated.
 
 Look in UFOcopyMeta.py for a full list of metadata copied.  Note that only fontinfo.plist is updated; the target font is not normalized.
 
-_[Return to table of scripts](#table-of-scripts)_
+Also UFOsyncMeta does not use Pysilfont's backup mechanism for fonts.
 
 ---
 ####  UFOexportAnchors
-usage: ```UFOexportAnchors [-r {X,S,E,P,W,I,V}]  [-g] [-s] ifont [output]```
+Usage: **`UFOexportAnchors [-r {X,S,E,P,W,I,V}]  [-g] [-s] ifont [output]`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-l LOG] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
 This exports anchor data from a UFO font to an XML file. (An "anchor" is also called an "attachment point" which is sometimes abbreviated to "AP".)
 
@@ -283,90 +263,73 @@ If the command line includes
 - -s, then the glyph elements will be sorted by PSName attribute (rather than by GID attribute).
 - -u, then the UID attribute will include a "U+" prefix
 
-
-_[Return to table of scripts](#table-of-scripts)_
-
 ---
 ####  UFOexportPSnames
-usage: ```UFOexportPSnames [-o OUTPUT] [--nocomments] ifont```
+Usage: **`UFOexportPSnames [-o OUTPUT] [--nocomments] ifont`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-l LOG] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
-Export a mapping of glyph name to postscript name to a csv file, format "```glyphname,postscriptname```"
+Export a mapping of glyph name to postscript name to a csv file, format "glyphname,postscriptname"
 
 It includes comments at the start saying when it was run etc unless \-\-nocomments is specified
-
-_[Return to table of scripts](#table-of-scripts)_
 
 ---
 ####  UFOexportUnicodes
-usage: ```UFOexportUnicodes  [-o OUTPUT] [--nocomments] ifont```
+Usage: **`UFOexportUnicodes  [-o OUTPUT] [--nocomments] ifont`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-l LOG] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
-Export a mapping of glyph name to unicode to a csv file, format "```glyphname,unicode```" for glyphs that have a defined unicode. Does not support double-encoded glyphs.
+Export a mapping of glyph name to unicode to a csv file, format "glyphname,unicode" for glyphs that have a defined unicode. Does not support double-encoded glyphs.
 
 It includes comments at the start saying when it was run etc unless \-\-nocomments is specified
 
-_[Return to table of scripts](#table-of-scripts)_
-
 ---
 ####  UFOloadGlyphOrder
-usage: ```UFOloadGlyphOrder [--GlyphsApp] [-i INPUT] ifont [ofont]```
+Usage: **`UFOloadGlyphOrder [--GlyphsApp] [-i INPUT] ifont [ofont]`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-l LOG] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
 From the INPUT file, read an ordered list of glyph names (one per line) and load the list into public.glyphOrder in lib.plist to control the order of glyphs in generated TTF files.
 If \-\-GlyphsApp is specified, the glyph list is loaded into com.schriftgestaltung.glyphOrder instead, which
 controls of the glyph display order in GlyphsApp.
 
-_[Return to table of scripts](#table-of-scripts)_
-
 ---
 ####  UFOsetAssocFeat
-usage: ```UFOsetAssocFeat [-i INPUT] ifont [ofont]```
+Usage: **`UFOsetAssocFeat [-i INPUT] ifont [ofont]`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-l LOG] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
-Add associate feature info to  org.sil.assocFeatureValue glif lib based on a csv file, format "```glyphname,featurename[,featurevalue]```"
-
-_[Return to table of scripts](#table-of-scripts)_
+Add associate feature info to  org.sil.assocFeatureValue glif lib based on a csv file, format "glyphname,featurename[,featurevalue]"
 
 ---
 ####  UFOsetAssocUIDs
-usage: ```UFOsetAssocUIDs [-i INPUT] ifont [ofont]```
+Usage: **`UFOsetAssocUIDs [-i INPUT] ifont [ofont]`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-l LOG] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
-Add associate UID info to org.sil.assocUIDs in glif lib based on a csv file - could be one value for variant UIDs and multiple for ligatures,   format "```glyphname,UID[,UID]```"
-
-_[Return to table of scripts](#table-of-scripts)_
+Add associate UID info to org.sil.assocUIDs in glif lib based on a csv file - could be one value for variant UIDs and multiple for ligatures,   format "glyphname,UID[,UID]"
 
 ---
 ####  UFOsetPSnames
-usage: ```UFOsetPSnames [-i INPUT] ifont [ofont]```
+Usage: **`UFOsetPSnames [-i INPUT] ifont [ofont]`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-l LOG] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
-Add public.postscriptname to glif lib based on a csv file,  format "```glyphname,postscriptname```"
-
-_[Return to table of scripts](#table-of-scripts)_
+Add public.postscriptname to glif lib based on a csv file,  format "glyphname,postscriptname"
 
 ---
 ####  UFOsetUnicodes
-usage: ```UFOsetUnicodes [-i INPUT] ifont [ofont]```
+Usage: **`UFOsetUnicodes [-i INPUT] ifont [ofont]`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-l LOG] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
-Set the unicodes of glyphs in a font based on a csv file,  format "```glyphname,UID```". Note that this will not currently remove any unicode values that already exist in unlisted glyphs
-
-_[Return to table of scripts](#table-of-scripts)_
+Set the unicodes of glyphs in a font based on a csv file,  format "glyphname,UID". Note that this will not currently remove any unicode values that already exist in unlisted glyphs
 
 ---
 ####  UFOsetVersion
-usage: ```UFOsetVersion font [newversion]```
+Usage: **`UFOsetVersion font [newversion]`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-l LOG] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
 This updates the various font version fields based on 'newversion' supplied which may be:
 
@@ -385,7 +348,9 @@ Incrementing will fail if either the openTypeNameVersion is not formatted correc
 
 Examples of usage:
 
-```UFOsetVersion font.ufo "1.423"```
+```
+UFOsetVersion font.ufo "1.423"
+```
 
 will set:
 
@@ -393,17 +358,15 @@ will set:
 - versionMajor to 1
 - versionMinor to 423
  
-```UFOsetVersion font.ufo +1```
+`UFOsetVersion font.ufo +1`
  
 If values were originally as in the first example, openTypeNameVersion will be changed to "Version 1.424" and versionMinor to 424
  
-_[Return to table of scripts](#table-of-scripts)_
-
 ---
 ####  UFOsyncMeta
-usage: ```UFOsyncMeta [-s] [-m [MASTER]] [-r] [-n] [--normalize] ifont```
+Usage: **`UFOsyncMeta [-s] [-m [MASTER]] [-r] [-n] [--normalize] ifont`**
 
-_([Standard options](#standard-options) [-h] [-d] [-q] [-l LOG] [-p PARAMS] also apply)_
+_([Standard options](#standard-options) also apply)_
 
 Verifies and synchronises fontinfo.plist metatdata across a family of fonts.  By default it uses the regular font as the master and updates any other fonts that exist assuming standard name endings of -Regular, -Italic, -Bold and -BoldItalic.  Optionally a single font file can be synced against any other font as master, regardless of file naming.
 
@@ -423,22 +386,21 @@ UFOsyncMeta -s font-Italic.ufo -m otherfont.ufo
 ```
 The first will sync font-Italic against font-Regular and the second against otherfont.
 
-Look in UFOsyncMeta.py for a full details of metadata actions.  Note that by default only fontinfo.plist is updated so fonts are not normalized.  Use \-\-normalize to additionally normalize all fonts in the family.
+Look in UFOsyncMeta.py for a full details of metadata actions.  
+Note that by default only fontinfo.plist is updated so fonts are not normalized.  Use \-\-normalize to additionally normalize all fonts in the family.
 
-_[Return to table of scripts](#table-of-scripts)_
+Also UFOsyncMeta does not use Pysilfont's backup mechanism for fonts.
 
 ---
 #### Standard Options
 
 Will be link to details of these, probably in another document
 
-_[Return to table of scripts](#table-of-scripts)_
+---
 
 #### Link to be set
 
 Will be link to details of these, probably in another document
-
-_[Return to table of scripts](#table-of-scripts)_
 
 ---
 
@@ -448,4 +410,4 @@ When Pysilfont is downloaded, there are example scripts in pysilfont/examples.  
 
 Some are documented below; for others just read the scripts!
 
-_This section is WIP!_
+_This section is Work In Progress!_
