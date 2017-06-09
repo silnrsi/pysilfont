@@ -115,8 +115,8 @@ def doit(args) :
                         infont.logger.log("The AP '" + diacAP + "' does not exist on diacritic glyph " + currglyph, "E")
                     else:
                         i = cganc.index(diacAP)
-                        diacAPx = int(cg['anchor'][i].element.get('x'))
-                        diacAPy = int(cg['anchor'][i].element.get('y'))
+                        diacAPx = int(float(cg['anchor'][i].element.get('x')))
+                        diacAPy = int(float(cg['anchor'][i].element.get('y')))
                 else:
                     infont.logger.log("No AP specified for diacritic " + currglyph, "E")
                 if baseAP is not None: # find base character Attachment Point in targetglyph
@@ -140,7 +140,9 @@ def doit(args) :
             componentlist.append( componentdic )
 
             # Find advance width of currglyph and add to xadvance
-            xadvance += int(cg['advance'].element.get('width'))
+            cgadvance = cg['advance'] if 'advance' in cg else None
+            if cgadvance is not None and cgadvance.element.get('width') is not None :
+                xadvance += int(float(cgadvance.element.get('width')))
 
             # Move anchor information to targetglyphanchors
             for a in cg['anchor']:
@@ -226,5 +228,5 @@ def doit(args) :
     # Return changed font and let execute() write it out
     return infont
 
-def cmd() : execute("UFO",doit,argspec) 
+def cmd() : execute("UFO",doit,argspec)
 if __name__ == "__main__": cmd()

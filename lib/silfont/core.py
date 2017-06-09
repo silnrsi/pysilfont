@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 'General classes and functions for use in pysilfont scripts'
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2014 SIL International (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2014-2017 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 __version__ = '1.1.2'
@@ -209,7 +209,6 @@ def execute(tool, fn, argspec, chain = None) :
     #   -l  opens log file and also creates a logger function to write to the log file
     #   -p  includes loglevel and scrlevel settings for logger
     #       for UFOlib scripts, also includes all font.outparams keys
-    #   -v  for UFOlib scripts this sets font.outparams(UFOversion)
     # infont and returnfont are used when chaining calls to execute together, passing ifont on without writing to disk
 
     params = chain["params"] if chain else parameters()
@@ -244,18 +243,15 @@ def execute(tool, fn, argspec, chain = None) :
     standardargs = [
             ('-d','--defaults', {'help': 'Display help with info on default values', 'action': 'store_true'}, {}),
             ('-q','--quiet',{'help': 'Quiet mode - only display errors', 'action': 'store_true'}, {}),
+            ('-l','--log',{'help': 'Log file'}, {'type': 'outfile'}),
             ('-p','--params',{'help': 'Other parameters','action': 'append'}, {'type': 'optiondict'})]
-    standardargsindex = ['defaults','quiet','params']
-    if tool == "UFO":
-        standardargs.extend([('-v','--version',{'help': 'UFO version to output'},{})])
-        standardargsindex.extend(['version'])
+    standardargsindex = ['defaults','quiet','log','params']
 
     suppliedargs = []
     for a in argspec :
         argn = a[:-2][-1] # [:-2] will give either 1 or 2, the last of which is the full argument name
         if argn[0:2] == "--" : argn = argn[2:] # Will start with -- for options
         suppliedargs.append(argn)
-
     for i,arg in enumerate(standardargsindex) :
         if arg not in suppliedargs: argspec.append(standardargs[i])
 
@@ -342,9 +338,6 @@ def execute(tool, fn, argspec, chain = None) :
                     if x[1] == "\\t" : x[1] = "\t" # Special handling for tab characters
                     clparams[x[0]] = x[1]
 
-        if tool == "UFO" and 'version' in args.__dict__:
-            if args.version : clparams["UFOversion"] = args.version
-
         args.params = clparams
         params.addset("command line", "command line", inputdict = clparams)
         if not quiet and "scrlevel" in params.sets["command line"] : logger.scrlevel = params.sets["command line"]["scrlevel"]
@@ -380,13 +373,16 @@ def execute(tool, fn, argspec, chain = None) :
                         base = dbase
                 if not ext and dext : ext = dext
                 logname = os.path.join(path,base+ext)
-            if not quiet : logger.log( 'Opening log file for output: '+logname, "P")
-            try :
-                logfile=open(logname,"w")
-            except Exception as e :
-                print e
-                sys.exit(1)
-            args.log = logfile
+            if logname == "" :
+                logfile = None
+            else :
+                if not quiet : logger.log( 'Opening log file for output: '+logname, "P")
+                try :
+                    logfile=open(logname,"w")
+                except Exception as e :
+                    print e
+                    sys.exit(1)
+                args.log = logfile
         # Set up logger details
         logger.loglevel = execparams['loglevel'].upper()
         if not quiet : logger.scrlevel = execparams['scrlevel'].upper()
