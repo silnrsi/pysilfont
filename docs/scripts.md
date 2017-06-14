@@ -23,8 +23,8 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [UFOconvert](#ufoconvert) | Normalize a UFO and optionally converts it between UFO2 and UFO3 versions |
 | [UFOcopyMeta](#ufocopymeta) | Copy basic metadata from one UFO to another, for fonts in related families |
 | [UFOexportAnchors](#ufoexportanchors) | Export UFO anchor data to a separate XML file |
-| [UFOexportPSnames](#ufoexportpsnames) | Export a map of gylph name to PS name to a csv file |
-| [UFOexportUnicodes](#ufoexportunicodes) | Export a map of gylph name to unicode value to a csv file |
+| [UFOexportPSnames](#ufoexportpsnames) | Export a map of glyph name to PS name to a csv file |
+| [UFOexportUnicodes](#ufoexportunicodes) | Export a map of glyph name to unicode value to a csv file |
 | [UFOloadGlyphOrder](#ufoloadglyphorder) | Load glyph order data into public.glyphOrder based on a text file |
 | [UFOsetAssocFeat](#ufosetassocfeat) | Add associate feature info to glif lib based on a csv file |
 | [UFOsetAssocUIDs](#ufosetassocuids) | Add associate UID info to glif lib based on a csv file |
