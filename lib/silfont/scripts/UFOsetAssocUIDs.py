@@ -7,6 +7,7 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'David Raymond'
 
 from silfont.core import execute
+from xml.etree import cElementTree as ET
 
 suffix = "_AssocUIDs"
 argspec = [
