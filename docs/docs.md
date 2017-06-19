@@ -4,43 +4,70 @@
 
 Pysilfont is a collection of tools to support font development, with an emphasis on [UFO](#ufo-support-in-pysilfont)-based workflows.
 
-In addition to the UFO utilities, there is also support for testing using [FTML](#font-test-markup-language) and (composite definitions - how to phrase???).  
+In addition to the UFO utilities, there is also support for testing using [FTML](#font-test-markup-language) and [Composite Definitions](#linktobeset).
 
-(Reference to Font Development Best Practices)
+Some scripts are written specifically to fit in with the approaches recommended in [Font Development Best Practices](https://silnrsi.github.io/FDBP/en-US/index.html)
 
 # Documentation
 
 Documentation is held in the following documents:
 
-- docs.md: This document with summary oy pysilfont, particularly with users in mind
-- [scripts.md](scripts.md): List of all command line tools and scripts with usage instructions
+- docs.md: This document - the main document for users
+- [scripts.md](scripts.md): User documentation for all command-line tools and other scripts
 - [technical.md](technical.md): Technical details for those wanting write scripts or other development tasks
 - Other sub-documents, with links from the above
 
-Installation instructions are in [README.md](README.md)
+Installation instructions are in [README.md](../README.md)
 
-# Introduction
+# Scripts and commands
+Many Pysilfont scripts are installed to be used as command-line tools, and these are all listed, with usage instructions, in [scripts.md](scripts.md).  This also has details of some other example python scripts.
 
-Most scripts are written to using a framework designed to give users a standard interface and simplify script writing.
+All scripts work using a standard framework designed to give users a consistent interface across scripts, and common features of these scripts are described in the following sections, so the documentation below needs to be read in conjunction with that in scripts.md.
 
+## Standard command line options
+
+All scripts support these:
+
+- `-h, --help`
+  - Basic usage help for the command
+- `-d, --defaults`
+  - Display -h info with added info about default values
+- `-q, --quiet`
+  - Quiet mode - only display errors.  See reporting below
+- `-l LOG, --log LOG`
+  - Log file name (if not using default name)
+- `-p PARAMS, --params PARAMS`
+  - Other [parameters](#parameters)
+
+The individual script documentation in scripts.md indicates which apply
+
+## Default values
+
+Most scripts have defaults for file names and other arguments - except for the main file the script is running against.
+
+### Font/file name defaults
+
+Once the initial input file (eg input font) has been given, most other font and file names will have defaults based on those.
+
+This applies to other input font names, output font names, input file names and output file names and is done to minimise retyping repeated information like the path the files reside in.   For example, simply using:
+
+	psfsetpsnames path/font.ufo
+	
+will:
+
+(remainder to be written)
+
+## Reporting
+
+## Backups for fonts
+
+# Parameters
 
 # UFO support in Pysilfont
 
-With some limitations, all UFO scripts in Pysilfont should work with UFO2 or UFO3 source files - and can convert from one format to the other.
-
-In addition, most scripts will output UFOs in a normalized form, designed to work with source control systems. Most aspects of the normalization can be set by [parameters](parameters.md), so projects are not forced to use Pysilfont’s default normalization.
-
-## Known limitations
-
-The following are known limitations that will be addressed in the future:
-
-- UFO 3 specific folders (data and images) are not copied
-- Converting from UFO 3 to UFO 2 only handles data that has a place in UFO 2, but does include converting UFO 3 anchors to the standard way of handling them in UFO 2
-- If a project uses non-standard files within the UFO folder, they are deleted
-
 # Font Test Markup Language
 
-FTML is described in the [FTML github project](https://github.com/silnrsi/ftml). Pysilfont includes some python scripts for working with FTML, and a python library so that new scripts can be written to read and write FTML files.
+# Composite definitions
 
 # Contributing to the project
 
