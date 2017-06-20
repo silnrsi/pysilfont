@@ -34,6 +34,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfsyncmeta](#psfsyncmeta) | Copy basic metadata from one member of a font family to other family members |
 | [psfexpandstroke](#psfexpandstroke.py) | Expand an unclosed UFO stroke font into monoline forms |
 | [psfmakewoffmetadata](#psfmakewoffmetadata) | Make the WOFF meatadata xml file based on input UFO and FONTLOG.txt |
+| [psfufo2ttf](#psfufo2ttf) | Generate a ttf file without OpenType tables from a UFO |
 
 ---
 #### psfxml2compdef
@@ -393,22 +394,38 @@ Note that by default only fontinfo.plist is updated so fonts are not normalized.
 
 Also psfsyncmeta does not use Pysilfont's backup mechanism for fonts.
 
+---
 #### psfexpandstroke
 
 Expand an unclosed UFO stroke font into monoline forms with a fixed width
 
 To be documented...
 
+---
 #### psfmakewoffmetadata
+Usage: **`psfmakewoffmetadata -n PRIMARYFONTNAME -i ORGID [-f FONTLOG] font`**
+
+
+Make the WOFF meatadata xml file based on input UFO and FONTLOG.txt.
+
+The primary font name and orgid need to be supplied on the command line.  By default it reads FONTLOG.txt from the folder it is run in and outputs to *primaryfontname*-WOFF-metadata.xml.
+
+It constructs the information needed from: 
+
+- The supplied primary font name and orgid
+- Information within the UFO
+- Information within the FONTLOG.txt
+
+FONTLOG.txt needs to be formatted in a standard way.  The description in the xml file is created using the contents of the font log, starting after the "Basic Font Information" header and finishing before the "Information for Contributers" header (if present) or the Acknowledgements header otherwise.  The credits are created from the N:, W:, D: and E: sets of values in the acknowledgements section, with one credit created from each set.  The E: is not used, but needs to be present.
+
+---
+#### psfufo2ttf
+Usage: **`psfufo2ttffont ...`**
 
 To be documented
 
 ---
-#### Standard Options
 
-Will be link to details of these, probably in another document
-
----
 
 #### Link to be set
 
