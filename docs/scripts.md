@@ -403,20 +403,26 @@ To be documented...
 
 ---
 #### psfmakewoffmetadata
-Usage: **`psfmakewoffmetadata -n PRIMARYFONTNAME -i ORGID [-f FONTLOG] font`**
+Usage: **`psfmakewoffmetadata -n PRIMARYFONTNAME -i ORGID [-f FONTLOG] fontfile.ufo`**
 
 
 Make the WOFF meatadata xml file based on input UFO and FONTLOG.txt.
 
-The primary font name and orgid need to be supplied on the command line.  By default it reads FONTLOG.txt from the folder it is run in and outputs to *primaryfontname*-WOFF-metadata.xml.
+The primary font name and orgid need to be supplied on the command line. By default it reads FONTLOG.txt from the folder it is run in and outputs to *primaryfontname*-WOFF-metadata.xml.
+
+Example:
+
+```
+psfmakewoffmetadata -n "Nokyung" -i "org.sil.fonts" source/Nokyung-Regular.ufo
+```
 
 It constructs the information needed from: 
 
-- The supplied primary font name and orgid
-- Information within the UFO
+- The supplied orgid
+- Information within the primary font file
 - Information within the FONTLOG.txt
 
-FONTLOG.txt needs to be formatted in a standard way.  The description in the xml file is created using the contents of the font log, starting after the "Basic Font Information" header and finishing before the "Information for Contributers" header (if present) or the Acknowledgements header otherwise.  The credits are created from the N:, W:, D: and E: sets of values in the acknowledgements section, with one credit created from each set.  The E: is not used, but needs to be present.
+FONTLOG.txt needs to be formatted according to the pattern used for most SIL font packages. The description in the xml file is created using the contents of the FONTLOG, starting after the "Basic Font Information" header and finishing before the "Information for Contributors" header (if present) or the "Acknowledgements" header otherwise. The credits are created from the N:, W:, D: and E: sets of values in the acknowledgements section, with one credit created from each set. The E: is not used, but needs to be present.
 
 ---
 #### psfufo2ttf
