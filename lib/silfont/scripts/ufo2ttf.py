@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-'Convert a UFO into a ttf file without OpenType tables'
+'Generate a ttf file without OpenType tables from a UFO'
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2017 SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
@@ -14,35 +14,34 @@ __author__ = 'Alan Ward'
 # you can install fontmake in a virtual environment and run this script there
 
 # TODO: rename according to pysilfont conventions
-# TODO: use pysilfont framework
-# TODO: improve command line parsing
 
-import sys
+from silfont.core import execute
 import defcon, ufo2ft.outlineCompiler
 
-try:
-    ufo_fn = sys.argv[1]
-    ttf_fn = sys.argv[2]
-except:
-    print("ufo2ttf <ufo> <output ttf>")
-    sys.exit()
+argspec = [
+    ('iufo', {'help': 'Input UFO folder'}, {}),
+    ('ottf', {'help': 'Output ttf file name'}, {})]
 
 PUBLIC_PREFIX = 'public.'
 
-ufo = defcon.Font(ufo_fn)
+def doit(args):
+    ufo = defcon.Font(args.iufo)
 
-# print('Converting UFO to ttf and compiling fea')
-# font = ufo2ft.compileTTF(ufo,
-#     glyphOrder = ufo.lib.get(PUBLIC_PREFIX + 'glyphOrder'),
-#     useProductionNames = False)
+#    args.logger.log('Converting UFO to ttf and compiling fea')
+#    font = ufo2ft.compileTTF(ufo,
+#        glyphOrder = ufo.lib.get(PUBLIC_PREFIX + 'glyphOrder'),
+#        useProductionNames = False)
 
-print('Converting UFO to ttf without OT')
-outlineCompiler = ufo2ft.outlineCompiler.OutlineTTFCompiler(ufo,
-    glyphOrder=ufo.lib.get(PUBLIC_PREFIX + 'glyphOrder'),
-    convertCubics=True)
-font = outlineCompiler.compile()
+    args.logger.log('Converting UFO to ttf without OT', 'P')
+    outlineCompiler = ufo2ft.outlineCompiler.OutlineTTFCompiler(ufo,
+        glyphOrder=ufo.lib.get(PUBLIC_PREFIX + 'glyphOrder'),
+        convertCubics=True)
+    font = outlineCompiler.compile()
 
-print('Saving ttf file')
-font.save(ttf_fn)
+    args.logger.log('Saving ttf file', 'P')
+    font.save(args.ottf)
 
-print('Done')
+    args.logger.log('Done', 'P')
+
+def cmd(): execute(None, doit, argspec)
+if __name__ == '__main__': cmd()
