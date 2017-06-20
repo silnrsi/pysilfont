@@ -8,13 +8,6 @@ __author__ = 'Alan Ward'
 # Compared to fontmake it does not decompose glyphs or remove overlaps 
 # and curve conversion seems to happen in a different way.
 
-# The easiest way to install all the needed libraries is to install fontmake.
-#   [sudo] pip install fontmake
-# If you want to isolate all the libraries fontmake needs,
-# you can install fontmake in a virtual environment and run this script there
-
-# TODO: rename according to pysilfont conventions
-
 from silfont.core import execute
 import defcon, ufo2ft.outlineCompiler
 
