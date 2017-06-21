@@ -51,11 +51,44 @@ Once the initial input file (eg input font) has been given, most other font and 
 
 This applies to other input font names, output font names, input file names and output file names and is done to minimise retyping repeated information like the path the files reside in.   For example, simply using:
 
-	psfsetpsnames path/font.ufo
+```
+psfsetpsnames path/font.ufo
+```
 	
 will:
 
-(remainder to be written)
+- open (and update)	`/path/font.ufo`
+- backup the font to `/path/backups/font.ufo.nnn~`
+- read its input from `/path/font_psnames.csv`
+- write its log to `/path/font_psnames.log`
+
+If only part of a file name is supplied, other parts will default. If only "test" is supplied for the output font name, the font would be output to `/path/test.ufo`.
+
+If a full file name is supplied, but no path, the the current working directory will be used, so if “test.ufo” is supplied it won’t have `/path/` added.
+
+### Other defaults
+
+Other parameters will just have standard default values.
+
+### Displaying defaults for a command
+
+Use the `-d` option to see what defaults are for a given command. For example,
+
+```
+UFOsetPSnames -d
+```
+
+will output its help text with the following appended:
+
+```
+Defaults for parameters/options
+
+  Font/file names
+    -i                  _PSnames.csv
+    -l                  _PSnames.log
+```
+
+If the default value starts with “_” (as above) then the input file name will be prepended to the default value; otherwise just the default value will be used.
 
 ## Reporting
 
@@ -72,5 +105,3 @@ will:
 # Contributing to the project
 
 Pysilfont is developed and maintained by SIL International’s [Non-Roman Script Initiative team](http://scripts.sil.org), though contributions from anyone are welcome. Pysilfont is copyright (c) 2014-2017 [SIL International](http://www.sil.org) and licensed under the [MIT license](http://en.wikipedia.org/wiki/MIT_License). The project is hosted at [https://github.com/silnrsi/pysilfont](https://github.com/silnrsi/pysilfont).
-
-
