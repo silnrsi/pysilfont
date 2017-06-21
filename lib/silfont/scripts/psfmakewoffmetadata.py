@@ -6,10 +6,7 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'David Raymond'
 
 from silfont.core import execute
-#import silfont.etutil as ETU
-#from xml.etree import cElementTree as ET
-#from xml.dom import minidom
-import re
+import re,os
 
 argspec = [
     ('font',{'help': 'Source font file'}, {'type': 'infont'}),
@@ -25,7 +22,7 @@ def doit(args) :
     fontlog = args.fontlog
     logger = args.logger
 
-    # ****** Parse the fontlog file
+    # Parse the fontlog file
     (section,match) = readuntil(fontlog,("Basic Font Information",)) # Skip until start of "Basic Font Information" section
     if match == None : logger.log("No 'Basic Font Information' section in fontlog", "S")
     (description,match) = readuntil(fontlog,("Information for C","Acknowledgements")) # Desciption ends when first of these sections is found
@@ -59,7 +56,7 @@ def doit(args) :
                 nexttype = "N"
     if credits == [] : logger.log("No credits found in fontlog", "S")
 
-    # ****** Find & process info required in the UFO
+    # Find & process info required in the UFO
 
     fi = font.fontinfo
 
@@ -78,19 +75,22 @@ def doit(args) :
     # Split the license into shorter lines, breaking on spaces.
     license = []
     for line in ufofields["openTypeNameLicense"].splitlines() :
-        line = line.strip()
-        while len(line) > 74 : ## Value of 74 might need adjusting!
-            words = line[0:74].split(' ')
-            l = ' '.join(words[0:len(words)-1])
-            license.append(l)
-            line = line[len(l):].strip()
+#        line = line.strip()
+#        while len(line) > 74 : ## Value of 74 might need adjusting!
+#            words = line[0:74].split(' ')
+#            l = ' '.join(words[0:len(words)-1])
+#            license.append(l)
+#            line = line[len(l):].strip()
         license.append(line)
 
-    filename = pfn + "-WOFF-metadata.xml"
+    # Construct output file name
+    (folder, ufoname) = os.path.split(font.ufodir)
+    filename = os.path.join(folder, pfn + "-WOFF-metadata.xml")
     try :
         file = open(filename,"w")
     except Exception as e :
         logger.log("Unable to open " + filename + " for writing:\n" + str(e), "S")
+    logger.log("Writing to :" + filename, "P")
 
     file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
     file.write('<metadata version="' + version + '">\n')
@@ -108,13 +108,13 @@ def doit(args) :
 
     file.write('  <description>\n')
     file.write('    <text lang="en">\n')
-    for line in description : file.write('      ' + line + '\n')
+    for line in description : file.write('      ' + charprotect(line) + '\n')
     file.write('    </text>\n')
     file.write('  </description>\n')
 
     file.write('  <license url="http://scripts.sil.org/OFL" id="org.sil.ofl.1.1">\n')
     file.write('    <text lang="en">\n')
-    for line in license : file.write('      ' + line + '\n')
+    for line in license : file.write('      ' + charprotect(line) + '\n')
     file.write('    </text>\n')
     file.write('  </license>\n')
 
@@ -125,47 +125,9 @@ def doit(args) :
     file.write('  <trademark>\n')
     file.write('    <text lang="en">' + ufofields["trademark"] + '</text>\n')
     file.write('  </trademark>\n')
-
-
-
-
-
-
-
+    file.write('</metadata>')
 
     file.close()
-
-
-    # Create the XML item and write to disk
-
-    #woffxml = ET.Element('metadata', version = version)
-    #ET.SubElement(woffxml, 'uniqueid', id = orgid + "." + pfn + "." + version)
-    #ET.SubElement(woffxml, 'vendor', name = ufofields["openTypeNameManufacturer"])
-    #credelem = ET.SubElement(woffxml,"credits")
-    #for credit in credits : ET.SubElement(credelem,'credit', name = credit[0], url = credit[1], role = credit[2])
-    #descelem = ET.SubElement(woffxml,"description")
-    #desctext = ET.SubElement(descelem, 'text', lang = "en")
-    #desctext.text = description
-
-    #attributeOrder = ETU.makeAttribOrder(["name","url","role"])
-    #etwobj=ETU.ETWriter(woffxml, attributeOrder=attributeOrder)
-
-
-    #xmlstr = minidom.parseString(ET.tostring(woffxml)).toprettyxml(indent="  ")
-    #print xmlstr
-
-    #filename = pfn + "-WOFF-metadata.xml"
-    #ET.ElementTree(woffxml).write(filename)
-    #try :
-    #    woffxml.write(filename)
-    #except Exception as e :
-    #    print e
-    #    logger.log("Unable to open " + filename + " for writing: " + str(e), "S")
-
-    #etwobj.serialize_xml(file.write)
-
-    #print ET.tostring(woffxml)
-
 
 def readuntil(file,texts) : # Read through file until line is in text.  Return section up to there and the text matched
     skip = True
@@ -185,6 +147,12 @@ def readuntil(file,texts) : # Read through file until line is in text.  Return s
             section.append(line)
     while section[-1] == "" : section.pop() # Strip blank lines at end
     return (section, match)
+
+def charprotect(txt) : # Switch special characters in text to use &...; format
+    txt = re.sub(r'&','&amp;',txt)
+    txt = re.sub(r'<','&lt;',txt)
+    txt = re.sub(r'>','&gt;',txt)
+    return txt
 
 def cmd() : execute("UFO",doit,argspec)
 if __name__ == "__main__": cmd()
