@@ -31,29 +31,27 @@ def doit(args) :
     (acksection,match) = readuntil(fontlog,("No match needed!!",))
 
     credits = []
-    name = ""
-    nexttype = "N"
+    credit = {}
+    type = ""
     for line in acksection :
-        match = re.match("^([NEWD]): (.*)",line)
-        if match is None:
-            if nexttype == "E" : name = name + line # Allow for name to be multiple names spread over multiple lines
-        else :
-            type = match.group(1)
-            text = match.group(2)
-            # Assumes all three exist in file in the order NWD
-            if type <> nexttype : logger.log("Credit records in font log not in order N,E,W,D", "S")
-            if type == "N" :
-                name = text
-                nexttype = "E"
-            elif type == "E" :
-                nexttype = "W"
-            elif type == "W" :
-                url = text
-                nexttype = "D"
+        if line == "" :
+            if type != "" : # Must be at the end of a credit section
+                if "N" in credit :
+                    credits.append(credit)
+                else :
+                    logger.log("Credit section found with no N: entry", "E")
+            credit = {}
+            type = ""
+        else:
+            match = re.match("^([NEWD]): (.*)",line)
+            if match is None :
+                if type == "N" : credit["N"] = credit["N"] + line # Name entries can be multiple lines
             else :
-                designer = text
-                credits.append((name,url,designer))
-                nexttype = "N"
+                type = match.group(1)
+                if type in credit :
+                    logger.log("Multiple " + type + " entries found in a credit section", "E")
+                else :
+                    credit[type] = match.group(2)
     if credits == [] : logger.log("No credits found in fontlog", "S")
 
     # Find & process info required in the UFO
@@ -100,9 +98,9 @@ def doit(args) :
     file.write('  <credits>\n')
     for credit in credits :
         file.write('    <credit>\n')
-        file.write('      name="' + credit[0] + '"\n')
-        file.write('      url="' + credit[1] + '"\n')
-        file.write('      role="' + credit[2] + '"\n')
+        file.write('      name="' + credit["N"] + '"\n')
+        if "W" in credit : file.write('      url="' + credit["W"] + '"\n')
+        if "D" in credit : file.write('      role="' + credit["D"] + '"\n')
         file.write('    </credit>\n')
     file.write('  </credits>\n')
 
