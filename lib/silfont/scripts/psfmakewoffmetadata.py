@@ -91,7 +91,7 @@ def doit(args) :
     logger.log("Writing to :" + filename, "P")
 
     file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-    file.write('<metadata version="' + version + '">\n')
+    file.write('<metadata version="1.0">\n')
     file.write('  <uniqueid id="' + orgid + '.' + pfn + '.' + version + '" />\n')
     file.write('  <vendor name="' +  ufofields["openTypeNameManufacturer"] + '" url="' + ufofields["openTypeNameManufacturerURL"] + '" />\n')
 
