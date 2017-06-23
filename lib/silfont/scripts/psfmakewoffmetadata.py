@@ -97,11 +97,11 @@ def doit(args) :
 
     file.write('  <credits>\n')
     for credit in credits :
-        file.write('    <credit>\n')
+        file.write('    <credit\n')
         file.write('      name="' + credit["N"] + '"\n')
         if "W" in credit : file.write('      url="' + credit["W"] + '"\n')
         if "D" in credit : file.write('      role="' + credit["D"] + '"\n')
-        file.write('    </credit>\n')
+        file.write('    />\n')
     file.write('  </credits>\n')
 
     file.write('  <description>\n')
