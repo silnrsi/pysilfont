@@ -32,7 +32,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfsetunicodes](#psfsetunicodes) | Set unicode values for a glif based on a csv file |
 | [psfsetversion](#psfsetversion) | Change all the version-related info in a UFO's fontinfo.plist |
 | [psfsyncmeta](#psfsyncmeta) | Copy basic metadata from one member of a font family to other family members |
-| [psfexpandstroke](#psfexpandstroke.py) | Expand an unclosed UFO stroke font into monoline forms |
+| [psfexpandstroke](#psfexpandstroke) | Expand an unclosed UFO stroke font into monoline forms |
 | [psfmakewoffmetadata](#psfmakewoffmetadata) | Make the WOFF meatadata xml file based on input UFO and FONTLOG.txt |
 | [psfufo2ttf](#psfufo2ttf) | Generate a ttf file without OpenType tables from a UFO |
 
