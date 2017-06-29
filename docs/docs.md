@@ -2,7 +2,7 @@
 
 Pysilfont is a collection of tools to support font development, with an emphasis on [UFO](#ufo-support-in-pysilfont)-based workflows.
 
-In addition to the UFO utilities, there is also support for testing using [FTML](#font-test-markup-language) and [Composite Definitions](#composite definitions).
+In addition to the UFO utilities, there is also support for testing using [FTML](#font-test-markup-language) and [Composite Definitions](#composite-definitions).
 
 Some scripts are written specifically to fit in with the approaches recommended in [Font Development Best Practices](https://silnrsi.github.io/FDBP/en-US/index.html)
 
@@ -133,11 +133,11 @@ Note that other scripts also normalize, so psfnormalize is usually only needed a
 ## Normalization
 Default normalization behaviours include:
 - XML formatting
-- - Use 2 spaces as indents
-- - Don’t indent the <dict> for plists
-- - Sort all <dicts>s in ascending key order
-- - Where values can be “integer or float”, store integer values as <integer>
-- - Limit <real> precision to 6
+  - Use 2 spaces as indents
+  - Don’t indent the <dict> for plists
+  - Sort all <dicts>s in ascending key order
+  - Where values can be “integer or float”, store integer values as <integer>
+  - Limit <real> precision to 6
 - glif file names - use the UFO 3 suggested algorithm
 - order glif elements and attributes in the order they are described in the UFO spec
 
