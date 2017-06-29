@@ -138,7 +138,7 @@ Changes the graphite names within GDL files(s) based on mappings file(s). It can
 
 Two mappings files are required (NAMES and PSNAMES).  Optionally a second GDL names mapping file, NAMES2 can be supplied.
 
-The mapping files are csv files of the format "`old name, new name`". It logs if any graphite names are in the GDL but not found in the mapping files.
+The mapping files are csv files of the format `"old name,new name"`. It logs if any graphite names are in the GDL but not found in the mapping files.
 
 Example usage:
 
@@ -293,7 +293,7 @@ Usage: **`psfnormalize [-v VERSION] ifont [ofont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-This converts UFO fonts from one version to another (such as UFO2 to UFO3), but if no version is specified it will simply normalize the font without converting it. _Note that most pysilfont scripts automatically output normalized UFOs, so psfnormalize is normally only needed after fonts have been processed by external font tools._
+This normalizes a UFO font (and optionally converts from one version to another if -v is specified). _Note that most pysilfont scripts automatically output normalized UFOs, so psfnormalize is normally only needed after fonts have been processed by external font tools._
 
 Example that normalizes the named font:
 
@@ -301,7 +301,7 @@ Example that normalizes the named font:
 psfnormalize Nokyung-Regular.ufo
 ```
 
-The normalization follows the [default behaviours](#link-to-be-set), but these can be overriden using [custom parameters](#link-to-be-set)
+The normalization follows the [default behaviours](docs.md#normalization), but these can be overriden using [custom parameters](parameters.md)
 
 If you are a macOS user, see _pysilfont/actionsosx/README.txt_ to install an action that will enable you to run psfnormalize without using the command line.
 
@@ -365,7 +365,7 @@ It will update the openTypeNameVersion, versionMajor and versionMinor fields. It
 "Version M.mpp" or "Version M.mpp extrainfo", eg "Version 1.323 Beta2"
 
 
-Based on [FDBP](#linktobeset), the version number is parsed as M.mpp where M is major, m is minor and pp is patch number.  M matches the versionMajor and mpp the versionMinor fields.
+Based on [FDBP](https://silnrsi.github.io/FDBP/en-US/Versioning.html), the version number is parsed as M.mpp where M is major, m is minor and pp is patch number.  M matches the versionMajor and mpp the versionMinor fields.
 
 Incrementing will fail if either the openTypeNameVersion is not formatted correctly or the version numbers in there don’t match those in versionMajor and versionMinor.
 
@@ -399,7 +399,7 @@ Example usage for family of fonts:
 psfsyncmeta CharisSIL-Regular.ufo
 ```
 
-This will sync the metadata in CharisSIL-Italic, CharisSIL-Bold and CharisSIL-BoldItalic against values in CharisSIL-Regular.  In addition it will verify certain field in all fonts (including Regular) are valid and follow [FDBP](#linktobeset) best-pactice standards.
+This will sync the metadata in CharisSIL-Italic, CharisSIL-Bold and CharisSIL-BoldItalic against values in CharisSIL-Regular.  In addition it will verify certain fields in all fonts (including Regular) are valid and follow [FDBP](https://silnrsi.github.io/FDBP/en-US/index.html) best-pactice standards.
 
 Example usages for a single font:
 
@@ -433,12 +433,6 @@ _This section is Work In Progress!_
 
 - input                 Input file of CD in XML format
 - output                Output file of CD in single line format
-
----
-
-#### Link to be set
-
-Will be link to details of these, probably in another document
 
 ---
 
