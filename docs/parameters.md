@@ -6,30 +6,34 @@ See [List of Parameters](#list-of-parameters) for a full list, which includes th
 
 # Setting parameters
 
+Parameters can be set in multiple ways
+1. Default values are set by the core.py Pysilfont module - see [List of Parameters](#list-of-parameters)
+1. Standard values for a project can be set in a pysilfont.cfg [config file](#config-file)
+1. For UFO fonts, font-specific values can be set within the [lib.plist](#lib-plist) file
+1. On the command line \- see next section
+
+Values set by later methods override those set by earlier methods.
+
+(Scripts can also change some values, but they would normally be written to avoid overwriting command-line values)
+
+## Command line
+
 For script users, parameters can be set on the command line with -p, for example:
-
-`psfnormalize test.ufo -p scrlevel=V -p indentIncr=”    “`
-
+```
+psfnormalize test.ufo -p scrlevel=V -p indentIncr=”    “
+```
 would increase the screen reporting level to Verbose and change the xml indent from 2 spaces to 4 spaces.
 
 If a parameter has multiple values, enter them separated with commas but no spaces, eg:
 
 `-p glifElemOrder=unicode,advance,note,image,guideline,anchor,outline,lib`
 
-Parameters can be set in multiple ways
-1. Default values are set by the core.py Pysilfont module - see List of Parameters
-- Standard values for a project can be set in a pysilfont.cfg config file - see next section
-- For UFO fonts, font-specific values can be set within the lib.plist file
-- On the command line, as above
 
-Values set by later methods override those set by earlier methods.
-
-(Scripts can also change some values, but they would normally be written to avoid overwriting command-line values)
 
 ## Config file
 If pysilfont.cfg exists in the same directory as the first file specified on the command line (typically the font being processed) then parameters will be read from there.
 
-The format is a ConfigParser config file, which is similar structure to a Windows .ini file.
+The format is a [ConfigParser](https://docs.python.org/2/library/configparser.html) config file, which is similar structure to a Windows .ini file.
 
 Lines starting with # are ignored, as are any blank lines.
 
@@ -45,9 +49,9 @@ indentIncr: '  '
 glifElemOrder: unicode,advance,note,image,guideline,anchor,outline,lib
 ```
 
-In a font project with multiple UFO fonts in the same folder would use a single config file.
+In a font project with multiple UFO fonts in the same folder, all would use a single config file.
 
-## lib.plist
+## lib plist
 
 If, with a UFO font, org.sil.pysilfontparams exists in lib.plist, parameter values held in an array will be processed, eg
 ```
@@ -64,7 +68,7 @@ There are many parameters used by Pysilfont
 
 | Parameter | Default | Description | Notes |
 | -------- | -------- | --------------------------------------------- | ------------------------------------- |
-| **Reporting** | | | To change in a script use <br>`logger.<parameter> = <value>`|
+| **Reporting** | | | To change within a script use <br>`logger.<parameter> = <value>`|
 | scrlevel | P | Reporting level to screen. See [Reporting](docs.md#reporting) for more details | -q, --quiet option sets this to E |
 | loglevel | W | Reporting level to log file |  |
 | **Backup** (font scripts only) |  |  |  |  
@@ -88,24 +92,27 @@ There are many parameters used by Pysilfont
 ### Accessing values
 If you need to access values of parameters or to see what values have been set on the command line you can look at:
 - args.paramsobj.sets[“main”]
- - This is a dictionary containing the values for all parameters. If not overridden by config file or command line, will give the default values.
+  - This is a dictionary containing the values for all parameters. If not overridden by config file or command line, will give the default values.
 - args.params
- - This is a dictionary containing any parameters specified on the command line with -p.
+  - This is a dictionary containing any parameters specified on the command line with -p.
 
 Within a UFO Ufont object, use font.paramset, since this will include any updates as a result parameter values set in lib.plist.
 
 In addition to the parameters in the table above, two more read-only parameters can be accessed by scripts - “version” and “copyright” which give the pysilfont version and copyright info, based on values in core.py headers.
 
 ### Updating values
-Currently only values under Output can be set via scripts, since Backup and Reporting parameters are processed by execute() prior to the script being called.  For exmaple:
-
-'font.paramset[“precision”] = 9'
-
+Currently only values under Output can be set via scripts, since Backup and Reporting parameters are processed by execute() prior to the script being called.  For example:
+```python
+font.paramset[“precision”] = 9
+```
 would set the precision parameter to 9.
 
-Note that, whilst reporting parameters can’t be set in scripts, reporting levels can be updated by setting values in the args.logger() object, eg `args.logger.scrlevel = “W”.`
+Note that, whilst reporting _parameters_ can’t be set in scripts, _reporting levels_ can be updated by setting values in the args.logger() object, eg `args.logger.scrlevel = “W”.`
 
 # Technical
+
+_Note the details below are probably not needed just for developing scripts..._
+
 ## Basics
 The default for all parameters are set in core.py as part of the parameters() object.  Those for all pysilfont library modules need to be defined in core.py so that execute() can process command-line arguments without needing information from other modules.
 
@@ -122,22 +129,22 @@ There should only be ever a single parameters() object used by a script.
 ## Paramobj
 In addition to the paramsets, the paramobj also contains
 - classes:
- - A dictionary keyed on class, returning a list of parameter names in that class
+  - A dictionary keyed on class, returning a list of parameter names in that class
 - paramclass:
- - A dictionary keyed on parameter name, returning the class of that parameter
+  - A dictionary keyed on parameter name, returning the class of that parameter
 - lcase:
- - A dictionary keyed on lowercase version of parameter name returning the parameter name
+  - A dictionary keyed on lowercase version of parameter name returning the parameter name
 - type:
- - A dictionary keyed on parameter name, returning the type of that parameter (eg str, boolean, list)
+  - A dictionary keyed on parameter name, returning the type of that parameter (eg str, boolean, list)
 - listtype:
- - For list parameters, a dictionary keyed on parameter name, returning the type of that parameters in the list
+  - For list parameters, a dictionary keyed on parameter name, returning the type of that parameters in the list
 - logger:
- - The logger object for the script
+  - The logger object for the script
 
 ## Parameter sets
 These serve two purposes:
 1. To allow multiple set of parameter values to be used - eg two different fonts might have different values in the lib.plist
-- To keep track of the original sets of parameters (“default”, “config file” and “command line”) if needed.  See UFO specific for an example of this need.
+1. To keep track of the original sets of parameters (“default”, “config file” and “command line”) if needed.  See UFO specific for an example of this need.
 
 Additional sets can be added with addset() and one set can be updated with values from another using updatewith(), for example, to create the “main” set, the following code is used:
 ```
@@ -148,22 +155,20 @@ params.sets["main"].updatewith("command line")  # Update with command-line value
 ## UFO-specific
 The parameter set relevant to a UFO font can be accessed by font.paramset, so font.paramset[“loglevel"] would access the loglevel.
 
-The details below are probably not needed just for developing scripts...
-
 In ufo.py there is code to cope with two complications:
 1. If a script is opening multiple fonts, in they could have different lib.plist values so font-specific parameter sets are needed
-- The parameters passed to ufo.py include the “main” set which has already had command-line parameters applied.   Any in lib.plist also need to be applied, but can’t simply be applied to “main” since command-line parameters should take precedence over lib.plist ones
+1. The parameters passed to ufo.py include the “main” set which has already had command-line parameters applied.   Any in lib.plist also need to be applied, but can’t simply be applied to “main” since command-line parameters should take precedence over lib.plist ones
 
 To ensure unique names, the parameter sets are created using the full path name of the UFO.  Then font.paramset is set to point to this, so scripts do not need to know the underlying set name.
 
 To apply the parameter sets updates in the correct order, ufo.py does:
 
 1. Create a new paramset from any lib parameters present
-- Update this with any command line parameters
-- Create the paramset for the font by copying the “main” paramset
-- Update this with the lib paramset (which has already been updated with command line values in step 2)
+1. Update this with any command line parameters
+1. Create the paramset for the font by copying the “main” paramset
+1. Update this with the lib paramset (which has already been updated with command line values in step 2)
 
 ## Adding another parameter or class
-If there was a need to add another parameter or class, all that should be needed is to add that to defparams in the \__init__() of parameters() in core.py.  Ensure the new parameter is case-insensitively unique.
+If there was a need to add another parameter or class, all that should be needed is to add that to defparams in the \_\_init\_\_() of parameters() in core.py.  Ensure the new parameter is case-insensitively unique.
 
 If a class was Ufont-specific and needed to be supported within lib.plist, then ufo.py would also need updating to handle that similarly to how it now handles outparams.
