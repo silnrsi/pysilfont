@@ -26,6 +26,7 @@ class Font(object) :
     def __init__(self):
         self.glyphs = OrderedDict()
         self.classes = {}
+        self.all_aps = {}
 
     def readaps(self, filename) :
         self.all_aps = {}
@@ -40,7 +41,7 @@ class Font(object) :
                         glyph.add_anchor(a.element.attrib)
                         self.all_aps.setdefault(a.element.attrib['name'], []).append(glyph)
         elif filename.endswith('.xml') :
-            pass # read AP.xml into etree and process to extract anchors
+            pass #TODO: read AP.xml into etree and process to extract anchors
             # may want to extract other info at the same time like class
             # and property values.
 
@@ -54,7 +55,7 @@ class Font(object) :
             if pos > 0 :
                 ext = name[pos+1:]
                 base = name[:pos]
-                if base in self.glyphs :
+                if base in self.glyphs : #TODO: user dict.setdefault() instead of exception handling
                     try: self.classes["c_" + ext].append(name)
                     except KeyError: self.classes["c_" + ext] = [name]
                     try: self.classes["cno_" + ext].append(base)
@@ -70,10 +71,8 @@ class Font(object) :
         for name, g in self.glyphs.items() :
             g.decide_if_mark()
 
-#    def prepend_classes(self, parser, count = 0) :
     def prepend_classes(self, parser, count = 0) :
         # normal classes
-        #doc = parser.doc_
         for name, c in self.classes.items() :
             gc = parser.ast.GlyphClass(0, None)
             for g in c :
@@ -85,29 +84,34 @@ class Font(object) :
 
     def prepend_positions(self, parser, count = 0):
         # baseclasses and markclasses
+        #TODO: only create baseClasses for _ap
         doc = parser.doc_
-        for name, c in self.all_aps.items() :
-            gc = parser.ast.BaseClass(name)
+        for ap_nm, glyphs_w_ap in self.all_aps.items() :
+            gc = parser.ast.BaseClass(ap_nm)
             if not hasattr(doc, 'baseClasses') :
                 doc.baseClasses = {}
-            doc.baseClasses[name] = gc
-            parser.glyphclasses_.define(name, gc)
+            doc.baseClasses[ap_nm] = gc
+            parser.glyphclasses_.define(ap_nm, gc) #add to parser symbol table
             # p is a tuple(glyph_name, pos)
             anchor_cache = {}
-            for g in c :
-                p = g.anchors[name]
+            for g in glyphs_w_ap :
+                p = g.anchors[ap_nm]
                 anchor_cache.setdefault(p, []).append(g.name)
-            for p, gs in anchor_cache.items() :
+            for p, glyphs_w_pt in anchor_cache.items() :
+                #TODO: add anchor to parser symbol table?
                 anchor = parser.ast.Anchor(0, None, p.real, p.imag, None, None, None)
-                if len(gs) > 1 :
-                    bcd = parser.ast.BaseClassDefinition(0, gc, anchor, parser.ast.GlyphClass(0, gs))
+                if len(glyphs_w_pt) > 1 :
+                    bcd = parser.ast.BaseClassDefinition(0, gc, anchor, parser.ast.GlyphClass(0, glyphs_w_pt))
                 else :
-                    bcd = parser.ast.BaseClassDefinition(0, gc, anchor, parser.ast.GlyphName(0, gs[0]))
+                    bcd = parser.ast.BaseClassDefinition(0, gc, anchor, parser.ast.GlyphName(0, glyphs_w_pt[0]))
                 doc.statements.insert(count, bcd)
+                gc.addDefinition(bcd)
                 count += 1
-        # repeat for markClasses
+        #TODO: repeat for markClasses for ap (no _)
+        #TODO: factor common code for baseClass and markClass generation into a method
         return count
 
+#TODO: pysilfont-ify script
 def cmd() :
     pass
 
@@ -140,6 +144,8 @@ first_index = font.prepend_classes(p)
 # prepend baseclasses and markclasses
 if args.input :
     first_index = font.prepend_positions(p, count=first_index)
+
+#TODO: conditional compilation, compare to fea, compile to ttf
 
 # output as doc.asFea()
 if args.output :

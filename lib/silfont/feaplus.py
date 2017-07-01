@@ -21,7 +21,7 @@ class ast_MarkBasePosStatement(ast.MarkBasePosStatement):
                 for m in self.marks:
                     res += " mark @{}".format(m.name)
                 res += ";"
-        else:
+        else: #TODO: call the superclass instead?
             res = "pos base {}".format(self.base.asFea())
             for a, m in self.marks:
                 res += " {} mark @{}".format(a.asFea(), m.name)
@@ -29,7 +29,7 @@ class ast_MarkBasePosStatement(ast.MarkBasePosStatement):
         return res
 
     def build(self, builder) :
-        # do the right thing here
+        #TODO: do the right thing here (write to ttf?)
         pass
 
 class feaplus_ast(object) :
