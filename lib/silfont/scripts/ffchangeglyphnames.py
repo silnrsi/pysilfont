@@ -41,12 +41,12 @@ def doit(args) :
             glyph.glyphname = newnames[gname]
         else:
             missingnames = True
-            logger.log(gname + "in font but not csv file","W")
+            logger.log(gname + " in font but not csv file","W")
 
     if missingnames : logger.log("Font glyph names missing from csv - see log for details","E")
 
     for name in namescheck : # Any names left in namescheck were in csv but not ttf
-        logger.log(name + "in csv but not in font","W")
+        logger.log(name + " in csv but not in font","W")
 
     if namescheck <> [] : logger.log("csv file names missing from font - see log for details","E")
 
