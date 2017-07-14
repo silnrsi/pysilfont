@@ -253,9 +253,20 @@ Code to support xml handling based on xml.etree cElementTree objects.  It covers
   - process_attributes() processes the attributes of the element based on a supplied spec
   - process_subelements() processes the subelements of the element based on a supplied spec
 
-xmlitem() and ETelement() are mainly used as parent classes for other classes, eg in ufo.py
+xmlitem() and ETelement() are mainly used as parent classes for other classes, eg in ufo.py.
 
 The process functions validate the attributes/subelements against the spec.  See code comments for details.
+
+#### Immutable containers
+
+Both xmlitem and ETelement objects are immutable containers, where
+- object[name] can be used to reference items
+- the object can be iterated over
+- object.keys() returns a list of keys in the object
+
+however, values can't be set with `object[name] = ... `; rather values need to be set using methods within child objects.  For example, with a Uglif object, you can refer to the Uadvance object with glif['advance'], but to add a Uadvance oject you need to use glif.addObject().
+
+Other Pysilfont objects also use such immutable containers.
 
 ## util.py
 

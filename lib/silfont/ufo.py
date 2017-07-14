@@ -59,6 +59,16 @@ class _plist(object) :
         else :
             self.addval(key,valuetype,value)
 
+    def getval(self,key) :
+        elem = self._contents[key][1]
+        if elem.tag in ("integer","real","string") : return elem.text
+        if elem.tag == "array" :
+            array = []
+            for subelem in elem : array.append(subelem)
+            return array
+        else:
+            self.font.logger.log("getval() can only be used with integer, real, string or array elements","X")
+
     def remove(self,key) :
         item = self._contents[key]
         self.etree[0].remove(item[0])
