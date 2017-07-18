@@ -1,6 +1,6 @@
 # Pysilfont parameters
 
-In addition to normal command-line arguments (see [scripts.md](scripts.md) and [Standard Command-line Parameters](docs.md#standard-command-line-options)), Pysilfont supports many other parameters that can be changed either on the command-line or by settings in a config file.  For UFO fonts there is also an option to set parameters within the UFO.
+In addition to normal command-line arguments (see [scripts.md](scripts.md) and [Standard Command-line Options](docs.md#standard-command-line-options)), Pysilfont supports many other parameters that can be changed either on the command-line or by settings in a config file.  For UFO fonts there is also an option to set parameters within the UFO.
 
 See [List of Parameters](#list-of-parameters) for a full list, which includes the default values for each parameter.
 
@@ -64,7 +64,6 @@ If, with a UFO font, org.sil.pysilfontparams exists in lib.plist, parameter valu
 Currently only font output parameters can be changed via lib.plist
 
 ## List of parameters
-There are many parameters used by Pysilfont
 
 | Parameter | Default | Description | Notes |
 | -------- | -------- | --------------------------------------------- | ------------------------------------- |
@@ -72,7 +71,7 @@ There are many parameters used by Pysilfont
 | scrlevel | P | Reporting level to screen. See [Reporting](docs.md#reporting) for more details | -q, --quiet option sets this to E |
 | loglevel | W | Reporting level to log file |  |
 | **Backup** (font scripts only) |  |  |  |  
-| backup | True | Backup font to subdirectory | Will backup unless location of output font is different |
+| backup | True | Backup font to subdirectory | If the original font is being updated, make a backup first |
 | backupdir | backups | Sub-directory name for backups |  |
 | backupkeep |  5 | Number of backups to keep |  |
 | **Output** (UFO scripts only) |  |  | To change in a script use <br>`font.outparams[<parameter>] = <value>` |
@@ -92,13 +91,13 @@ There are many parameters used by Pysilfont
 ### Accessing values
 If you need to access values of parameters or to see what values have been set on the command line you can look at:
 - args.paramsobj.sets[“main”]
-  - This is a dictionary containing the values for all parameters. If not overridden by config file or command line, will give the default values.
+  - This is a dictionary containing the values for **all** parameters listed above.  Where they have been specified in a config file, or overwritten on the command line, those values will be used.  Otherwise the default values listed above will be used
 - args.params
   - This is a dictionary containing any parameters specified on the command line with -p.
 
 Within a UFO Ufont object, use font.paramset, since this will include any updates as a result parameter values set in lib.plist.
 
-In addition to the parameters in the table above, two more read-only parameters can be accessed by scripts - “version” and “copyright” which give the pysilfont version and copyright info, based on values in core.py headers.
+In addition to the parameters in the table above, two more read-only parameters can be accessed by scripts - “version” and “copyright” - which give the pysilfont library version and copyright info, based on values in core.py headers.
 
 ### Updating values
 Currently only values under Output can be set via scripts, since Backup and Reporting parameters are processed by execute() prior to the script being called.  For example:
@@ -114,7 +113,7 @@ Note that, whilst reporting _parameters_ can’t be set in scripts, _reporting l
 _Note the details below are probably not needed just for developing scripts..._
 
 ## Basics
-The default for all parameters are set in core.py as part of the parameters() object.  Those for all pysilfont library modules need to be defined in core.py so that execute() can process command-line arguments without needing information from other modules.
+The default for all parameters are set in core.py as part of the parameters() object.  Those for **all** pysilfont library modules need to be defined in core.py so that execute() can process command-line arguments without needing information from other modules.
 
 Parameters are passed to scripts via a parameters() object as args.paramsobj.  This contains several parameter sets, with “main” being the standard one for scripts to use since that contains the default parameters updated with those (if any) from the config file then the same for any command-line values.
 

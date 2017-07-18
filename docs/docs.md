@@ -20,7 +20,7 @@ Installation instructions are in [README.md](../README.md)
 # Scripts and commands
 Many Pysilfont scripts are installed to be used as command-line tools, and these are all listed, with usage instructions, in [scripts.md](scripts.md).  This also has details of some other example python scripts.
 
-All scripts work using a standard framework designed to give users a consistent interface across scripts, and common features of these scripts are described in the following sections, so the documentation below needs to be read in conjunction with that in [scripts.md](scripts.md).
+All scripts work using a standard framework designed to give users a consistent interface across scripts, and common features of these scripts are described in the following sections, so the **documentation below** needs to be read in conjunction with that in [scripts.md](scripts.md).
 
 ## Standard command line options
 
@@ -33,7 +33,7 @@ Nearly all scripts support these:
 - `-q, --quiet`
   - Quiet mode - only display errors.  See reporting below
 - `-l LOG, --log LOG`
-  - Log file name (if not using default name)
+  - Log file name (if not using default name).  If there is no default for a log file name, a log file will only be created if LOG is specified
 - `-p PARAMS, --params PARAMS`
   - Other [parameters](#parameters)
 
@@ -55,14 +55,14 @@ psfsetpsnames path/font.ufo
 
 will:
 
-- open (and update)	`/path/font.ufo`
-- backup the font to `/path/backups/font.ufo.nnn~`
-- read its input from `/path/font_psnames.csv`
-- write its log to `/path/font_psnames.log`
+- open (and update)	`path/font.ufo`
+- backup the font to `path/backups/font.ufo.nnn~`
+- read its input from `path/font_psnames.csv`
+- write its log to `path/font_psnames.log`
 
-If only part of a file name is supplied, other parts will default. If only "test" is supplied for the output font name, the font would be output to `/path/test.ufo`.
+If only part of a file name is supplied, other parts will default. So if only "test" is supplied for the output font name, the font would be output to `path/test.ufo`.
 
-If a full file name is supplied, but no path, the the current working directory will be used, so if “test.ufo” is supplied it won’t have `/path/` added.
+If a full file name is supplied, but no path, the current working directory will be used, so if “test.ufo” is supplied it won’t have `path/` added.
 
 ### Other defaults
 
@@ -89,7 +89,7 @@ Defaults for parameters/options
 If the default value starts with “\_” (as with \_PSnames.csv above) then the input file name will be prepended to the default value; otherwise just the default value will be used.
 
 ## Reporting
-Most scripts support standardised reporting, both to screen and a log file, with different levels of reporting set for each via loglevel and scrlevel parameters which can be set to one of:
+Most scripts support standardised reporting (logging), both to screen and a log file, with different levels of reporting available. Levels are set for via loglevel and scrlevel parameters which can be set to one of:
 - E	Errors
 - P	Progress - Reports basic progress messages and all errors
 - W	Warning - As P but with warning messages as well
@@ -102,7 +102,7 @@ For most scripts these default to W for loglevel and P for scrlevel and can be s
 
 ## Backups for fonts
 
-If the output font name is the same as the input font name (which is the default behaviour for most scripts), then the original font is backed up prior to outputting the revised font.
+If the output font name is the same as the input font name (which is the default behaviour for most scripts), then a backup is made original font prior to updating it.
 
 By default, the last 5 copies of backups are kept in a sub-directory called “backups”.  These defaults can be changed using the following parameters:
 
@@ -114,7 +114,7 @@ By default, the last 5 copies of backups are kept in a sub-directory called “b
 
 There are many parameters that can be set to change the behaviour of scripts, either on the command line (using -p)  or via a config file.
 
-To set a parameter on the command line, use -p <param name>=<param value>, eg
+To set a parameter on the command line, use ``-p <param name>=<param value>``, eg
 ```
 UFOconvert font.ufo -p backupkeep=3
 ```
@@ -134,14 +134,15 @@ Note that other scripts also normalize, so psfnormalize is usually only needed a
 Default normalization behaviours include:
 - XML formatting
   - Use 2 spaces as indents
-  - Don’t indent the <dict> for plists
-  - Sort all <dicts>s in ascending key order
-  - Where values can be “integer or float”, store integer values as <integer>
-  - Limit <real> precision to 6
-- glif file names - use the UFO 3 suggested algorithm
+  - Don’t indent the ``<dict>`` for plists
+  - Sort all ``<dicts>``s in ascending key order
+  - Where values can be “integer or float”, store integer values as ``<integer>``
+  - Limit ``<real>`` limit decimal precision to 6
+  - For attributes identified as numeric, limit decimal precision to 6
+- glif file names - use the UFO 3 suggested algorithm, even for UFO 2 fonts
 - order glif elements and attributes in the order they are described in the UFO spec
 
-Most of the above can be overridden by parameters
+Most of the above can be overridden by [parameters](#parameters)
 
 ## Known limitations
 The following are known limitations that will be addressed in the future:
@@ -155,7 +156,7 @@ Font Test Markup Language (FTML) is a file format for specifying the content and
 
 FTML is described in the [FTML github project](https://github.com/silnrsi/ftml).
 
-Pysilfont includes some python scripts for working with FTML, and a python library, ftml.py, so that new scripts can be developed to read and write FTML files.
+Pysilfont includes some python scripts for working with FTML, and a python library, [ftml.py](technical.md#ftml.py), so that new scripts can be developed to read and write FTML files.
 
 # Composite definitions
 
@@ -163,7 +164,7 @@ Pysilfont includes tools for automatically adding composite glyphs to fonts.  Th
 
 The current tools (psfbuildcomp, psfcomp2xml and psfxml2comp) are documented in [scripts.md](scripts.md).
 
-The tools are based on a python module, cd.py.
+The tools are based on a python module, [cd.py](technical.md#cd.py).
 
 # Contributing to the project
 

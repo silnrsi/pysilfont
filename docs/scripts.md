@@ -2,7 +2,7 @@
 
 Below is a table listing all the commands installed by Pysilfont followed by descriptions of each command.
 
-All these commands work in consistent ways in terms of certain standard options (eg -h for help) and default names for many files - see details in [Pysilfont Documentation](docs.md).
+All these commands work in consistent ways in terms of certain standard options (eg -h for help) and default names for many files - see details in [Pysilfont Documentation](docs.md#standard-command-line-options).
 
 There are further example scripts supplied with Pysilfont, and some of these are also [documented further down](#example-scripts)
 

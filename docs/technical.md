@@ -16,7 +16,7 @@ The framework covers:
 - Opening fonts and other files
 - Outputting fonts (including normalization for UFO fonts)
 - Initial error handling
-- Reporting - both to screen and log file
+- Reporting (logging) - both to screen and log file
 
 ## Basic use of the framework
 
@@ -95,7 +95,7 @@ argspec = [
 ```
 Each argument has the format:
 ```
-(argument name(s),argparse dict,framework-specific dict)
+(argument name(s),argparse dict,framework dict)
 ```
 argument name is either
 - name for positional parameters, eg *‘ifont’*
@@ -103,7 +103,7 @@ argument name is either
 
 **argparse dict** follows standard [argparse usage for .add_argument()](https://docs.python.org/2/library/argparse.html#the-add-argument-method).  Help should always be included.
 
-**framework-specific dict** has optional values for:
+**framework dict** has optional values for:
 - ‘type’ - the type of parameter, eg ‘outfile’
 - ‘def’ - default for file names.  Only applies if ‘type’ is a font or file.
 
@@ -114,12 +114,12 @@ argument name is either
 |infont|Open a font of that name and pass the font to the main function|
 |outfont|If the main function to returns a font, save that to the supplied name|
 |infile|Open a file for read and pass the file handle to the main function|
-|incsv|Open a csv file for input and pass iterator to the main function|
+|incsv|Open a [csv](#support-for-csv-files) file for input and pass iterator to the main function|
 |outfile|Open a file for writing and pass the file handle to the main function|
 |filename|Filename to be passed as text|
 |optiondict|Expects multiple values in the form name=val and passes a dictionary containing them|
 
-If ‘def’ is supplied, the parameter value is passed through the file name defaulting as specified below.  Applies to all the above types except for optiondict.
+If ‘def’ is supplied, the parameter value is passed through the [file name defaulting](#default-values-for-arguments) as specified below.  Applies to all the above types except for optiondict.
 
 In addition to options supplied in argspec, the framework adds [standard options](docs.md#standard-command-line-options), ie:
 
@@ -129,23 +129,28 @@ In addition to options supplied in argspec, the framework adds [standard options
 -   -p, --params
 -   -l, --log
 
-so these do not need to be included in argspec.
+so these do not need to be included in argspec.  
+
+With -l, --log, this is still often set in argspec to create default log file names:
+- If specified in argspec (with a default), a log file is always created and -l is only used to override the default name
+- If not specified in arspec, a log file is only created when -l is used
 
 #### doit() function
 The main code of the script is in the doit() function.  
 
 The name is just by convention - it just needs to match what is passed to execute() at the end of the script.  The
 execute() function passes an args object to doit() containing:
-- An entry for each command-line argument as appropriate based on the full name of the argument
-  - eg with ``'-v','--version'``, args.version is set to the value given on the command line (or None if no value given).
-  - this includes params, quiet and log added by the framework, but see below for params
+- An entry for each command-line argument as appropriate, based on the full name of the argument
+  - eg with ``'-v','--version'``, args.version is set.
+  - Values are set for every entry in argspec, plus params, quiet and log added by the framework
+  - If no value is given on the command-line and the argument has no default then None is used.
 - logger for the loggerobj()
 - clarguments for a list of what was actually specified on the command line
 - For parameters:
   - params is a list of what parameters, if any, were specified on the command line
   - paramsobj is the  parameters object containing all [parameter](parameters.md) details
 
-The final lines
+#### The final lines
 
 These should always be:
 ```
@@ -169,9 +174,9 @@ Even if a script is initially just going to be used to be run manually, include 
 ## Default values for arguments
 Default values in [docs.md](docs.md#default-values) describes how file name defaulting works from a user perspective.
 
-To set default values, either use the ‘default’ keyword in the argparse dict (for standard defaults) or the ‘def’ keyword in the framework-specific dict to use Pysilfont’s file-name defaulting mechanism.  Only one of these should be used.  'def' can't be used with the first positional parameter.
+To set default values, either use the ‘default’ keyword in the argparse dict (for standard defaults) or the ‘def’ keyword in the framework dict to use Pysilfont’s file-name defaulting mechanism.  Only one of these should be used.  'def' can't be used with the first positional parameter.
 
-Note if you want a fixed file name - ie to bypass the file name defaulting mechanism, then use the argparse default keyword.
+Note if you want a fixed file name, ie to bypass the file name defaulting mechanism, then use the argparse default keyword.
 
 ## Reporting
 args.logger is a loggerobj(), and used to report messages to screen and log file.  If no log file is set, messages are just to screen.
@@ -181,7 +186,7 @@ Messages are sent using
 logger.log(<message text>, [severity level]>
 ```
 Where severity level has a default value of W and can be set to one of:
-- X	Exception - for programming errors
+- X	Exception - For fatal programming errors
 - S	Severe - For fatal errors
 - E	Errors
 - P	Progress - Reports basic progress messages and all errors
@@ -191,7 +196,7 @@ Where severity level has a default value of W and can be set to one of:
 
 Errors are reported to screen if the severity level is higher or equal to logger.scrlevel (default E) and to log based on loglevel (default W).  The defaults for these can be set via parameters or within a script, if needed.
 
-With X and S, the script is terminated.  S should be used for user problems (eg file does not exists, font is invalid) and X for programming issues (eg an invalid value has been set by code).  Exception errors are mainly used by the libraries and force a stack trace.
+With X and S, the script is terminated.  S should be used for user problems (eg file does not exist, font is invalid) and X for programming issues (eg an invalid value has been set by code).  Exception errors are mainly used by the libraries and force a stack trace.
 
 With Ufont objects, font.logger also points to the logger, but this is used primarily within the libraries rather than in scripts.
 
@@ -245,7 +250,7 @@ Code to support xml handling based on xml.etree cElementTree objects.  It covers
   - doctype, comments and commentsafter
 - xmlitem() class
   - For reading and writing xml files
-  - Keeps record of original and final xml strings, so only need to write to disk if changed
+  - Keeps record of original and final xml strings, so only needs to write to disk if changed
   - write_to_xml() function to create outxmlstr using ETWriter()
 - ETelement() class
   - For handling an ElementTree element
@@ -264,7 +269,9 @@ Both xmlitem and ETelement objects are immutable containers, where
 - the object can be iterated over
 - object.keys() returns a list of keys in the object
 
-however, values can't be set with `object[name] = ... `; rather values need to be set using methods within child objects.  For example, with a Uglif object, you can refer to the Uadvance object with glif['advance'], but to add a Uadvance oject you need to use glif.addObject().
+however, values can't be set with `object[name] = ... `; rather values need to be set using methods within child objects.  For example, with a Uglif object, you can refer to the Uadvance object with glif['advance'], but to add a Uadvance object you need to use glif.addObject().
+
+This is done so that values can be easily referenced and iterated over, but values can only be changed if appropriate methods have been defined.
 
 Other Pysilfont objects also use such immutable containers.
 
