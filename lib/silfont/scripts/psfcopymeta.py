@@ -75,7 +75,7 @@ def doit(args) :
                         tfi.setelem(field, ET.fromstring(ET.tostring(felem)))
                         logger.log(message + "Some values different Old: " + str(tarray) + " New: " + str(farray), "W")
                         updated = True
-                else : logger.log("Non-standard fontinfo field type: "+ ftag + " in " + fontname, "X")
+                else : logger.log("Non-standard fontinfo field type: "+ ftag + " in " + fontname, "S")
             else :
                 tfi.addelem(field, ET.fromstring(ET.tostring(felem)))
                 logger.log(message + "is missing from destination font so will be copied from source font", "W")

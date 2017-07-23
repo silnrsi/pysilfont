@@ -115,8 +115,8 @@ def doit(args) :
                         infont.logger.log("The AP '" + diacAP + "' does not exist on diacritic glyph " + currglyph, "E")
                     else:
                         i = cganc.index(diacAP)
-                        diacAPx = int(cg['anchor'][i].element.get('x'))
-                        diacAPy = int(cg['anchor'][i].element.get('y'))
+                        diacAPx = int(float(cg['anchor'][i].element.get('x')))
+                        diacAPy = int(float(cg['anchor'][i].element.get('y')))
                 else:
                     infont.logger.log("No AP specified for diacritic " + currglyph, "E")
                 if baseAP is not None: # find base character Attachment Point in targetglyph
@@ -140,7 +140,9 @@ def doit(args) :
             componentlist.append( componentdic )
 
             # Find advance width of currglyph and add to xadvance
-            xadvance += int(cg['advance'].element.get('width'))
+            cgadvance = cg['advance'] if 'advance' in cg else None
+            if cgadvance is not None and cgadvance.element.get('width') is not None :
+                xadvance += int(float(cgadvance.element.get('width')))
 
             # Move anchor information to targetglyphanchors
             for a in cg['anchor']:
@@ -196,35 +198,42 @@ def doit(args) :
         # Check if this new glyph exists in the font already; if so, decide whether to replace, or issue warning
         if  targetglyphname in infont.deflayer.keys():
             infont.logger.log("Target glyph, " + targetglyphname + ", already exists in font.", "V")
-            g = infont.deflayer[targetglyphname]
-            if g['outline'] and g['outline'].contours and not args.force: # don't replace glyph with contours, unless -f set
+            targetglyph = infont.deflayer[targetglyphname]
+            if targetglyph['outline'] and targetglyph['outline'].contours and not args.force: # don't replace glyph with contours, unless -f set
                 infont.logger.log("Not replacing existing glyph, " + targetglyphname + ", because it has contours.", "W")
                 continue
             else:
-                infont.logger.log("Replacing glyph, " + targetglyphname, "V")
-                infont.deflayer.delGlyph(targetglyphname) ### delete existing glyph
+                infont.logger.log("Replacing information in existing glyph, " + targetglyphname, "V")
+                # delete information from existing glyph
+                targetglyph.remove('outline')
+                targetglyph.remove('advance')
+                for i in xrange(len(targetglyph['anchor'])-1,-1,-1):
+                    targetglyph.remove('anchor',index=i)
         else:
             infont.logger.log("Adding new glyph, " + targetglyphname, "V")
+            # create glyph, using targetglyphname, targetglyphunicode
+            targetglyph = ufo.Uglif(layer=infont.deflayer, name=targetglyphname)
+            # actually add the glyph to the font
+            infont.deflayer.addGlyph(targetglyph)
 
-        # create glyph, using targetglyphname, targetglyphunicode
-        targetglyph = ufo.Uglif(layer=infont.deflayer, name=targetglyphname)
         targetglyph.add('advance',{'width': str(xbase)} )
-        if targetglyphunicode: targetglyph.add('unicode',{'hex': targetglyphunicode} )
+        if targetglyphunicode: # remove any existing unicode value(s) before adding unicode value
+            for i in xrange(len(targetglyph['unicode'])-1,-1,-1):
+                targetglyph.remove('unicode',index=i)
+            targetglyph.add('unicode',{'hex': targetglyphunicode} )
         targetglyph.add('outline')
-        # add to the outline element, a component element for every entry in componentlist
+        # to the outline element, add a component element for every entry in componentlist
         for compdic in componentlist:
             comp = ufo.Ucomponent(targetglyph['outline'],ET.Element('component',compdic))
             targetglyph['outline'].appendobject(comp,'component')
-        # copy anchors to new glyph from targetglyphanchors which has {'U': (500,1000), 'L': (500,0)}
+        # copy anchors to new glyph from targetglyphanchors which has format {'U': (500,1000), 'L': (500,0)}
         for a in targetglyphanchors:
             targetglyph.add('anchor', {'name': a, 'x': str(targetglyphanchors[a][0]), 'y': str(targetglyphanchors[a][1])} )
-        # actually add the glyph to the font
-        infont.deflayer.addGlyph(targetglyph)
 
     # If analysis only, return without writing output font
     if args.analysis: return
     # Return changed font and let execute() write it out
     return infont
 
-def cmd() : execute("UFO",doit,argspec) 
+def cmd() : execute("UFO",doit,argspec)
 if __name__ == "__main__": cmd()

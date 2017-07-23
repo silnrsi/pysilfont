@@ -8,7 +8,6 @@ __author__ = 'David Raymond'
 from silfont.core import execute
 import silfont.ufo as UFO
 import re
-##from xml.etree import cElementTree as ET
 
 argspec = [
     ('font',{'help': 'From font file'}, {'type': 'infont'}),
@@ -33,6 +32,7 @@ def doit(args) :
     vmaj = None if majelem is None else majelem.text
     vmin = None if minelem is None else minelem.text
 
+    if otnv is None or vmaj is None or vmin is None : logger.log("At least one of openTypeNameVersion, versionMajor or versionMinor missing fron fontinfo.plist", "S")
 
     if newversion is None:
         if otnvre.match(otnv) is None:
@@ -40,7 +40,7 @@ def doit(args) :
         else :
             logger.log("Current version is '" + otnv + "'", "P")
             (otmaj,otmin,otextrainfo) = parseotnv(otnv)
-            if (otmaj, otmin) != (vmaj,vmin) :
+            if (otmaj, int(otmin)) != (vmaj,int(vmin)) :
                 logger.log("openTypeNameVersion values don't match versionMajor (" + vmaj + ") and versionMinor (" + vmin + ")", "E")
     else:
         if newversion[0] == "+" :
@@ -48,7 +48,7 @@ def doit(args) :
                 logger.log("Current openTypeNameVersion is non-standard so can't be incremented: " + otnv , "S")
             else :
                 (otmaj,otmin,otextrainfo) = parseotnv(otnv)
-                if (otmaj, otmin) != (vmaj,vmin) :
+                if (otmaj, int(otmin)) != (vmaj,int(vmin)) :
                     logger.log("openTypeNameVersion (" + otnv + ") doesn't match versionMajor (" + vmaj + ") and versionMinor (" + vmin + ")", "S")
             # Process increment to versionMinor.  Note vmin is treated as 3 digit mpp where m and pp are minor and patch versions respectively
             increment = newversion[1:]
