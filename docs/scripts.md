@@ -114,9 +114,14 @@ Usage: **`psfbuildcomp [-i CDFILE] [-a] [-f] [-r {X,S,E,P,W,I,V}] ifont [ofont]`
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-_This section is Work In Progress!_
+Creates or updates composite glyphs in a UFO based on an external text file of definitions.
 
-Read Composite Definitions and add glyphs to a UFO font
+Example usage:
+
+```
+psfbuildcomp -i composites.txt font.ufo
+psfbuildcomp -i newcomps.txt -f -r V Andika-BoldItalic.ufo Andika-BoldItalic.ufo
+``` 
 
 optional arguments:
 
@@ -128,6 +133,7 @@ optional arguments:
   -r {X,S,E,P,W,I,V}, --report {X,S,E,P,W,I,V}
                         Set reporting level for log
 ```
+
 ---
 #### psfchangegdlnames
 Usage: **`psfchangegdlnames [-n NAMES] [--names2 [NAMES2]] [--psnames PSNAMES] input [output]`**
