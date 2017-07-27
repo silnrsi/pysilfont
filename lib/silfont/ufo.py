@@ -66,8 +66,12 @@ class _plist(object) :
             array = []
             for subelem in elem : array.append(subelem)
             return array
+        elif elem.tag == "dict" : # Only works if dict items are simple, eg real, string
+            dict = {}
+            for i in range(0,len(elem),2): dict[elem[i].text] = elem[i+1].text
+            return dict
         else:
-            self.font.logger.log("getval() can only be used with integer, real, string or array elements","X")
+            self.font.logger.log("getval() can only be used with integer, real, string, array or dict elements","X")
 
     def remove(self,key) :
         item = self._contents[key]
@@ -297,6 +301,14 @@ class Ufont(object) :
 
         writeToDisk(dtree, outdir, self, odtree,)
         self.logger.log("All done!", "P") ## Just for timing tests
+
+    def addfile(self,filetype) : # Add empty plist file for optional files
+        if filetype not in ("fontinfo","groups","kerning","lib") : self.logger.log("Invalid file type to add","X")
+        if filetype in self.__dict__ : self.logger.log("File already in font","X")
+        obj = Uplist(font = self)
+        setattr(self, filetype, obj )
+        self.dtree[filetype + '.plist'] = dirTreeItem(read = True, added = True, fileObject = obj, fileType = "xml")
+        obj.etree = ET.fromstring("<plist>\n<dict/>\n</plist>")
 
 class Ulayer(_Ucontainer) :
 

@@ -20,7 +20,7 @@ Values set by later methods override those set by earlier methods.
 
 For script users, parameters can be set on the command line with -p, for example:
 ```
-psfnormalize test.ufo -p scrlevel=V -p indentIncr=”    “
+psfnormalize test.ufo -p scrlevel=V -p indentIncr="    "
 ```
 would increase the screen reporting level to Verbose and change the xml indent from 2 spaces to 4 spaces.
 

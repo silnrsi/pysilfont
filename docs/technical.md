@@ -99,7 +99,7 @@ Each argument has the format:
 ```
 argument name is either
 - name for positional parameters, eg *‘ifont’*
-- *-n --name* or *--name* for other arguments, eg *‘-v’, ‘--version’*
+- *-n, --name* or *--name* for other arguments, eg *‘-v’, ‘--version’*
 
 **argparse dict** follows standard [argparse usage for .add_argument()](https://docs.python.org/2/library/argparse.html#the-add-argument-method).  Help should always be included.
 
@@ -314,7 +314,7 @@ See [ufo.md](ufo.md) for details
 
 To be written
 
-## cd.py
+## comp.py
 
 To be written
 

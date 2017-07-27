@@ -135,7 +135,7 @@ Default normalization behaviours include:
 - XML formatting
   - Use 2 spaces as indents
   - Don’t indent the ``<dict>`` for plists
-  - Sort all ``<dicts>``s in ascending key order
+  - Sort all ``<dict>``s in ascending key order
   - Where values can be “integer or float”, store integer values as ``<integer>``
   - Limit ``<real>`` limit decimal precision to 6
   - For attributes identified as numeric, limit decimal precision to 6
@@ -164,7 +164,7 @@ Pysilfont includes tools for automatically adding composite glyphs to fonts.  Th
 
 The current tools (psfbuildcomp, psfcomp2xml and psfxml2comp) are documented in [scripts.md](scripts.md).
 
-The tools are based on a python module, [cd.py](technical.md#cd.py).
+The tools are based on a python module, [comp.py](technical.md#comp.py).
 
 # Contributing to the project
 

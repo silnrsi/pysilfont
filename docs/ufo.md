@@ -91,7 +91,9 @@ In addition to the objects listed above, a Ufont object contains:
 
 self.write(outputdir) will write the UFO to disk.  For basic scripts this will usually be done by the execute() funtion - see [writing scripts](technical.md#writing-scripts).
 
-When writing to disk, the UFO is always normalized, and only changed files will actually be written to disk.  For format for normalization, as well as the output UFO version, are controlled by values in self.outparams.
+self.addfile(type) will add an empty entry for any of the optional plist files (fontinfo, groups, kerning or lib).
+
+When writing to disk, the UFO is always normalized, and only changed files will actually be written to disk.  The format for normalization, as well as the output UFO version, are controlled by values in self.outparams.
 
 ### Uplist
 
