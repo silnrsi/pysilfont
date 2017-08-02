@@ -49,23 +49,19 @@ class Font(object) :
         self.classes = {}
         for name, g in self.glyphs.items() :
             # pull off suffix and make classes
-            # doesn't handle multiple suffices. Refactor for that.
-            # handle ligatures
+            # TODO: doesn't handle multiple suffices. Refactor for that.
+            # TODO: handle ligatures
             pos = name.find('.')
             if pos > 0 :
                 ext = name[pos+1:]
                 base = name[:pos]
-                if base in self.glyphs : #TODO: user dict.setdefault() instead of exception handling
-                    try: self.classes["c_" + ext].append(name)
-                    except KeyError: self.classes["c_" + ext] = [name]
-                    try: self.classes["cno_" + ext].append(base)
-                    except KeyError: self.classes["cno_" + ext] = [base]
+                if base in self.glyphs :
+                    self.classes.setdefault("c_" + ext, []).append(name)
+                    self.classes.setdefault("cno_" + ext, []).append(base)
             if g.is_mark :
-                try: self.classes['GDEF_marks'].append(name)
-                except KeyError: self.classes['GDEF_marks'] = [name]
+                self.classes.setdefault('GDEF_marks', []).append(name)
             else :
-                try: self.classes['GDEF_bases'].append(name)
-                except KeyError: self.classes['GDEF_bases'] = [name]
+                self.classes.setdefault('GDEF_bases', []).append(name)
 
     def make_marks(self) :
         for name, g in self.glyphs.items() :
@@ -79,26 +75,27 @@ class Font(object) :
                 gc.append(g)
             gcd = parser.ast.GlyphClassDefinition(0, name, gc)
             parser.doc_.statements.insert(count, gcd)
+            parser.glyphclasses_.define(name, gc)
             count += 1
         return count
 
     def prepend_positions(self, parser, count = 0):
         # baseclasses and markclasses
-        #TODO: only create baseClasses for _ap
+        # should be similar to parser.parse_markClass in what structs are created
+        #TODO: only create baseClasses for ap (no _)
         doc = parser.doc_
         for ap_nm, glyphs_w_ap in self.all_aps.items() :
             gc = parser.ast.BaseClass(ap_nm)
             if not hasattr(doc, 'baseClasses') :
                 doc.baseClasses = {}
             doc.baseClasses[ap_nm] = gc
-            parser.glyphclasses_.define(ap_nm, gc) #add to parser symbol table
+            parser.glyphclasses_.define(ap_nm, gc)
             # p is a tuple(glyph_name, pos)
             anchor_cache = {}
             for g in glyphs_w_ap :
                 p = g.anchors[ap_nm]
                 anchor_cache.setdefault(p, []).append(g.name)
             for p, glyphs_w_pt in anchor_cache.items() :
-                #TODO: add anchor to parser symbol table?
                 anchor = parser.ast.Anchor(0, None, p.real, p.imag, None, None, None)
                 if len(glyphs_w_pt) > 1 :
                     bcd = parser.ast.BaseClassDefinition(0, gc, anchor, parser.ast.GlyphClass(0, glyphs_w_pt))
@@ -107,7 +104,7 @@ class Font(object) :
                 doc.statements.insert(count, bcd)
                 gc.addDefinition(bcd)
                 count += 1
-        #TODO: repeat for markClasses for ap (no _)
+        #TODO: repeat for markClasses for _ap
         #TODO: factor common code for baseClass and markClass generation into a method
         return count
 
@@ -137,7 +134,7 @@ font.make_classes()
 if not args.input :
     args.input = StringIO.StringIO("")
 p = feaplus_parser(args.input, [])
-doc = p.parse() # doc is an ast.FeatureFile
+doc = p.parse() # returns an ast.FeatureFile
 
 first_index = font.prepend_classes(p)
 

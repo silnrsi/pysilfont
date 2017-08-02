@@ -4,15 +4,19 @@ from fontTools.feaLib.builder import Builder
 
 class ast_BaseClass(ast.MarkClass) :
     def asFea(self, indent="") :
+        # should not be used since BaseClass is flattened to BaseClassDefinitions
+        # in ast_MarkBasePosStatement.asFea and not output directly
         return ""
 
 class ast_BaseClassDefinition(ast.MarkClassDefinition) :
     def asFea(self, indent="") :
+        # similar to base class asFea
         return "# BaseClass @{} {} {}".format(self.markClass.name, self.glyphs.asFea(), self.anchor.asFea())
 
 class ast_MarkBasePosStatement(ast.MarkBasePosStatement):
     def asFea(self, indent=""):
-        if isinstance(self.base, ast.MarkClassName):
+        # handles members added by parse_position_base_ with feax syntax
+        if isinstance(self.base, ast.MarkClassName): # flattens pos @BASECLASS mark @MARKCLASS
             res = ""
             for bcd in self.base.markClass.definitions:
                 if res != "":
@@ -21,7 +25,7 @@ class ast_MarkBasePosStatement(ast.MarkBasePosStatement):
                 for m in self.marks:
                     res += " mark @{}".format(m.name)
                 res += ";"
-        else: #TODO: call the superclass instead?
+        else: # like base class method
             res = "pos base {}".format(self.base.asFea())
             for a, m in self.marks:
                 res += " {} mark @{}".format(a.asFea(), m.name)
@@ -46,6 +50,7 @@ class feaplus_parser(Parser) :
     }
     ast = feaplus_ast()
 
+    # like base class parse_position_base_ & overrides it
     def parse_position_base_(self, enumerated, vertical):
         location = self.cur_token_location_
         self.expect_keyword_("base")
@@ -55,17 +60,19 @@ class feaplus_parser(Parser) :
                 'mark-to-base attachment positioning',
                 location)
         base = self.parse_glyphclass_(accept_glyphname=True)
-        if self.next_token_ == "<":
+        if self.next_token_ == "<": # handle pos base [glyphs] <anchor> mark @MARKCLASS
             marks = self.parse_anchor_marks_()
-        else:
+        else: # handle pos base @BASECLASS mark @MARKCLASS; like base class parse_anchor_marks_
             marks = []
-            while self.next_token_ == "mark":
+            while self.next_token_ == "mark": #TODO: is more than one 'mark' meaningful?
                 self.expect_keyword_("mark")
                 m = self.expect_markClass_reference_()
                 marks.append(m)
         self.expect_symbol_(";")
         return self.ast.MarkBasePosStatement(location, base, marks)
 
+    # like base class parseMarkClass
+    # but uses BaseClass and BaseClassDefinition which subclass Mark counterparts
     def parseBaseClass(self):
         if not hasattr(self.doc_, 'baseClasses'):
             self.doc_.baseClasses = {}
@@ -76,9 +83,9 @@ class feaplus_parser(Parser) :
         self.expect_symbol_(";")
         baseClass = self.doc_.baseClasses.get(name)
         if baseClass is None:
-            baseClass = ast_BaseClass(name)
+            baseClass = self.ast.BaseClass(name)
             self.doc_.baseClasses[name] = baseClass
             self.glyphclasses_.define(name, baseClass)
-        bcdef = ast_BaseClassDefinition(location, baseClass, anchor, glyphs)
+        bcdef = self.ast.BaseClassDefinition(location, baseClass, anchor, glyphs)
         baseClass.addDefinition(bcdef)
         return bcdef
