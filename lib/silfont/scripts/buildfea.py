@@ -68,7 +68,7 @@ class Font(object) :
             g.decide_if_mark()
 
     def prepend_classes(self, parser, count = 0) :
-        # normal classes
+        # normal glyph classes
         for name, c in self.classes.items() :
             gc = parser.ast.GlyphClass(0, None)
             for g in c :
@@ -82,30 +82,57 @@ class Font(object) :
     def prepend_positions(self, parser, count = 0):
         # baseclasses and markclasses
         # should be similar to parser.parse_markClass in what structs are created
-        #TODO: only create baseClasses for ap (no _)
-        doc = parser.doc_
+        #TODO: factor common code for baseClass and markClass generation into a method?
+        doc_ = parser.doc_
+
+        # create base and mark classes, add to fea file dicts and parser symbol table
+        classdef_lst = []
         for ap_nm, glyphs_w_ap in self.all_aps.items() :
-            gc = parser.ast.BaseClass(ap_nm)
-            if not hasattr(doc, 'baseClasses') :
-                doc.baseClasses = {}
-            doc.baseClasses[ap_nm] = gc
+            # e.g. all glyphs with U AP
+            if not ap_nm.startswith("_"):
+                gc = parser.ast.BaseClass(ap_nm)
+                if not hasattr(doc_, 'baseClasses') :
+                    doc_.baseClasses = {}
+                doc_.baseClasses[ap_nm] = gc
+            else:
+                gc = parser.ast.MarkClass(ap_nm)
+                if not hasattr(doc_, 'markClasses') :
+                    doc_.markClasses = {}
+                doc_.markClasses[ap_nm] = gc
             parser.glyphclasses_.define(ap_nm, gc)
-            # p is a tuple(glyph_name, pos)
+
+            # create lists of glyphs that use the same point (name and coordinates)
+            # that can share a class definition
             anchor_cache = {}
             for g in glyphs_w_ap :
-                p = g.anchors[ap_nm]
+                p = g.anchors[ap_nm] # p is a tuple(glyph_name, pos)
                 anchor_cache.setdefault(p, []).append(g.name)
+
+            # create and add class definitions to base and mark classes
             for p, glyphs_w_pt in anchor_cache.items() :
                 anchor = parser.ast.Anchor(0, None, p.real, p.imag, None, None, None)
                 if len(glyphs_w_pt) > 1 :
-                    bcd = parser.ast.BaseClassDefinition(0, gc, anchor, parser.ast.GlyphClass(0, glyphs_w_pt))
-                else :
-                    bcd = parser.ast.BaseClassDefinition(0, gc, anchor, parser.ast.GlyphName(0, glyphs_w_pt[0]))
-                doc.statements.insert(count, bcd)
-                gc.addDefinition(bcd)
+                    if not ap_nm.startswith("_"):
+                        classdef = parser.ast.BaseClassDefinition(0, gc, anchor, parser.ast.GlyphClass(0, glyphs_w_pt))
+                    else:
+                        classdef = parser.ast.MarkClassDefinition(0, gc, anchor, parser.ast.GlyphClass(0, glyphs_w_pt))
+                else : # len == 1
+                    if not ap_nm.startswith("_"):
+                        classdef = parser.ast.BaseClassDefinition(0, gc, anchor, parser.ast.GlyphName(0, glyphs_w_pt[0]))
+                    else:
+                        classdef = parser.ast.MarkClassDefinition(0, gc, anchor, parser.ast.GlyphName(0, glyphs_w_pt[0]))
+                classdef_lst.append(classdef)
+                gc.addDefinition(classdef)
+
+        # insert base classes before mark classes in fea file
+        for classdef in classdef_lst:
+            if type(classdef) == parser.ast.BaseClassDefinition:
+                doc_.statements.insert(count, classdef)
                 count += 1
-        #TODO: repeat for markClasses for _ap
-        #TODO: factor common code for baseClass and markClass generation into a method
+        for classdef in classdef_lst:
+            if type(classdef) == parser.ast.MarkClassDefinition:
+                doc_.statements.insert(count, classdef)
+                count += 1
         return count
 
 #TODO: pysilfont-ify script

@@ -10,8 +10,9 @@ class ast_BaseClass(ast.MarkClass) :
 
 class ast_BaseClassDefinition(ast.MarkClassDefinition) :
     def asFea(self, indent="") :
-        # similar to base class asFea
-        return "# BaseClass @{} {} {}".format(self.markClass.name, self.glyphs.asFea(), self.anchor.asFea())
+        # like base class asFea
+        return "{}baseClass {} {} @{};".format(indent, self.glyphs.asFea(),
+                                               self.anchor.asFea(), self.markClass.name)
 
 class ast_MarkBasePosStatement(ast.MarkBasePosStatement):
     def asFea(self, indent=""):
