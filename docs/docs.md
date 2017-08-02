@@ -164,7 +164,7 @@ Pysilfont includes tools for automatically adding composite glyphs to fonts.  Th
 
 The current tools (psfbuildcomp, psfcomp2xml and psfxml2comp) are documented in [scripts.md](scripts.md).
 
-The tools are based on a python module, [comp.py](technical.md#comp.py).
+The tools are based on a python module, [comp.py](technical.md#comppy).
 
 # Contributing to the project
 

@@ -105,9 +105,11 @@ For each key,value pair in the file, self[key] contains a list:
 
 self.getval(key) will return:
 - the value, if the value type is integer, real or string
-- a list containing elementree elements if the value type is array
+- a list if the value type is array
+- a dict if the value type is dict
 - None, for other value types (which would only occur in lib.plist)
 - It will throw an exception if the key does not exist
+- for dict and array, it will recursively process dict and/or array subelements
 
 Methods are available for adding, changing and deleting values - see class \_plist in ufo.py for details.
 

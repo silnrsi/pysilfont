@@ -39,7 +39,8 @@ class _Ucontainer(object) :
 class _plist(object) :
     # Used for common plist methods inherited by Uplist and Ulib classes
 
-    def addval(self,key,valuetype,value) : # For simple single-value elements
+    def addval(self,key,valuetype,value) : # For simple single-value elements - use addelem for dicts or arrays
+        if valuetype not in ("integer","real","string") : self.font.logger.log("addval() can only be used with simple elements", "X")
         if key in self._contents : self.font.logger.log("Attempt to add duplicate key " + key + " to plist", "X")
         dict = self.etree[0]
 
@@ -53,25 +54,28 @@ class _plist(object) :
 
         self._contents[key] = [keyelem,valelem]
 
-    def setval(self,key,valuetype,value) :
+    def setval(self,key,valuetype,value) : # For simple single-value elements - use setelem for dicts or arrays
+        if valuetype not in ("integer","real","string") : self.font.logger.log("setval() can only be used with simple elements", "X")
         if key in self._contents :
             self._contents[key][1].text = value
         else :
             self.addval(key,valuetype,value)
 
-    def getval(self,key) :
+    def getval(self,key) : # Returns a value for integer, real, string, dict or array keys or None for other keys
         elem = self._contents[key][1]
+        return self._valelem(elem)
+
+    def _valelem(self, elem) : # Used by getval to recursively process dict anbd array elements
         if elem.tag in ("integer","real","string") : return elem.text
         if elem.tag == "array" :
             array = []
-            for subelem in elem : array.append(subelem)
+            for subelem in elem : array.append(self._valelem(subelem))
             return array
         elif elem.tag == "dict" : # Only works if dict items are simple, eg real, string
             dict = {}
-            for i in range(0,len(elem),2): dict[elem[i].text] = elem[i+1].text
+            for i in range(0,len(elem),2): dict[elem[i].text] = self._valelem(elem[i+1])
             return dict
-        else:
-            self.font.logger.log("getval() can only be used with integer, real, string, array or dict elements","X")
+        else: return None
 
     def remove(self,key) :
         item = self._contents[key]
