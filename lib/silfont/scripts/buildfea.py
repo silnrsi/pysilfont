@@ -1,4 +1,9 @@
 #!/usr/bin/python3
+'Make features.fea file'
+__url__ = 'http://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2017 SIL International  (http://www.sil.org)'
+__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__author__ = 'Martin Hosken, Alan Ward'
 
 from argparse import ArgumentParser
 import silfont.ufo as ufo
@@ -6,6 +11,8 @@ from collections import OrderedDict
 from silfont.feaplus import feaplus_parser
 import fontTools.feaLib.ast as ast
 import StringIO
+
+from silfont.core import execute
 
 class Glyph(object) :
     def __init__(self, name) :
@@ -135,43 +142,42 @@ class Font(object) :
                 count += 1
         return count
 
-#TODO: pysilfont-ify script
-def cmd() :
-    pass
+#TODO: provide more argument info
+argspec = [
+    ('infile', {'help': 'Input UFO or file'}, {}),
+    ('-a', '--aps', {'help': 'Attachment Point database or .ufo file'}, {}),
+    ('-i', '--input', {'help': 'Fea file to merge'}, {}),
+    ('-o', '--output', {'help': 'Output fea file'}, {})
+]
 
-parser = ArgumentParser()
-parser.add_argument('infile', help="Input file")
-parser.add_argument('-a','--aps',help="Attachment Point database or .ufo file")
-parser.add_argument('-i','--input',help='Fea file to merge in')
-parser.add_argument('-o','--output',help='Output fea file')
-args = parser.parse_args()
+def doit(args) :
+    font = Font()
+    if args.aps :
+        font.readaps(args.aps)
+    elif args.infile.endswith('.ufo') :
+        font.readaps(args.infile)
 
-# import pdb; pdb.set_trace()
+    font.make_marks()
+    font.make_classes()
 
-font = Font()
-if args.aps :
-    font.readaps(args.aps)
-elif args.infile.endswith('.ufo') :
-    font.readaps(args.infile)
+    # parser the input
+    if not args.input :
+        args.input = StringIO.StringIO("")
+    p = feaplus_parser(args.input, [])
+    doc = p.parse() # returns an ast.FeatureFile
 
-font.make_marks()
-font.make_classes()
+    first_index = font.prepend_classes(p)
 
-# parser the input
-if not args.input :
-    args.input = StringIO.StringIO("")
-p = feaplus_parser(args.input, [])
-doc = p.parse() # returns an ast.FeatureFile
+    # prepend baseclasses and markclasses
+    if args.input :
+        first_index = font.prepend_positions(p, count=first_index)
 
-first_index = font.prepend_classes(p)
+    #TODO: conditional compilation, compare to fea, compile to ttf
 
-# prepend baseclasses and markclasses
-if args.input :
-    first_index = font.prepend_positions(p, count=first_index)
+    # output as doc.asFea()
+    if args.output :
+        with open(args.output, "w") as of :
+            of.write(doc.asFea())
 
-#TODO: conditional compilation, compare to fea, compile to ttf
-
-# output as doc.asFea()
-if args.output :
-    with open(args.output, "w") as of :
-        of.write(doc.asFea())
+def cmd(): execute(None, doit, argspec)
+if __name__ == '__main__': cmd()
