@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 'Make features.fea file'
+# TODO: add conditional compilation, compare to fea, compile to ttf
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2017 SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
@@ -21,7 +22,7 @@ class Glyph(object) :
         self.is_mark = False
 
     def add_anchor(self, info) :
-        self.anchors[info['name']] = complex(int(info['x']), int(info['y']))
+        self.anchors[info['name']] = (int(info['x']), int(info['y']))
 
     def decide_if_mark(self) :
         for a in self.anchors.keys() :
@@ -112,12 +113,12 @@ class Font(object) :
             # that can share a class definition
             anchor_cache = {}
             for g in glyphs_w_ap :
-                p = g.anchors[ap_nm] # p is a tuple(glyph_name, pos)
+                p = g.anchors[ap_nm]
                 anchor_cache.setdefault(p, []).append(g.name)
 
             # create and add class definitions to base and mark classes
             for p, glyphs_w_pt in anchor_cache.items() :
-                anchor = parser.ast.Anchor(0, None, p.real, p.imag, None, None, None)
+                anchor = parser.ast.Anchor(0, None, p[0], p[1], None, None, None)
                 if len(glyphs_w_pt) > 1 :
                     if not ap_nm.startswith("_"):
                         classdef = parser.ast.BaseClassDefinition(0, gc, anchor, parser.ast.GlyphClass(0, glyphs_w_pt))
@@ -160,24 +161,38 @@ def doit(args) :
     font.make_marks()
     font.make_classes()
 
-    # parser the input
-    if not args.input :
-        args.input = StringIO.StringIO("")
-    p = feaplus_parser(args.input, [])
-    doc = p.parse() # returns an ast.FeatureFile
+    empty_file = StringIO.StringIO("")
+    p_ufo = feaplus_parser(empty_file, [])
+    doc_ufo = p_ufo.parse() # returns an empty ast.FeatureFile
 
-    first_index = font.prepend_classes(p)
+    # prepend glyph classes
+    first_index = font.prepend_classes(p_ufo)
 
     # prepend baseclasses and markclasses
-    if args.input :
-        first_index = font.prepend_positions(p, count=first_index)
+    first_index = font.prepend_positions(p_ufo, count=first_index)
 
-    #TODO: conditional compilation, compare to fea, compile to ttf
+    # parse the input fea file
+    if args.input :
+        # the glyph, base, and mark classes from the ufo have to be defined before parsing the input fea
+        # so write above created classes to fea in memory and include() fea file to merge
+        ufo_fea = StringIO.StringIO()
+        ufo_fea.write(doc_ufo.asFea())
+        ufo_fea.write("\ninclude({})\n".format(args.input))
+        ufo_fea.seek(0)
+
+        p_fea = feaplus_parser(ufo_fea, [])
+        doc_fea = p_fea.parse()
+
+        # doing it by breaking encapsulation instead of with the fea memory file works but is horrible
+        # p_fea = feaplus_parser(args.input, [])
+        # p_fea.doc_ = p_ufo.doc_
+        # p_fea.glyphclasses_ = p_ufo.glyphclasses_
+        # doc_fea = p_fea.parse()
 
     # output as doc.asFea()
     if args.output :
         with open(args.output, "w") as of :
-            of.write(doc.asFea())
+            of.write(doc_fea.asFea())
 
 def cmd(): execute(None, doit, argspec)
 if __name__ == '__main__': cmd()
