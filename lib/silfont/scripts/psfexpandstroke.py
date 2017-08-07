@@ -5,7 +5,7 @@ __copyright__ = 'Copyright (c) 2017 SIL International (http://www.sil.org), base
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Victor Gaultney'
 
-# Usage: UFOexpandStroke ifont ofont thickness
+# Usage: psfexpandstroke ifont ofont thickness
 
 # To Do
 # - Simplify to assume round caps and corners
@@ -167,8 +167,8 @@ class MathPoint(object):
         if sinAngle < 0:
             cosAngle = 360 - cosAngle
         return radians(cosAngle + add)
-        
-        
+
+
 class CleanPointPen(AbstractPointPen):
 
     def __init__(self, pointPen):
@@ -566,7 +566,7 @@ class OutlinePen(BasePen):
         pointPen = glyph.getPointPen()
         self.drawPoints(pointPen)
         return glyph
-        
+
 # The following functions have been decoupled from the outlinerRoboFontExtension and
 # effectively de-parameterized, with built-in assumptions
 
@@ -601,8 +601,8 @@ def calculate(glyph, strokewidth):
     result = pen.getGlyph()
 
     return result
-        
-        
+
+
 def expandGlyph(glyph, strokewidth):
     defconGlyph = glyph
     outline = calculate(defconGlyph, strokewidth)
@@ -624,10 +624,8 @@ def doit(args):
     strokewidth = int(args.thickness)
     expandFont(infont, strokewidth)
     infont.save(outfont)
-    
+
     return infont
-    
-def cmd() : execute(None,doit,argspec) 
+
+def cmd() : execute(None,doit,argspec)
 if __name__ == "__main__": cmd()
-
-
