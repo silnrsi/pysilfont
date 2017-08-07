@@ -14,7 +14,7 @@ __author__ = 'Victor Gaultney'
 from silfont.core import execute
 
 from fontTools.pens.basePen import BasePen
-from robofab.world import OpenFont, CurrentGlyph, CurrentFont
+from robofab.world import OpenFont
 from robofab.pens.pointPen import AbstractPointPen
 from robofab.pens.reverseContourPointPen import ReverseContourPointPen
 from robofab.pens.adapterPens import PointToSegmentPen
