@@ -6,12 +6,12 @@ __copyright__ = 'Copyright (c) 2017 SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Martin Hosken, Alan Ward'
 
-from argparse import ArgumentParser
 import silfont.ufo as ufo
 from collections import OrderedDict
 from silfont.feaplus import feaplus_parser
 import fontTools.feaLib.ast as ast
 import StringIO
+import os
 
 from silfont.core import execute
 
@@ -180,14 +180,23 @@ def doit(args) :
         ufo_fea.write("\ninclude({})\n".format(args.input))
         ufo_fea.seek(0)
 
+        # Since there is no path to a file when passing a file object, the current dir is likely used.
+        #  include() stmts in the args.input file will be relative to this path,
+        #  so set the cwd to where args.input is located, then set it back
+        cwd = os.getcwd()
+        fea_path = os.path.abspath(os.path.dirname(args.input))
+        os.chdir(fea_path)
         p_fea = feaplus_parser(ufo_fea, [])
         doc_fea = p_fea.parse()
+        os.chdir(cwd)
 
         # doing it by breaking encapsulation instead of with the fea memory file works but is horrible
         # p_fea = feaplus_parser(args.input, [])
         # p_fea.doc_ = p_ufo.doc_
         # p_fea.glyphclasses_ = p_ufo.glyphclasses_
         # doc_fea = p_fea.parse()
+    else:
+        doc_fea = doc_ufo
 
     # output as doc.asFea()
     if args.output :
