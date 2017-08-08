@@ -15,6 +15,7 @@ __author__ = 'Victor Gaultney'
 
 # main input, output, and execution handled by pysilfont framework
 from silfont.core import execute
+import silfont.ufo as UFO
 
 from robofab.world import OpenFont
 
@@ -27,28 +28,29 @@ argspec = [
    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': suffix+'log'})]
 
 
-def setParameters():
+def getParameters(font):
     global glyphHeight, marginFlatLeft, marginPointLeft, marginFlatRight, marginPointRight, contourWidth, marginDotLeft, marginDotRight, dotSpacing, italicAngle, radius, strokeHeight, strokeDepth, contourGap, fakeBottom, dotRadius, dotBCP, contourGapDot, fakeBottomDot
 
-    # temp parameters for Andika R
-    strokeThickness = 240    # total width of stroke (ideally an even number)
-    glyphHeight = 1600        # height, including overshoot
-    glyphDepth = -25            # depth - essentially overshoot (typically negative)
-    marginFlatLeft = 120    # left sidebearing for straight bar
-    marginPointLeft = 100    # left sidebearing for endpoints
-    marginFlatRight = 160    # left sidebearing for straight bar
-    marginPointRight = 140    # left sidebearing for endpoints
-    contourWidth = 480      # this is how wide the contour portions are, from the middle
+    source = font.lib.getval("org.sil.lcg.toneLetters")
+
+    strokeThickness = int(source["strokeThickness"]) # total width of stroke (ideally an even number)
+    glyphHeight = int(source["glyphHeight"]) # height, including overshoot
+    glyphDepth = int(source["glyphDepth"]) # depth - essentially overshoot (typically negative)
+    marginFlatLeft = int(source["marginFlatLeft"]) # left sidebearing for straight bar
+    marginPointLeft = int(source["marginPointLeft"]) # left sidebearing for endpoints
+    marginFlatRight = int(source["marginFlatRight"]) # left sidebearing for straight bar
+    marginPointRight = int(source["marginPointRight"]) # left sidebearing for endpoints
+    contourWidth = int(source["contourWidth"]) # this is how wide the contour portions are, from the middle
                             # of one end to the other, in the horizontal axis. The actual
                             # bounding box of the contours would then be this plus the
                             # strokeThickness.
-    marginDotLeft = 120        # left sidebearing for dots
-    marginDotRight = 160    # right sidebearing for dots
-    dotSize = 360            # the diameter of the dot, normally 150% of the stroke weight
+    marginDotLeft = int(source["marginDotLeft"]) # left sidebearing for dots
+    marginDotRight = int(source["marginDotRight"]) # right sidebearing for dots
+    dotSize = int(source["dotSize"]) # the diameter of the dot, normally 150% of the stroke weight
                             #  (ideally an even number)
-    dotSpacing = 200        # the space between the edge of the dot and the
+    dotSpacing = int(source["dotSpacing"]) # the space between the edge of the dot and the
                             # edge of the expanded stroke
-    italicAngle = 0            # angle of italic slant, 0 for upright
+    italicAngle = int(source["italicAngle"]) # angle of italic slant, 0 for upright
 
     radius = round(strokeThickness / 2)
     strokeHeight = glyphHeight - radius                # for the unexpanded stroke
@@ -189,14 +191,14 @@ def updateTLPieces(targetfont):
 
 
 def doit(args):
-    psffont = args.ifont
-    infont = OpenFont(args.ifont)
+    psffont = UFO.Ufont(args.ifont, params = args.paramsobj)
+    rffont = OpenFont(args.ifont)
     outfont = args.ofont
-    setParameters()
-    updateTLPieces(infont)
-    infont.save(outfont)
+    getParameters(psffont)
+    updateTLPieces(rffont)
+    rffont.save(outfont)
 
-    return infont
+    return
 
 def cmd() : execute(None,doit,argspec)
 if __name__ == "__main__": cmd()
