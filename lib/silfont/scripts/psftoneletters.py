@@ -29,7 +29,7 @@ argspec = [
 
 
 def getParameters(font):
-    global glyphHeight, marginFlatLeft, marginPointLeft, marginFlatRight, marginPointRight, contourWidth, marginDotLeft, marginDotRight, dotSpacing, italicAngle, radius, strokeHeight, strokeDepth, contourGap, fakeBottom, dotRadius, dotBCP, contourGapDot, fakeBottomDot
+    global glyphHeight, marginFlatLeft, marginPointLeft, marginFlatRight, marginPointRight, contourWidth, marginDotLeft, marginDotRight, dotSpacing, italicAngle, radius, strokeHeight, strokeDepth, contourGap, fakeBottom, dotRadius, dotBCP, contourGapDot, fakeBottomDot, anchorHeight, anchorOffset
 
     source = font.lib.getval("org.sil.lcg.toneLetters")
 
@@ -64,6 +64,8 @@ def getParameters(font):
     contourGapDot = round(( (glyphHeight - dotRadius) - (glyphDepth + dotRadius) ) / 4)
     fakeBottomDot = (glyphDepth + dotRadius) - contourGapDot
 
+    anchorHeight = [ 0 , strokeDepth , (strokeDepth + contourGap) , (strokeDepth + contourGap * 2) , (strokeHeight - contourGap) , strokeHeight ]
+    anchorOffset = 20   # hardcoded for now
 
 # drawing functions
 
@@ -131,8 +133,42 @@ def drawDot(glyph,dotX,dotY):
 
 
 def adjItalX(aiX,aiY):
-	newX = aiX + round(tan(radians(italicAngle)) * aiY)
-	return newX
+    newX = aiX + round(tan(radians(italicAngle)) * aiY)
+    return newX
+
+
+def buildComp(f,g,pieces,ancLevelLeft,ancLevelMidLeft,ancLevelMidRight,ancLevelRight):
+
+    g.clear()
+    g.width = 0
+
+    for p in pieces:
+        g.appendComponent(p, (g.width, 0))
+        g.width += f[p].width
+
+    if ancLevelLeft > 0:
+        anc_nm = "_TL"
+        anc_x = adjItalX(0,anchorHeight[ancLevelLeft]) - anchorOffset
+        anc_y = anchorHeight[ancLevelLeft]
+        g.appendAnchor(anc_nm, (anc_x, anc_y))
+
+    if ancLevelMidLeft > 0:
+        anc_nm = "_TL"
+        anc_x = adjItalX(marginPointLeft + radius,anchorHeight[ancLevelMidLeft])
+        anc_y = anchorHeight[ancLevelMidLeft]
+        g.appendAnchor(anc_nm, (anc_x, anc_y))
+
+    if ancLevelMidRight > 0:
+        anc_nm = "TL"
+        anc_x = adjItalX(g.width - marginPointRight - radius,anchorHeight[ancLevelMidRight])
+        anc_y = anchorHeight[ancLevelMidRight]
+        g.appendAnchor(anc_nm, (anc_x, anc_y))
+
+    if ancLevelRight > 0:
+        anc_nm = "TL"
+        anc_x = adjItalX(g.width,anchorHeight[ancLevelRight]) + anchorOffset
+        anc_y = anchorHeight[ancLevelRight]
+        g.appendAnchor(anc_nm, (anc_x, anc_y))
 
 
 # updating functions
@@ -153,6 +189,7 @@ def updateTLPieces(targetfont):
     # redraw bar
     g = f["TnLtrBar"]
     drawLine(g,adjItalX(0,strokeDepth),strokeDepth,adjItalX(0,strokeHeight),strokeHeight)
+    g.width = 0
 
     # redraw contours
     namePre = 'TnLtrSeg'
@@ -190,12 +227,93 @@ def updateTLPieces(targetfont):
         drawDot(g,adjItalX(0,dotLevel),dotLevel)
 
 
+def rebuildTLComps(targetfont):
+
+    f = targetfont
+
+    # staff right
+    for i in range(1,6):
+        nameFull = 'TnStaffRt' + str(i)
+        buildComp(f,f[nameFull],['TnLtrBar','TnLtrSpcFlatRight'],i,0,0,0)
+
+    # staff right no outline
+    for i in range(1,6):
+        nameFull = 'TnStaffRt' + str(i) + 'no'
+        buildComp(f,f[nameFull],['TnLtrSpcFlatRight'],i,0,0,0)
+
+    # staff left
+    for i in range(1,6):
+        nameFull = 'TnStaffLft' + str(i)
+        buildComp(f,f[nameFull],['TnLtrSpcFlatLeft','TnLtrBar'],0,0,0,i)
+
+    # staff left no outline
+    for i in range(1,6):
+        nameFull = 'TnStaffLft' + str(i) + 'no'
+        buildComp(f,f[nameFull],['TnLtrSpcFlatLeft'],0,0,0,i)
+
+    # contours right
+    for i in range(1,6):
+        for j in range(1,6):
+            nameFull = 'TnContRt' + str(i) + str(j)
+            segment = 'TnLtrSeg' + str(i) + str(j)
+            buildComp(f,f[nameFull],['TnLtrSpcPointLeft',segment],0,i,0,j)
+
+    # contours left
+    for i in range(1,6):
+        for j in range(1,6):
+            nameFull = 'TnContLft' + str(i) + str(j)
+            segment = 'TnLtrSeg' + str(i) + str(j)
+            buildComp(f,f[nameFull],[segment,'TnLtrSpcPointRight'],i,0,j,0)
+
+    # basic tone letters
+    for i in range(1,6):
+        nameFull = 'TnLtr' + str(i)
+        segment = 'TnLtrSeg' + str(i) + str(i)
+        buildComp(f,f[nameFull],['TnLtrSpcPointLeft',segment,'TnLtrBar','TnLtrSpcFlatRight'],0,i,0,0)
+
+    # basic tone letters no outline
+    for i in range(1,6):
+        nameFull = 'TnLtr' + str(i) + 'no'
+        segment = 'TnLtrSeg' + str(i) + str(i)
+        buildComp(f,f[nameFull],['TnLtrSpcPointLeft',segment,'TnLtrSpcFlatRight'],0,i,0,0)
+
+    # left stem tone letters
+    for i in range(1,6):
+        nameFull = 'LftStemTnLtr' + str(i)
+        segment = 'TnLtrSeg' + str(i) + str(i)
+        buildComp(f,f[nameFull],['TnLtrSpcFlatLeft','TnLtrBar',segment,'TnLtrSpcPointRight'],0,0,i,0)
+
+    # left stem tone letters no outline
+    for i in range(1,6):
+        nameFull = 'LftStemTnLtr' + str(i) + 'no'
+        segment = 'TnLtrSeg' + str(i) + str(i)
+        buildComp(f,f[nameFull],['TnLtrSpcFlatLeft',segment,'TnLtrSpcPointRight'],0,0,i,0)
+
+    # dotted tone letters
+    for i in range(1,6):
+        nameFull = 'DotTnLtr' + str(i)
+        dot = 'TnLtrDot' + str(i)
+        buildComp(f,f[nameFull],['TnLtrSpcDotLeft',dot,'TnLtrSpcDotMiddle','TnLtrBar','TnLtrSpcFlatRight'],0,0,0,0)
+
+    # dotted left stem tone letters
+    for i in range(1,6):
+        nameFull = 'DotLftStemTnLtr' + str(i)
+        dot = 'TnLtrDot' + str(i)
+        buildComp(f,f[nameFull],['TnLtrSpcFlatLeft','TnLtrBar','TnLtrSpcDotMiddle',dot,'TnLtrSpcDotRight'],0,0,0,0)
+
+
 def doit(args):
+
     psffont = UFO.Ufont(args.ifont, params = args.paramsobj)
     rffont = OpenFont(args.ifont)
     outfont = args.ofont
+
     getParameters(psffont)
+
     updateTLPieces(rffont)
+    rebuildTLComps(rffont)
+
+
     rffont.save(outfont)
 
     return
