@@ -148,7 +148,9 @@ def buildComp(f,g,pieces,ancLevelLeft,ancLevelMidLeft,ancLevelMidRight,ancLevelR
 
     if ancLevelLeft > 0:
         anc_nm = "_TL"
-        anc_x = adjItalX(0,anchorHeight[ancLevelLeft]) - anchorOffset
+        anc_x = adjItalX(0,anchorHeight[ancLevelLeft])
+        if g.name[0:7] == 'TnStaff':
+        	anc_x = anc_x - anchorOffset
         anc_y = anchorHeight[ancLevelLeft]
         g.appendAnchor(anc_nm, (anc_x, anc_y))
 
@@ -166,7 +168,9 @@ def buildComp(f,g,pieces,ancLevelLeft,ancLevelMidLeft,ancLevelMidRight,ancLevelR
 
     if ancLevelRight > 0:
         anc_nm = "TL"
-        anc_x = adjItalX(g.width,anchorHeight[ancLevelRight]) + anchorOffset
+        anc_x = adjItalX(g.width,anchorHeight[ancLevelRight])
+        if g.name[0:7] == 'TnStaff':
+        	anc_x = anc_x + anchorOffset
         anc_y = anchorHeight[ancLevelRight]
         g.appendAnchor(anc_nm, (anc_x, anc_y))
 
