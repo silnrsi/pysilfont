@@ -51,6 +51,43 @@ class feaplus_parser(Parser) :
     }
     ast = feaplus_ast()
 
+    def __init__(self, filename, glyphmap) :
+        if filename is None :
+            empty_file = StringIO.StringIO("")
+            super(self, Parser).__init__(empty_file, glyphmap)
+        else :
+            super(self, Parser).__init__(filename, glyphmap)
+
+    def parse(self, filename=None) :
+        if filename is not None :
+            self.lexer_ = IncludingLexer(filename)
+            self.advance_lexer_(comments=True)
+        return super(self, Parser).parse()
+
+    # methods to limit layer violations
+    def define_glyphclass(self, ap_nm, gc) :
+        self.glyphclasses_.define(ap_nm, gc)
+
+    def add_statement(self, val) :
+        self.doc_.statements.append(val)
+
+    def set_baseclass(self, ap_nm) :
+        gc = parser.ast.BaseClass(ap_nm)
+        if not hasattr(self.doc_, 'baseClasses') :
+            self.doc_.baseClasses = {}
+        self.doc_.baseClasses[ap_nm] = gc
+        self.define_glyphclass(ap_nm, gc)
+        return gc
+
+    def set_markclass(self, ap_nm) :
+        gc = parser.ast.MarkClass(ap_nm)
+        if not hasattr(self.doc_, 'markClasses') :
+            self.doc_.markClasses = {}
+        self.doc_.markClasses[ap_nm] = gc
+        self.define_glyphclass(ap_nm, gc)
+        return gc
+
+
     # like base class parse_position_base_ & overrides it
     def parse_position_base_(self, enumerated, vertical):
         location = self.cur_token_location_

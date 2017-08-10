@@ -75,39 +75,26 @@ class Font(object) :
         for name, g in self.glyphs.items() :
             g.decide_if_mark()
 
-    def prepend_classes(self, parser, count = 0) :
+    def append_classes(self, parser) :
         # normal glyph classes
         for name, c in self.classes.items() :
             gc = parser.ast.GlyphClass(0, None)
             for g in c :
                 gc.append(g)
             gcd = parser.ast.GlyphClassDefinition(0, name, gc)
-            parser.doc_.statements.insert(count, gcd)
-            parser.glyphclasses_.define(name, gc)
-            count += 1
-        return count
+            parser.add_statement(gcd)
+            parser.define_glyphclass(name, gc)
 
-    def prepend_positions(self, parser, count = 0):
-        # baseclasses and markclasses
-        # should be similar to parser.parse_markClass in what structs are created
-        #TODO: factor common code for baseClass and markClass generation into a method?
-        doc_ = parser.doc_
-
+    def append_positions(self, parser):
         # create base and mark classes, add to fea file dicts and parser symbol table
-        classdef_lst = []
+        bclassdef_lst = []
+        mclassdef_lst = []
         for ap_nm, glyphs_w_ap in self.all_aps.items() :
             # e.g. all glyphs with U AP
             if not ap_nm.startswith("_"):
-                gc = parser.ast.BaseClass(ap_nm)
-                if not hasattr(doc_, 'baseClasses') :
-                    doc_.baseClasses = {}
-                doc_.baseClasses[ap_nm] = gc
+                gc = parser.set_baseclass(ap_nm)
             else:
-                gc = parser.ast.MarkClass(ap_nm)
-                if not hasattr(doc_, 'markClasses') :
-                    doc_.markClasses = {}
-                doc_.markClasses[ap_nm] = gc
-            parser.glyphclasses_.define(ap_nm, gc)
+                gc = parser.set_markclass(ap_nm)
 
             # create lists of glyphs that use the same point (name and coordinates)
             # that can share a class definition
@@ -120,28 +107,22 @@ class Font(object) :
             for p, glyphs_w_pt in anchor_cache.items() :
                 anchor = parser.ast.Anchor(0, None, p[0], p[1], None, None, None)
                 if len(glyphs_w_pt) > 1 :
-                    if not ap_nm.startswith("_"):
-                        classdef = parser.ast.BaseClassDefinition(0, gc, anchor, parser.ast.GlyphClass(0, glyphs_w_pt))
-                    else:
-                        classdef = parser.ast.MarkClassDefinition(0, gc, anchor, parser.ast.GlyphClass(0, glyphs_w_pt))
-                else : # len == 1
-                    if not ap_nm.startswith("_"):
-                        classdef = parser.ast.BaseClassDefinition(0, gc, anchor, parser.ast.GlyphName(0, glyphs_w_pt[0]))
-                    else:
-                        classdef = parser.ast.MarkClassDefinition(0, gc, anchor, parser.ast.GlyphName(0, glyphs_w_pt[0]))
-                classdef_lst.append(classdef)
+                    val = glyphs_w_pt
+                else :
+                    val = glyphs_w_pt[0]
+                if not ap_nm.startswith("_"):
+                    classdef = parser.ast.BaseClassDefinition(0, gc, anchor, parser.ast.GlyphClass(0, val))
+                    bclassdef_lst.append(classdef)
+                else:
+                    classdef = parser.ast.MarkClassDefinition(0, gc, anchor, parser.ast.GlyphClass(0, val))
+                    mclassdef_lst.append(classdef)
                 gc.addDefinition(classdef)
 
         # insert base classes before mark classes in fea file
-        for classdef in classdef_lst:
-            if type(classdef) == parser.ast.BaseClassDefinition:
-                doc_.statements.insert(count, classdef)
-                count += 1
-        for classdef in classdef_lst:
-            if type(classdef) == parser.ast.MarkClassDefinition:
-                doc_.statements.insert(count, classdef)
-                count += 1
-        return count
+        for classdef in bclassdef_lst:
+            parser.add_statement(classdef)
+        for classdef in mclassdef_lst:
+            parser.add_statement(classdef)
 
 #TODO: provide more argument info
 argspec = [
@@ -161,40 +142,16 @@ def doit(args) :
     font.make_marks()
     font.make_classes()
 
-    empty_file = StringIO.StringIO("")
-    p_ufo = feaplus_parser(empty_file, [])
-    doc_ufo = p_ufo.parse() # returns an empty ast.FeatureFile
+    p = feaplus_parser(None, [])
+    doc_ufo = p.parse() # returns an empty ast.FeatureFile
 
-    # prepend glyph classes
-    first_index = font.prepend_classes(p_ufo)
-
-    # prepend baseclasses and markclasses
-    first_index = font.prepend_positions(p_ufo, count=first_index)
+    # Add goodies from the font
+    font.append_classes(p)
+    font.append_positions(p)
 
     # parse the input fea file
     if args.input :
-        # the glyph, base, and mark classes from the ufo have to be defined before parsing the input fea
-        # so write above created classes to fea in memory and include() fea file to merge
-        ufo_fea = StringIO.StringIO()
-        ufo_fea.write(doc_ufo.asFea())
-        ufo_fea.write("\ninclude({})\n".format(args.input))
-        ufo_fea.seek(0)
-
-        # Since there is no path to a file when passing a file object, the current dir is likely used.
-        #  include() stmts in the args.input file will be relative to this path,
-        #  so set the cwd to where args.input is located, then set it back
-        cwd = os.getcwd()
-        fea_path = os.path.abspath(os.path.dirname(args.input))
-        os.chdir(fea_path)
-        p_fea = feaplus_parser(ufo_fea, [])
-        doc_fea = p_fea.parse()
-        os.chdir(cwd)
-
-        # doing it by breaking encapsulation instead of with the fea memory file works but is horrible
-        # p_fea = feaplus_parser(args.input, [])
-        # p_fea.doc_ = p_ufo.doc_
-        # p_fea.glyphclasses_ = p_ufo.glyphclasses_
-        # doc_fea = p_fea.parse()
+        doc_fea = p.parse(args.input)
     else:
         doc_fea = doc_ufo
 
