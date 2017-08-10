@@ -50,7 +50,7 @@ def getParameters(font):
                             #  (ideally an even number)
     dotSpacing = int(source["dotSpacing"]) # the space between the edge of the dot and the
                             # edge of the expanded stroke
-    italicAngle = int(source["italicAngle"]) # angle of italic slant, 0 for upright
+    italicAngle = float(source["italicAngle"]) # angle of italic slant, 0 for upright
 
     radius = round(strokeThickness / 2)
     strokeHeight = glyphHeight - radius                # for the unexpanded stroke
