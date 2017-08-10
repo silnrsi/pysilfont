@@ -269,7 +269,7 @@ def rebuildTLComps(targetfont):
     for i in range(1,6):
         nameFull = 'TnLtr' + str(i)
         segment = 'TnLtrSeg' + str(i) + str(i)
-        buildComp(f,f[nameFull],['TnLtrSpcPointLeft',segment,'TnLtrBar','TnLtrSpcFlatRight'],0,i,0,0)
+        buildComp(f,f[nameFull],['TnLtrSpcPointLeft',segment,'TnLtrBar','TnLtrSpcFlatRight'],0,0,0,0)
 
     # basic tone letters no outline
     for i in range(1,6):
@@ -281,7 +281,7 @@ def rebuildTLComps(targetfont):
     for i in range(1,6):
         nameFull = 'LftStemTnLtr' + str(i)
         segment = 'TnLtrSeg' + str(i) + str(i)
-        buildComp(f,f[nameFull],['TnLtrSpcFlatLeft','TnLtrBar',segment,'TnLtrSpcPointRight'],0,0,i,0)
+        buildComp(f,f[nameFull],['TnLtrSpcFlatLeft','TnLtrBar',segment,'TnLtrSpcPointRight'],0,0,0,0)
 
     # left stem tone letters no outline
     for i in range(1,6):

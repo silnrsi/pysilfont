@@ -33,6 +33,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfsetunicodes](#psfsetunicodes) | Set unicode values for a glif based on a csv file |
 | [psfsetversion](#psfsetversion) | Change all the version-related info in a UFO's fontinfo.plist |
 | [psfsyncmeta](#psfsyncmeta) | Copy basic metadata from one member of a font family to other family members |
+| [psftoneletters](#psftoneletters) | Add Latin script tone letters (pitch contours) to a UFO |
 | [psfufo2ttf](#psfufo2ttf) | Generate a ttf file without OpenType tables from a UFO |
 | [psfxml2compdef](#psfxml2compdef) | Convert composite definition file from XML format |
 
@@ -121,7 +122,7 @@ Example usage:
 ```
 psfbuildcomp -i composites.txt font.ufo
 psfbuildcomp -i newcomps.txt -f -r V Andika-BoldItalic.ufo Andika-BoldItalic.ufo
-``` 
+```
 
 optional arguments:
 
@@ -420,6 +421,20 @@ Note that by default only fontinfo.plist is updated so fonts are not normalized.
 
 Also psfsyncmeta does not use Pysilfont's backup mechanism for fonts.
 
+
+---
+####  psftoneletters
+Usage: **`psftoneletters infont outfont`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+This uses the parameters from the UFO lib.plist org.sil.lcg.toneLetters key to create Latin script tone letters (pitch contours).
+
+Example usage:
+
+```
+psftoneletters Andika-Regular.ufo Andika-Regular.ufo
+```
 
 ---
 #### psfufo2ttf
