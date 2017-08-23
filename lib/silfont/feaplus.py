@@ -40,6 +40,7 @@ class ast_MarkBasePosStatement(ast.MarkBasePosStatement):
         #TODO: do the right thing here (write to ttf?)
         pass
 
+#similar to ast.SingleSubstStatement
 class ast_MultipleSubstStatement(ast.Statement):
     def __init__(self, location, prefix, glyph, suffix, replacement):
         ast.Statement.__init__(self, location)
@@ -121,7 +122,7 @@ class feaplus_parser(Parser) :
         self.doc_.statements.append(val)
 
     def set_baseclass(self, ap_nm) :
-        gc = parser.ast.BaseClass(ap_nm)
+        gc = self.ast.BaseClass(ap_nm)
         if not hasattr(self.doc_, 'baseClasses') :
             self.doc_.baseClasses = {}
         self.doc_.baseClasses[ap_nm] = gc
@@ -129,7 +130,7 @@ class feaplus_parser(Parser) :
         return gc
 
     def set_markclass(self, ap_nm) :
-        gc = parser.ast.MarkClass(ap_nm)
+        gc = self.ast.MarkClass(ap_nm)
         if not hasattr(self.doc_, 'markClasses') :
             self.doc_.markClasses = {}
         self.doc_.markClasses[ap_nm] = gc
@@ -177,6 +178,7 @@ class feaplus_parser(Parser) :
         baseClass.addDefinition(bcdef)
         return bcdef
 
+    #similar to and overrides parser.parse_substitute_
     def parse_substitute_(self):
         assert self.cur_token_ in {"substitute", "sub", "reversesub", "rsub"}
         location = self.cur_token_location_

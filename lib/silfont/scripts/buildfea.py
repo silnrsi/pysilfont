@@ -107,14 +107,14 @@ class Font(object) :
             for p, glyphs_w_pt in anchor_cache.items() :
                 anchor = parser.ast.Anchor(0, None, p[0], p[1], None, None, None)
                 if len(glyphs_w_pt) > 1 :
-                    val = glyphs_w_pt
+                    val = parser.ast.GlyphClass(0, glyphs_w_pt)
                 else :
-                    val = glyphs_w_pt[0]
+                    val = parser.ast.GlyphName(0, glyphs_w_pt[0])
                 if not ap_nm.startswith("_"):
-                    classdef = parser.ast.BaseClassDefinition(0, gc, anchor, parser.ast.GlyphClass(0, val))
+                    classdef = parser.ast.BaseClassDefinition(0, gc, anchor, val)
                     bclassdef_lst.append(classdef)
                 else:
-                    classdef = parser.ast.MarkClassDefinition(0, gc, anchor, parser.ast.GlyphClass(0, val))
+                    classdef = parser.ast.MarkClassDefinition(0, gc, anchor, val)
                     mclassdef_lst.append(classdef)
                 gc.addDefinition(classdef)
 
