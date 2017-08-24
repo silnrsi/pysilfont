@@ -26,6 +26,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfftml2odt](#psfftml2odt) | Create a LibreOffice Writer file from an FTML test description |
 | [psfmakewoffmetadata](#psfmakewoffmetadata) | Make the WOFF meatadata xml file based on input UFO and FONTLOG.txt |
 | [psfnormalize](#psfnormalize) | Normalize a UFO and optionally converts it between UFO2 and UFO3 versions |
+| [psfrenameglyphs](#psfrenameglyphs) | Within a UFO, assign new working names to glyphs based on csv input file |
 | [psfsetassocfeat](#psfsetassocfeat) | Add associate feature info to glif lib based on a csv file |
 | [psfsetassocuids](#psfsetassocuids) | Add associate UID info to glif lib based on a csv file |
 | [psfsetglyphorder](#psfsetglyphorder) | Load glyph order data into public.glyphOrder based on a text file |
@@ -295,23 +296,6 @@ It constructs the information needed from:
 FONTLOG.txt needs to be formatted according to the pattern used for most SIL font packages. The description in the xml file is created using the contents of the FONTLOG, starting after the "Basic Font Information" header and finishing before the "Information for Contributors" header (if present) or the "Acknowledgements" header otherwise. The credits are created from the N:, W:, D: and E: sets of values in the acknowledgements section, though E: is not used. One credit is created from each set of values and sets should be separated by blank lines.
 
 ---
-####  psfrenameglyphs
-Usage: **`psfrenameglyphs -i INPUT ifont [ofnt]`**
-
-_([Standard options](docs.md#standard-command-line-options) also apply)_
-
-Within a UFO, assign new working names to glyphs based on csv input file, format "oldname,newname". The algorithm will handle circular rename specifications such as:
-```
-glyph1,glyph2
-glyph2,glyph1
-```
-Unless default value for `renameGlyphs` [parameter](parameters.md) is overridden, the .glif filenames in the UFO will also be adjusted.
-
-At present this program modifies the glyphs themselves as well as the `public.glyphOrder` and `com.schriftgestaltung.glyphOrder` lists, if present, in `lib.plist`.
-
-Currently it does _not_ update `public.postscriptNames`
-
----
 ####  psfnormalize
 Usage: **`psfnormalize [-v VERSION] ifont [ofont]`**
 
@@ -329,6 +313,22 @@ The normalization follows the [default behaviours](docs.md#normalization), but t
 
 If you are a macOS user, see _pysilfont/actionsosx/README.txt_ to install an action that will enable you to run psfnormalize without using the command line.
 
+---
+####  psfrenameglyphs
+Usage: **`psfrenameglyphs -i INPUT ifont [ofnt]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Within a UFO, assign new working names to glyphs based on csv input file, format "oldname,newname". The algorithm will handle circular rename specifications such as:
+```
+glyph1,glyph2
+glyph2,glyph1
+```
+Unless default value for `renameGlyphs` [parameter](parameters.md) is overridden, the .glif filenames in the UFO will also be adjusted.
+
+At present this program modifies the glyphs themselves as well as the `public.glyphOrder` and `com.schriftgestaltung.glyphOrder` lists, if present, in `lib.plist`.
+
+Currently it does _not_ update `public.postscriptNames`
 
 ---
 ####  psfsetassocfeat
