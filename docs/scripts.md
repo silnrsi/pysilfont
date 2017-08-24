@@ -295,6 +295,23 @@ It constructs the information needed from:
 FONTLOG.txt needs to be formatted according to the pattern used for most SIL font packages. The description in the xml file is created using the contents of the FONTLOG, starting after the "Basic Font Information" header and finishing before the "Information for Contributors" header (if present) or the "Acknowledgements" header otherwise. The credits are created from the N:, W:, D: and E: sets of values in the acknowledgements section, though E: is not used. One credit is created from each set of values and sets should be separated by blank lines.
 
 ---
+####  psfrenameglyphs
+Usage: **`psfrenameglyphs -i INPUT ifont [ofnt]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Within a UFO, assign new working names to glyphs based on csv input file, format "oldname,newname". The algorithm will handle circular rename specifications such as:
+```
+glyph1,glyph2
+glyph2,glyph1
+```
+Unless default value for `renameGlyphs` [parameter](parameters.md) is overridden, the .glif filenames in the UFO will also be adjusted.
+
+At present this program modifies the glyphs themselves as well as the `public.glyphOrder` and `com.schriftgestaltung.glyphOrder` lists, if present, in `lib.plist`.
+
+Currently it does _not_ update `public.postscriptNames`
+
+---
 ####  psfnormalize
 Usage: **`psfnormalize [-v VERSION] ifont [ofont]`**
 
