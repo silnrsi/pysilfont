@@ -6,11 +6,6 @@ __copyright__ = 'Copyright (c) 2017 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Bob Hallissy'
 
-from silfont.core import execute
-from xml.etree import cElementTree as ET
-
-print silfont.core.__path__
-
 suffix = "_namesmap"
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
