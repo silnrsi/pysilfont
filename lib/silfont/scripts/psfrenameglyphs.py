@@ -6,7 +6,9 @@ __copyright__ = 'Copyright (c) 2017 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Bob Hallissy'
 
-suffix = "_namesmap"
+from silfont.core import execute
+from xml.etree import cElementTree as ET
+
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
     ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
@@ -108,7 +110,7 @@ def doit(args) :
         tempname, oldname, newname = j
         if newname in font.deflayer:
             # Ok, this really is a problem
-            font.logger.log("Glyph %s already in font; can't rename %s" % (newname, oldname), "E")
+            font.logger.log("Glyph %s already in font; can't rename %s" % (newname, oldname), "S")
         else:
             font.deflayer[tempname].name = newname
             font.logger.log("Pass 2: Renamed %s to %s" % (oldname, newname), "I")
