@@ -326,9 +326,7 @@ glyph2,glyph1
 ```
 Unless default value for `renameGlyphs` [parameter](parameters.md) is overridden, the .glif filenames in the UFO will also be adjusted.
 
-At present this program modifies the glyphs themselves as well as the `public.glyphOrder` and `com.schriftgestaltung.glyphOrder` lists, if present, in `lib.plist`.
-
-Currently it does _not_ update `public.postscriptNames`
+This program modifies the glyphs themselves and, if present in lib.plist, the `public.glyphOrder`,  `com.schriftgestaltung.glyphOrder` and `public.postscriptNames` definitions.
 
 ---
 ####  psfsetassocfeat
