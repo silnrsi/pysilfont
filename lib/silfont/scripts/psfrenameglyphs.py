@@ -9,6 +9,8 @@ __author__ = 'Bob Hallissy'
 from silfont.core import execute
 from xml.etree import cElementTree as ET
 
+print silfont.core.__path__
+
 suffix = "_namesmap"
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
@@ -21,11 +23,13 @@ def doit(args) :
     # logger = args.logger
     incsv = args.input
 
-   # Obtain lib.plist glyph order(s) if they exist:
+   # Obtain lib.plist glyph order(s) and psnames if they exist:
     if 'public.glyphOrder' in font.lib:
-        publicGlyphOrder = font.lib.getval('public.glyphOrder')
+        publicGlyphOrder = font.lib.getval('public.glyphOrder')     # This is an array
     if 'com.schriftgestaltung.glyphOrder' in font.lib:
-        csGlyphOrder = font.lib.getval('com.schriftgestaltung.glyphOrder')
+        csGlyphOrder = font.lib.getval('com.schriftgestaltung.glyphOrder') # This is an array
+    if 'public.postscriptNames' in font.lib:
+        psnames = font.lib.getval('public.postscriptNames')   # This is a dict keyed by glyphnames
 
     # Renaming is done in two passes to make sure we can handle circular renames such as:
     #    someglyph.alt = someglyph
@@ -52,6 +56,7 @@ def doit(args) :
     saveforlaterFont = []   # For the font itself
     saveforlaterPGO = []    # For public.GlyphOrder
     saveforlaterCSGO = []   # For GlyphsApp GlyphOrder (com.schriftgestaltung.glyphOrder)
+    saveforlaterPSN = []    # For public.postscriptNames
 
     for r in incsv:
         oldname = r[0]
@@ -84,7 +89,7 @@ def doit(args) :
                 publicGlyphOrder[x] = tempname
                 saveforlaterPGO.append( (x, oldname, newname) )
 
-        # And finally for GlyphsApp glyph order:
+        # And for GlyphsApp glyph order:
         if csGlyphOrder and oldname in csGlyphOrder:
             x = csGlyphOrder.index(oldname)
             if newname not in csGlyphOrder:
@@ -93,6 +98,15 @@ def doit(args) :
                 tempname = gettempname(lambda n : n not in csGlyphOrder)
                 csGlyphOrder[x] = tempname
                 saveforlaterCSGO.append( (x, oldname, newname) )
+
+        # Finally, psnames
+        if psnames and oldname in psnames:
+            if newname not in psnames:
+                psnames[newname] = psnames.pop(oldname)
+            else:
+                tempname = gettempname(lambda n: n not in psnames)
+                psnames[tempname] = psnames.pop(oldname)
+                saveforlaterPSN.append( (tempname, oldname, newname))
 
     # Ok, now we can reprocess those things we saved for later:
     for j in saveforlaterFont:
@@ -108,7 +122,7 @@ def doit(args) :
         x, oldname, newname = j
         if newname in publicGlyphOrder:
             # Ok, this really is a problem
-            font.logger.log("Glyph %s already in public.GlyphOrder; can't rename %s" % (newname, oldname), "E")
+            font.logger.log("Glyph %s already in public.GlyphOrder; can't rename %s" % (newname, oldname), "S")
         else:
             publicGlyphOrder[x] = newname
 
@@ -116,11 +130,19 @@ def doit(args) :
         x, oldname, newname = j
         if newname in csGlyphOrder:
             # Ok, this really is a problem
-            font.logger.log("Glyph %s already in com.schriftgestaltung.glyphOrder; can't rename %s" % (newname, oldname), "E")
+            font.logger.log("Glyph %s already in com.schriftgestaltung.glyphOrder; can't rename %s" % (newname, oldname), "S")
         else:
             csGlyphOrder[x] = newname
 
-    # Now rebuild glyph order elements from the modified lists we have
+    for x, oldname, newname in saveforlaterPSN:
+        if newname in psnames:
+            # Ok, this really is a problem
+            font.logger.log("Glyph %s already in public.postscriptNames; can't rename %s" % (newname, oldname), "S")
+        else:
+            psnames[newname] = psnames.pop(tempname)
+
+
+    # Rebuild glyph order elements from the modified lists we have
     if publicGlyphOrder:
         array = ET.Element("array")
         for name in publicGlyphOrder:
@@ -132,6 +154,14 @@ def doit(args) :
         for name in csGlyphOrder:
             ET.SubElement(array, "string").text = name
         font.lib.setelem("com.schriftgestaltung.glyphOrder", array)
+
+    # Rebuild postscriptNames
+    if psnames:
+        dict = ET.Element("dict")
+        for n in psnames:
+            ET.SubElement(dict, "key").text = n
+            ET.SubElement(dict, "string").text = psnames[n]
+        font.lib.setelem("public.postscriptNames", dict)
 
     return font
 
