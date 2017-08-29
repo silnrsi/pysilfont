@@ -20,7 +20,7 @@ def doit(args) :
     # logger = args.logger
     incsv = args.input
 
-   # Obtain lib.plist glyph order(s) and psnames if they exist:
+    # Obtain lib.plist glyph order(s) and psnames if they exist:
     if 'public.glyphOrder' in font.lib:
         publicGlyphOrder = font.lib.getval('public.glyphOrder')     # This is an array
     if 'com.schriftgestaltung.glyphOrder' in font.lib:
@@ -131,7 +131,7 @@ def doit(args) :
         else:
             csGlyphOrder[x] = newname
 
-    for x, oldname, newname in saveforlaterPSN:
+    for tempname, oldname, newname in saveforlaterPSN:
         if newname in psnames:
             # Ok, this really is a problem
             font.logger.log("Glyph %s already in public.postscriptNames; can't rename %s" % (newname, oldname), "S")
