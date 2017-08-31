@@ -17,10 +17,14 @@ argspec = [
 
 def doit(args) :
     font = args.ifont
-    # logger = args.logger
     incsv = args.input
+    logger = args.logger
+
+    # remember all glyphs actually renamed:
+    nameMap = {}
 
     # Obtain lib.plist glyph order(s) and psnames if they exist:
+    publicGlyphOrder = csGlyphOrder = psnames = None
     if 'public.glyphOrder' in font.lib:
         publicGlyphOrder = font.lib.getval('public.glyphOrder')     # This is an array
     if 'com.schriftgestaltung.glyphOrder' in font.lib:
@@ -36,10 +40,10 @@ def doit(args) :
     # done independently since the same glyph names are not necessarily in all
     # three structures.
 
-    # First process all records of csv, and for each glyph that is to be renamed:
+    # First pass: process all records of csv, and for each glyph that is to be renamed:
     #   If the new glyphname is not already present, go ahead and rename it now.
     #   If the new glyph name already exists, rename the glyph to a temporary name
-    #      and put relevant details in saveforlater{}
+    #      and put relevant details in saveforlater[]
 
     def gettempname(f):
         ''' return a temporary glyph name that, when passed to function f(), returns true'''
@@ -64,11 +68,12 @@ def doit(args) :
 
         # Handle font first:
         if oldname not in font.deflayer:
-            font.logger.log("glyph name not in font: " + oldname , "I")
+            logger.log("glyph name not in font: " + oldname , "I")
         elif newname not in font.deflayer:
             # Ok, this case is easy: just rename the glyph
             font.deflayer[oldname].name = newname
-            font.logger.log("Pass 1: Renamed %s to %s" % (oldname, newname), "I")
+            nameMap[oldname] = newname
+            logger.log("Pass 1: Renamed %s to %s" % (oldname, newname), "I")
         else:
             # newname already in font -- but it might get renamed later in which case this isn't actually a problem.
             # For now, then, rename glyph to a temporary name and remember it for second pass
@@ -105,21 +110,25 @@ def doit(args) :
                 psnames[tempname] = psnames.pop(oldname)
                 saveforlaterPSN.append( (tempname, oldname, newname))
 
-    # Ok, now we can reprocess those things we saved for later:
+    # Second pass: now we can reprocess those things we saved for later:
+    #    If the new glyphname is no longer present, we can complete the renaming
+    #    Otherwise we've got a fatal error
+
     for j in saveforlaterFont:
         tempname, oldname, newname = j
         if newname in font.deflayer:
             # Ok, this really is a problem
-            font.logger.log("Glyph %s already in font; can't rename %s" % (newname, oldname), "S")
+            logger.log("Glyph %s already in font; can't rename %s" % (newname, oldname), "S")
         else:
             font.deflayer[tempname].name = newname
-            font.logger.log("Pass 2: Renamed %s to %s" % (oldname, newname), "I")
+            nameMap[oldname] = newname
+            logger.log("Pass 2: Renamed %s to %s" % (oldname, newname), "I")
 
     for j in saveforlaterPGO:
         x, oldname, newname = j
         if newname in publicGlyphOrder:
             # Ok, this really is a problem
-            font.logger.log("Glyph %s already in public.GlyphOrder; can't rename %s" % (newname, oldname), "S")
+            logger.log("Glyph %s already in public.GlyphOrder; can't rename %s" % (newname, oldname), "S")
         else:
             publicGlyphOrder[x] = newname
 
@@ -127,19 +136,20 @@ def doit(args) :
         x, oldname, newname = j
         if newname in csGlyphOrder:
             # Ok, this really is a problem
-            font.logger.log("Glyph %s already in com.schriftgestaltung.glyphOrder; can't rename %s" % (newname, oldname), "S")
+            logger.log("Glyph %s already in com.schriftgestaltung.glyphOrder; can't rename %s" % (newname, oldname), "S")
         else:
             csGlyphOrder[x] = newname
 
     for tempname, oldname, newname in saveforlaterPSN:
         if newname in psnames:
             # Ok, this really is a problem
-            font.logger.log("Glyph %s already in public.postscriptNames; can't rename %s" % (newname, oldname), "S")
+            logger.log("Glyph %s already in public.postscriptNames; can't rename %s" % (newname, oldname), "S")
         else:
             psnames[newname] = psnames.pop(tempname)
 
+    # Finally rebuild font structures from the modified lists we have:
 
-    # Rebuild glyph order elements from the modified lists we have
+    # Rebuild glyph order elements:
     if publicGlyphOrder:
         array = ET.Element("array")
         for name in publicGlyphOrder:
@@ -152,7 +162,7 @@ def doit(args) :
             ET.SubElement(array, "string").text = name
         font.lib.setelem("com.schriftgestaltung.glyphOrder", array)
 
-    # Rebuild postscriptNames
+    # Rebuild postscriptNames:
     if psnames:
         dict = ET.Element("dict")
         for n in psnames:
@@ -160,6 +170,14 @@ def doit(args) :
             ET.SubElement(dict, "string").text = psnames[n]
         font.lib.setelem("public.postscriptNames", dict)
 
+    # Iterate over all glyphs, and fix up any components that reference renamed glyphs
+    for name in font.deflayer:
+        for component in font.deflayer[name].etree.findall('./outline/component[@base]'):
+            oldname = component.get('base')
+            if oldname in nameMap:
+                component.set('base', nameMap[oldname])
+
+    logger.log("%d glyphs renamed" % (len(nameMap)), "P")
     return font
 
 def cmd() : execute("UFO",doit,argspec) 
