@@ -142,7 +142,7 @@ class _paramset(dict):
             value = str2bool(value)
             if value is None: self.params.logger.log(self.sourcedesc+" parameter "+origparn+" must be boolean: " + origvalue, "S")
         if ptyp is list:
-            if type(value) is not list: value = value.split(", ")  # Convert csv string into list
+            if type(value) is not list: value = value.split(",")  # Convert csv string into list
             if len(value) < 2: self.params.logger.log(self.sourcedesc+" parameter "+origparn+" must have a list of values: " + origvalue, "S")
             valuesOK = True
             listtype = self.params.listtypes[parn]
@@ -187,6 +187,9 @@ class csvreader(object):    # Iterator for csv files, skipping comments and chec
             print e
             sys.exit(1)
         self.reader = csv.reader(file)
+        # Read first line then reset; this is so scripts can analyse first line before starting iterating
+        self.firstline = next(self.reader, None)
+        file.seek(0)
 
     def __setattr__(self, name, value):
         if name == "numfields" and value is not None:  # If numfields is changed, reset min and max fields
@@ -414,7 +417,8 @@ def execute(tool, fn, argspec, chain = None):
                 continue
 
         if c == 0:
-            if aval[-1] in ("\\", "/"): aval = aval[0:-1]  # Remove trailing slashes
+            if aval is None : logger.log("Invalid first positional parameter spec", "X")
+            if aval[-1] in ("\\","/"): aval = aval[0:-1]  # Remove trailing slashes
         else:  #Handle defaults for all but first positional parameter
             if adef is not None:
                 if not aval: aval = ""
@@ -565,7 +569,7 @@ def chain(argv, function, argspec, font, params, logger, quiet):  # Chain multpl
 
 def splitfn(fn):  # Split filename into path, base and extension
     if fn:  # Remove trailing slashes
-        if fn[-1] in ("\\", "/"): fn = fn[0:-1]
+        if fn[-1] in ("\\","/"): fn = fn[0:-1]
     (path, base) = os.path.split(fn)
     (base, ext) = os.path.splitext(base)
     # Handle special case where just a directory is supplied
