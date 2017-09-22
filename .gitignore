@@ -13,4 +13,5 @@ pysilfont.cfg
 /lib/pysilfont.egg-info
 /pysilfont.egg-info
 /setuptools-*
+/.idea
 
