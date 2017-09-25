@@ -40,9 +40,10 @@ def doit(args) :
                 incsv.numfields = 2
             else:
                 logger.log("Invalid first line in csv file", "S")
-        print line
         glyphn = line[0]
         psname = line[psnamepos]
+        if len(psname) == 0 or glyphn == psname:
+        	continue	# No need to include cases where production name is blank or same as working name
         # Add to dict
         sub = ET.SubElement(dict,"key")
         sub.text = glyphn
