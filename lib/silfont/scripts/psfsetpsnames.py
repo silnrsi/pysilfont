@@ -11,9 +11,9 @@ from silfont.core import execute
 from xml.etree import cElementTree as ET
 
 argspec = [
-    ('ifont', {'help': 'Input font file'}, {'type': 'infont'}), 
+    ('ifont', {'help': 'Input font file'}, {'type': 'infont'}),
     ('ofont', {'help': 'Output font file', 'nargs': '?'}, {'type': 'outfont'}),
-    ('-i', '--input', {'help': 'Input csv file'}, {'type': 'incsv', 'def': 'glyph_data.csv'}), 
+    ('-i', '--input', {'help': 'Input csv file'}, {'type': 'incsv', 'def': 'glyph_data.csv'}),
     ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': 'setpsnames.log'})]
 
 
@@ -45,6 +45,8 @@ def doit(args):
     for line in incsv:
         glyphn = line[0]
         psname = line[psnamepos]
+        if len(psname) == 0 or glyphn == psname:
+        	continue	# No need to include cases where production name is blank or same as working name
         # Add to dict
         sub = ET.SubElement(dict, "key")
         sub.text = glyphn
