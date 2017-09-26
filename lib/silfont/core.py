@@ -199,7 +199,7 @@ class csvreader(object):    # Iterator for csv files, skipping comments and chec
 
     def __iter__(self):
         for row in self.reader:
-            self.line_num = self.reader.line_num
+            self.line_num = self.reader.line_num-1 # Count is out by 1 due to reading first lin in __init__
             if row == []: continue  # Skip blank lines
             if row[0][0] == "#": continue  # Skip comments - ie lines starting with  #
             if len(row) < self.minfields or len(row) > self.maxfields:

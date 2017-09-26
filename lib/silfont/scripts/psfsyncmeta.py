@@ -206,6 +206,8 @@ def doit(args) :
                 pass
             elif action == "Warn" :
                 logger.log(field + " needs manual correction: " + issue, "W")
+            elif action == "Error" :
+                logger.log(field + " needs manual correction: " + issue, "E")
             elif action in ("Update", "FlipBoolean", "Copyfield", "CopyArray") : # Updating actions
                 changed = True
                 message = field + updatemessage
@@ -225,7 +227,7 @@ def doit(args) :
                     finfo.setelem(field, ET.fromstring(ET.tostring(melem)))
                 logger.log(message, "W")
             else:
-                logger.log("Uncoded action - oops", "X")
+                logger.log("Uncoded action: " + action + " - oops", "X")
 
         # Now update on disk
         if not reportonly :

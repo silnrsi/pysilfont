@@ -346,13 +346,17 @@ Add associate UID info to org.sil.assocUIDs in glif lib based on a csv file - co
 
 ---
 ####  psfsetglyphorder
-Usage: **`psfsetglyphorder [--GlyphsApp] [-i INPUT] ifont [ofont]`**
+Usage: **`psfsetglyphorder [--header] [--field] [-i INPUT] ifont [ofont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-From the INPUT file, read an ordered list of glyph names (one per line) and load the list into public.glyphOrder in lib.plist to control the order of glyphs in generated TTF files.
-If \-\-GlyphsApp is specified, the glyph list is loaded into com.schriftgestaltung.glyphOrder instead, which
-controls of the glyph display order in GlyphsApp.
+From the INPUT file, load public.glyphOrder in lib.plist to control the order of glyphs in generated TTF files.  Optionally, using `--field`,  update other orders like com.schriftgestaltung.glyphOrder instead.
+
+The input file can be in one of two formats:
+- Plain text file with one glyph name per line in the desired order
+- csv file with headers where first column contains glyph names and sort_final column contains numeric values
+
+With the csv file, the glyph names are sorted by the values in the sort column, which can be integer or real. `--header` can be used to specify alternate header to sort_final.  Multiple values can be used with `--header` and `--field` to update 2 or more orders in a single command call.
 
 ---
 ####  psfsetpsnames
@@ -360,7 +364,9 @@ Usage: **`psfsetpsnames [-i INPUT] ifont [ofont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-Add public.postscriptname to glif lib based on a csv file,  format "glyphname,postscriptname"
+Add public.postscriptName to glif lib based on a csv file, in one of two formats:
+- simple csv in form glyphname,postscriptname
+- csv file with headers where first column contains glyph names and ps_name column contains the postscript names
 
 ---
 ####  psfsetunicodes

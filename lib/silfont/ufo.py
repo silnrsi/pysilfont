@@ -311,7 +311,7 @@ class Ufont(object) :
         if filetype in self.__dict__ : self.logger.log("File already in font","X")
         obj = Uplist(font = self)
         setattr(self, filetype, obj )
-        self.dtree[filetype + '.plist'] = dirTreeItem(read = True, added = True, fileObject = obj, fileType = "xml")
+        self.dtree[filetype + '.plist'] = UT.dirTreeItem(read = True, added = True, fileObject = obj, fileType = "xml")
         obj.etree = ET.fromstring("<plist>\n<dict/>\n</plist>")
 
 class Ulayer(_Ucontainer) :

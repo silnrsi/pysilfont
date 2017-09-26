@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-'''Load glyph order data into lib.plist based on a text file'''
+'''Load glyph order data into public.glyphOrder in lib.plist based on based on a text file in one of two formats:
+    - simple text file with one glyph name per line
+    - csv file with headers, where column 1 is glyph name and column with header "sort_final" contains
+      numeric values used to sort the glyph names by'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
@@ -8,47 +11,72 @@ __author__ = 'David Raymond'
 from silfont.core import execute
 from xml.etree import cElementTree as ET
 
-suffix = "_Gorder"
 argspec = [
-    ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
-    ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
-    ('--GlyphsApp',{'help': 'Load display order for Glyphs app rather than public.glyphOrder', 'action': 'store_true'},{}),
-    ('-i','--input',{'help': 'Input text file, one glyphname per line'}, {'type': 'infile', 'def': suffix+'.txt'}),
-    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': suffix+'.log'})]
+    ('ifont', {'help': 'Input font file'}, {'type': 'infont'}), 
+    ('ofont', {'help': 'Output font file', 'nargs': '?'}, {'type': 'outfont'}),
+    ('--header', {'help': 'Column header(s) for sort order', 'default': 'sort_final'}, {}),
+    ('--field', {'help': 'Field(s) in lib.plist to update', 'default': 'public.glyphOrder'}, {}),
+    ('-i', '--input', {'help': 'Input text file, one glyphname per line'}, {'type': 'incsv', 'def': 'glyph_data.csv'}),
+    ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': '_gorder.log'})]
 
-def doit(args) :
+
+def doit(args):
     font = args.ifont
-    infile = args.input
-    glyphlist = font.deflayer.keys() # List to check every glyph has a record in the list
+    incsv = args.input
+    logger = args.logger
+    fields = args.field.split(",")
+    fieldcount = len(fields)
+    headers = args.header.split(",")
+    if fieldcount != len(headers): logger.log("Must specify same number of values in --field and --header", "S")
 
-    array = ET.Element("array")
-
-    for glyphn in infile.readlines() :
-        glyphn = glyphn.strip()
-        if glyphn == "" or glyphn[0] == "#" : continue
-        # Add to array
-        sub = ET.SubElement(array,"string")
-        sub.text = glyphn
-        # Check to see if glyph is in font
-        if glyphn in glyphlist :
-            glyphlist.remove(glyphn) # So glyphlist ends up with those without an entry
-        else :
-            font.logger.log("No glyph in font for " + glyphn,"I")
-
-    for glyphn in glyphlist : # Remaining glyphs were not in the input file
-        font.logger.log("No entry in input file for font glyph " + glyphn,"I")
-
-    # Add to lib.plist
-    if "lib" not in font.__dict__ : #@@@ Need to extend capability of Uplist to do much of this
-        font.lib = Uplist(font = font)
-        font.dtree['lib.plist'] = dirTreeItem(read = True, added = True, fileObject = font.lib, fileType = "xml")
-        font.lib.etree = ET.fromstring("<plist>\n<dict/>\n</plist>")
-    if args.GlyphsApp:
-        font.lib.setelem("com.schriftgestaltung.glyphOrder",array)
+    # Identify file format from first line then create glyphdata[] with glyph name then one column per header
+    glyphdata = []
+    fl = incsv.firstline
+    if fl is None: logger.log("Empty imput file", "S")
+    numfields = len(fl)
+    incsv.numfields = numfields
+    fieldpos = []
+    if numfields > 1:  # More than 2 columns, so must have headers
+        for header in headers:
+            if header in fl:
+                pos = fl.index(header)
+                if pos == 0: logger.log("First csv field mush be glyph name", "S")
+                fieldpos.append(pos)
+            else:
+                logger.log('No "' + header + '" heading in csv headers"', "S")
+        next(incsv.reader, None)  # Skip first line with headers in
+        for line in incsv:
+            vals = [line[0]]
+            for pos in fieldpos: vals.append(float(line[pos]))
+            glyphdata.append(vals)
+    elif numfields == 1:   # Simple text file.  Create glyphdata in same format as for csv files
+        for i, line in enumerate(incsv): glyphdata.append((line[0], i))
     else:
-        font.lib.setelem("public.glyphOrder",array)
+        logger.log("Invalid csv file", "S")
+
+    # Now process the data
+    if "lib" not in font.__dict__: font.addfile("lib")
+    glyphlist = font.deflayer.keys()  # List to check every glyph has a record in the list
+
+    for i in range(1,fieldcount+1):
+        glyphdata = sorted(glyphdata, key=lambda row: row[i])
+        array = ET.Element("array")
+        for row in glyphdata:
+            glyphn = row[0]
+            sub = ET.SubElement(array, "string")
+            sub.text = glyphn
+            if i == 1:  # check glyphs exist in font during the first pass
+                if glyphn in glyphlist:
+                    glyphlist.remove(glyphn)  # So glyphlist ends up with those without an entry
+                else:
+                    font.logger.log("No glyph in font for " + glyphn, "I")
+        font.lib.setelem(fields[i-1],array)
+
+    for glyphn in glyphlist:  # Remaining glyphs were not in the input file
+        font.logger.log("No entry in input file for font glyph " + glyphn, "I")
 
     return font
 
-def cmd() : execute("UFO",doit,argspec) 
+
+def cmd(): execute("UFO", doit, argspec) 
 if __name__ == "__main__": cmd()

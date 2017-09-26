@@ -204,6 +204,7 @@ There would normally only be a single logger object used by a script.
 
 ## Support for csv files
 csv file support has been added to core.py with a csvreader() object (using the python csv module).  In addition to the basic handling that the csv module provides, the following are supported:
+- csvreader.firstline returns the first line of the file, so analyse headers if needed.  Iteration still starts with the first line.
 - Specifying the number of values expected (with minfields, maxfields, numfields)
 - Comments (lines starting with #) are ignored
 - Blank lines are also ignored
