@@ -9,6 +9,7 @@ __author__ = 'Martin Hosken, Alan Ward'
 import silfont.ufo as ufo
 from collections import OrderedDict
 from silfont.feaplus import feaplus_parser
+from xml.etree import ElementTree as et
 import fontTools.feaLib.ast as ast
 import StringIO
 import os
@@ -37,7 +38,6 @@ class Font(object) :
         self.all_aps = {}
 
     def readaps(self, filename) :
-        self.all_aps = {}
         if filename.endswith('.ufo') :
             f = ufo.Ufont(filename)
             for g in f.deflayer :
@@ -49,12 +49,49 @@ class Font(object) :
                         glyph.add_anchor(a.element.attrib)
                         self.all_aps.setdefault(a.element.attrib['name'], []).append(glyph)
         elif filename.endswith('.xml') :
-            pass #TODO: read AP.xml into etree and process to extract anchors
-            # may want to extract other info at the same time like class
-            # and property values.
+            currGlyph = None
+            currPoint = None
+            for event, elem in et.iterparse(filename, events=('start', 'end')):
+                if event == 'start':
+                    if elem.tag == 'glyph':
+                        name = elem.get('PSName', '')
+                        if name:
+                            currGlyph = Glyph(name)
+                            self.glyphs[name] = currGlyph
+                        currPoint = None
+                    elif elem.tag == 'point':
+                        currPoint = {'name' : elem.get('type', '')}
+                    elif elem.tag == 'location' and currPoint is not None:
+                        currPoint['x'] = elem.get('x', 0)
+                        currPoint['y'] = elem.get('y', 0)
+                elif event == 'end':
+                    if elem.tag == 'point':
+                        if currGlyph:
+                            currGlyph.add_anchor(currPoint)
+                            self.all_aps.setdefault(currPoint['name'], []).append(currGlyph)
+                        currPoint = None
+                    elif elem.tag == 'glyph':
+                        currGlyph = None
 
+    def read_classes(self, fname, classproperties=False):
+        doc = et.parse(fname)
+        for c in doc.findall('.//class'):
+            cl = []
+            self.classes[c.get('name')] = cl
+            for e in c.get('exts', '').split() + [""]:
+                for g in c.text.split():
+                    if g+e in self.glyphs:
+                        cl.append(g+e)
+        if not classproperties:
+            return
+        for c in doc.findall('.//property'):
+            for e in c.get('exts', '').split() + [""]:
+                for g in c.text.split():
+                    if g+e in self.glyphs:
+                            cname = c.get('name') + "_" + c.get('value')
+                            self.classes.set_default(cname, []).append(g+e)
+                    
     def make_classes(self) :
-        self.classes = {}
         for name, g in self.glyphs.items() :
             # pull off suffix and make classes
             # TODO: doesn't handle multiple suffices. Refactor for that.
@@ -127,20 +164,21 @@ class Font(object) :
 #TODO: provide more argument info
 argspec = [
     ('infile', {'help': 'Input UFO or file'}, {}),
-    ('-a', '--aps', {'help': 'Attachment Point database or .ufo file'}, {}),
     ('-i', '--input', {'help': 'Fea file to merge'}, {}),
-    ('-o', '--output', {'help': 'Output fea file'}, {})
+    ('-o', '--output', {'help': 'Output fea file'}, {}),
+    ('-c', '--classfile', {'help': 'Classes file'}, {}),
+    ('--classprops', {'help': 'Include property elements from classes file', 'action': 'store_true'}, {})
 ]
 
 def doit(args) :
     font = Font()
-    if args.aps :
-        font.readaps(args.aps)
-    elif args.infile.endswith('.ufo') :
+    if args.infile :
         font.readaps(args.infile)
 
     font.make_marks()
     font.make_classes()
+    if args.classfile:
+        font.read_classes(args.classfile, classproperties = args.classprops)
 
     p = feaplus_parser(None, [])
     doc_ufo = p.parse() # returns an empty ast.FeatureFile
