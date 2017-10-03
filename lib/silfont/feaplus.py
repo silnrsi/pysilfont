@@ -14,7 +14,7 @@ class ast_BaseClass(ast.MarkClass) :
 class ast_BaseClassDefinition(ast.MarkClassDefinition) :
     def asFea(self, indent="") :
         # like base class asFea
-        return "{}baseClass {} {} @{};".format(indent, self.glyphs.asFea(),
+        return "# {}baseClass {} {} @{};".format(indent, self.glyphs.asFea(),
                                                self.anchor.asFea(), self.markClass.name)
 
 class ast_MarkBasePosStatement(ast.MarkBasePosStatement):
@@ -85,12 +85,60 @@ class ast_MultipleSubstStatement(ast.Statement):
             res += ";" 
         return res
 
+class ast_LigatureSubstStatement(ast.Statement):
+    def __init__(self, location, prefix, glyphs, suffix, replacement,
+                 forceChain):
+        ast.Statement.__init__(self, location)
+        self.prefix, self.glyphs, self.suffix = (prefix, glyphs, suffix)
+        self.replacement, self.forceChain = replacement, forceChain
+        if len(self.replacement.glyphSet()) > 1:
+            for i, g in enumerate(self.glyphs):
+                if len(g.glyphSet()) > 1:
+                    self.multindex = i
+                    break
+        else:
+            self.multindex = 0
+
+    def build(self, builder):
+        prefix = [p.glyphSet() for p in self.prefix]
+        glyphs = [g.glyphSet() for g in self.glyphs]
+        suffix = [s.glyphSet() for s in self.suffix]
+        replacements = self.replacement.glyphSet()
+        glyphs = self.glyphs[self.multindex].glyphSet()
+        for i in range(min(len(glyphs), len(replacements))):
+            builder.add_ligature_subst(
+                self.location, prefix,
+                self.glyphs[:self.multindex] + glyphs[i] + self.glyphs[self.multindex+1:],
+                suffix, replacements[i], self.forceChain)
+
+    def asFea(self, indent=""):
+        res = ""
+        pres = " ".join(map(asFea, self.prefix)) if len(self.prefix) else ""
+        sufs = " ".join(map(asFea, self.suffix)) if len(self.suffix) else ""
+        glyphs = self.glyphs[self.multindex].glyphSet()
+        replacements = self.replacement.glyphSet()
+        for i in range(min(len(glyphs), len(replacements))) :
+            res += ("\n" + indent if i > 0 else "") + "sub "
+            if len(self.prefix) > 0 or len(self.suffix) > 0 :
+                if len(self.prefix) :
+                    res += pres + " "
+                res += " ".join(asFea(g) + "'" for g in self.glyphs[:self.multindex] + [glyphs[i]] + self.glyphs[self.multindex+1:])
+                if len(self.suffix) :
+                    res += " " + sufs
+            else :
+                res += " ".join(map(asFea, self.glyphs[:self.multindex] + [glyphs[i]] + self.glyphs[self.multindex+1:]))
+            res += " by "
+            res += asFea(replacements[i])
+            res += ";"
+        return res
+
 
 class feaplus_ast(object) :
     MarkBasePosStatement = ast_MarkBasePosStatement
     BaseClass = ast_BaseClass
     BaseClassDefinition = ast_BaseClassDefinition
     MultipleSubstStatement = ast_MultipleSubstStatement
+    LigatureSubstStatement = ast_LigatureSubstStatement
 
     def __getattr__(self, name):
         return getattr(ast, name)
@@ -255,12 +303,8 @@ class feaplus_parser(Parser) :
         # GSUB lookup type 4: Ligature substitution.
         # Format: "substitute f f i by f_f_i;"
         if (not reverse and
-                len(old) > 1 and len(new) == 1 and
-                len(new[0].glyphSet()) == 1 and
-                num_lookups == 0):
-            return self.ast.LigatureSubstStatement(
-                location, old_prefix, old, old_suffix,
-                list(new[0].glyphSet())[0], forceChain=hasMarks)
+                len(old) > 1 and len(new) == 1 and num_lookups == 0):
+            return self.ast.LigatureSubstStatement(location, old_prefix, old, old_suffix, new[0], forceChain=hasMarks)
 
         # GSUB lookup type 8: Reverse chaining substitution.
         if reverse:

@@ -80,7 +80,7 @@ class Font(object) :
             self.classes[c.get('name')] = cl
             for e in c.get('exts', '').split() + [""]:
                 for g in c.text.split():
-                    if g+e in self.glyphs:
+                    if g+e in self.glyphs or (e == '' and g.startswith('@')):
                         cl.append(g+e)
         if not classproperties:
             return
@@ -120,7 +120,7 @@ class Font(object) :
                 gc.append(g)
             gcd = parser.ast.GlyphClassDefinition(0, name, gc)
             parser.add_statement(gcd)
-            parser.define_glyphclass(name, gc)
+            parser.define_glyphclass(name, gcd)
 
     def append_positions(self, parser):
         # create base and mark classes, add to fea file dicts and parser symbol table
