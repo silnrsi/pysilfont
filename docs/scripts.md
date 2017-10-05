@@ -354,9 +354,9 @@ From the INPUT file, load public.glyphOrder in lib.plist to control the order of
 
 The input file can be in one of two formats:
 - Plain text file with one glyph name per line in the desired order
-- csv file with headers where first column contains glyph names and sort_final column contains numeric values
+- csv file with headers using glyph_name and sort_final columns
 
-With the csv file, the glyph names are sorted by the values in the sort column, which can be integer or real. `--header` can be used to specify alternate header to sort_final.  Multiple values can be used with `--header` and `--field` to update 2 or more orders in a single command call.
+With the csv file, the glyph names are sorted by the values in the sort_final column, which can be integer or real. `--header` can be used to specify alternate header to sort_final.  Multiple values can be used with `--header` and `--field` to update 2 or more orders in a single command call.
 
 ---
 ####  psfsetpsnames
@@ -366,7 +366,7 @@ _([Standard options](docs.md#standard-command-line-options) also apply)_
 
 Add public.postscriptName to glif lib based on a csv file, in one of two formats:
 - simple csv in form glyphname,postscriptname
-- csv file with headers where first column contains glyph names and ps_name column contains the postscript names
+- csv file with headers using on glyph_name and ps_name columns
 
 ---
 ####  psfsetunicodes

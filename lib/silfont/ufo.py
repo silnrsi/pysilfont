@@ -61,17 +61,19 @@ class _plist(object) :
         else :
             self.addval(key,valuetype,value)
 
-    def getval(self,key) : # Returns a value for integer, real, string, dict or array keys or None for other keys
+    def getval(self,key) : # Returns a value for integer, real, string, true, false, dict or array keys or None for other keys
         elem = self._contents[key][1]
         return self._valelem(elem)
 
-    def _valelem(self, elem) : # Used by getval to recursively process dict anbd array elements
-        if elem.tag in ("integer","real","string") : return elem.text
+    def _valelem(self, elem):  # Used by getval to recursively process dict anbd array elements
+        if elem.tag in ("integer", "real", "string"): return elem.text
+        if elem.tag == "true": return True
+        if elem.tag == "false": return False
         if elem.tag == "array" :
             array = []
-            for subelem in elem : array.append(self._valelem(subelem))
+            for subelem in elem: array.append(self._valelem(subelem))
             return array
-        elif elem.tag == "dict" : # Only works if dict items are simple, eg real, string
+        elif elem.tag == "dict":
             dict = {}
             for i in range(0,len(elem),2): dict[elem[i].text] = self._valelem(elem[i+1])
             return dict

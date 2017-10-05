@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 '''Add public.postscriptNames to lib.plist based on a csv file in one of two formats:
     - simple glyphname, postscriptname with no headers
-    - with headers, where column 1 is glyph name and header for postscript name is "ps_name"'''
+    - with headers, where the headers for glyph name and postscript name "glyph_name" and "ps_name"'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
@@ -29,11 +29,15 @@ def doit(args):
     numfields = len(fl)
     incsv.numfields = numfields
     if numfields == 2:
+        glyphnpos = 0
         psnamepos = 1    # Default for plain csv
     elif numfields > 2:  # More than 2 columns, so must have standard headers
+        if "glyph_name" in fl:
+            glyphnpos = fl.index("glyph_name")
+        else:
+            logger.log("No glyph_name field in csv headers", "S")
         if "ps_name" in fl:
             psnamepos = fl.index("ps_name")
-            if psnamepos == 0: logger.log("First field must be glyph name, not ps_name", "S")
         else:
             logger.log("No ps_name field in csv headers", "S")
         next(incsv.reader, None)  # Skip first line with headers in
@@ -43,7 +47,7 @@ def doit(args):
     # Now process the data
     dict = ET.Element("dict")
     for line in incsv:
-        glyphn = line[0]
+        glyphn = line[glyphnpos]
         psname = line[psnamepos]
         if len(psname) == 0 or glyphn == psname:
         	continue	# No need to include cases where production name is blank or same as working name

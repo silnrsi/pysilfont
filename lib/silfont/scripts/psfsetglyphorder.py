@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 '''Load glyph order data into public.glyphOrder in lib.plist based on based on a text file in one of two formats:
     - simple text file with one glyph name per line
-    - csv file with headers, where column 1 is glyph name and column with header "sort_final" contains
+    - csv file with headers, using headers "glyph_name" and "sort_final" where the latter contains
       numeric values used to sort the glyph names by'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
@@ -36,17 +36,20 @@ def doit(args):
     numfields = len(fl)
     incsv.numfields = numfields
     fieldpos = []
-    if numfields > 1:  # More than 2 columns, so must have headers
+    if numfields > 1:  # More than 1 column, so must have headers
+        if "glyph_name" in fl:
+            glyphnpos = fl.index("glyph_name")
+        else:
+            logger.log("No glyph_name field in csv headers", "S")
         for header in headers:
             if header in fl:
                 pos = fl.index(header)
-                if pos == 0: logger.log("First csv field mush be glyph name", "S")
                 fieldpos.append(pos)
             else:
                 logger.log('No "' + header + '" heading in csv headers"', "S")
         next(incsv.reader, None)  # Skip first line with headers in
         for line in incsv:
-            vals = [line[0]]
+            vals = [line[glyphnpos]]
             for pos in fieldpos: vals.append(float(line[pos]))
             glyphdata.append(vals)
     elif numfields == 1:   # Simple text file.  Create glyphdata in same format as for csv files
