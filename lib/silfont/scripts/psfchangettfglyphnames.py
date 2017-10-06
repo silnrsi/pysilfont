@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-'Rename the glpyhs in a ttf file based on production names in a UFO'
+'Rename the glyphs in a ttf file based on production names in a UFO'
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2017 SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Alan Ward'
 
-# Rename the glpyhs in a ttf file based on production names in a UFO
+# Rename the glyphs in a ttf file based on production names in a UFO
 # using same technique as fontmake.
 # Production names come from ufo.lib.public.postscriptNames according to ufo2ft comments
 # but I don't know exactly where in the UFO that is
@@ -22,7 +22,7 @@ def doit(args):
     ufo = defcon.Font(args.iufo)
     ttf = fontTools.ttLib.TTFont(args.ittf)
     
-    args.logger.log('Renaming the input ttf glpyhs based on production names in the UFO', 'P')
+    args.logger.log('Renaming the input ttf glyphs based on production names in the UFO', 'P')
     postProcessor = ufo2ft.PostProcessor(ttf, ufo)
     ttf = postProcessor.process(useProductionNames=True, optimizeCFF=False)
     
