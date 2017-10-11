@@ -192,7 +192,7 @@ Usage: **`psfcopymeta [-r] fromfont tofont`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-This copies selected fontlist.plist metadata (eg copyright, openTypeNameVersion, decender) between fonts in different (related) families.
+This copies selected fontlist.plist and lib.plist metadata (eg copyright, openTypeNameVersion, decender) between fonts in different (related) families.
 
 It is usually run against the master (regular) font in each family then data synced within family afterwards using [psfsyncmeta](#psfsyncmeta).
 
@@ -204,7 +204,7 @@ psfcopymeta GentiumPlus-Regular.ufo GentiumBookPlus-Bold
 
 If run with -r or \-\-reportonly it just reports what values would be updated.
 
-Look in psfcopymeta.py for a full list of metadata copied.  Note that only fontinfo.plist is updated; the target font is not normalized.
+Look in psfcopymeta.py for a full list of metadata copied.  Note that only fontinfo.plist and lib.plist are updated; the target font is not normalized.
 
 Also psfcopymeta does not use Pysilfont's backup mechanism for fonts.
 
@@ -419,7 +419,7 @@ Usage: **`psfsyncmeta [-s] [-m [MASTER]] [-r] [-n] [--normalize] ifont`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-Verifies and synchronises fontinfo.plist metatdata across a family of fonts.  By default it uses the regular font as the master and updates any other fonts that exist assuming standard name endings of -Regular, -Italic, -Bold and -BoldItalic.  Optionally a single font file can be synced against any other font as master, regardless of file naming.
+Verifies and synchronises some fontinfo.plist and lib.plist metatdata across a family of fonts.  By default it uses the regular font as the master and updates any other fonts that exist assuming standard name endings of -Regular, -Italic, -Bold and -BoldItalic.  Optionally a single font file can be synced against any other font as master, regardless of file naming.
 
 Example usage for family of fonts:
 
@@ -438,7 +438,7 @@ psfsyncmeta -s font-Italic.ufo -m otherfont.ufo
 The first will sync font-Italic against font-Regular and the second against otherfont.
 
 Look in psfsyncmeta.py for a full details of metadata actions.  
-Note that by default only fontinfo.plist is updated so fonts are not normalized.  Use \-\-normalize to additionally normalize all fonts in the family.
+Note that by default only fontinfo.plist and lib.plist are updated, so fonts are not normalized.  Use \-\-normalize to additionally normalize all fonts in the family.
 
 Also psfsyncmeta does not use Pysilfont's backup mechanism for fonts.
 
