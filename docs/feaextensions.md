@@ -92,8 +92,6 @@ classes on one side of the rule. The other side will, necessarily, contain a
 single term -- which Adobe currently requires to be a glyph.  For convenience of
 expression, we'll call the sides of the rule the *sequence side* and the *singleton side*.
 
-Rules that we need to expand meet the following criteria:
-
 *   Non-contextual substitution
 *   Uses the 'by' keyword
 *   Singleton side references a glyph class.
