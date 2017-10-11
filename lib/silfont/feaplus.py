@@ -40,7 +40,13 @@ class ast_MarkBasePosStatement(ast.MarkBasePosStatement):
         #TODO: do the right thing here (write to ttf?)
         pass
 
-#similar to ast.SingleSubstStatement
+#similar to ast.MultipleSubstStatement
+#one-to-many substitution, one glyph class is on LHS, multiple glyph classes may be on RHS
+# equivalent to generation of one stmt for each glyph in the LHS class
+# that's matched to corresponding glyphs in the RHS classes
+#prefix and suffx are for contextual lookups and do not need processing
+#replacement could contain multiple slots
+#TODO: below only supports one RHS class?
 class ast_MultipleSubstStatement(ast.Statement):
     def __init__(self, location, prefix, glyph, suffix, replacement):
         ast.Statement.__init__(self, location)
@@ -49,7 +55,7 @@ class ast_MultipleSubstStatement(ast.Statement):
         if len(self.glyph.glyphSet()) > 1 :
             for i, r in enumerate(self.replacement) :
                 if len(r.glyphSet()) > 1 :
-                    self.multindex = i
+                    self.multindex = i #first RHS slot with a glyph class
                     break
         else :
             self.multindex = 0
@@ -85,6 +91,15 @@ class ast_MultipleSubstStatement(ast.Statement):
             res += ";" 
         return res
 
+
+# similar to ast.LigatureSubstStatement
+# many-to-one substitution, one glyph class is on RHS, multiple glyph classes may be on LHS
+# equivalent to generation of one stmt for each glyph in the RHS class
+# that's matched to corresponding glyphs in the LHS classes
+# it's unclear which LHS class should correspond to the RHS class
+# prefix and suffx are for contextual lookups and do not need processing
+# replacement could contain multiple slots
+#TODO: below only supports one LHS class?
 class ast_LigatureSubstStatement(ast.Statement):
     def __init__(self, location, prefix, glyphs, suffix, replacement,
                  forceChain):
@@ -94,7 +109,7 @@ class ast_LigatureSubstStatement(ast.Statement):
         if len(self.replacement.glyphSet()) > 1:
             for i, g in enumerate(self.glyphs):
                 if len(g.glyphSet()) > 1:
-                    self.multindex = i
+                    self.multindex = i #first LHS slot with a glyph class
                     break
         else:
             self.multindex = 0

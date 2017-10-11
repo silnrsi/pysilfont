@@ -1,0 +1,3 @@
+feature test {
+    pos base @O mark @_O;
+} test;

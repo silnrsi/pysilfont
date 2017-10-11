@@ -77,7 +77,7 @@ class Font(object) :
         doc = et.parse(fname)
         for c in doc.findall('.//class'):
             cl = []
-            self.classes[c.get('name')] = cl
+            self.classes[c.get('name')] = cl  # assumes class does not already exist
             for e in c.get('exts', '').split() + [""]:
                 for g in c.text.split():
                     if g+e in self.glyphs or (e == '' and g.startswith('@')):
@@ -88,8 +88,8 @@ class Font(object) :
             for e in c.get('exts', '').split() + [""]:
                 for g in c.text.split():
                     if g+e in self.glyphs:
-                            cname = c.get('name') + "_" + c.get('value')
-                            self.classes.set_default(cname, []).append(g+e)
+                        cname = c.get('name') + "_" + c.get('value')
+                        self.classes.set_default(cname, []).append(g+e)
                     
     def make_classes(self) :
         for name, g in self.glyphs.items() :
