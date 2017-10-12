@@ -274,7 +274,7 @@ If the font specified with the -f parameter contains a '.' it is assumed to be a
 
 ---
 #### psfmakewoffmetadata
-Usage: **`psfmakewoffmetadata -n PRIMARYFONTNAME -i ORGID [-f FONTLOG] fontfile.ufo`**
+Usage: **`psfmakewoffmetadata -n PRIMARYFONTNAME -i ORGID [-f FONTLOG]  [-o OUTPUT] fontfile.ufo`**
 
 
 Make the WOFF meatadata xml file based on input UFO and FONTLOG.txt.
@@ -289,7 +289,7 @@ psfmakewoffmetadata -n "Nokyung" -i "org.sil.fonts" source/Nokyung-Regular.ufo
 
 It constructs the information needed from:
 
-- The supplied orgid
+- The supplied primary font name and orgid
 - Information within the primary font file
 - Information within the FONTLOG.txt
 

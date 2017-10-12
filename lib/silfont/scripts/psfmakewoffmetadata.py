@@ -13,6 +13,7 @@ argspec = [
     ('-n', '--primaryname', {'help': 'Primary Font Name', 'required': True}, {}),
     ('-i', '--orgid', {'help': 'orgId', 'required': True}, {}),
     ('-f', '--fontlog', {'help': 'FONTLOG.txt file', 'default': 'FONTLOG.txt'}, {'type': 'infile'}),
+    ('-o', '--output', {'help': 'Override output file'}, {'type': 'filename', 'def': None}),
     ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': '_makewoff.log'})]
 
 
@@ -22,6 +23,7 @@ def doit(args):
     orgid = args.orgid
     fontlog = args.fontlog
     logger = args.logger
+    ofn = args.output
 
     # Parse the fontlog file
     (section, match) = readuntil(fontlog, ("Basic Font Information",))  # Skip until start of "Basic Font Information" section
@@ -67,7 +69,11 @@ def doit(args):
         if elem is None:
             missing = field if missing is None else missing + ", " + field
         else:
-            ufofields[field] = elem.text
+            if field in ("openTypeNameLicense", "copyright", "trademark"):
+                text = textprotect(elem.text)
+            else:
+                text = attrprotect(elem.text)
+            ufofields[field] = text
     if missing is not None: logger.log("Field(s) missing from fontinfo.plist: " + missing, "S")
 
     version = ufofields["versionMajor"] + "." + ufofields["versionMinor"].zfill(3)
@@ -85,12 +91,12 @@ def doit(args):
 
     # Construct output file name
     (folder, ufoname) = os.path.split(font.ufodir)
-    filename = os.path.join(folder, pfn + "-WOFF-metadata.xml")
+    filename = os.path.join(folder, pfn + "-WOFF-metadata.xml") if ofn is None else ofn
     try:
         file = open(filename, "w")
     except Exception as e:
         logger.log("Unable to open " + filename + " for writing:\n" + str(e), "S")
-    logger.log("Writing to :" + filename, "P")
+    logger.log("Writing to : " + filename, "P")
 
     file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
     file.write('<metadata version="1.0">\n')
@@ -109,18 +115,20 @@ def doit(args):
 
     file.write('  <description>\n')
     file.write('    <text lang="en">\n')
-    for line in description: file.write('      ' + charprotect(line) + '\n')
+    for line in description: file.write('      ' + line + '\n')
     file.write('    </text>\n')
     file.write('  </description>\n')
 
     file.write('  <license url="http://scripts.sil.org/OFL" id="org.sil.ofl.1.1">\n')
     file.write('    <text lang="en">\n')
-    for line in license: file.write('      ' + charprotect(line) + '\n')
+    for line in ufofields["openTypeNameLicense"].splitlines(): file.write('      ' + line + '\n')
     file.write('    </text>\n')
     file.write('  </license>\n')
 
     file.write('  <copyright>\n')
-    file.write('    <text lang="en">' + ufofields["copyright"] + '</text>\n')
+    file.write('    <text lang="en">\n')
+    for line in ufofields["copyright"].splitlines(): file.write('      ' + line + '\n')
+    file.write('    </text>\n')
     file.write('  </copyright>\n')
 
     file.write('  <trademark>\n')
@@ -140,21 +148,29 @@ def readuntil(file, texts):  # Read through file until line is in text.  Return 
             if line == "" or line[0:5] == "-----":
                 pass
             else:
-                section = [line]
+                section = [textprotect(line)]
                 skip = False
         else:
             for text in texts:
                 if line[0:len(text)] == text: match = text
             if match: break
-            section.append(line)
+            section.append(textprotect(line))
     while section[-1] == "": section.pop()  # Strip blank lines at end
     return (section, match)
 
 
-def charprotect(txt):  # Switch special characters in text to use &...; format
+def textprotect(txt):  # Switch special characters in text to use &...; format
     txt = re.sub(r'&', '&amp;', txt)
     txt = re.sub(r'<', '&lt;', txt)
     txt = re.sub(r'>', '&gt;', txt)
+    return txt
+
+
+def attrprotect(txt):  # Switch special characters in text to use &...; format
+    txt = re.sub(r'&', '&amp;', txt)
+    txt = re.sub(r'<', '&lt;', txt)
+    txt = re.sub(r'>', '&gt;', txt)
+    txt = re.sub(r'"', '&quot;', txt)
     return txt
 
 
