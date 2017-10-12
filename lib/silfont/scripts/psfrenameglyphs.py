@@ -73,7 +73,7 @@ def doit(args) :
             # Ok, this case is easy: just rename the glyph
             font.deflayer[oldname].name = newname
             nameMap[oldname] = newname
-            logger.log("Pass 1: Renamed %s to %s" % (oldname, newname), "I")
+            logger.log("Pass 1 (Font): Renamed %s to %s" % (oldname, newname), "I")
         else:
             # newname already in font -- but it might get renamed later in which case this isn't actually a problem.
             # For now, then, rename glyph to a temporary name and remember it for second pass
@@ -81,30 +81,44 @@ def doit(args) :
             font.deflayer[oldname].name = tempname
             saveforlaterFont.append( (tempname, oldname, newname) )
 
-        # Similar algorithm for public.glyphOrder
-        if publicGlyphOrder and oldname in publicGlyphOrder:
-            x = publicGlyphOrder.index(oldname)
-            if newname not in publicGlyphOrder:
-                publicGlyphOrder[x] = newname
+        # Similar algorithm for public.glyphOrder, if present:
+        if publicGlyphOrder:
+            if oldname not in publicGlyphOrder:
+                logger.log("glyph name not in publicGlyphorder: " + oldname , "I")
             else:
-                tempname = gettempname(lambda n : n not in publicGlyphOrder)
-                publicGlyphOrder[x] = tempname
-                saveforlaterPGO.append( (x, oldname, newname) )
+                x = publicGlyphOrder.index(oldname)
+                if newname not in publicGlyphOrder:
+                    publicGlyphOrder[x] = newname
+                    nameMap[oldname] = newname
+                    logger.log("Pass 1 (PGO): Renamed %s to %s" % (oldname, newname), "I")
+                else:
+                    tempname = gettempname(lambda n : n not in publicGlyphOrder)
+                    publicGlyphOrder[x] = tempname
+                    saveforlaterPGO.append( (x, oldname, newname) )
 
-        # And for GlyphsApp glyph order:
-        if csGlyphOrder and oldname in csGlyphOrder:
-            x = csGlyphOrder.index(oldname)
-            if newname not in csGlyphOrder:
-                csGlyphOrder[x] = newname
+        # And for GlyphsApp glyph order, if present:
+        if csGlyphOrder:
+            if oldname not in csGlyphOrder:
+                logger.log("glyph name not in csGlyphorder: " + oldname , "I")
             else:
-                tempname = gettempname(lambda n : n not in csGlyphOrder)
-                csGlyphOrder[x] = tempname
-                saveforlaterCSGO.append( (x, oldname, newname) )
+                x = csGlyphOrder.index(oldname)
+                if newname not in csGlyphOrder:
+                    csGlyphOrder[x] = newname
+                    nameMap[oldname] = newname
+                    logger.log("Pass 1 (csGO): Renamed %s to %s" % (oldname, newname), "I")
+                else:
+                    tempname = gettempname(lambda n : n not in csGlyphOrder)
+                    csGlyphOrder[x] = tempname
+                    saveforlaterCSGO.append( (x, oldname, newname) )
 
         # Finally, psnames
-        if psnames and oldname in psnames:
-            if newname not in psnames:
+        if psnames:
+            if oldname not in psnames:
+                logger.log("glyph name not in psnames: " + oldname , "I")
+            elif newname not in psnames:
                 psnames[newname] = psnames.pop(oldname)
+                nameMap[oldname] = newname
+                logger.log("Pass 1 (psn): Renamed %s to %s" % (oldname, newname), "I")
             else:
                 tempname = gettempname(lambda n: n not in psnames)
                 psnames[tempname] = psnames.pop(oldname)
@@ -122,7 +136,7 @@ def doit(args) :
         else:
             font.deflayer[tempname].name = newname
             nameMap[oldname] = newname
-            logger.log("Pass 2: Renamed %s to %s" % (oldname, newname), "I")
+            logger.log("Pass 2 (Font): Renamed %s to %s" % (oldname, newname), "I")
 
     for j in saveforlaterPGO:
         x, oldname, newname = j
@@ -131,6 +145,8 @@ def doit(args) :
             logger.log("Glyph %s already in public.GlyphOrder; can't rename %s" % (newname, oldname), "S")
         else:
             publicGlyphOrder[x] = newname
+            nameMap[oldname] = newname
+            logger.log("Pass 2 (PGO): Renamed %s to %s" % (oldname, newname), "I")
 
     for j in saveforlaterCSGO:
         x, oldname, newname = j
@@ -139,6 +155,8 @@ def doit(args) :
             logger.log("Glyph %s already in com.schriftgestaltung.glyphOrder; can't rename %s" % (newname, oldname), "S")
         else:
             csGlyphOrder[x] = newname
+            nameMap[oldname] = newname
+            logger.log("Pass 2 (csGO): Renamed %s to %s" % (oldname, newname), "I")
 
     for tempname, oldname, newname in saveforlaterPSN:
         if newname in psnames:
@@ -146,6 +164,8 @@ def doit(args) :
             logger.log("Glyph %s already in public.postscriptNames; can't rename %s" % (newname, oldname), "S")
         else:
             psnames[newname] = psnames.pop(tempname)
+            nameMap[oldname] = newname
+            logger.log("Pass 2 (psn): Renamed %s to %s" % (oldname, newname), "I")
 
     # Finally rebuild font structures from the modified lists we have:
 
