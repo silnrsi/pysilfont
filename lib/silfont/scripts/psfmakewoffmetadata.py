@@ -78,17 +78,17 @@ def doit(args):
 
     version = ufofields["versionMajor"] + "." + ufofields["versionMinor"].zfill(3)
 
-    # Split the license into shorter lines, breaking on spaces.
+    ''''# Split the license into shorter lines, breaking on spaces.
     license = []
     for line in ufofields["openTypeNameLicense"].splitlines():
-        #        line = line.strip()
-        #        while len(line) > 74 : ## Value of 74 might need adjusting!
-        #            words = line[0:74].split(' ')
-        #            l = ' '.join(words[0:len(words)-1])
-        #            license.append(l)
-        #            line = line[len(l):].strip()
+        line = line.strip()
+        while len(line) > 74:  ## Value of 74 might need adjusting!
+            words = line[0:74].split(' ')
+            l = ' '.join(words[0:len(words)-1])
+            license.append(l)
+            line = line[len(l):].strip()
         license.append(line)
-
+'''
     # Construct output file name
     (folder, ufoname) = os.path.split(font.ufodir)
     filename = os.path.join(folder, pfn + "-WOFF-metadata.xml") if ofn is None else ofn
