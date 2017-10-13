@@ -107,7 +107,7 @@ It should be borne in mind that both markClasses and baseClasses can also be use
 
 The baseClass statement is a high priority need in order to facilitate auto generation of attachment point information without having to create what might be redundant lookups in the wrong order.
 
-#### Cursive Attachment ✓
+#### Cursive Attachment ⍻
 
 Cursive attachment involves two base anchors, one for the entry and one for the exit. We can extend the use of baseClasses to support this, by passing two baseClasses to the pos cursive statement:
 
@@ -122,7 +122,7 @@ feature test {
 
 Here we have two base classes for the two anchor points, and the pos cursive processing code works out which glyphs are in both classes, and which are in one or the other and generates the necessary pos cursive statement for each glyph. I.e. there will be statements for the union of the two classes but with null anchors for those only in one (according to which baseClass they are in). This has the added advantage that any code generating baseClasses does not need to know whether a particular attachment point is being used in a cursive attachment. That is entirely up to the user of the baseClass.
 
-#### Mark Attachment ⍻
+#### Mark Attachment ✓
 
 The current mark attachment syntax is related to the base mark attachment in that the base mark has to be specified explicitly and we cannot currently use a markclass as the base mark in a mark attachment lookup. We can extend the mark attachment in the same way as we extend the base attachment, by allowing the mark base to be a markclass. Thus:
 
