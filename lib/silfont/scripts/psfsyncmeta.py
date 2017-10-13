@@ -22,8 +22,9 @@ argspec = [
 
 def doit(args) :
     standardstyles = ["Regular", "Italic", "Bold", "BoldItalic"]
-    finfoignore = ["openTypeHeadCreated", "openTypeOS2Panose",
-        "postscriptBlueScale", "postscriptBlueShift", "postscriptBlueValues", "postscriptOtherBlues", "postscriptStemSnapH", "postscriptStemSnapV", "postscriptForceBold"]
+    finfoignore = ["openTypeHeadCreated", "openTypeOS2Panose", "postscriptBlueScale", "postscriptBlueShift",
+                   "postscriptBlueValues", "postscriptOtherBlues", "postscriptStemSnapH", "postscriptStemSnapV", "postscriptForceBold"]
+    libfields = ["public.postscriptNames", "public.glyphOrder", "com.schriftgestaltung.font.glyphOrder", "com.schriftgestaltung.glyphOrder"]
 
     font = args.ifont
     logger = args.logger
@@ -75,6 +76,8 @@ def doit(args) :
         manufacturer = mfinfo["openTypeNameManufacturer"][1].text
     else:
         logger.log("No openTypeNameManufacturer field in " + mastertext, "S")
+    mlib = mfont.lib
+
     # Open the remaining fonts in the family
     if not singlefont :
         for style in standardstyles :
@@ -97,9 +100,10 @@ def doit(args) :
         ital = True if "Italic" in style else False
         bold = True if "Bold" in style else False
 
+        # Process fontinfo.plist
         finfo=font.fontinfo
         fieldlist = list(set(finfo) | set(mfinfo)) # Need all fields from both to detect missing fields
-        changed = False
+        fchanged = False
 
         for field in fieldlist:
             action = None; issue = ""; newval = ""
@@ -193,15 +197,12 @@ def doit(args) :
                         issue = "does not match " + mastertext + " value"
                         action = "FlipBoolean"
                 elif tag == "array" : # Assume simple array with just values to compare
-                    array = []
-                    for subelem in elem : array.append(subelem.text)
-                    marray = []
-                    for subelem in melem : marray.append(subelem.text)
-                    if array != marray : action = "CopyArray"
+                    marray = mfinfo.getval(field)
+                    array = finfo.getval(field)
+                    if array != marray: action = "CopyArray"
                 else : logger.log("Non-standard fontinfo field type in " + fontname, "X")
 
             # Now process the actions, create log messages etc
-
             if action is None or action == "Ignore" :
                 pass
             elif action == "Warn" :
@@ -209,7 +210,7 @@ def doit(args) :
             elif action == "Error" :
                 logger.log(field + " needs manual correction: " + issue, "E")
             elif action in ("Update", "FlipBoolean", "Copyfield", "CopyArray") : # Updating actions
-                changed = True
+                fchanged = True
                 message = field + updatemessage
                 if action == "Update" :
                     message = message + issue + " Old: '" + text + "' New: '" + str(newval) + "'"
@@ -229,16 +230,58 @@ def doit(args) :
             else:
                 logger.log("Uncoded action: " + action + " - oops", "X")
 
+        # Process lib.plist - currently just public.postscriptNames and glyph order fields which are all simple dicts or arrays
+        lib = font.lib
+        lchanged = False
+
+        for field in libfields:
+            # Check the values
+            action = None; issue = ""; newval = ""
+            if field in mlib:
+                if field in lib:
+                    if lib.getval(field) != mlib.getval(field):  # will only work for arrays or dicts with simple values
+                        action = "Updatefield"
+                else:
+                    action = "Copyfield"
+            else:
+                action = "Error" if field == ("public.GlyphOrder", "public.postscriptNames") else "Warn"
+                issue = field + " not in " + mastertext + " lib.plist"
+
+            # Process the actions, create log messages etc
+            if action is None or action == "Ignore":
+                pass
+            elif action == "Warn":
+                logger.log(field + " needs manual correction: " + issue, "W")
+            elif action == "Error":
+                logger.log(field + " needs manual correction: " + issue, "E")
+            elif action in ("Updatefield", "Copyfield"):  # Updating actions
+                lchanged = True
+                message = field + updatemessage
+                if action == "Copyfield":
+                    message = message + "is missing so will be copied from " + mastertext
+                    lib.addelem(field, ET.fromstring(ET.tostring(mlib[field][1])))
+                elif action == "Updatefield":
+                    message = message + "Some values different"
+                    lib.setelem(field, ET.fromstring(ET.tostring(mlib[field][1])))
+                logger.log(message, "W")
+            else:
+                logger.log("Uncoded action: " + action + " - oops", "X")
+
         # Now update on disk
-        if not reportonly :
-            if args.normalize :
-                font.write(os.path.join(path,family + "-" + style + newfile + ".ufo"))
-            else : # Just update fontinfo
-                if changed :
+        if not reportonly:
+            if args.normalize:
+                font.write(os.path.join(path, family + "-" + style + newfile + ".ufo"))
+            else:  # Just update fontinfo and lib
+                if fchanged:
                     filen = "fontinfo" + newfile + ".plist"
                     logger.log("Writing updated fontinfo to " + filen, "P")
                     exists = True if os.path.isfile(os.path.join(font.ufodir, filen)) else False
-                    UFO.writeXMLobject(finfo,font,font.ufodir, filen, exists, fobject = True)
+                    UFO.writeXMLobject(finfo, font, font.ufodir, filen, exists, fobject=True)
+                if lchanged:
+                    filen = "lib" + newfile + ".plist"
+                    logger.log("Writing updated lib.plist to " + filen, "P")
+                    exists = True if os.path.isfile(os.path.join(font.ufodir, filen)) else False
+                    UFO.writeXMLobject(lib, font, font.ufodir, filen, exists, fobject=True)
 
     if fieldscopied :
         message = "After updating, UFOsyncMeta will need to be re-run to validate these fields" if reportonly else "Re-run UFOsyncMeta to validate these fields"
@@ -246,10 +289,12 @@ def doit(args) :
 
     return
 
+
 def openfont(params, path, family, style) : # Only try if directory esists
     ufodir = os.path.join(path,family+"-"+style+".ufo")
     font = UFO.Ufont(ufodir, params=params) if os.path.isdir(ufodir) else None
     return font
+
 
 def processnum(text, precision) : # Apply same processing to numbers that normalization will
     if precision is not None:
@@ -257,6 +302,7 @@ def processnum(text, precision) : # Apply same processing to numbers that normal
         if val == int(val) : val = int(val) # Removed trailing decimal .0
         text = str(val)
     return text
+
 
 def cmd() : execute("UFO",doit, argspec)
 if __name__ == "__main__": cmd()
