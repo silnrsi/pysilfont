@@ -30,8 +30,15 @@ python ../lib/silfont/scripts/psfmakefea.py ../../font-charis/source/CharisSIL-R
 # test the use of a mark class for the base marks in a mark to mark position lookup
 python ../lib/silfont/scripts/psfmakefea.py ../../font-charis/source/CharisSIL-Regular.ufo -o results/test-pos-markClass-to-mark.fea -i test-pos-markClass-to-mark.feax
 
+# test the use of a glyph class in a one-to-many substitution lookup
+python ../lib/silfont/scripts/psfmakefea.py ../../font-charis/source/CharisSIL-Regular.ufo -o results/test-sub-1-to-many.fea -i test-sub-1-to-many.feax
+
+# test the use of a glyph class in a many-to-one substitution lookup
+python ../lib/silfont/scripts/psfmakefea.py ../../font-charis/source/CharisSIL-Regular.ufo -o results/test-sub-many-to-1.fea -i test-sub-many-to-1.feax
 
 diff results/classes.fea results/classes-ref.fea
 diff results/features.fea results/features-ref.fea
 diff results/test-pos-baseClass-to-mark.fea results/test-pos-baseClass-to-mark-ref.fea
 diff results/test-pos-markClass-to-mark.fea results/test-pos-markClass-to-mark-ref.fea
+diff results/test-sub-1-to-many.fea results/test-sub-1-to-many-ref.fea
+diff results/test-sub-many-to-1.fea results/test-sub-many-to-1-ref.fea

@@ -1,0 +1,4 @@
+feature test {
+    sub @cno_VN CombAcute by @c_VN;
+    sub @cno_VN [CombGrave CombBreve] by @c_VN;
+} test;
