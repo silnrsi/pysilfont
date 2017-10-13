@@ -40,6 +40,35 @@ class ast_MarkBasePosStatement(ast.MarkBasePosStatement):
         #TODO: do the right thing here (write to ttf?)
         pass
 
+class ast_MarkMarkPosStatement(ast.MarkMarkPosStatement):
+    # super class __init__() for reference
+    # def __init__(self, location, baseMarks, marks):
+    #     Statement.__init__(self, location)
+    #     self.baseMarks, self.marks = baseMarks, marks
+
+    def asFea(self, indent=""):
+        # handles members added by parse_position_base_ with feax syntax
+        if isinstance(self.baseMarks, ast.MarkClassName): # flattens pos @MARKCLASS mark @MARKCLASS
+            res = ""
+            for mcd in self.baseMarks.markClass.definitions:
+                if res != "":
+                    res += "\n{}".format(indent)
+                res += "pos mark {} {}".format(mcd.glyphs.asFea(), mcd.anchor.asFea())
+                for m in self.marks:
+                    res += " mark @{}".format(m.name)
+                res += ";"
+        else: # like base class method
+            res = "pos mark {}".format(self.baseMarks.asFea())
+            for a, m in self.marks:
+                res += " {} mark @{}".format(a.asFea(), m.name)
+            res += ";"
+        return res
+
+    def build(self, builder):
+        # builder.add_mark_mark_pos(self.location, self.baseMarks.glyphSet(), self.marks)
+        #TODO: do the right thing
+        pass
+
 #similar to ast.MultipleSubstStatement
 #one-to-many substitution, one glyph class is on LHS, multiple glyph classes may be on RHS
 # equivalent to generation of one stmt for each glyph in the LHS class
@@ -150,13 +179,14 @@ class ast_LigatureSubstStatement(ast.Statement):
 
 class feaplus_ast(object) :
     MarkBasePosStatement = ast_MarkBasePosStatement
+    MarkMarkPosStatement = ast_MarkMarkPosStatement
     BaseClass = ast_BaseClass
     BaseClassDefinition = ast_BaseClassDefinition
     MultipleSubstStatement = ast_MultipleSubstStatement
     LigatureSubstStatement = ast_LigatureSubstStatement
 
     def __getattr__(self, name):
-        return getattr(ast, name)
+        return getattr(ast, name) # retrieve undefined attrs from imported fontTools.feaLib ast module
 
 class feaplus_parser(Parser) :
     extensions = {
@@ -221,6 +251,27 @@ class feaplus_parser(Parser) :
                 marks.append(m)
         self.expect_symbol_(";")
         return self.ast.MarkBasePosStatement(location, base, marks)
+
+    # like base class parse_position_mark_ & overrides it
+    def parse_position_mark_(self, enumerated, vertical):
+        location = self.cur_token_location_
+        self.expect_keyword_("mark")
+        if enumerated:
+            raise FeatureLibError(
+                '"enumerate" is not allowed with '
+                'mark-to-mark attachment positioning',
+                location)
+        baseMarks = self.parse_glyphclass_(accept_glyphname=True)
+        if self.next_token_ == "<": # handle pos mark [glyphs] <anchor> mark @MARKCLASS
+            marks = self.parse_anchor_marks_()
+        else: # handle pos mark @MARKCLASS mark @MARKCLASS; like base class parse_anchor_marks_
+            marks = []
+            while self.next_token_ == "mark": #TODO: is more than one 'mark' meaningful?
+                self.expect_keyword_("mark")
+                m = self.expect_markClass_reference_()
+                marks.append(m)
+        self.expect_symbol_(";")
+        return self.ast.MarkMarkPosStatement(location, baseMarks, marks)
 
     # like base class parseMarkClass
     # but uses BaseClass and BaseClassDefinition which subclass Mark counterparts
