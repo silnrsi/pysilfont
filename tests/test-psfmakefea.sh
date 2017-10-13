@@ -12,9 +12,6 @@
 # test class generation only
 python ../lib/silfont/scripts/psfmakefea.py ../../font-charis/source/CharisSIL-Regular.ufo -o results/classes.fea
 
-# test the use of a base class in a position lookup
-python ../lib/silfont/scripts/psfmakefea.py ../../font-charis/source/CharisSIL-Regular.ufo -o results/test-baseClass.fea -i test-baseClass.feax
-
 # test that the Charis fea will pass thru cleanly
 # *** this will OVERWRITE any features.fea that is already present in the UFO
 # at this time, no such file is present
@@ -27,6 +24,14 @@ rm ../../font-charis/source/CharisSIL-Regular.ufo/features.fea
 #  that that file is itself included from source/results
 # python ../lib/silfont/scripts/psfmakefea.py ../../font-charis/source/CharisSIL-Regular.ufo -o results/features.fea  -i ../../font-charis/source/opentype/CharisSIL-Regular.fea
 
+# test the use of a base class for the bases in a mark to base position lookup
+python ../lib/silfont/scripts/psfmakefea.py ../../font-charis/source/CharisSIL-Regular.ufo -o results/test-pos-baseClass-to-mark.fea -i test-pos-baseClass-to-mark.feax
+
+# test the use of a mark class for the base marks in a mark to mark position lookup
+python ../lib/silfont/scripts/psfmakefea.py ../../font-charis/source/CharisSIL-Regular.ufo -o results/test-pos-markClass-to-mark.fea -i test-pos-markClass-to-mark.feax
+
+
 diff results/classes.fea results/classes-ref.fea
-diff results/test-baseClass.fea results/test-baseClass-ref.fea
 diff results/features.fea results/features-ref.fea
+diff results/test-pos-baseClass-to-mark.fea results/test-pos-baseClass-to-mark-ref.fea
+diff results/test-pos-markClass-to-mark.fea results/test-pos-markClass-to-mark-ref.fea
