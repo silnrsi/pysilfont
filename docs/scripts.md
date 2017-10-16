@@ -24,6 +24,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfexportpsnames](#psfexportpsnames) | Export a map of glyph name to PS name to a csv file |
 | [psfexportunicodes](#psfexportunicodes) | Export a map of glyph name to unicode value to a csv file |
 | [psfftml2odt](#psfftml2odt) | Create a LibreOffice Writer file from an FTML test description |
+| [psfglyphs2ufo](#psfglyphs2ufo) | Export all the masters in a .glyphs file to UFOs |
 | [psfmakewoffmetadata](#psfmakewoffmetadata) | Make the WOFF meatadata xml file based on input UFO and FONTLOG.txt |
 | [psfnormalize](#psfnormalize) | Normalize a UFO and optionally converts it between UFO2 and UFO3 versions |
 | [psfrenameglyphs](#psfrenameglyphs) | Within a UFO, assign new working names to glyphs based on csv input file |
@@ -271,6 +272,26 @@ psfftml2odt -f "Andika New Basic" -f "AndikaNewBasic-Regular.ttf" test-ss.xml te
 ```
 
 If the font specified with the -f parameter contains a '.' it is assumed to be a file name, otherwise it is assumed to be the name of an installed font. In the former case, the font is embedded in the .odt document, in the latter case the font is expected to be installed on the machine that views the .odt document.
+
+---
+####  psfglyphs2ufo
+Usage: **`psfglyphs2ufo fontfile.glyphs masterdir`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Exports one UFO file per master found in the fontfile.glyphs file, and places it in the directory specified as masterdir.
+
+Example usage:
+
+```
+psfglyphs2ufo CharisSIL-RB.glyphs masterufos
+```
+
+If this Glyphs file contains two masters, Regular and Bold, then it will export a UFO for each into a 'masterufos' directory. To have the fonts exported to the current directory, give it a blank directory name:
+
+```
+psfglyphs2ufo CharisSIL-RB.glyphs ""
+```
 
 ---
 #### psfmakewoffmetadata
