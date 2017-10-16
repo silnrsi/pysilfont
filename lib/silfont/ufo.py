@@ -201,8 +201,8 @@ class Ufont(object):
             # Process UFO.lib if present
             if "UFO.lib" in self.lib:
                 deletekeys = ("UFOFormat", "com.schriftgestaltung.Disable Last Change", "com.schriftgestaltung.font.Disable Last Change")
-                setboolean = ("com.schriftgestaltung.useNiceNames", "com.schriftgestaltung.disableslastchange")
-                # Copy fields from UOF.lib to root
+                setboolean = ("com.schriftgestaltung.useNiceNames", "com.schriftgestaltung.disablesLastChange")
+                # Copy fields from UFO.lib to root
                 self.logger.log("UFOlib found in lib.plist.  Values will be copied to root", "P")
                 UL = self.lib["UFO.lib"][1]
                 ULdict = self.lib.getval("UFO.lib")
