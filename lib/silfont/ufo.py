@@ -195,6 +195,56 @@ class Ufont(object):
         libparams = {}
         if "lib.plist" in self.dtree:
             self.lib = self._readPlist("lib.plist")
+            # This next section deals with specific issues that occur in lib.plist following creating ufo files
+            # from a .glyphs glyphsapp file using glyphsLib.
+            # This will be updated over time as glyphsapp and glyphslib evolve.
+            # Process UFO.lib if present
+            if "UFO.lib" in self.lib:
+                deletekeys = ("UFOFormat", "com.schriftgestaltung.Disable Last Change", "com.schriftgestaltung.font.Disable Last Change")
+                setboolean = ("com.schriftgestaltung.useNiceNames", "com.schriftgestaltung.disableslastchange")
+                # Copy fields from UOF.lib to root
+                self.logger.log("UFOlib found in lib.plist.  Values will be copied to root", "P")
+                UL = self.lib["UFO.lib"][1]
+                ULdict = self.lib.getval("UFO.lib")
+                for i in range(0, len(UL), 2):
+                    key = UL[i].text
+                    if key in deletekeys: continue
+                    elem = UL[i + 1]
+                    logvals = True if elem.tag in ("integer", "real", "string", "true", "false") else False
+                    if key in self.lib:
+                        if logvals:
+                            oval = str(self.lib.getval(key))
+                            if len(oval) > 20: oval = oval[0:20] + "..."
+                            logmess = " updated from UFO.lib, Old value: " + oval
+                        else:
+                            logmess = " updated from UFO.lib."
+                    else:
+                        logmess = " copied from UFO.lib. "
+                    self.lib.setelem(key, elem)
+                    if logvals:
+                        val = str(ULdict[key])
+                        if len(val) > 20: val = val[0:20] + "..."
+                        logmess = logmess + " New Value: " + val
+                    else:
+                        logmess = logmess + " (Values not shown for array or dict fields)"
+                    self.logger.log(key + logmess, "I")
+                self.lib.remove("UFO.lib")
+                self.logger.log("UFO.lib field deleted", "I")
+                # Delete unwanted or invalid keys
+                for key in deletekeys:
+                    if key in self.lib:
+                        self.lib.remove(key)
+                        self.logger.log(key + " deleted")
+                # Change specific keys to boolean if needed
+                for key in setboolean:
+                    if key in self.lib:
+                        oval = self.lib.getval(key)
+                        if oval not in (True, False):
+                            val = silfont.core.str2bool(oval)
+                            elem = ET.fromstring("<true/>") if val else ET.fromstring("<false/>")
+                            self.lib.setelem(key, elem)
+                            self.logger.log(key + " changed from " + str(oval) + " to " + str(val), "I")
+
             if "org.sil.pysilfontparams" in self.lib:
                 elem = self.lib["org.sil.pysilfontparams"][1]
                 if elem.tag != "array":
