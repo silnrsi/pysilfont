@@ -16,7 +16,7 @@ argspec = [
 
 def doit(args) :
     master_dir = args.masterdir
-    ufomasters = glyphsLib.build_masters(args.glyphsfont, master_dir)
+    ufomasters = glyphsLib.build_masters(args.glyphsfont, master_dir, propagate_anchors=False)
 
 def cmd() : execute(None,doit,argspec)
 if __name__ == "__main__": cmd()
