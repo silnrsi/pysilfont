@@ -98,14 +98,15 @@ class Font(object) :
             base = name
             pos = base.rfind('.')
             while pos > 0 :
+                old_base = base
                 ext = base[pos+1:]
                 base = base[:pos]
                 ext_class_nm = "c_" + ext
-                base_glyph_nm = base + "." + ext
-                base_glyph_lst = self.classes.setdefault(ext_class_nm, [])
-                if base in self.glyphs and not base_glyph_nm in base_glyph_lst:
-                    base_glyph_lst.append(base_glyph_nm)
-                    self.classes.setdefault("cno_" + ext, []).append(base)
+                if base in self.glyphs :
+                    glyph_lst = self.classes.setdefault(ext_class_nm, [])
+                    if not old_base in glyph_lst:
+                        glyph_lst.append(old_base)
+                        self.classes.setdefault("cno_" + ext, []).append(base)
                 pos = base.rfind('.')
             if g.is_mark :
                 self.classes.setdefault('GDEF_marks', []).append(name)
