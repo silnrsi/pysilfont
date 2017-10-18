@@ -68,8 +68,14 @@ class ast_MarkMarkPosStatement(ast.MarkMarkPosStatement):
         pass
 
 class ast_CursivePosStatement(ast.CursivePosStatement):
+    # super class __init__() for reference
+    # def __init__(self, location, glyphclass, entryAnchor, exitAnchor):
+    #     Statement.__init__(self, location)
+    #     self.glyphclass = glyphclass
+    #     self.entryAnchor, self.exitAnchor = entryAnchor, exitAnchor
+
     def asFea(self, indent=""):
-        if self.entryAnchor == None:    # pos cursive @BASE1 @BASE2
+        if isinstance(self.exitAnchor, ast.MarkClass): # pos cursive @BASE1 @BASE2
             res = ""
             allglyphs = set(self.glyphclass.glyphSet())
             allglyphs.update(self.exitAnchor.glyphSet())
@@ -82,7 +88,7 @@ class ast_CursivePosStatement(ast.CursivePosStatement):
                             (entry.anchor.asFea() if entry else "<anchor NULL>"),
                             (exit.anchor.asFea() if exit else "<anchor NULL>"))
         else:
-            res = super(ast.CursivePosStatement, self, indent)
+            res = super(ast_CursivePosStatement, self).asFea(indent)
         return res
 
     def build(self, builder) :
@@ -96,7 +102,6 @@ class ast_CursivePosStatement(ast.CursivePosStatement):
 #prefix and suffx are for contextual lookups and do not need processing
 #replacement could contain multiple slots
 #TODO: below only supports one RHS class?
-#similar to ast.SingleSubstStatement
 class ast_MultipleSubstStatement(ast.Statement):
     def __init__(self, location, prefix, glyph, suffix, replacement):
         ast.Statement.__init__(self, location)
@@ -304,15 +309,15 @@ class feaplus_parser(Parser) :
                 'cursive attachment positioning',
                 location)
         glyphclass = self.parse_glyphclass_(accept_glyphname=True)
-        if self.next_token_ == "<":
+        if self.next_token_ == "<": # handle pos cursive @glyphClass <anchor entry> <anchor exit>
             entryAnchor = self.parse_anchor_()
             exitAnchor = self.parse_anchor_()
             self.expect_symbol_(";")
             return self.ast.CursivePosStatement(
                 location, glyphclass, entryAnchor, exitAnchor)
-        else:
-            m = self.expect_markClass_reference_()
-            return self.ast.CursivePosStatement(location, glyphclass.markClass, None, m)
+        else: # handle pos cursive @baseClass @baseClass;
+            mc = self.expect_markClass_reference_()
+            return self.ast.CursivePosStatement(location, glyphclass.markClass, None, mc)
 
     # like base class parseMarkClass
     # but uses BaseClass and BaseClassDefinition which subclass Mark counterparts
