@@ -230,6 +230,12 @@ class Ufont(object):
                     self.logger.log(key + logmess, "I")
                 self.lib.remove("UFO.lib")
                 self.logger.log("UFO.lib field deleted", "I")
+                # Fix for problems with handling of Infinity
+                psn = self.lib["public.postscriptNames"][1]
+                for i in range(0, len(psn), 2):
+                    if psn[i].text == "Infinity":
+                        psn[i+1] = ET.fromstring("<string>infinity</string>")
+                        self.logger.log("public.postscriptNames - Infinity fixed!","I")
                 # Delete unwanted or invalid keys
                 for key in deletekeys:
                     if key in self.lib:
