@@ -96,13 +96,15 @@ class Font(object) :
             # pull off suffix and make classes
             # TODO: doesn't handle multiple suffices. Refactor for that.
             # TODO: handle ligatures
-            pos = name.find('.')
-            if pos > 0 :
-                ext = name[pos+1:]
-                base = name[:pos]
+            base = name
+            pos = base.rfind('.')
+            while pos > 0 :
+                ext = base[pos+1:]
+                base = base[:pos]
                 if base in self.glyphs :
-                    self.classes.setdefault("c_" + ext, []).append(name)
+                    self.classes.setdefault("c_" + ext, []).append(base + "." + ext)
                     self.classes.setdefault("cno_" + ext, []).append(base)
+                pos = base.rfind('.')
             if g.is_mark :
                 self.classes.setdefault('GDEF_marks', []).append(name)
             else :
@@ -114,7 +116,11 @@ class Font(object) :
 
     def append_classes(self, parser) :
         # normal glyph classes
-        for name, c in self.classes.items() :
+        def sortkey(x):
+            i = x[0].find('_')
+            return (x[0][i:], x[0][:i], x[1]) if i > 0 else (x[0], "", x[1])
+
+        for name, c in sorted(self.classes.items(), key=sortkey):
             gc = parser.ast.GlyphClass(0, None)
             for g in c :
                 gc.append(g)

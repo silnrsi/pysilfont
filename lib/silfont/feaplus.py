@@ -3,7 +3,7 @@ from fontTools.feaLib.parser import Parser
 from fontTools.feaLib.builder import Builder
 from fontTools.feaLib.lexer import IncludingLexer
 from fontTools.feaLib.ast import asFea
-import StringIO
+import StringIO, itertools
 
 class ast_BaseClass(ast.MarkClass) :
     def asFea(self, indent="") :
@@ -26,13 +26,11 @@ class ast_MarkBasePosStatement(ast.MarkBasePosStatement):
                 if res != "":
                     res += "\n{}".format(indent)
                 res += "pos base {} {}".format(bcd.glyphs.asFea(), bcd.anchor.asFea())
-                for m in self.marks:
-                    res += " mark @{}".format(m.name)
+                res += "".join(" mark @{}".format(m.name) for m in self.marks)
                 res += ";"
         else: # like base class method
             res = "pos base {}".format(self.base.asFea())
-            for a, m in self.marks:
-                res += " {} mark @{}".format(a.asFea(), m.name)
+            res += "".join(" {} mark @{}".format(a.asFea(), m.name) for a, m in self.marks)
             res += ";"
         return res
 
@@ -69,6 +67,28 @@ class ast_MarkMarkPosStatement(ast.MarkMarkPosStatement):
         #TODO: do the right thing
         pass
 
+class ast_CursivePosStatement(ast.CursivePosStatement):
+    def asFea(self, indent=""):
+        if self.entryAnchor == None:    # pos cursive @BASE1 @BASE2
+            res = ""
+            allglyphs = set(self.glyphclass.glyphSet())
+            allglyphs.update(self.exitAnchor.glyphSet())
+            for g in sorted(allglyphs):
+                entry = self.glyphclass.glyphs.get(g, None)
+                exit = self.exitAnchor.glyphs.get(g, None)
+                if res != "":
+                    res += "\n{}".format(indent)
+                res += "pos cursive {} {} {};".format(g,
+                            (entry.anchor.asFea() if entry else "<anchor NULL>"),
+                            (exit.anchor.asFea() if exit else "<anchor NULL>"))
+        else:
+            res = super(ast.CursivePosStatement, self, indent)
+        return res
+
+    def build(self, builder) :
+        #TODO: do the right thing here (write to ttf?)
+        pass
+
 #similar to ast.MultipleSubstStatement
 #one-to-many substitution, one glyph class is on LHS, multiple glyph classes may be on RHS
 # equivalent to generation of one stmt for each glyph in the LHS class
@@ -76,6 +96,7 @@ class ast_MarkMarkPosStatement(ast.MarkMarkPosStatement):
 #prefix and suffx are for contextual lookups and do not need processing
 #replacement could contain multiple slots
 #TODO: below only supports one RHS class?
+#similar to ast.SingleSubstStatement
 class ast_MultipleSubstStatement(ast.Statement):
     def __init__(self, location, prefix, glyph, suffix, replacement):
         ast.Statement.__init__(self, location)
@@ -180,6 +201,7 @@ class ast_LigatureSubstStatement(ast.Statement):
 class feaplus_ast(object) :
     MarkBasePosStatement = ast_MarkBasePosStatement
     MarkMarkPosStatement = ast_MarkMarkPosStatement
+    CursivePosStatement = ast_CursivePosStatement
     BaseClass = ast_BaseClass
     BaseClassDefinition = ast_BaseClassDefinition
     MultipleSubstStatement = ast_MultipleSubstStatement
@@ -272,6 +294,25 @@ class feaplus_parser(Parser) :
                 marks.append(m)
         self.expect_symbol_(";")
         return self.ast.MarkMarkPosStatement(location, baseMarks, marks)
+
+    def parse_position_cursive_(self, enumerated, vertical):
+        location = self.cur_token_location_
+        self.expect_keyword_("cursive")
+        if enumerated:
+            raise FeatureLibError(
+                '"enumerate" is not allowed with '
+                'cursive attachment positioning',
+                location)
+        glyphclass = self.parse_glyphclass_(accept_glyphname=True)
+        if self.next_token_ == "<":
+            entryAnchor = self.parse_anchor_()
+            exitAnchor = self.parse_anchor_()
+            self.expect_symbol_(";")
+            return self.ast.CursivePosStatement(
+                location, glyphclass, entryAnchor, exitAnchor)
+        else:
+            m = self.expect_markClass_reference_()
+            return self.ast.CursivePosStatement(location, glyphclass.markClass, None, m)
 
     # like base class parseMarkClass
     # but uses BaseClass and BaseClassDefinition which subclass Mark counterparts
