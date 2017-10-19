@@ -10,13 +10,27 @@ from silfont.core import execute
 import glyphsLib
 
 argspec = [
-    ('glyphsfont',{'help': 'Input font file'}, {'type': 'filename'}),
-    ('masterdir',{'help': 'Output directory for masters'}, {}),
-    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_glyphs2ufo.log'})]
+    ('glyphsfont', {'help': 'Input font file'}, {'type': 'filename'}),
+    ('masterdir', {'help': 'Output directory for masters'}, {}),
+    ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': '_glyphs2ufo.log'})]
 
-def doit(args) :
-    master_dir = args.masterdir
-    ufomasters = glyphsLib.build_masters(args.glyphsfont, master_dir, propagate_anchors=False)
 
-def cmd() : execute(None,doit,argspec)
+def doit(args):
+    ufos = glyphsLib.load_to_ufos(args.glyphsfont, propagate_anchors=False)
+
+    for ufo in ufos:
+        # Fixes to the data
+
+        # glyphOrder has data as unicode rather than utf-8.
+        new = []
+        for name in ufo.lib["public.glyphOrder"]:
+            if name == float("inf"): name = "Infinity"
+            new.append(name.encode('utf8'))
+        ufo.lib["public.glyphOrder"] = new
+
+        # Write ufo out
+        glyphsLib.write_ufo(ufo, args.masterdir)
+
+
+def cmd(): execute(None, doit, argspec)
 if __name__ == "__main__": cmd()
