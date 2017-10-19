@@ -238,6 +238,9 @@ class feaplus_parser(Parser) :
     def define_glyphclass(self, ap_nm, gc) :
         self.glyphclasses_.define(ap_nm, gc)
 
+    def resolve_glyphclass(self, ap_nm):
+        return self.glyphclasses_.resolve(ap_nm)
+
     def add_statement(self, val) :
         self.doc_.statements.append(val)
 

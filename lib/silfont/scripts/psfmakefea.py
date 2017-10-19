@@ -120,16 +120,46 @@ class Font(object) :
     def append_classes(self, parser) :
         # normal glyph classes
         def sortkey(x):
-            key1 = 'c_' + x[0][4:] if x[0].startswith('cno_') else x[0]
-            return (key1, x[0], x[1])
+            key1 = 'c_' + x[4:] if x.startswith('cno_') else x
+            return (key1, x)
 
-        for name, c in sorted(self.classes.items(), key=sortkey):
-            gc = parser.ast.GlyphClass(0, None)
-            for g in c :
-                gc.append(g)
-            gcd = parser.ast.GlyphClassDefinition(0, name, gc)
-            parser.add_statement(gcd)
-            parser.define_glyphclass(name, gcd)
+        # Try to append classes in alphabetical order. Exceptions:
+        #   1. Classes can be defined in terms of other classes but FEA requires that
+        #      classes be defined before they can be referenced.
+        #   2. Put classes like "cno_whatever" adjacent to "c_whatever"
+        classes = sorted(self.classes.keys(), key = sortkey)
+        while len(classes) > 0:
+            # find first class that we can append
+            foundone = 0
+            for name in classes:
+                c = self.classes[name]
+                # See if we can append this one
+                musthold = 0
+                for g in c:
+                    if g[0] == '@' and parser.resolve_glyphclass(g[1:]) is None:
+                       # Can't append this class because a referenced class hasn't been appended yet
+                       musthold = 1
+                       break
+                if musthold:
+                    # leave this one in the list and try the next
+                    continue
+                # Found one we can process, so append this class
+                gc = parser.ast.GlyphClass(0, None)
+                for g in c :
+                    gc.append(g)
+                gcd = parser.ast.GlyphClassDefinition(0, name, gc)
+                parser.add_statement(gcd)
+                parser.define_glyphclass(name, gcd)
+                # note that we found one and remove it from list
+                foundone = 1
+                classes.remove(name)
+                # It may now be possible to append some we skipped earlier,
+                # so start over from the start of the list
+                break
+            if not foundone:
+                # all remaining classes have dependencies and thus there is a loop
+                # somewhere
+                raise ValueError("Class reference loop(s) found: " + ", ".join(classes))
 
     def append_positions(self, parser):
         # create base and mark classes, add to fea file dicts and parser symbol table
