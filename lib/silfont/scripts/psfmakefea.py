@@ -120,8 +120,8 @@ class Font(object) :
     def append_classes(self, parser) :
         # normal glyph classes
         def sortkey(x):
-            i = x[0].find('_')
-            return (x[0][i:], x[0][:i], x[1]) if i > 0 else (x[0], "", x[1])
+            key1 = 'c_' + x[0][4:] if x[0].startswith('cno_') else x[0]
+            return (key1, x[0], x[1])
 
         for name, c in sorted(self.classes.items(), key=sortkey):
             gc = parser.ast.GlyphClass(0, None)
