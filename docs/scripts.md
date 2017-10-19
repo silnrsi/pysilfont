@@ -25,7 +25,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfexportunicodes](#psfexportunicodes) | Export a map of glyph name to unicode value to a csv file |
 | [psfftml2odt](#psfftml2odt) | Create a LibreOffice Writer file from an FTML test description |
 | [psfglyphs2ufo](#psfglyphs2ufo) | Export all the masters in a .glyphs file to UFOs |
-| [psfmakewoffmetadata](#psfmakewoffmetadata) | Make the WOFF meatadata xml file based on input UFO and FONTLOG.txt |
+| [psfmakewoffmetadata](#psfmakewoffmetadata) | Make the WOFF metadata xml file based on input UFO and FONTLOG.txt |
 | [psfnormalize](#psfnormalize) | Normalize a UFO and optionally converts it between UFO2 and UFO3 versions |
 | [psfrenameglyphs](#psfrenameglyphs) | Within a UFO, assign new working names to glyphs based on csv input file |
 | [psfsetassocfeat](#psfsetassocfeat) | Add associate feature info to glif lib based on a csv file |
@@ -298,7 +298,7 @@ psfglyphs2ufo CharisSIL-RB.glyphs ""
 Usage: **`psfmakewoffmetadata -n PRIMARYFONTNAME -i ORGID [-f FONTLOG]  [-o OUTPUT] fontfile.ufo`**
 
 
-Make the WOFF meatadata xml file based on input UFO and FONTLOG.txt.
+Make the WOFF metadata xml file based on input UFO and FONTLOG.txt.
 
 The primary font name and orgid need to be supplied on the command line. By default it reads FONTLOG.txt from the folder it is run in and outputs to *primaryfontname*-WOFF-metadata.xml.
 
@@ -330,7 +330,7 @@ Example that normalizes the named font:
 psfnormalize Nokyung-Regular.ufo
 ```
 
-The normalization follows the [default behaviours](docs.md#normalization), but these can be overriden using [custom parameters](parameters.md)
+The normalization follows the [default behaviours](docs.md#normalization), but these can be overridden using [custom parameters](parameters.md)
 
 If you are a macOS user, see _pysilfont/actionsosx/README.txt_ to install an action that will enable you to run psfnormalize without using the command line.
 
@@ -501,7 +501,7 @@ _This section is Work In Progress!_
 
 ## Example Scripts
 
-When Pysilfont is downloaded, there are example scripts in pysilfont/examples.  These are a mixture of scripts that are under development, scripts that work but would likely need amending for a specific project's need  and others that are just examples of how things could be done.
+When Pysilfont is downloaded, there are example scripts in pysilfont/examples.  These are a mixture of scripts that are under development, scripts that work but would likely need amending for a specific project's need and others that are just examples of how things could be done.
 
 Some are documented below; for others just read the scripts!
 

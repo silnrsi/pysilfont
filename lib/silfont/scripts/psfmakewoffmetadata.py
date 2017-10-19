@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-'Make the WOFF meatadata xml file based on input UFO and FONTLOG.txt'
+'Make the WOFF metadata xml file based on input UFO and FONTLOG.txt'
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2017 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
