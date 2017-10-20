@@ -219,7 +219,7 @@ def doit(args) :
     if args.classfile:
         font.read_classes(args.classfile, classproperties = args.classprops)
 
-    p = feaplus_parser(None, [])
+    p = feaplus_parser(None, font.glyphs)
     doc_ufo = p.parse() # returns an empty ast.FeatureFile
 
     # Add goodies from the font
