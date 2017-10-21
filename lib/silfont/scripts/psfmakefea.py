@@ -117,49 +117,58 @@ class Font(object) :
         for name, g in self.glyphs.items() :
             g.decide_if_mark()
 
-    def append_classes(self, parser) :
-        # normal glyph classes
+    def order_classes(self):
+        # return ordered list of classnames as desired for FEA
+
+        # Start with alphabetical then correct:
+        #   1. Put classes like "cno_whatever" adjacent to "c_whatever"
+        #   2. Classes can be defined in terms of other classes but FEA requires that
+        #      classes be defined before they can be referenced.
+
         def sortkey(x):
             key1 = 'c_' + x[4:] if x.startswith('cno_') else x
             return (key1, x)
 
-        # Try to append classes in alphabetical order. Exceptions:
-        #   1. Classes can be defined in terms of other classes but FEA requires that
-        #      classes be defined before they can be referenced.
-        #   2. Put classes like "cno_whatever" adjacent to "c_whatever"
-        classes = sorted(self.classes.keys(), key = sortkey)
+        classes = sorted(self.classes.keys(), key=sortkey)
+        links = {}  # key = classname; value = list of other classes that include this one
+        counts = {} # key = classname; value = count of un-output classes that this class includes
+        for name in classes:
+            count = 0
+            for c in filter(lambda n: n[0] == '@', self.classes[name]):
+                count += 1
+                links.setdefault(c[1:],[]).append(name)
+            counts[name] = count
+
+        outclasses = []
         while len(classes) > 0:
-            # find first class that we can append
-            foundone = 0
+            foundone = False
             for name in classes:
-                c = self.classes[name]
-                # See if we can append this one
-                musthold = 0
-                for g in c:
-                    if g[0] == '@' and parser.resolve_glyphclass(g[1:]) is None:
-                       # Can't append this class because a referenced class hasn't been appended yet
-                       musthold = 1
-                       break
-                if musthold:
-                    # leave this one in the list and try the next
-                    continue
-                # Found one we can process, so append this class
-                gc = parser.ast.GlyphClass(0, None)
-                for g in c :
-                    gc.append(g)
-                gcd = parser.ast.GlyphClassDefinition(0, name, gc)
-                parser.add_statement(gcd)
-                parser.define_glyphclass(name, gcd)
-                # note that we found one and remove it from list
-                foundone = 1
-                classes.remove(name)
-                # It may now be possible to append some we skipped earlier,
-                # so start over from the start of the list
-                break
+                if counts[name] == 0:
+                    foundone = True
+                    # output this class
+                    outclasses.append(name)
+                    classes.remove(name)
+                    # adjust counts of classes that include this one
+                    if name in links:
+                        for n in links[name]:
+                            counts[n] -= 1
+                    # It may now be possible to output some we skipped earlier,
+                    # so start over from the begining of the list
+                    break
             if not foundone:
-                # all remaining classes have dependencies and thus there is a loop
-                # somewhere
+                # all remaining classes include un-output classes and thus there is a loop somewhere
                 raise ValueError("Class reference loop(s) found: " + ", ".join(classes))
+        return outclasses
+
+    def append_classes(self, parser) :
+        # normal glyph classes
+        for name in self.order_classes():
+            gc = parser.ast.GlyphClass(0, None)
+            for g in self.classes[name] :
+                gc.append(g)
+            gcd = parser.ast.GlyphClassDefinition(0, name, gc)
+            parser.add_statement(gcd)
+            parser.define_glyphclass(name, gcd)
 
     def append_positions(self, parser):
         # create base and mark classes, add to fea file dicts and parser symbol table
