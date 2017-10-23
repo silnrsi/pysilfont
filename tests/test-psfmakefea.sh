@@ -36,9 +36,9 @@ python ../lib/silfont/scripts/psfmakefea.py ../../font-charis/source/CharisSIL-R
 # test the use of a glyph class in a many-to-one substitution lookup
 python ../lib/silfont/scripts/psfmakefea.py ../../font-charis/source/CharisSIL-Regular.ufo -o results/test-sub-many-to-1.fea -i test-sub-many-to-1.feax
 
-diff results/classes.fea results/classes-ref.fea
-diff results/features.fea results/features-ref.fea
-diff results/test-pos-baseClass-to-mark.fea results/test-pos-baseClass-to-mark-ref.fea
-diff results/test-pos-markClass-to-mark.fea results/test-pos-markClass-to-mark-ref.fea
-diff results/test-sub-1-to-many.fea results/test-sub-1-to-many-ref.fea
-diff results/test-sub-many-to-1.fea results/test-sub-many-to-1-ref.fea
+diff -Z results/classes.fea results/classes-ref.fea
+diff -Z results/features.fea results/features-ref.fea
+diff -Z results/test-pos-baseClass-to-mark.fea results/test-pos-baseClass-to-mark-ref.fea
+diff -Z results/test-pos-markClass-to-mark.fea results/test-pos-markClass-to-mark-ref.fea
+diff -Z results/test-sub-1-to-many.fea results/test-sub-1-to-many-ref.fea
+diff -Z results/test-sub-many-to-1.fea results/test-sub-many-to-1-ref.fea

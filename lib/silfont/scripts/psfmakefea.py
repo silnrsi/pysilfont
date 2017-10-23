@@ -117,15 +117,53 @@ class Font(object) :
         for name, g in self.glyphs.items() :
             g.decide_if_mark()
 
+    def order_classes(self):
+        # return ordered list of classnames as desired for FEA
+
+        # Start with alphabetical then correct:
+        #   1. Put classes like "cno_whatever" adjacent to "c_whatever"
+        #   2. Classes can be defined in terms of other classes but FEA requires that
+        #      classes be defined before they can be referenced.
+
+        def sortkey(x):
+            key1 = 'c_' + x[4:] if x.startswith('cno_') else x
+            return (key1, x)
+
+        classes = sorted(self.classes.keys(), key=sortkey)
+        links = {}  # key = classname; value = list of other classes that include this one
+        counts = {} # key = classname; value = count of un-output classes that this class includes
+        for name in classes:
+            y = [c[1:] for c in self.classes[name] if c.startswith('@')]  #list of included classes
+            counts[name] = len(y)
+            for c in y:
+                links.setdefault(c, []).append(name)
+
+        outclasses = []
+        while len(classes) > 0:
+            foundone = False
+            for name in classes:
+                if counts[name] == 0:
+                    foundone = True
+                    # output this class
+                    outclasses.append(name)
+                    classes.remove(name)
+                    # adjust counts of classes that include this one
+                    if name in links:
+                        for n in links[name]:
+                            counts[n] -= 1
+                    # It may now be possible to output some we skipped earlier,
+                    # so start over from the begining of the list
+                    break
+            if not foundone:
+                # all remaining classes include un-output classes and thus there is a loop somewhere
+                raise ValueError("Class reference loop(s) found: " + ", ".join(classes))
+        return outclasses
+
     def append_classes(self, parser) :
         # normal glyph classes
-        def sortkey(x):
-            i = x[0].find('_')
-            return (x[0][i:], x[0][:i], x[1]) if i > 0 else (x[0], "", x[1])
-
-        for name, c in sorted(self.classes.items(), key=sortkey):
+        for name in self.order_classes():
             gc = parser.ast.GlyphClass(0, None)
-            for g in c :
+            for g in self.classes[name] :
                 gc.append(g)
             gcd = parser.ast.GlyphClassDefinition(0, name, gc)
             parser.add_statement(gcd)
