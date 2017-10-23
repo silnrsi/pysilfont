@@ -133,11 +133,10 @@ class Font(object) :
         links = {}  # key = classname; value = list of other classes that include this one
         counts = {} # key = classname; value = count of un-output classes that this class includes
         for name in classes:
-            count = 0
-            for c in filter(lambda n: n[0] == '@', self.classes[name]):
-                count += 1
-                links.setdefault(c[1:],[]).append(name)
-            counts[name] = count
+            y = [c[1:] for c in self.classes[name] if c.startswith('@')]  #list of included classes
+            counts[name] = len(y)
+            for c in y:
+                links.setdefault(c, []).append(name)
 
         outclasses = []
         while len(classes) > 0:
