@@ -37,7 +37,8 @@ class Font(object) :
         self.classes = {}
         self.all_aps = {}
 
-    def readaps(self, filename) :
+    def readaps(self, filename, omitaps='') :
+        omittedaps = set(omitaps.replace(',',' ').split())  # allow comma- and/or space-separated list
         if filename.endswith('.ufo') :
             f = ufo.Ufont(filename)
             for g in f.deflayer :
@@ -46,8 +47,9 @@ class Font(object) :
                 ufo_g = f.deflayer[g]
                 if 'anchor' in ufo_g._contents :
                     for a in ufo_g._contents['anchor'] :
-                        glyph.add_anchor(a.element.attrib)
-                        self.all_aps.setdefault(a.element.attrib['name'], []).append(glyph)
+                        if a.element.attrib['name'] not in omittedaps:
+                            glyph.add_anchor(a.element.attrib)
+                            self.all_aps.setdefault(a.element.attrib['name'], []).append(glyph)
         elif filename.endswith('.xml') :
             currGlyph = None
             currPoint = None
@@ -66,7 +68,7 @@ class Font(object) :
                         currPoint['y'] = elem.get('y', 0)
                 elif event == 'end':
                     if elem.tag == 'point':
-                        if currGlyph:
+                        if currGlyph and currPoint['name'] not in omittedaps:
                             currGlyph.add_anchor(currPoint)
                             self.all_aps.setdefault(currPoint['name'], []).append(currGlyph)
                         currPoint = None
@@ -214,13 +216,14 @@ argspec = [
     ('-i', '--input', {'help': 'Fea file to merge'}, {}),
     ('-o', '--output', {'help': 'Output fea file'}, {}),
     ('-c', '--classfile', {'help': 'Classes file'}, {}),
-    ('--classprops', {'help': 'Include property elements from classes file', 'action': 'store_true'}, {})
+    ('--classprops', {'help': 'Include property elements from classes file', 'action': 'store_true'}, {}),
+    ('--omitaps', {'help': 'names of attachment points to omit (comma- or space-separated)', 'default': '', 'action': 'store'}, {})
 ]
 
 def doit(args) :
     font = Font()
     if args.infile :
-        font.readaps(args.infile)
+        font.readaps(args.infile, args.omitaps)
 
     font.make_marks()
     font.make_classes()
