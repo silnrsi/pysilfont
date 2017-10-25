@@ -233,7 +233,7 @@ class OutlinePen(BasePen):
     pointClass = MathPoint
     magicCurve = 0.5522847498
 
-    def __init__(self, glyphSet, offset=10, contrast=0, contrastAngle=0, connection="round", cap="round", miterLimit=None, optimizeCurve=False):
+    def __init__(self, glyphSet, offset=10, contrast=0, contrastAngle=0, connection="round", cap="round", miterLimit=None, optimizeCurve=True):
         BasePen.__init__(self, glyphSet)
 
         self.offset = abs(offset)
