@@ -14,6 +14,7 @@ __author__ = 'Victor Gaultney'
 from silfont.core import execute
 
 from fontTools.pens.basePen import BasePen
+from fontTools.misc.bezierTools import splitCubicAtT
 from robofab.world import OpenFont
 from robofab.pens.pointPen import AbstractPointPen
 from robofab.pens.reverseContourPointPen import ReverseContourPointPen
@@ -232,7 +233,7 @@ class OutlinePen(BasePen):
     pointClass = MathPoint
     magicCurve = 0.5522847498
 
-    def __init__(self, glyphSet, offset=10, contrast=0, contrastAngle=0, connection="round", cap="round", miterLimit=None):
+    def __init__(self, glyphSet, offset=10, contrast=0, contrastAngle=0, connection="round", cap="round", miterLimit=None, optimizeCurve=False):
         BasePen.__init__(self, glyphSet)
 
         self.offset = abs(offset)
@@ -242,6 +243,8 @@ class OutlinePen(BasePen):
         if miterLimit is None:
             miterLimit = self.offset * 2
         self.miterLimit = abs(miterLimit)
+
+        self.optimizeCurve = optimizeCurve
 
         self.connectionCallback = getattr(self, "connection%s" % (connection.title()))
         self.capCallback = getattr(self, "cap%s" % (cap.title()))
@@ -325,7 +328,10 @@ class OutlinePen(BasePen):
         self.prevAngle = self.currentAngle
 
     def _curveToOne(self, (x1, y1), (x2, y2), (x3, y3)):
-        curves = [(self.prevPoint, (x1, y1), (x2, y2), (x3, y3))]
+        if self.optimizeCurve:
+            curves = splitCubicAtT(self.prevPoint, (x1, y1), (x2, y2), (x3, y3), .5)
+        else:
+            curves = [(self.prevPoint, (x1, y1), (x2, y2), (x3, y3))]
         for curve in curves:
             p1, h1, h2, p2 = curve
             self._processCurveToOne(h1, h2, p2)
@@ -575,6 +581,7 @@ def calculate(glyph, strokewidth):
     contrast = 0
     contrastAngle = 0
     keepBounds = False
+    optimizeCurve = True
     miterLimit = None  #assumed
 
     corner = "round"  #assumed - other options not supported
@@ -590,7 +597,8 @@ def calculate(glyph, strokewidth):
                         contrastAngle,
                         connection=corner,
                         cap=cap,
-                        miterLimit=miterLimit)
+                        miterLimit=miterLimit,
+                        optimizeCurve=optimizeCurve)
 
     glyph.draw(pen)
 
