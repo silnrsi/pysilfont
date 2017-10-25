@@ -212,9 +212,19 @@ Also psfcopymeta does not use Pysilfont's backup mechanism for fonts.
 ---
 #### psfexpandstroke
 
-Expand an unclosed UFO stroke font into monoline forms with a fixed width
+Usage: **`psfexpandstroke infont outfont thickness`**
 
-To be documented...
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Expands the outlines (typically unclosed) in an UFO stroke font into monoline forms with a fixed width.
+
+Example that expands the stokes in a UFO font `SevdaStrokeMaster-Regular.ufo`, giving them a width of 20 units, and writes the result to `Sevda-Regular.ufo`.
+
+```
+psfexpandstroke SevdaStrokeMaster-Regular.ufo Sevda-Regular.ufo 20
+```
+
+Note that this only expands the outlines - it does not remove any resulting overlap. 
 
 
 ---

@@ -28,7 +28,7 @@ argspec = [
    ('ifont',{'help': 'Input font file'}, {'type': 'filename'}),
    ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'filename', 'def': "_"+suffix}),
    ('thickness',{'help': 'Stroke thickness'}, {}),
-   ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': suffix+'log'})]
+   ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': suffix+'.log'})]
 
 
 # The following functions are straight from outlinerRoboFontExtension
