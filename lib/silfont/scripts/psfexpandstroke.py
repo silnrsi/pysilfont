@@ -5,7 +5,8 @@ __copyright__ = 'Copyright (c) 2017 SIL International (http://www.sil.org), base
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Victor Gaultney'
 
-# Usage: psfexpandstroke ifont ofont thickness
+# Usage: psfexpandstroke ifont ofont expansion
+# expansion is the number of units added to each side of the stroke
 
 # To Do
 # - Simplify to assume round caps and corners
