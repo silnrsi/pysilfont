@@ -5,13 +5,32 @@ from fontTools.feaLib.lexer import IncludingLexer
 from fontTools.feaLib.ast import asFea
 import StringIO, itertools
 
-class ast_BaseClass(ast.MarkClass) :
+def asFea(g):
+    if hasattr(g, 'asClassFea'):
+        return g.asClassFea()
+    elif hasattr(g, 'asFea'):
+        return g.asFea()
+    elif isinstance(g, tuple) and len(g) == 2:
+        return asFea(g[0]) + "-" + asFea(g[1])   # a range
+    elif g.lower() in ast.fea_keywords:
+        return "\\" + g
+    else:
+        return g
+
+ast.asFea = asFea
+
+class ast_MarkClass(ast.MarkClass):
+    # This is better fixed upstream in parser.parse_glyphclass_ to handle MarkClasses
+    def asClassFea(self, indent=""):
+        return "[" + " ".join(map(asFea, self.glyphs)) + "]"
+
+class ast_BaseClass(ast_MarkClass) :
     def asFea(self, indent="") :
         # should not be used since BaseClass is flattened to BaseClassDefinitions
         # in ast_MarkBasePosStatement.asFea and not output directly
         return ""
 
-class ast_BaseClassDefinition(ast.MarkClassDefinition) :
+class ast_BaseClassDefinition(ast.MarkClassDefinition):
     def asFea(self, indent="") :
         # like base class asFea
         return "# {}baseClass {} {} @{};".format(indent, self.glyphs.asFea(),
@@ -208,6 +227,7 @@ class feaplus_ast(object) :
     MarkMarkPosStatement = ast_MarkMarkPosStatement
     CursivePosStatement = ast_CursivePosStatement
     BaseClass = ast_BaseClass
+    MarkClass = ast_MarkClass
     BaseClassDefinition = ast_BaseClassDefinition
     MultipleSubstStatement = ast_MultipleSubstStatement
     LigatureSubstStatement = ast_LigatureSubstStatement
