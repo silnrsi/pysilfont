@@ -172,10 +172,10 @@ class Font(object) :
             parser.define_glyphclass(name, gcd)
 
     def _addGlyphsToClass(self, parser, glyphs, gc, anchor, definer):
-        if len(glyphs_w_pt) > 1 :
-            val = parser.ast.GlyphClass(0, glyphs_w_pt)
+        if len(glyphs) > 1 :
+            val = parser.ast.GlyphClass(0, glyphs)
         else :
-            val = parser.ast.GlyphName(0, glyphs_w_pt[0])
+            val = parser.ast.GlyphName(0, glyphs[0])
         classdef = definer(0, gc, anchor, val)
         gc.addDefinition(classdef)
         parser.add_statement(classdef)
@@ -187,33 +187,35 @@ class Font(object) :
         for ap_nm, glyphs_w_ap in self.all_aps.items() :
             # e.g. all glyphs with U AP
             if not ap_nm.startswith("_"):
-                if any(lambda x:not x.is_mark, glyphs_w_ap):
+                if any(not x.is_mark for x in glyphs_w_ap):
                     gcb = parser.set_baseclass(ap_nm)
-                if any(lambda x:x.is_mark, glyphs_w_ap):
-                    gcm = parse.set_baseclass(ap_nm + "_MarkBase")
+                if any(x.is_mark for x in glyphs_w_ap):
+                    gcm = parser.set_baseclass(ap_nm + "_MarkBase")
             else:
                 gc = parser.set_markclass(ap_nm)
 
             # create lists of glyphs that use the same point (name and coordinates)
             # that can share a class definition
             anchor_cache = {}
+            markanchor_cache = {}
             for g in glyphs_w_ap :
                 p = g.anchors[ap_nm]
-                anchor_cache.setdefault(p, []).append(g.name)
+                if g.is_mark and not ap_nm.startswith("_"):
+                    markanchor_cache.setdefault(p, []).append(g.name)
+                else:
+                    anchor_cache.setdefault(p, []).append(g.name)
 
             if ap_nm.startswith("_"):
-                for p, glyphs_w_pt in anchor.cache_items():
+                for p, glyphs_w_pt in anchor_cache.items():
                     anchor = parser.ast.Anchor(0, None, p[0], p[1], None, None, None)
-                    self._addGlyphsToClass(parser, glyphs_w_pt, gc, anchor, parser.ast.markClassDefinition)
+                    self._addGlyphsToClass(parser, glyphs_w_pt, gc, anchor, parser.ast.MarkClassDefinition)
             else:
-                for p, glyphs_w_pt in anchor.cache_items():
+                for p, glyphs_w_pt in anchor_cache.items():
                     anchor = parser.ast.Anchor(0, None, p[0], p[1], None, None, None)
-                    bgs = [x for x in glyphs_w_pt if not x.is_mark]
-                    mgs = [x for x in glyphs_w_pt if x.is_mark]
-                    if len(bgs):
-                        self._addGlyphsToClass(parser, bgs, gcb, anchor, parser.ast.baseClassDefinition)
-                    if len(mgs):
-                        self._addGlyphsToClass(parser, bgs, gcm, anchor, parser.ast.baseClassDefinition)
+                    self._addGlyphsToClass(parser, glyphs_w_pt, gcb, anchor, parser.ast.BaseClassDefinition)
+                for p, glyphs_w_pt in markanchor_cache.items():
+                    anchor = parser.ast.Anchor(0, None, p[0], p[1], None, None, None)
+                    self._addGlyphsToClass(parser, glyphs_w_pt, gcm, anchor, parser.ast.BaseClassDefinition)
 
 #TODO: provide more argument info
 argspec = [
