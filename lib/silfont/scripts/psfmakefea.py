@@ -171,6 +171,15 @@ class Font(object) :
             parser.add_statement(gcd)
             parser.define_glyphclass(name, gcd)
 
+    def _addGlyphsToClass(self, parser, glyphs, gc, anchor, definer):
+        if len(glyphs_w_pt) > 1 :
+            val = parser.ast.GlyphClass(0, glyphs_w_pt)
+        else :
+            val = parser.ast.GlyphName(0, glyphs_w_pt[0])
+        classdef = definer(0, gc, anchor, val)
+        gc.addDefinition(classdef)
+        parser.add_statement(classdef)
+
     def append_positions(self, parser):
         # create base and mark classes, add to fea file dicts and parser symbol table
         bclassdef_lst = []
@@ -178,7 +187,10 @@ class Font(object) :
         for ap_nm, glyphs_w_ap in self.all_aps.items() :
             # e.g. all glyphs with U AP
             if not ap_nm.startswith("_"):
-                gc = parser.set_baseclass(ap_nm)
+                if any(lambda x:not x.is_mark, glyphs_w_ap):
+                    gcb = parser.set_baseclass(ap_nm)
+                if any(lambda x:x.is_mark, glyphs_w_ap):
+                    gcm = parse.set_baseclass(ap_nm + "_MarkBase")
             else:
                 gc = parser.set_markclass(ap_nm)
 
@@ -189,26 +201,19 @@ class Font(object) :
                 p = g.anchors[ap_nm]
                 anchor_cache.setdefault(p, []).append(g.name)
 
-            # create and add class definitions to base and mark classes
-            for p, glyphs_w_pt in anchor_cache.items() :
-                anchor = parser.ast.Anchor(0, None, p[0], p[1], None, None, None)
-                if len(glyphs_w_pt) > 1 :
-                    val = parser.ast.GlyphClass(0, glyphs_w_pt)
-                else :
-                    val = parser.ast.GlyphName(0, glyphs_w_pt[0])
-                if not ap_nm.startswith("_"):
-                    classdef = parser.ast.BaseClassDefinition(0, gc, anchor, val)
-                    bclassdef_lst.append(classdef)
-                else:
-                    classdef = parser.ast.MarkClassDefinition(0, gc, anchor, val)
-                    mclassdef_lst.append(classdef)
-                gc.addDefinition(classdef)
-
-        # insert base classes before mark classes in fea file
-        for classdef in bclassdef_lst:
-            parser.add_statement(classdef)
-        for classdef in mclassdef_lst:
-            parser.add_statement(classdef)
+            if ap_nm.startswith("_"):
+                for p, glyphs_w_pt in anchor.cache_items():
+                    anchor = parser.ast.Anchor(0, None, p[0], p[1], None, None, None)
+                    self._addGlyphsToClass(parser, glyphs_w_pt, gc, anchor, parser.ast.markClassDefinition)
+            else:
+                for p, glyphs_w_pt in anchor.cache_items():
+                    anchor = parser.ast.Anchor(0, None, p[0], p[1], None, None, None)
+                    bgs = [x for x in glyphs_w_pt if not x.is_mark]
+                    mgs = [x for x in glyphs_w_pt if x.is_mark]
+                    if len(bgs):
+                        self._addGlyphsToClass(parser, bgs, gcb, anchor, parser.ast.baseClassDefinition)
+                    if len(mgs):
+                        self._addGlyphsToClass(parser, bgs, gcm, anchor, parser.ast.baseClassDefinition)
 
 #TODO: provide more argument info
 argspec = [
