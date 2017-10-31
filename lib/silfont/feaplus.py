@@ -1,7 +1,7 @@
 from fontTools.feaLib import ast
 from fontTools.feaLib.parser import Parser
 from fontTools.feaLib.builder import Builder
-from fontTools.feaLib.lexer import IncludingLexer
+from fontTools.feaLib.lexer import IncludingLexer, Lexer
 from fontTools.feaLib.ast import asFea
 import StringIO, itertools
 
@@ -474,4 +474,75 @@ class feaplus_parser(Parser) :
         rule = self.ast.ChainContextSubstStatement(
             location, old_prefix, old, old_suffix, lookups)
         return rule
+
+    def parse_glyphclass_(self, accept_glyphname):
+        if (accept_glyphname and
+                self.next_token_type_ in (Lexer.NAME, Lexer.CID)):
+            glyph = self.expect_glyph_()
+            return self.ast.GlyphName(self.cur_token_location_, glyph)
+        if self.next_token_type_ is Lexer.GLYPHCLASS:
+            self.advance_lexer_()
+            gc = self.glyphclasses_.resolve(self.cur_token_)
+            if gc is None:
+                raise FeatureLibError(
+                    "Unknown glyph class @%s" % self.cur_token_,
+                    self.cur_token_location_)
+            if isinstance(gc, self.ast.MarkClass):
+                return self.ast.MarkClassName(self.cur_token_location_, gc)
+            else:
+                return self.ast.GlyphClassName(self.cur_token_location_, gc)
+
+        self.expect_symbol_("[")
+        location = self.cur_token_location_
+        glyphs = self.ast.GlyphClass(location)
+        while self.next_token_ != "]":
+            if self.next_token_type_ is Lexer.NAME:
+                glyph = self.expect_glyph_()
+                location = self.cur_token_location_
+                if '-' in glyph and glyph not in self.glyphMap_:
+                    start, limit = self.split_glyph_range_(glyph, location)
+                    glyphs.add_range(
+                        start, limit,
+                        self.make_glyph_range_(location, start, limit))
+                elif self.next_token_ == "-":
+                    start = glyph
+                    self.expect_symbol_("-")
+                    limit = self.expect_glyph_()
+                    glyphs.add_range(
+                        start, limit,
+                        self.make_glyph_range_(location, start, limit))
+                else:
+                    glyphs.append(glyph)
+            elif self.next_token_type_ is Lexer.CID:
+                glyph = self.expect_glyph_()
+                if self.next_token_ == "-":
+                    range_location = self.cur_token_location_
+                    range_start = self.cur_token_
+                    self.expect_symbol_("-")
+                    range_end = self.expect_cid_()
+                    glyphs.add_cid_range(range_start, range_end,
+                                         self.make_cid_range_(range_location,
+                                                              range_start, range_end))
+                else:
+                    glyphs.append("cid%05d" % self.cur_token_)
+            elif self.next_token_type_ is Lexer.GLYPHCLASS:
+                self.advance_lexer_()
+                gc = self.glyphclasses_.resolve(self.cur_token_)
+                if gc is None:
+                    raise FeatureLibError(
+                        "Unknown glyph class @%s" % self.cur_token_,
+                        self.cur_token_location_)
+                # fix bug don't output class definition, just the name.
+                if isinstance(gc, self.ast.MarkClass):
+                    gcn = self.ast.MarkClassName(self.cur_token_location_, gc)
+                else:
+                    gcn = self.ast.GlyphClassName(self.cur_token_location_, gc)
+                glyphs.add_class(gcn)
+            else:
+                raise FeatureLibError(
+                    "Expected glyph name, glyph range, "
+                    "or glyph class reference",
+                    self.next_token_location_)
+        self.expect_symbol_("]")
+        return glyphs
 
