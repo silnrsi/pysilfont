@@ -26,9 +26,7 @@ class ast_MarkClass(ast.MarkClass):
 
 class ast_BaseClass(ast_MarkClass) :
     def asFea(self, indent="") :
-        # should not be used since BaseClass is flattened to BaseClassDefinitions
-        # in ast_MarkBasePosStatement.asFea and not output directly
-        return ""
+        return "@" + self.name + " = [" + " ".join(map(asFea, self.glyphs.keys())) + "];"
 
 class ast_BaseClassDefinition(ast.MarkClassDefinition):
     def asFea(self, indent="") :

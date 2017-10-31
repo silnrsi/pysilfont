@@ -104,7 +104,7 @@ class Font(object) :
                 ext = base[pos+1:]
                 base = base[:pos]
                 ext_class_nm = "c_" + ext
-                if base in self.glyphs :
+                if base in self.glyphs and old_base in self.glyphs:
                     glyph_lst = self.classes.setdefault(ext_class_nm, [])
                     if not old_base in glyph_lst:
                         glyph_lst.append(old_base)
@@ -189,8 +189,10 @@ class Font(object) :
             if not ap_nm.startswith("_"):
                 if any(not x.is_mark for x in glyphs_w_ap):
                     gcb = parser.set_baseclass(ap_nm)
+                    parser.add_statement(gcb)
                 if any(x.is_mark for x in glyphs_w_ap):
                     gcm = parser.set_baseclass(ap_nm + "_MarkBase")
+                    parser.add_statement(gcm)
             else:
                 gc = parser.set_markclass(ap_nm)
 
