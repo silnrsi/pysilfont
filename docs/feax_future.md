@@ -6,7 +6,8 @@ This document is where people can dream of the extensions they would like to see
 added to FEA. Notice that any extensions need to be convertible back to normal FEA
 so shouldn't do things that can't be expressed in FEA.
 
-As things get implemented from here, they will be moved to feaextensions.md.
+As things get implemented from here, they will be moved to feaextensions.md. There
+are no guaranteees that what is in here, will end up in psfmakefea.
 
 There are a number of possible things that can be added to FEA, the question is whether they are worth adding in terms of meeting actual need (remove from this list if added to the rest of the document):
 
