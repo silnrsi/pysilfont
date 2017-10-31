@@ -2,6 +2,7 @@ from fontTools.feaLib import ast
 from fontTools.feaLib.parser import Parser
 from fontTools.feaLib.builder import Builder
 from fontTools.feaLib.lexer import IncludingLexer, Lexer
+from fontTools.feaLib.error import FeatureLibError
 from fontTools.feaLib.ast import asFea
 import StringIO, itertools
 
