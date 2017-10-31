@@ -75,7 +75,7 @@ class ast_MarkMarkPosStatement(ast.MarkMarkPosStatement):
         else: # like base class method
             res = "pos mark {}".format(self.baseMarks.asFea())
             for a, m in self.marks:
-                res += " {} mark @{}".format(a.asFea(), m.name)
+                res += " {} mark @{}".format(a.asFea() if a else "<anchor NULL>", m.name)
             res += ";"
         return res
 
