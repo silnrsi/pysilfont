@@ -10,6 +10,7 @@ __author__ = 'Alan Ward'
 
 from silfont.core import execute
 import defcon, ufo2ft.outlineCompiler
+from ufo2ft.preProcessor import TTFPreProcessor
 
 argspec = [
     ('iufo', {'help': 'Input UFO folder'}, {}),
@@ -26,9 +27,11 @@ def doit(args):
 #        useProductionNames = False)
 
     args.logger.log('Converting UFO to ttf without OT', 'P')
+    preProcessor = TTFPreProcessor(ufo, inplace=False, removeOverlaps=False)
+    glyphSet = preProcessor.process()
     outlineCompiler = ufo2ft.outlineCompiler.OutlineTTFCompiler(ufo,
-        glyphOrder=ufo.lib.get(PUBLIC_PREFIX + 'glyphOrder'),
-        convertCubics=True)
+        glyphSet=glyphSet,
+        glyphOrder=ufo.lib.get(PUBLIC_PREFIX + 'glyphOrder'))
     font = outlineCompiler.compile()
 
     args.logger.log('Saving ttf file', 'P')
