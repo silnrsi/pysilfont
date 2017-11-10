@@ -2,6 +2,7 @@
 
 A composite glyph is one that is defined in terms of one or more other glyphs.
 The composite definition syntax described in this document is a subset of that used by Robofont, but with extensions for additional functionality.
+Composites defined in this syntax can be applied to a UFO using the [psfbuildcomp](scripts.md#psfbuildcomp) tool.
 
 # Overview
 
@@ -13,12 +14,12 @@ where
 - `<result>` is the name of the composite glyph being constructed
 - `<one or more glyphs>` represents one or more glyphs used in the construction of the composite glyph, with optional glyph-level parameters described below
 - `<parameters>` represents adjustments made to the `<result>` glyph, using the following optional parameters:
- - at most one of the two following options:
-   - `^x,y` (where `x` is the amount added to the left margin and `y` is the amount added to the right margin)
-	- `^a` (where `a` is the advance width of the resulting glyph)
- - `|usv` where `usv` is the 4-, 5- or 6-digit hex Unicode scalar value assigned to the resulting glpyh
- - `!colordef` (currently ignored by SIL tools)
- - `[key1=value1;key2=value2;...]` to add one or more `key=value` pairs (representing SIL-specific properties documented below) to the resulting glyph
+    - at most one of the two following options:
+        - `^x,y` (where `x` is the amount added to the left margin and `y` is the amount added to the right margin)
+        - `^a` (where `a` is the advance width of the resulting glyph)
+    - `|usv` where `usv` is the 4-, 5- or 6-digit hex Unicode scalar value assigned to the resulting glpyh
+    - `!colordef` (currently ignored by SIL tools)
+    - `[key1=value1;key2=value2;...]` to add one or more `key=value` pairs (representing SIL-specific properties documented below) to the resulting glyph
 - `# comment` is an optional comment (everything from the `#` to the end of the line is ignored)
 
 In addition, a line that begins with `#` is considered a comment and is ignored (as are blank lines).
