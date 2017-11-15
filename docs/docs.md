@@ -131,6 +131,8 @@ The simplest script is psfnormalize, which will normalize a UFO (and optionally 
 Note that other scripts also normalize, so psfnormalize is usually only needed after fonts have been processed by external font tools.
 
 ## Normalization
+By default scripts normalize the UFOs and also run various check & fix tests to ensure the validity of the UFO metadata.
+
 Default normalization behaviours include:
 - XML formatting
   - Use 2 spaces as indents
@@ -143,6 +145,8 @@ Default normalization behaviours include:
 - order glif elements and attributes in the order they are described in the UFO spec
 
 Most of the above can be overridden by [parameters](#parameters)
+
+The check & fix tests are being developed, and will cover items like required fields in fontinfo.plist.  The check & fix behaviour can be controlled by [parameters](#parameters), including turning off by setting the checkfix parameter to none.
 
 ## Known limitations
 The following are known limitations that will be addressed in the future:
