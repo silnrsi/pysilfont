@@ -10,7 +10,6 @@ from glob import glob
 #import re, sys, os, codecs, argparse, datetime, shutil, csv, copy, ConfigParser
 import sys, os, argparse, datetime, shutil, csv, ConfigParser, codecs
 
-
 class loggerobj(object):
     # For handling log messages.
     # Use S for severe errors caused by data, parameters supplied by user etc
@@ -42,7 +41,7 @@ class loggerobj(object):
         levelval = self.loglevels[msglevel]
         message = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S ") + self.leveltext[levelval] + logmessage
         #message = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f ") + self.leveltext[levelval] + logmessage  ## added milliseconds for timing tests
-        if levelval <= self.loglevels[self.scrlevel]: print message
+        if levelval <= self.loglevels[self.scrlevel]: print(message)
         if self.logfile and levelval <= self.loglevels[self.loglevel]: self.logfile.write(message + "\n")
         if msglevel == "S":
             print "\n **** Fatal error - exiting ****"
@@ -59,7 +58,7 @@ class parameters(object):
     def __init__(self):
         # Default parameters for all modules
         defparams = {}
-        defparams['main'] = {'version': __version__, 'copyright': __copyright__}  ## Need to make these read-only somehow
+        defparams['main'] = {'version': __version__, 'copyright': __copyright__}  ## Need to make these read-only if possible
         defparams['logging'] = {'scrlevel': 'P', 'loglevel': 'W'}
         defparams['backups'] = {'backup': True, 'backupdir': 'backups', 'backupkeep': 5}
         # Default parameters for UFO module
@@ -77,6 +76,9 @@ class parameters(object):
             "attribOrders.glif":['pos', 'width', 'height', 'fileName', 'base', 'xScale', 'xyScale', 'yxScale', 'yScale', 'xOffset', 'yOffset', 
                                   'x', 'y', 'angle', 'type', 'smooth', 'name', 'format', 'color', 'identifier']
             }
+        defparams['ufometadata'] = {
+            "checkfix":         "fix"   # Apply metadata fixes when reading UFOs
+        }
 
         self.classes = {}  # Dictionary containing a list of parameters in each class
         self.paramclass = {}  # Dictionary of class name for each parameter name
@@ -123,7 +125,8 @@ class parameters(object):
 
 class _paramset(dict):
     # Set of parameter values
-    def __init__(self, params, name, sourcedesc, inputdict={}):
+    def __init__(self, params, name, sourcedesc, inputdict=None):
+        if inputdict is None: inputdict = {}
         self.name = name
         self.sourcedesc = sourcedesc  # Description of source for reporting
         self.params = params  # Parent parameters object
@@ -212,11 +215,11 @@ def execute(tool, fn, argspec, chain = None):
     # Function to handle parameter parsing, font and file opening etc in command-line scripts
     # Supports opening (and saving) fonts using FontForge (FF), PysilFont UFO (UFO) or fontTools (FT)
     # Special handling for:
-    #   -d        variation on -h to print extra info about defaults
+    #   -d  variation on -h to print extra info about defaults
     #   -q  quiet mode - suppresses progress messages and sets screen logging to errors only
     #   -l  opens log file and also creates a logger function to write to the log file
-    #   -p  includes loglevel and scrlevel settings for logger
-    #       for UFOlib scripts, also includes all font.outparams keys
+    #   -p  other parameters. Includes backup settings and loglevel/scrlevel settings for logger
+    #       for UFOlib scripts, also includes all outparams keys and ufometadata settings
     # infont and returnfont are used when chaining calls to execute together, passing ifont on without writing to disk
 
     params = chain["params"] if chain else parameters()
@@ -246,6 +249,7 @@ def execute(tool, fn, argspec, chain = None):
     poptions['epilog'] = "Version: " + params.sets['default']['version'] + "\n" + params.sets['default']['copyright']
 
     parser = argparse.ArgumentParser(**poptions)
+    parser._optionals.title = "other arguments"
 
     # Add standard arguments
     standardargs = [

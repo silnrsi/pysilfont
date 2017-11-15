@@ -65,7 +65,7 @@ class _plist(object):
         if valuetype not in ("integer", "real", "string"):
             self.font.logger.log("setval() can only be used with simple elements", "X")
         if key in self._contents:
-            self._contents[key][1].text = value
+            self._contents[key][1].text = str(value)
         else:
             self.addval(key, valuetype, value)
 
@@ -74,7 +74,9 @@ class _plist(object):
         return self._valelem(elem)
 
     def _valelem(self, elem):  # Used by getval to recursively process dict anbd array elements
-        if elem.tag in ("integer", "real", "string"): return elem.text
+        if elem.tag == "integer": return int(elem.text)
+        if elem.tag == "real": return float(elem.text)
+        if elem.tag == "string": return elem.text
         if elem.tag == "true": return True
         if elem.tag == "false": return False
         if elem.tag == "array":
@@ -195,70 +197,14 @@ class Ufont(object):
         libparams = {}
         if "lib.plist" in self.dtree:
             self.lib = self._readPlist("lib.plist")
-            # This next section deals with specific issues that occur in lib.plist following creating ufo files
-            # from a .glyphs glyphsapp file using glyphsLib.
-            # This will be updated over time as glyphsapp and glyphslib evolve.
-            # Process UFO.lib if present
-            if "UFO.lib" in self.lib:
-                deletekeys = ("UFOFormat", "com.schriftgestaltung.Disable Last Change", "com.schriftgestaltung.font.Disable Last Change")
-                setboolean = ("com.schriftgestaltung.useNiceNames", "com.schriftgestaltung.disablesLastChange")
-                # Copy fields from UFO.lib to root
-                self.logger.log("UFOlib found in lib.plist.  Values will be copied to root", "P")
-                UL = self.lib["UFO.lib"][1]
-                ULdict = self.lib.getval("UFO.lib")
-                for i in range(0, len(UL), 2):
-                    key = UL[i].text
-                    if key in deletekeys: continue
-                    elem = UL[i + 1]
-                    logvals = True if elem.tag in ("integer", "real", "string", "true", "false") else False
-                    if key in self.lib:
-                        if logvals:
-                            oval = str(self.lib.getval(key))
-                            if len(oval) > 20: oval = oval[0:20] + "..."
-                            logmess = " updated from UFO.lib, Old value: " + oval
-                        else:
-                            logmess = " updated from UFO.lib."
-                    else:
-                        logmess = " copied from UFO.lib. "
-                    self.lib.setelem(key, elem)
-                    if logvals:
-                        val = str(ULdict[key])
-                        if len(val) > 20: val = val[0:20] + "..."
-                        logmess = logmess + " New Value: " + val
-                    else:
-                        logmess = logmess + " (Values not shown for array or dict fields)"
-                    self.logger.log(key + logmess, "I")
-                self.lib.remove("UFO.lib")
-                self.logger.log("UFO.lib field deleted", "I")
-                # Fix for problems with handling of Infinity
-                # psn = self.lib["public.postscriptNames"][1]
-                # for i in range(0, len(psn), 2):
-                    # if psn[i].text == "Infinity":
-                    #    psn[i+1] = ET.fromstring("<string>infinity</string>")
-                    #    self.logger.log("public.postscriptNames - Infinity fixed!","I")
-                # Delete unwanted or invalid keys
-                for key in deletekeys:
-                    if key in self.lib:
-                        self.lib.remove(key)
-                        self.logger.log(key + " deleted")
-                # Change specific keys to boolean if needed
-                for key in setboolean:
-                    if key in self.lib:
-                        oval = self.lib.getval(key)
-                        if oval not in (True, False):
-                            val = silfont.core.str2bool(oval)
-                            elem = ET.fromstring("<true/>") if val else ET.fromstring("<false/>")
-                            self.lib.setelem(key, elem)
-                            self.logger.log(key + " changed from " + str(oval) + " to " + str(val), "I")
-
             if "org.sil.pysilfontparams" in self.lib:
                 elem = self.lib["org.sil.pysilfontparams"][1]
                 if elem.tag != "array":
                     self.logger.log("Invalid parameter XML lib.plist - org.sil.pysilfontparams must be an array", "S")
                 for param in elem:
                     parn = param.tag
-                    if not (parn in params.paramclass) or params.paramclass[parn] != "outparams":
-                        self.logger.log("lib.plist org.sil.pysilfontparams must only contain outparams values: " + parn + " invalid", "S")
+                    if not (parn in params.paramclass) or params.paramclass[parn] not in ("outparams", "ufometadata"):
+                        self.logger.log("lib.plist org.sil.pysilfontparams must only contain outparams or ufometadata values: " + parn + " invalid", "S")
                     libparams[parn] = param.text
         # Create font-specific parameter set (with updates from lib.plist)  Prepend names with ufodir to ensure uniqueness if multiple fonts open
         params.addset(ufodir + "lib", "lib.plist in " + ufodir, inputdict=libparams)
@@ -283,6 +229,12 @@ class Ufont(object):
             else:
                 self.outparams[parn] = value
         if self.outparams["UFOversion"] is "": self.outparams["UFOversion"] = self.UFOversion
+
+        # Set flags for checking and fixing metadata
+        cf = self.paramset["checkfix"].lower()
+        if cf not in ("check", "fix", "none", ""): self.logger.log("Invalid value '" + cf + "' for checkfix parameter", "S")
+        self.metacheck = True if cf in ("check", "fix") else False
+        self.metafix = True if cf == "fix" else False
 
         # Read other top-level plists
         if "fontinfo.plist" in self.dtree: self.fontinfo = self._readPlist("fontinfo.plist")
@@ -315,6 +267,35 @@ class Ufont(object):
                 self.logger.log("Glyph directory " + layerdir + " missing", "S")
         if self.deflayer is None: self.logger.log("No public.default layer", "S")
         ## Process other files and directories
+
+        # Run best practices check and fix routines
+        if self.metacheck:
+            # Fontinfo
+            required = ("ascender", "copyright", "descender", "familyName", "openTypeNameDesigner",
+                        "openTypeNameDesignerURL", "openTypeNameLicense", "openTypeNameLicenseURL",
+                        "openTypeNameManufacturer", "openTypeNameManufacturerURL", "openTypeNameVersion",
+                        "openTypeOS2CodePageRanges", "openTypeOS2UnicodeRanges", "openTypeOS2VendorID",
+                        "styleName", "unitsPerEm")
+            missing = []
+            for key in required:
+                if key not in self.fontinfo: missing.append(key)
+            if missing:
+                logtype = "S" if self.metafix else "E"
+                self.logger.log("Required fields missing from fontinfo.plist: " + str(missing), logtype)
+                self.logger.log("Missing fields will be given dummy values to allow checking to proceed", "E")
+            # Collect values for contructing other fields, setting dummy values when missing and in check-only mode
+            dummies = False
+            values = {}
+            for key in ("ascender", "copyright", "descender", "familyName", "styleName", "openTypeNameManufacturer"):
+                if key in self.fontinfo:
+                    values[key] = self.fontinfo.getval(key)
+                else:
+                    if key in ("ascender", "descender"):
+                        values[key] = 999
+                    else:
+                        values[key] = "Dummy"
+
+
 
     def _readPlist(self, filen):
         if filen in self.dtree:
