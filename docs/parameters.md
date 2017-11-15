@@ -86,6 +86,9 @@ Currently only font output parameters can be changed via lib.plist
 | numAttribs | (list of attributes in the spec that hold numbers) | Used to know if precision needs setting. | May need items adding for lib data |
 | glifElemOrder | (list of elements in the order defined in spec) | Order for outputting elements in a glif |  |
 | attribOrders | (list of attribute orders defined in spec) | Order for outputting attributes in an element.  One list per element type | When setting this, the parameter name is `attribOrders.<element type>`.  Currently only used with attribOrders.glif |
+| **ufometadata** (ufo scripts only) |  |  |  |
+| checkfix | fix | Metadata check & fix action | If set to "check", issues will just be reported.  Set to "none" for no metadata checking |
+| More to be added... | |
 
 ## Within basic scripts
 ### Accessing values
@@ -170,4 +173,4 @@ To apply the parameter sets updates in the correct order, ufo.py does:
 ## Adding another parameter or class
 If there was a need to add another parameter or class, all that should be needed is to add that to defparams in the \_\_init\_\_() of parameters() in core.py.  Ensure the new parameter is case-insensitively unique.
 
-If a class was Ufont-specific and needed to be supported within lib.plist, then ufo.py would also need updating to handle that similarly to how it now handles outparams.
+If a class was Ufont-specific and needed to be supported within lib.plist, then ufo.py would also need updating to handle that similarly to how it now handles outparams and ufometadata.
