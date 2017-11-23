@@ -498,7 +498,7 @@ class feaplus_parser(Parser) :
             if self.next_token_type_ is Lexer.NAME:
                 glyph = self.expect_glyph_()
                 location = self.cur_token_location_
-                if '-' in glyph and glyph not in self.glyphMap_:
+                if '-' in glyph and glyph not in self.glyphNames_:
                     start, limit = self.split_glyph_range_(glyph, location)
                     glyphs.add_range(
                         start, limit,
