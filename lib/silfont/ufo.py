@@ -6,8 +6,9 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'David Raymond'
 
 from xml.etree import cElementTree as ET
-import sys, os, copy, shutil, filecmp
+import sys, os, shutil, filecmp
 import collections
+import datetime
 import silfont.core
 import silfont.util as UT
 import silfont.etutil as ETU
@@ -56,7 +57,7 @@ class _plist(object):
         dict.append(keyelem)
 
         valelem = ET.Element(valuetype)
-        valelem.text = value
+        valelem.text = str(value)
         dict.append(valelem)
 
         self._contents[key] = [keyelem, valelem]
@@ -184,10 +185,11 @@ class Ufont(object):
             if logger is not None: params.logger = logger
         self.params = params
         self.logger = params.logger
+        logger = self.logger
         self.ufodir = ufodir
-        self.logger.log('Reading UFO: ' + ufodir, 'P')
+        logger.log('Reading UFO: ' + ufodir, 'P')
         if not os.path.isdir(ufodir):
-            self.logger.log(ufodir + " is not a directory", "S")
+            logger.log(ufodir + " is not a directory", "S")
         # Read list of files and folders
         self.dtree = UT.dirTree(ufodir)
         # Read metainfo (which must exist)
@@ -200,11 +202,11 @@ class Ufont(object):
             if "org.sil.pysilfontparams" in self.lib:
                 elem = self.lib["org.sil.pysilfontparams"][1]
                 if elem.tag != "array":
-                    self.logger.log("Invalid parameter XML lib.plist - org.sil.pysilfontparams must be an array", "S")
+                    logger.log("Invalid parameter XML lib.plist - org.sil.pysilfontparams must be an array", "S")
                 for param in elem:
                     parn = param.tag
                     if not (parn in params.paramclass) or params.paramclass[parn] not in ("outparams", "ufometadata"):
-                        self.logger.log("lib.plist org.sil.pysilfontparams must only contain outparams or ufometadata values: " + parn + " invalid", "S")
+                        logger.log("lib.plist org.sil.pysilfontparams must only contain outparams or ufometadata values: " + parn + " invalid", "S")
                     libparams[parn] = param.text
         # Create font-specific parameter set (with updates from lib.plist)  Prepend names with ufodir to ensure uniqueness if multiple fonts open
         params.addset(ufodir + "lib", "lib.plist in " + ufodir, inputdict=libparams)
@@ -215,9 +217,9 @@ class Ufont(object):
         params.sets[ufodir].updatewith(ufodir + "lib", sourcedesc="lib.plist")
         self.paramset = params.sets[ufodir]
         # Validate specific parameters
-        if self.paramset["UFOversion"] not in ("", "2", "3"): self.logger.log("UFO version must be 2 or 3", "S")
+        if self.paramset["UFOversion"] not in ("", "2", "3"): logger.log("UFO version must be 2 or 3", "S")
         if sorted(self.paramset["glifElemOrder"]) != sorted(self.params.sets["default"]["glifElemOrder"]):
-            self.logger.log("Invalid values for glifElemOrder", "S")
+            logger.log("Invalid values for glifElemOrder", "S")
 
         # Create outparams based on values in paramset, building attriborders from separate attriborders.<type> parameters.
         self.outparams = {"attribOrders": {}}
@@ -232,7 +234,7 @@ class Ufont(object):
 
         # Set flags for checking and fixing metadata
         cf = self.paramset["checkfix"].lower()
-        if cf not in ("check", "fix", "none", ""): self.logger.log("Invalid value '" + cf + "' for checkfix parameter", "S")
+        if cf not in ("check", "fix", "none", ""): logger.log("Invalid value '" + cf + "' for checkfix parameter", "S")
         self.metacheck = True if cf in ("check", "fix") else False
         self.metafix = True if cf == "fix" else False
 
@@ -241,7 +243,7 @@ class Ufont(object):
         if "groups.plist" in self.dtree: self.groups = self._readPlist("groups.plist")
         if "kerning.plist" in self.dtree: self.kerning = self._readPlist("kerning.plist")
         if self.UFOversion == "2":  # Create a dummy layer contents so 2 & 3 can be handled the same
-            if "glyphs" not in self.dtree: self.logger.log('No glyphs directory in font', "S")
+            if "glyphs" not in self.dtree: logger.log('No glyphs directory in font', "S")
             self.layercontents = Uplist(font=self)
             self.dtree['layercontents.plist'] = UT.dirTreeItem(read=True, added=True, fileObject=self.layercontents, fileType="xml")
             dummylc = "<plist>\n<array>\n<array>\n<string>public.default</string>\n<string>glyphs</string>\n</array>\n</array>\n</plist>"
@@ -258,44 +260,190 @@ class Ufont(object):
         for i in sorted(self.layercontents.keys()):
             layername = self.layercontents[i][0].text
             layerdir = self.layercontents[i][1].text
-            self.logger.log("Processing Glyph Layer " + str(i) + ": " + layername + layerdir, "I")
+            logger.log("Processing Glyph Layer " + str(i) + ": " + layername + layerdir, "I")
             layer = Ulayer(layername, layerdir, self)
             if layer:
                 self.layers.append(layer)
                 if layername == "public.default": self.deflayer = layer
             else:
-                self.logger.log("Glyph directory " + layerdir + " missing", "S")
-        if self.deflayer is None: self.logger.log("No public.default layer", "S")
+                logger.log("Glyph directory " + layerdir + " missing", "S")
+        if self.deflayer is None: logger.log("No public.default layer", "S")
         ## Process other files and directories
 
         # Run best practices check and fix routines
         if self.metacheck:
-            # Fontinfo
-            required = ("ascender", "copyright", "descender", "familyName", "openTypeNameDesigner",
+
+            #fontinfo.plist checks
+            if "fontinfo" not in self.__dict__:
+                logger.log("fontinfo.plist missing. Need to run with checkfix parameter set to None", "S")
+            logger.log("Checking fontinfo.plist metatdata", "P")
+            fireq = ("ascender", "copyright", "descender", "familyName", "openTypeNameDesigner",
                         "openTypeNameDesignerURL", "openTypeNameLicense", "openTypeNameLicenseURL",
                         "openTypeNameManufacturer", "openTypeNameManufacturerURL", "openTypeNameVersion",
                         "openTypeOS2CodePageRanges", "openTypeOS2UnicodeRanges", "openTypeOS2VendorID",
-                        "styleName", "unitsPerEm")
+                        "styleName", "unitsPerEm", "versionMajor", "versionMinor")
+            fiwarnifmiss = ("styleMapFamilyName", "styleMapStyleName", "openTypeOS2WeightClass")
+            fiwarnifnot = {"unitsPerEm": (1000, 2048), "openTypeOS2WidthClass": (5,),
+                           "styleMapStyleName": ("regular", "bold", "italic", "bold italic")}
+            fidel = ("macintoshFONDFamilyID", "macintoshFONDName", "openTypeNameCompatibleFullName", "year")
+            fiint = ("ascender", "capHeight", "descender", "postscriptUnderlinePosition",
+                     "postscriptUnderlineThickness", "unitsPerEm", "xHeight")
+            ficapitalize = ("styleMapFamilyName", "styleName")
+            fisettoother = {"openTypeHheaAscender": "ascender", "openTypeHheaDescender": "descender",
+                            "openTypeNamePreferredFamilyName": "familyName",
+                            "openTypeNamePreferredSubfamilyName": "styleName", "openTypeOS2TypoAscender": "ascender",
+                            "openTypeOS2TypoDescender": "descender", "openTypeOS2WinAscent": "ascender",
+                            "openTypeNameDescription": "copyright"}
+            fisetto = {"openTypeHheaLineGap": 0, "openTypeOS2TypoLineGap": 0} # Other values are added below
+            # Check required fields, some of which are needed for remaining checks
             missing = []
-            for key in required:
+            for key in fireq:
                 if key not in self.fontinfo: missing.append(key)
-            if missing:
-                logtype = "S" if self.metafix else "E"
-                self.logger.log("Required fields missing from fontinfo.plist: " + str(missing), logtype)
-                self.logger.log("Missing fields will be given dummy values to allow checking to proceed", "E")
             # Collect values for contructing other fields, setting dummy values when missing and in check-only mode
             dummies = False
-            values = {}
+            storedvals = {}
             for key in ("ascender", "copyright", "descender", "familyName", "styleName", "openTypeNameManufacturer"):
                 if key in self.fontinfo:
-                    values[key] = self.fontinfo.getval(key)
-                else:
+                    storedvals[key] = self.fontinfo.getval(key)
+                    if key == "styleName": # Capitalise words of stored value
+                        storedvals[key] = ' '.join(s[:1].upper() + s[1:] for s in storedvals[key].split(' '))
                     if key in ("ascender", "descender"):
-                        values[key] = 999
+                        storedvals[key] = int(storedvals[key])
+                else:
+                    dummies = True
+                    if key in ("ascender", "descender"):
+                        storedvals[key] = 999
                     else:
-                        values[key] = "Dummy"
+                        storedvals[key] = "Dummy"
+            if missing:
+                logtype = "S" if self.metafix else "E"
+                logger.log("Required fields missing from fontinfo.plist: " + str(missing), logtype)
+            if dummies:
+                logger.log("Checking will continue with values of 'Dummy' or 999 for missing fields", "W")
+            # Contruct values for certain fields
+            value = storedvals["openTypeNameManufacturer"] + ": " + storedvals["familyName"] + " "
+            value = value + storedvals["styleName"] + ": " + datetime.datetime.now().strftime("%Y")
+            fisetto["openTypeNameUniqueID"] = value
+            fisetto["openTypeOS2WinDescent"] = -storedvals["descender"]
+            value = storedvals["familyName"] + "-" + storedvals["styleName"]
+            fisetto["postscriptFontName"] = value.replace(" ", "") # Strip spaces
+            fisetto["postscriptFullName"] = storedvals["familyName"] + " " + storedvals["styleName"]
 
+            warnings = 0; changes = 0
+            # Warn about missing fields
+            for key in fiwarnifmiss:
+                if key not in self.fontinfo:
+                    logger.log(key + " is missing from fontinfo.plist", "W")
+                    warnings += 1
+            # Warn about bad values
+            for key in fiwarnifnot:
+                if key in self.fontinfo:
+                    value = self.fontinfo.getval(key)
+                    if value not in fiwarnifnot[key]:
+                        logger.log(key + " should be one of " + str(fiwarnifnot[key]))
+                        warnings += 1
 
+            # Now do all remaining checks - which will lead to values being changed
+            for key in fidel:
+                if key in self.fontinfo:
+                    old = self.fontinfo.getval(key)
+                    if self.metafix:
+                        self.fontinfo.remove(key)
+                        logmess = " removed from fontinfo. "
+                    else:
+                        logmess = " would be removed from fontinfo "
+                    self.logchange(logmess, key, old, None)
+                    changes += 1
+            # Set to integer values
+            for key in fiint:
+                if key in self.fontinfo:
+                    old = self.fontinfo.getval(key)
+                    if old != int(old):
+                        new = int(old)
+                        if self.metafix:
+                            self.fontinfo.setval(key, "integer", new)
+                            logmess = " updated "
+                        else:
+                            logmess = " would be updated "
+                        self.logchange(logmess, key, old, new)
+                        changes += 1
+            # Capitalize words
+            for key in ficapitalize:
+                if key in self.fontinfo:
+                    old = self.fontinfo.getval(key)
+                    new = ' '.join(s[:1].upper() + s[1:] for s in old.split(' '))  # Capitalise words
+                    if new != old:
+                        if self.metafix:
+                            self.fontinfo.setval(key, "string", new)
+                            logmess = " uppdated "
+                        else:
+                            logmess = " would be uppdated "
+                        self.logchange(logmess, key, old, new)
+                        changes += 1
+            # Set to specific values
+            for key in list(fisetto.keys()) + list(fisettoother.keys()):
+                if key in self.fontinfo:
+                    old = self.fontinfo.getval(key)
+                    logmess = " updated "
+                else:
+                    old = None
+                    logmess = " added "
+                if key in fisetto:
+                    new = fisetto[key]
+                else:
+                    new = storedvals[fisettoother[key]]
+                if new != old:
+                    if self.metafix:
+                        valtype = "integer" if isinstance(new, int) else "string"
+                        self.fontinfo.setval(key, valtype, new)
+                    else:
+                        logmess = " would be" + logmess
+                    self.logchange(logmess, key, old, new)
+                    changes += 1
+            # Specific checks
+            if "italicAngle" in self.fontinfo:
+                old = self.fontinfo.getval("italicAngle")
+                if old == 0: # Should be deleted if 0
+                    logmess = " removed since it is 0 "
+                    if self.metafix:
+                        self.fontinfo.remove("italicAngle")
+                    else:
+                        logmess = " would be" + logmess
+                    self.logchange(logmess, "italicAngle", old, None)
+                    changes += 1
+            vm = self.fontinfo.getval("versionMajor")
+            if vm == 0: logger.log("versionMajor is 0", "W")
+
+            # lib.plist checks
+            if "lib" not in self.__dict__:
+                logger.log("lib.plist missing. Need to run with checkfix parameter set to None", "S")
+            logger.log("Checking lib.plist metatdata", "P")
+
+            for key in ("com.schriftgestaltung.disablesAutomaticAlignment", "com.schriftgestaltung.disablesLastChange"):
+                if key in self.lib and self.lib.getval(key) is not True:
+                    val = str(self.lib.getval(key))
+                    logger.log(key + " should normally be True; currently set to " + val, "W")
+                    warnings += 1
+            if "com.schriftgestaltung.useNiceNames" in self.lib and self.lib.getval("com.schriftgestaltung.useNiceNames") is not False:
+                    val = str(self.lib.getval("com.schriftgestaltung.useNiceNames"))
+                    logger.log("com.schriftgestaltung.useNiceNames should normally be False; currently set to " + val, "W")
+                    warnings += 1
+            for key in ("com.schriftgestaltung.Disable Last Change",
+                        "com.schriftgestaltung.font.Disable Last Change", "UFO.lib", "UFOFormat"):
+                if key in self.lib:
+                    logger.log(key + " is not a invalid key", "W")
+                    warnings += 1
+
+            # If screen logging is less that "W", flag up if there have been warnings
+            if warnings or changes:
+                if logger.scrlevel not in "WIV":
+                    if changes and self.metafix:
+                        logger.log("***** NOTE ***** Changes were made by check & fix routines.                  *****",
+                                   "P")
+                    else:
+                        logger.log("***** NOTE ***** Warnings were generated by check & fix routines.            *****",
+                                   "P")
+                    logger.log("***** NOTE ***** See log file or re-run with screen logging set to W, I or V *****", "P")
 
     def _readPlist(self, filen):
         if filen in self.dtree:
@@ -346,7 +494,9 @@ class Ufont(object):
         # Set standard UFO files for output
         dtree = self.dtree
         setFileForOutput(dtree, "metainfo.plist", self.metainfo, "xml")
-        if "fontinfo" in self.__dict__: setFileForOutput(dtree, "fontinfo.plist", self.fontinfo, "xml")
+        if "fontinfo" in self.__dict__:
+            self.fontinfo.setval("openTypeHeadCreated", "string", datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
+            setFileForOutput(dtree, "fontinfo.plist", self.fontinfo, "xml")
         if "groups" in self.__dict__: setFileForOutput(dtree, "groups.plist", self.groups, "xml")
         if "kerning" in self.__dict__: setFileForOutput(dtree, "kerning.plist", self.kerning, "xml")
         if "lib" in self.__dict__: setFileForOutput(dtree, "lib.plist", self.lib, "xml")
@@ -369,6 +519,25 @@ class Ufont(object):
         setattr(self, filetype, obj)
         self.dtree[filetype + '.plist'] = UT.dirTreeItem(read=True, added=True, fileObject=obj, fileType="xml")
         obj.etree = ET.fromstring("<plist>\n<dict/>\n</plist>")
+
+    def logchange(self, logmess, key, old, new):
+        oldstr = str(old) if len(str(old)) < 22 else str(old)[0:20] + "..."
+        newstr = str(new) if len(str(new)) < 22 else str(new)[0:20] + "..."
+        logmess = key + logmess
+        if old is None:
+            logmess = logmess + " New value: " + newstr
+        else:
+            if new is None:
+                logmess = logmess + " Old value: " + oldstr
+            else:
+                logmess = logmess + " Old value: " + oldstr + ", new value: " + newstr
+        self.logger.log(logmess, "W")
+        # Extra verbose logging
+        if len(str(old)) > 21:
+            self.logger.log("Full old value: " + str(old), "I")
+        if len(str(new)) > 21:
+            self.logger.log("Full new value: " + str(new), "I")
+        self.logger.log("Types: Old - " + str(type(old)) + ", New - " + str(type(new)), "I")
 
 
 class Ulayer(_Ucontainer):

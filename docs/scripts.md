@@ -224,7 +224,7 @@ Example that expands the stokes in a UFO font `SevdaStrokeMaster-Regular.ufo` by
 psfexpandstroke SevdaStrokeMaster-Regular.ufo Sevda-Regular.ufo 13
 ```
 
-Note that this only expands the outlines - it does not remove any resulting overlap. 
+Note that this only expands the outlines - it does not remove any resulting overlap.
 
 
 ---
@@ -290,6 +290,8 @@ Usage: **`psfglyphs2ufo fontfile.glyphs masterdir`**
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
 Exports one UFO file per master found in the fontfile.glyphs file, and places it in the directory specified as masterdir.
+
+In a round-trip ufo -> glyphs -> ufo there is currently there is some data loss in the standard glyphs -> ufo conversion, so the script restores some fields from the original ufos if they are present in the masterdir.
 
 Example usage:
 

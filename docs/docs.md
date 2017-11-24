@@ -146,7 +146,20 @@ Default normalization behaviours include:
 
 Most of the above can be overridden by [parameters](#parameters)
 
-The check & fix tests are being developed, and will cover items like required fields in fontinfo.plist.  The check & fix behaviour can be controlled by [parameters](#parameters), including turning off by setting the checkfix parameter to none.
+The check & fix tests are based on [Font Development Best Practices](https://silnrsi.github.io/FDBP/en-US/index.html) and include:
+- fontinfo.plist
+ - Required fields
+ - Fields to be deleted
+ - Fields to constructed from other fields
+ - Specific recomended values for some fields
+- lib.plist
+ - Required fields
+ - Recomended values
+ - Fields that should not be present
+
+With some fields errors are fixed automatically and for others warnings are issued.
+
+The check & fix behaviour can be controlled by [parameters](#parameters), currently just the checkfix parameter which cane be set to 'check' for check but don't fix or none for no checking.
 
 ## Known limitations
 The following are known limitations that will be addressed in the future:
