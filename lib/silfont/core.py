@@ -388,7 +388,10 @@ def execute(tool, fn, argspec, chain = None):
             if logname == "":
                 logfile = None
             else:
-                if not quiet: logger.log('Opening log file for output: '+logname, "P")
+                (logname, logpath, exists) = fullpath(logname)
+                if not exists:
+                    logger.log("Log file directory " + logpath + " does not exist", "S")
+                if not quiet: logger.log('Opening log file for output: ' + logname, "P")
                 try:
                     logfile = open(logname, "w")
                 except Exception as e:
@@ -465,7 +468,10 @@ def execute(tool, fn, argspec, chain = None):
             if not quiet: logger.log('Opening file for input: '+aval, "P")
             aval = csvreader(aval)
         elif atype == 'outfile':
-            if not quiet: logger.log('Opening file for output: '+aval, "P")
+            (aval, path, exists) = fullpath(aval)
+            if not exists:
+                logger.log("Output file directory " + path + " does not exist", "S")
+            if not quiet: logger.log('Opening file for output: ' + aval, "P")
             try:
                 aval = codecs.open(aval, 'w', 'utf-8')
             except Exception as e:
@@ -594,3 +600,8 @@ def str2bool(v):  # If v is not a boolean, convert from string to boolean
     else:
         v = None
     return v
+
+def fullpath(filen): # Changes file name to one with full path and checks directory exists
+    fullname = os.path.abspath(filen)
+    (fpath,dummy) = os.path.split(fullname)
+    return fullname, fpath, os.path.isdir(fpath)
