@@ -48,6 +48,7 @@ scrlevel: I
 indentIncr: '  '
 glifElemOrder: unicode,advance,note,image,guideline,anchor,outline,lib
 ```
+The section headers are backups, logging, outparams and ufometadata.
 
 In a font project with multiple UFO fonts in the same folder, all would use a single config file.
 
