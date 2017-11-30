@@ -25,7 +25,7 @@ _reservedNames = "CON PRN AUX CLOCK$ NUL COM1 COM2 COM3 COM4 PT1 LPT2 LPT3".lowe
 
 class _Ucontainer(object):
     # Parent class for other objects (eg Ulayer)
-    def __init_(self):
+    def __init__(self):
         self._contents = {}
 
     # Define methods so it acts like an immutable container
@@ -36,12 +36,26 @@ class _Ucontainer(object):
     def __getitem__(self, key):
         return self._contents[key]
 
+    def __setitem__(self, key, val):
+        self._contents[key] = val
+
     def __iter__(self):
         return iter(self._contents)
+
+    def __delitem__(self, k):
+        del self._contents[k]
 
     def keys(self):
         return self._contents.keys()
 
+    def items(self):
+        return self._contents.items()
+
+    def values(self):
+        return self._contents.values()
+
+    def update(self, *p, **kw):
+        return self._contents.update(*p, **kw)
 
 class _plist(object):
     # Used for common plist methods inherited by Uplist and Ulib classes
@@ -602,13 +616,13 @@ class Ulayer(_Ucontainer):
 
     def addGlyph(self, glyph):
         glyphn = glyph.name
-        if glyphn in self._contents: self.font.logger.log(glyphn + " already in font", "X")
+        if glyphn in self.contents: self.font.logger.log(glyphn + " already in font", "X")
         self._contents[glyphn] = glyph
         # Set glif name
         glifn = makeFileName(glyphn)
         names = []
-        while glifn in self.contents:  # need to check for duplicate glif names
-            names.append(glfin)
+        while glifn in self._contents:  # need to check for duplicate glif names
+            names.append(glifn)
             glifn = makeFileName(glyphn, names)
         glifn += ".glif"
         glyph.filen = glifn
@@ -643,7 +657,7 @@ class Uplist(ETU.xmlitem, _plist):
                 self._contents[i] = pl[i]
 
 
-class Uglif(ETU.xmlitem):
+class Uglif(_Ucontainer, ETU.xmlitem):
     # Unlike plists, glifs can have multiples of some sub-elements (eg anchors) so create lists for those
 
     def __init__(self, layer, filen=None, parse=True, name=None, format=None):
@@ -739,13 +753,14 @@ class Uglif(ETU.xmlitem):
         if ename == "lib": ET.SubElement(element, "dict")
         multi = True if ename in _glifElemMulti else False
 
-        # Check element does not already exist for single elements
-        if self._contents[ename] and not multi: self.layer.font.logger.log("Already an " + ename + "in glif", "X")
-
         # Add new object
         if multi:
+            if ename not in self._contents:
+                self._contents[ename] = []
             self._contents[ename].append(self.makeObject(ename, element))
         else:
+            if ename in self._contents and self._contents[ename] is not None:
+                self.layer.font.logger.log("Already an " + ename + "in glif", "X")
             self._contents[ename] = self.makeObject(ename, element)
 
     def remove(self, ename, index=None, object=None):
