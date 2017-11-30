@@ -25,7 +25,7 @@ _reservedNames = "CON PRN AUX CLOCK$ NUL COM1 COM2 COM3 COM4 PT1 LPT2 LPT3".lowe
 
 class _Ucontainer(object):
     # Parent class for other objects (eg Ulayer)
-    def __init_(self):
+    def __init__(self):
         self._contents = {}
 
     # Define methods so it acts like an immutable container
@@ -347,6 +347,7 @@ class Ufont(object):
             for key in fidel:
                 if key in self.fontinfo:
                     old = self.fontinfo.getval(key)
+
                     if self.metafix:
                         self.fontinfo.remove(key)
                         logmess = " removed from fontinfo. "
@@ -431,12 +432,13 @@ class Ufont(object):
             for key in ("com.schriftgestaltung.Disable Last Change",
                         "com.schriftgestaltung.font.Disable Last Change", "UFO.lib", "UFOFormat"):
                 if key in self.lib:
-                    logger.log(key + " is not a invalid key", "W")
+                    logger.log(key + " is not a valid key", "W")
                     warnings += 1
 
             # If screen logging is less that "W", flag up if there have been warnings
             if warnings or changes:
                 if logger.scrlevel not in "WIV":
+
                     if changes and self.metafix:
                         logger.log("***** NOTE ***** Changes were made by check & fix routines.                  *****",
                                    "P")
@@ -739,8 +741,12 @@ class Uglif(ETU.xmlitem):
         if ename == "lib": ET.SubElement(element, "dict")
         multi = True if ename in _glifElemMulti else False
 
+        if multi and ename not in self._contents:
+            self._contents[ename] = []
+
         # Check element does not already exist for single elements
-        if self._contents[ename] and not multi: self.layer.font.logger.log("Already an " + ename + "in glif", "X")
+        if ename in self._contents and not multi:
+            if self._contents[ename] is not None: self.layer.font.logger.log("Already an " + ename + " in glif", "X")
 
         # Add new object
         if multi:
@@ -858,20 +864,38 @@ class Uoutline(Uelement):
                 for contour in self._contents[tag]:
                     self.contours.append(Ucontour(self, contour))
 
-    def removeobject(self, object, type):
-        super(Uoutline, self).remove(object.element)
-        if type == "component": self.components.remove(object)
-        if type == "contour": self.contours.remove(object)
+    def removeobject(self, obj, typ):
+        super(Uoutline, self).remove(obj.element)
+        if typ == "component": self.components.remove(obj)
+        if typ == "contour": self.contours.remove(obj)
 
-    def appendobject(self, object, type):
-        super(Uoutline, self).append(object.element)
-        if type == "component": self.components.append(object)
-        if type == "contour": self.contours.append(object)
+    def appendobject(self, item, typ): # Item can be an contour/component object, element or attribute list
+        if isinstance(item, (Ucontour, Ucomponent)):
+            obj = item
+        else:
+            if isinstance(item, dict):
+                elem = ET.Element(typ)
+                elem.attrib = item
+            elif isinstance(item, ET.Element):
+                elem = item
+            else:
+                self.logger.log("item should be dict, element, Ucontour or Ucomponent", "S")
+            if typ == 'component':
+                obj = Ucomponent(self,elem)
+            else:
+                obj = Ucontour(self,elem)
+        super(Uoutline, self).append(obj.element)
+        if type == "component": self.components.append(obj)
+        if type == "contour": self.contours.append(obj)
 
-    def insertobject(self, index, object, type):
-        super(Uoutline, self).insert(index, object.element)
-        if type == "component": self.components.insert(index, object)
-        if type == "contour": self.contours.insert(index, object)
+    def insertobject(self, index, item, typ): # Needs updating to match appendobject
+        self.logger.log("insertobject currently buggy so don't use!", "X")
+        # Bug is that index for super... should be different than other lines.
+        # need to think through logic to sort this out...
+
+        super(Uoutline, self).insert(index, obj.element)
+        if typ == "component": self.components.insert(index, obj)
+        if typ == "contour": self.contours.insert(index, obj)
 
 
 class Ucomponent(Uelement):
