@@ -37,10 +37,10 @@ class Font(object) :
         self.classes = {}
         self.all_aps = {}
 
-    def readaps(self, filename, omitaps='') :
+    def readaps(self, filename, omitaps='', params = None) :
         omittedaps = set(omitaps.replace(',',' ').split())  # allow comma- and/or space-separated list
         if filename.endswith('.ufo') :
-            f = ufo.Ufont(filename)
+            f = ufo.Ufont(filename, params = params)
             for g in f.deflayer :
                 glyph = Glyph(g)
                 self.glyphs[g] = glyph
@@ -232,7 +232,7 @@ argspec = [
 def doit(args) :
     font = Font()
     if args.infile :
-        font.readaps(args.infile, args.omitaps)
+        font.readaps(args.infile, args.omitaps, args.paramsobj)
 
     font.make_marks()
     font.make_classes()

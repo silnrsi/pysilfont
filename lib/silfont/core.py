@@ -77,7 +77,7 @@ class parameters(object):
                                   'x', 'y', 'angle', 'type', 'smooth', 'name', 'format', 'color', 'identifier']
             }
         defparams['ufometadata'] = {
-            "checkfix":         "fix"   # Apply metadata fixes when reading UFOs
+            "checkfix":         "check"   # Apply metadata fixes when reading UFOs
         }
 
         self.classes = {}  # Dictionary containing a list of parameters in each class

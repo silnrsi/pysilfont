@@ -169,10 +169,39 @@ class UtextFile(object):
             try:
                 shutil.copy2(inpath, dir)
             except Exception as e:
-                print e
+                print(e)
                 sys.exit(1)
         dtreeitem.written = True
 
+class Udirectory(object):
+    # Generic object for handling directories - used for data and images
+    def __init__(self, font, parentdir, dirn):
+        self.type = "directory"
+        self.font = font
+        self.parentdir = parentdir
+        self.dirn = dirn
+        if parentdir != font.ufodir:
+            self.font.logger.log("Currently Udir only supports top-level directories", "X")
+        dtree = font.dtree
+        if dirn not in dtree:
+            self.font.logger.log("Udir directory " + dirn + " does not exist", "X")
+        dtree[dirn].setinfo(read=True)
+        dtree[dirn].fileObject = self
+        dtree[dirn].fileType = "directory"
+
+    def write(self, dtreeitem, oparentdir):
+        # For now just copies source to destination
+        if self.parentdir == oparentdir: return # No action needed
+        inpath = os.path.join(self.parentdir, self.dirn)
+        outpath = os.path.join(oparentdir, self.dirn)
+        try:
+            if os.path.isdir(outpath):
+                shutil.rmtree(outpath)
+            shutil.copytree(inpath, outpath)
+        except Exception as e:
+            print(e)
+            sys.exit(1)
+        dtreeitem.written = True
 
 class Ufont(object):
     """ Object to hold all the data from a UFO"""
@@ -268,7 +297,11 @@ class Ufont(object):
             else:
                 logger.log("Glyph directory " + layerdir + " missing", "S")
         if self.deflayer is None: logger.log("No public.default layer", "S")
-        ## Process other files and directories
+        # Process other directories
+        if "images" in self.dtree:
+            self.images = Udirectory(self,ufodir, "images")
+        if "data" in self.dtree:
+            self.data = Udirectory(self, ufodir, "data")
 
         # Run best practices check and fix routines
         if self.metacheck:
@@ -462,7 +495,7 @@ class Ufont(object):
             try:
                 os.mkdir(outdir)
             except Exception as e:
-                print e
+                print(e)
                 sys.exit(1)
         if not os.path.isdir(outdir):
             self.logger.log(outdir + " not a directory", "S")
@@ -475,7 +508,7 @@ class Ufont(object):
                 try:
                     os.mkdir(outdir)
                 except Exception as e:
-                    print e
+                    print(e)
                     sys.exit(1)
                 odtree = {}
             else:
@@ -483,11 +516,9 @@ class Ufont(object):
                 dirlist = os.listdir(outdir)
                 if dirlist == []:  # Outdir is empty
                     odtree = {}
-                elif "metainfo.plist" in dirlist:
+                else:
                     self.logger.log("Output UFO already exists - reading for comparison", "P")
                     odtree = UT.dirTree(outdir)
-                else:
-                    self.logger.log(outdir + " exists but is not a UFO", "S")
         # Update version info etc
         UFOversion = self.outparams["UFOversion"]
         self.metainfo["formatVersion"][1].text = str(UFOversion)
@@ -972,7 +1003,7 @@ def writeXMLobject(dtreeitem, font, dirn, filen, exists, fobject=False):
             try:
                 oxml = open(os.path.join(dirn, filen), "r")
             except Exception as e:
-                print e
+                print(e)
                 sys.exit(1)
             for line in oxml.readlines():
                 oxmlstr += line
@@ -1076,20 +1107,23 @@ def writeToDisk(dtree, outdir, font, odtree=None, logindent=""):
                 continue
             font.logger.log(logindent + "Processing " + filen + " directory", "I")
             subdir = os.path.join(outdir, filen)
-            if not os.path.exists(subdir):  # If outdir does not exist, create it
-                try:
-                    os.mkdir(subdir)
-                except Exception as e:
-                    print e
-                    sys.exit(1)
-
-            if exists:
-                subodtree = odtree[filen].dirtree
+            if isinstance(dtreeitem.fileObject, Udirectory):
+                dtreeitem.fileObject.write(dtreeitem, outdir)
             else:
-                subodtree = {}
-            subindent = logindent + "  "
-            writeToDisk(dtreeitem.dirtree, subdir, font, subodtree, subindent)
-            if os.listdir(subdir) == []: os.rmdir(subdir)  # Delete directory if empty
+                if not os.path.exists(subdir):  # If outdir does not exist, create it
+                    try:
+                        os.mkdir(subdir)
+                    except Exception as e:
+                        print(e)
+                        sys.exit(1)
+
+                if exists:
+                    subodtree = odtree[filen].dirtree
+                else:
+                    subodtree = {}
+                subindent = logindent + "  "
+                writeToDisk(dtreeitem.dirtree, subdir, font, subodtree, subindent)
+                if os.listdir(subdir) == []: os.rmdir(subdir)  # Delete directory if empty
 
     while okey:  # Any remaining items in odree list are no longer needed
         ofilen = okey[1:]
