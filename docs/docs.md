@@ -157,13 +157,11 @@ The check & fix tests are based on [Font Development Best Practices](https://sil
  - Recomended values
  - Fields that should not be present
 
-With some fields errors are fixed automatically and for others warnings are issued.
-
-The check & fix behaviour can be controlled by [parameters](#parameters), currently just the checkfix parameter which cane be set to 'check' for check but don't fix or none for no checking.
+The check & fix behaviour can be controlled by [parameters](#parameters), currently just the checkfix parameter which defaults to 'check' (just report what is wrong), but can be set to  'fix' to fix what it can, or none for no checking.
 
 ## Known limitations
 The following are known limitations that will be addressed in the future:
-- UFO 3 specific folders (data and images) are not copied
+- UFO 3 specific folders (data and images) are preserved, even if present in a UFO 2 font.
 - Converting from UFO 3 to UFO 2 only handles data that has a place in UFO 2, but does include converting UFO 3 anchors to the standard way of handling them in UFO 2
 - If a project uses non-standard files within the UFO folder, they are deleted
 

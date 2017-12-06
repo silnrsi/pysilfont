@@ -88,8 +88,8 @@ Currently only font output parameters can be changed via lib.plist
 | glifElemOrder | (list of elements in the order defined in spec) | Order for outputting elements in a glif |  |
 | attribOrders | (list of attribute orders defined in spec) | Order for outputting attributes in an element.  One list per element type | When setting this, the parameter name is `attribOrders.<element type>`.  Currently only used with attribOrders.glif |
 | **ufometadata** (ufo scripts only) |  |  |  |
-| checkfix | fix | Metadata check & fix action | If set to "check", issues will just be reported.  Set to "none" for no metadata checking |
-| More to be added... | |
+| checkfix | check | Metadata check & fix action | If set to "fix", some values updated (or deleted).  Set to "none" for no metadata checking |
+| More may be added... | |
 
 ## Within basic scripts
 ### Accessing values
