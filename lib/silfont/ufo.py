@@ -264,8 +264,13 @@ class Ufont(object):
         # Set flags for checking and fixing metadata
         cf = self.paramset["checkfix"].lower()
         if cf not in ("check", "fix", "none", ""): logger.log("Invalid value '" + cf + "' for checkfix parameter", "S")
+
         self.metacheck = True if cf in ("check", "fix") else False
         self.metafix = True if cf == "fix" else False
+        if "fontinfo.plist" not in self.dtree:
+            logger.log("fontinfo.plist missing so checkfix routines can't be run", "E")
+            self.metacheck = False
+            self.metafix = False
 
         # Read other top-level plists
         if "fontinfo.plist" in self.dtree: self.fontinfo = self._readPlist("fontinfo.plist")
@@ -307,8 +312,6 @@ class Ufont(object):
         if self.metacheck:
 
             #fontinfo.plist checks
-            if "fontinfo" not in self.__dict__:
-                logger.log("fontinfo.plist missing. Need to run with checkfix parameter set to None", "S")
             logger.log("Checking fontinfo.plist metatdata", "P")
             fireq = ("ascender", "copyright", "descender", "familyName", "openTypeNameDesigner",
                         "openTypeNameDesignerURL", "openTypeNameLicense", "openTypeNameLicenseURL",
@@ -450,23 +453,24 @@ class Ufont(object):
 
             # lib.plist checks
             if "lib" not in self.__dict__:
-                logger.log("lib.plist missing. Need to run with checkfix parameter set to None", "S")
-            logger.log("Checking lib.plist metatdata", "P")
+                logger.log("lib.plist missing so not checked by check & fix routines", "E")
+            else:
+                logger.log("Checking lib.plist metatdata", "P")
 
-            for key in ("com.schriftgestaltung.disablesAutomaticAlignment", "com.schriftgestaltung.disablesLastChange"):
-                if key in self.lib and self.lib.getval(key) is not True:
-                    val = str(self.lib.getval(key))
-                    logger.log(key + " should normally be True; currently set to " + val, "W")
-                    warnings += 1
-            if "com.schriftgestaltung.useNiceNames" in self.lib and self.lib.getval("com.schriftgestaltung.useNiceNames") is not False:
-                    val = str(self.lib.getval("com.schriftgestaltung.useNiceNames"))
-                    logger.log("com.schriftgestaltung.useNiceNames should normally be False; currently set to " + val, "W")
-                    warnings += 1
-            for key in ("com.schriftgestaltung.Disable Last Change",
-                        "com.schriftgestaltung.font.Disable Last Change", "UFO.lib", "UFOFormat"):
-                if key in self.lib:
-                    logger.log(key + " is not a valid key", "W")
-                    warnings += 1
+                for key in ("com.schriftgestaltung.disablesAutomaticAlignment", "com.schriftgestaltung.disablesLastChange"):
+                    if key in self.lib and self.lib.getval(key) is not True:
+                        val = str(self.lib.getval(key))
+                        logger.log(key + " should normally be True; currently set to " + val, "W")
+                        warnings += 1
+                if "com.schriftgestaltung.useNiceNames" in self.lib and self.lib.getval("com.schriftgestaltung.useNiceNames") is not False:
+                        val = str(self.lib.getval("com.schriftgestaltung.useNiceNames"))
+                        logger.log("com.schriftgestaltung.useNiceNames should normally be False; currently set to " + val, "W")
+                        warnings += 1
+                for key in ("com.schriftgestaltung.Disable Last Change",
+                            "com.schriftgestaltung.font.Disable Last Change", "UFO.lib", "UFOFormat"):
+                    if key in self.lib:
+                        logger.log(key + " is not a valid key", "W")
+                        warnings += 1
 
             # If screen logging is less that "W", flag up if there have been warnings
             if warnings or changes:
