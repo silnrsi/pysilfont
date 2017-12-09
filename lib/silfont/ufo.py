@@ -312,7 +312,7 @@ class Ufont(object):
         if self.metacheck:
 
             #fontinfo.plist checks
-            logger.log("Checking fontinfo.plist metatdata", "P")
+            logger.log("Checking fontinfo.plist metadata", "P")
             fireq = ("ascender", "copyright", "descender", "familyName", "openTypeNameDesigner",
                         "openTypeNameDesignerURL", "openTypeNameLicense", "openTypeNameLicenseURL",
                         "openTypeNameManufacturer", "openTypeNameManufacturerURL", "openTypeNameVersion",
@@ -455,7 +455,7 @@ class Ufont(object):
             if "lib" not in self.__dict__:
                 logger.log("lib.plist missing so not checked by check & fix routines", "E")
             else:
-                logger.log("Checking lib.plist metatdata", "P")
+                logger.log("Checking lib.plist metadata", "P")
 
                 for key in ("com.schriftgestaltung.disablesAutomaticAlignment", "com.schriftgestaltung.disablesLastChange"):
                     if key in self.lib and self.lib.getval(key) is not True:
