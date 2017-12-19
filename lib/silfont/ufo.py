@@ -978,8 +978,7 @@ class UfeatureFile(UtextFile):
         super(UfeatureFile, self).__init__(font, dirn, filen)
 
 
-def writeXMLobject(dtreeitem, font, dirn, filen, exists, fobject=False):
-    params = font.outparams
+def writeXMLobject(dtreeitem, params, dirn, filen, exists, fobject=False):
     object = dtreeitem if fobject else dtreeitem.fileObject  # Set fobject to True if a file object is passed ratehr than dtreeitem
     if object.outparams: params = object.outparams  # override default params with object-specific ones
     indentFirst = params["indentFirst"]
@@ -1077,7 +1076,7 @@ def writeToDisk(dtree, outdir, font, odtree=None, logindent=""):
                                 if glif["lib"].__len__() == 0:
                                     glif.remove("lib")
                             glif.rebuildET()
-                        writeXMLobject(dtreeitem, font, outdir, filen, exists)
+                        writeXMLobject(dtreeitem, font.outparams, outdir, filen, exists)
                     else:  # Delete existing item if the current object is empty
                         if exists:
                             font.logger.log('Deleting empty item ' + filen + ' from existing output UFO', "I")

@@ -21,11 +21,11 @@ def doit(args) :
 
     fields = ["copyright", "openTypeNameDescription", "openTypeNameDesigner", "openTypeNameDesignerURL", "openTypeNameLicense", # General feilds
                 "openTypeNameLicenseURL", "openTypeNameManufacturer", "openTypeNameManufacturerURL", "openTypeOS2CodePageRanges",
-                "openTypeOS2UnicodeRanges", "openTypeOS2VendorID", "trademark", "year",
+                "openTypeOS2UnicodeRanges", "openTypeOS2VendorID", "trademark",
                 "openTypeNameVersion", "versionMajor", "versionMinor", # Version fields
                 "ascender", "descender", "openTypeHheaAscender", "openTypeHheaDescender", "openTypeHheaLineGap", # Design fields
                 "openTypeOS2TypoAscender", "openTypeOS2TypoDescender", "openTypeOS2TypoLineGap", "openTypeOS2WinAscent", "openTypeOS2WinDescent"]
-    libfields = ["public.postscriptNames", "public.glyphOrder", "com.schriftgestaltung.font.glyphOrder", "com.schriftgestaltung.glyphOrder"]
+    libfields = ["public.postscriptNames", "public.glyphOrder", "com.schriftgestaltung.glyphOrder"]
 
     fromfont = args.fromfont
     tofont = args.tofont
@@ -128,10 +128,10 @@ def doit(args) :
     if not reportonly:
         if fupdated:
             logger.log("Writing updated fontinfo.plist", "P")
-            UFO.writeXMLobject(tfi, tofont, tofont.ufodir, "fontinfo.plist", True, fobject=True)
+            UFO.writeXMLobject(tfi, tofont.outparams, tofont.ufodir, "fontinfo.plist", True, fobject=True)
         if lupdated:
             logger.log("Writing updated lib.plist", "P")
-            UFO.writeXMLobject(tlib, tofont, tofont.ufodir, "lib.plist", True, fobject=True)
+            UFO.writeXMLobject(tlib, tofont.outparams, tofont.ufodir, "lib.plist", True, fobject=True)
 
     return
 
