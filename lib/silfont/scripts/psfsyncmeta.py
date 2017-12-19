@@ -6,6 +6,7 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'David Raymond'
 
 from silfont.core import execute
+from datetime import datetime
 import silfont.ufo as UFO
 import os
 from xml.etree import cElementTree as ET
@@ -24,7 +25,7 @@ def doit(args) :
     standardstyles = ["Regular", "Italic", "Bold", "BoldItalic"]
     finfoignore = ["openTypeHeadCreated", "openTypeOS2Panose", "postscriptBlueScale", "postscriptBlueShift",
                    "postscriptBlueValues", "postscriptOtherBlues", "postscriptStemSnapH", "postscriptStemSnapV", "postscriptForceBold"]
-    libfields = ["public.postscriptNames", "public.glyphOrder", "com.schriftgestaltung.font.glyphOrder", "com.schriftgestaltung.glyphOrder"]
+    libfields = ["public.postscriptNames", "public.glyphOrder", "com.schriftgestaltung.glyphOrder"]
 
     font = args.ifont
     logger = args.logger
@@ -66,8 +67,6 @@ def doit(args) :
 
     # Check for required fields in master font
     mfinfo = mfont.fontinfo
-    myear = mfinfo["year"][1].text if "year" in mfinfo else None
-    if myear is None : logger.log("No year in Regular fontinfo.plist", "E")
     if "familyName" in mfinfo :
         spacedfamily = mfinfo["familyName"][1].text
     else:
@@ -126,14 +125,10 @@ def doit(args) :
                     newval = 0
                     action = "Update"
             elif field == "openTypeNameUniqueID" :
-                if myear is not None :
-                    newval = manufacturer + ": " + spacedname + ": " + myear
-                    if text != newval :
-                        issue = "Incorrect value"
-                        action = "Update"
-                else:
-                    issue = "No year in " + mastertext + " fontinfo so unable to check value"
-                    action = "Error"
+                newval = manufacturer + ": " + spacedname + ": " + datetime.now().strftime("%Y")
+                if text != newval :
+                    issue = "Incorrect value"
+                    action = "Update"
             elif field == "openTypeOS2WeightClass" :
                 if bold and text != "700" :
                     issue = "is not 700"
@@ -276,12 +271,12 @@ def doit(args) :
                     filen = "fontinfo" + newfile + ".plist"
                     logger.log("Writing updated fontinfo to " + filen, "P")
                     exists = True if os.path.isfile(os.path.join(font.ufodir, filen)) else False
-                    UFO.writeXMLobject(finfo, font, font.ufodir, filen, exists, fobject=True)
+                    UFO.writeXMLobject(finfo, font.outparams, font.ufodir, filen, exists, fobject=True)
                 if lchanged:
                     filen = "lib" + newfile + ".plist"
                     logger.log("Writing updated lib.plist to " + filen, "P")
                     exists = True if os.path.isfile(os.path.join(font.ufodir, filen)) else False
-                    UFO.writeXMLobject(lib, font, font.ufodir, filen, exists, fobject=True)
+                    UFO.writeXMLobject(lib, font.outparams, font.ufodir, filen, exists, fobject=True)
 
     if fieldscopied :
         message = "After updating, UFOsyncMeta will need to be re-run to validate these fields" if reportonly else "Re-run UFOsyncMeta to validate these fields"

@@ -71,7 +71,7 @@ def doit(args) :
         otelem.text = newotnv
         majelem.text = otmaj
         minelem.text = otmin
-        UFO.writeXMLobject(fi,font,font.ufodir, "fontinfo.plist" , True, fobject = True)
+        UFO.writeXMLobject(fi,font.outparams,font.ufodir, "fontinfo.plist" , True, fobject = True)
 
     return
 
