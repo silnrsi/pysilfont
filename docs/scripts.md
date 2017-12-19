@@ -452,7 +452,7 @@ Usage: **`psfsyncmeta [-s] [-m [MASTER]] [-r] [-n] [--normalize] ifont`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-Verifies and synchronises some fontinfo.plist and lib.plist metatdata across a family of fonts.  By default it uses the regular font as the master and updates any other fonts that exist assuming standard name endings of -Regular, -Italic, -Bold and -BoldItalic.  Optionally a single font file can be synced against any other font as master, regardless of file naming.
+Verifies and synchronises some fontinfo.plist and lib.plist metadata across a family of fonts.  By default it uses the regular font as the master and updates any other fonts that exist assuming standard name endings of -Regular, -Italic, -Bold and -BoldItalic.  Optionally a single font file can be synced against any other font as master, regardless of file naming.
 
 Example usage for family of fonts:
 
@@ -460,7 +460,7 @@ Example usage for family of fonts:
 psfsyncmeta CharisSIL-Regular.ufo
 ```
 
-This will sync the metadata in CharisSIL-Italic, CharisSIL-Bold and CharisSIL-BoldItalic against values in CharisSIL-Regular.  In addition it will verify certain fields in all fonts (including Regular) are valid and follow [FDBP](https://silnrsi.github.io/FDBP/en-US/index.html) best-pactice standards.
+This will sync the metadata in CharisSIL-Italic, CharisSIL-Bold and CharisSIL-BoldItalic against values in CharisSIL-Regular.  In addition it will verify certain fields in all fonts (including Regular) are valid and follow [FDBP](https://silnrsi.github.io/FDBP/en-US/index.html) best-practice standards.
 
 Example usages for a single font:
 
