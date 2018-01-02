@@ -35,6 +35,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfsetunicodes](#psfsetunicodes) | Set unicode values for a glif based on a csv file |
 | [psfsetversion](#psfsetversion) | Change all the version-related info in a UFO's fontinfo.plist |
 | [psfsyncmeta](#psfsyncmeta) | Copy basic metadata from one member of a font family to other family members |
+| [psfsyncmasters](#psfsyncmasters) | Sync metadata in master UFO files based on a Designspace file |
 | [psftoneletters](#psftoneletters) | Add Latin script tone letters (pitch contours) to a UFO |
 | [psfufo2ttf](#psfufo2ttf) | Generate a ttf file without OpenType tables from a UFO |
 | [psfxml2compdef](#psfxml2compdef) | Convert composite definition file from XML format |
@@ -470,10 +471,31 @@ psfsyncmeta -s font-Italic.ufo -m otherfont.ufo
 ```
 The first will sync font-Italic against font-Regular and the second against otherfont.
 
-Look in psfsyncmeta.py for a full details of metadata actions.  
+Look in psfsyncmeta.py for a full details of metadata actions.
+
 Note that by default only fontinfo.plist and lib.plist are updated, so fonts are not normalized.  Use \-\-normalize to additionally normalize all fonts in the family.
 
 Also psfsyncmeta does not use Pysilfont's backup mechanism for fonts.
+
+
+---
+####  psfsyncmasters
+Usage: **`psfsyncmasters primaryds [secondds] [-n]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Synchronises some fontinfo.plist and lib.plist metadata across a family of fonts based
+on a designspace file. It looks in the designspace file for a master with `info copy="1"` set then syncs the values from that master to other masters defined in the file.
+
+If a second designspace file is supplied, it also syncs to masters found in there (not yet tested!)
+
+Example usage:
+
+```
+psfsyncmasters CharisSIL.designspace
+```
+
+Note that only fontinfo.plist and lib.plist files are updated, so fonts are not normalized and Pysilfont's backup mechanism for fonts is not used.
 
 
 ---
