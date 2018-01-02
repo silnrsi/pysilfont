@@ -380,17 +380,17 @@ Add associate UID info to org.sil.assocUIDs in glif lib based on a csv file - co
 
 ---
 ####  psfsetglyphorder
-Usage: **`psfsetglyphorder [--header] [--field] [-i INPUT] ifont [ofont]`**
+Usage: **`psfsetglyphorder [--header HEADER] [--field FIELD] [-i INPUT] ifont [ofont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-From the INPUT file, load public.glyphOrder in lib.plist to control the order of glyphs in generated TTF files.  Optionally, using `--field`,  update other orders like com.schriftgestaltung.glyphOrder instead.
+From the INPUT file, load `public.glyphOrder` in lib.plist to control the order of glyphs in generated TTF files. FIELD can be used to specify a different order to load, such as `com.schriftgestaltung.glyphOrder`.
 
 The input file can be in one of two formats:
 - Plain text file with one glyph name per line in the desired order
 - csv file with headers using glyph_name and sort_final columns
 
-With the csv file, the glyph names are sorted by the values in the sort_final column, which can be integer or real. `--header` can be used to specify alternate header to sort_final.  Multiple values can be used with `--header` and `--field` to update 2 or more orders in a single command call.
+With the csv file, the glyph names are sorted by the values in the sort_final column, which can be integer or real. HEADER can be used to specify alternate column header to sort_final.  Multiple comma-separated values can be used with `--header` and `--field` to update two or more orders in a single command call.
 
 ---
 ####  psfsetpsnames
