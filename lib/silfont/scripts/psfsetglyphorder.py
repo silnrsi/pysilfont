@@ -14,6 +14,7 @@ from xml.etree import cElementTree as ET
 argspec = [
     ('ifont', {'help': 'Input font file'}, {'type': 'infont'}), 
     ('ofont', {'help': 'Output font file', 'nargs': '?'}, {'type': 'outfont'}),
+    ('--gname', {'help': 'Column header for glyph name', 'default': 'glyph_name'}, {}),
     ('--header', {'help': 'Column header(s) for sort order', 'default': 'sort_final'}, {}),
     ('--field', {'help': 'Field(s) in lib.plist to update', 'default': 'public.glyphOrder'}, {}),
     ('-i', '--input', {'help': 'Input text file, one glyphname per line'}, {'type': 'incsv', 'def': 'glyph_data.csv'}),
@@ -28,6 +29,7 @@ def doit(args):
     fieldcount = len(fields)
     headers = args.header.split(",")
     if fieldcount != len(headers): logger.log("Must specify same number of values in --field and --header", "S")
+    gname = args.gname
 
     # Identify file format from first line then create glyphdata[] with glyph name then one column per header
     glyphdata = []
@@ -37,10 +39,10 @@ def doit(args):
     incsv.numfields = numfields
     fieldpos = []
     if numfields > 1:  # More than 1 column, so must have headers
-        if "glyph_name" in fl:
-            glyphnpos = fl.index("glyph_name")
+        if gname in fl:
+            glyphnpos = fl.index(gname)
         else:
-            logger.log("No glyph_name field in csv headers", "S")
+            logger.log("No" + gname + "field in csv headers", "S")
         for header in headers:
             if header in fl:
                 pos = fl.index(header)
@@ -49,7 +51,10 @@ def doit(args):
                 logger.log('No "' + header + '" heading in csv headers"', "S")
         next(incsv.reader, None)  # Skip first line with headers in
         for line in incsv:
-            vals = [line[glyphnpos]]
+            glyphn = line[glyphnpos]
+            if len(glyphn) == 0:
+                continue	# No need to include cases where name is blank
+            vals = [glyphn]
             for pos in fieldpos: vals.append(float(line[pos]))
             glyphdata.append(vals)
     elif numfields == 1:   # Simple text file.  Create glyphdata in same format as for csv files

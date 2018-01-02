@@ -13,6 +13,7 @@ from xml.etree import cElementTree as ET
 argspec = [
     ('ifont', {'help': 'Input font file'}, {'type': 'infont'}),
     ('ofont', {'help': 'Output font file', 'nargs': '?'}, {'type': 'outfont'}),
+    ('--gname', {'help': 'Column header for glyph name', 'default': 'glyph_name'}, {}),
     ('-i', '--input', {'help': 'Input csv file'}, {'type': 'incsv', 'def': 'glyph_data.csv'}),
     ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': 'setpsnames.log'})]
 
@@ -21,6 +22,7 @@ def doit(args):
     font = args.ifont
     logger = args.logger
     incsv = args.input
+    gname = args.gname
     glyphlist = font.deflayer.keys()  # List to check every glyph has a psname supplied
 
     # Identify file format from first line
@@ -32,10 +34,10 @@ def doit(args):
         glyphnpos = 0
         psnamepos = 1    # Default for plain csv
     elif numfields > 2:  # More than 2 columns, so must have standard headers
-        if "glyph_name" in fl:
-            glyphnpos = fl.index("glyph_name")
+        if gname in fl:
+            glyphnpos = fl.index(gname)
         else:
-            logger.log("No glyph_name field in csv headers", "S")
+            logger.log("No " + gname + " field in csv headers", "S")
         if "ps_name" in fl:
             psnamepos = fl.index("ps_name")
         else:
@@ -50,7 +52,7 @@ def doit(args):
         glyphn = line[glyphnpos]
         psname = line[psnamepos]
         if len(psname) == 0 or glyphn == psname:
-        	continue	# No need to include cases where production name is blank or same as working name
+            continue	# No need to include cases where production name is blank or same as working name
         # Add to dict
         sub = ET.SubElement(dict, "key")
         sub.text = glyphn
