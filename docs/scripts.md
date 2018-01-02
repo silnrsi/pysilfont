@@ -380,7 +380,7 @@ Add associate UID info to org.sil.assocUIDs in glif lib based on a csv file - co
 
 ---
 ####  psfsetglyphorder
-Usage: **`psfsetglyphorder [--header HEADER] [--field FIELD] [-i INPUT] ifont [ofont]`**
+Usage: **`psfsetglyphorder [--gname GNAME] [--header HEADER] [--field FIELD] [-i INPUT] ifont [ofont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
@@ -390,17 +390,23 @@ The input file can be in one of two formats:
 - Plain text file with one glyph name per line in the desired order
 - csv file with headers using glyph_name and sort_final columns
 
-With the csv file, the glyph names are sorted by the values in the sort_final column, which can be integer or real. HEADER can be used to specify alternate column header to sort_final.  Multiple comma-separated values can be used with `--header` and `--field` to update two or more orders in a single command call.
+With the csv file:
+- The glyph names are sorted by the values in the sort_final column, which can be integer or real. HEADER can be used to specify alternate column header to sort_final.  Multiple comma-separated values can be used with `--header` and `--field` to update two or more orders in a single command call.
+- GNAME can be used to specify column header to use instead of glyph_name.
 
 ---
 ####  psfsetpsnames
-Usage: **`psfsetpsnames [-i INPUT] ifont [ofont]`**
+Usage: **`psfsetpsnames [--gname GNAME] [-i INPUT] ifont [ofont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-Add public.postscriptName to glif lib based on a csv file, in one of two formats:
+From the INPUT file, load `public.postscriptName` in lib.plist to specify final production names for glyphs.
+
+The input file can be in one of two formats:
 - simple csv in form glyphname,postscriptname
-- csv file with headers using on glyph_name and ps_name columns
+- csv file with headers using glyph_name and ps_name columns
+
+With the csv file, GNAME can be used to specify column header to use instead of glyph_name.
 
 ---
 ####  psfsetunicodes
