@@ -204,7 +204,7 @@ class csvreader(object):    # Iterator for csv files, skipping comments and chec
         for row in self.reader:
             self.line_num = self.reader.line_num-1 # Count is out by 1 due to reading first lin in __init__
             if row == []: continue  # Skip blank lines
-            if row[0][0] == "#": continue  # Skip comments - ie lines starting with  #
+            if row[0].lstrip().startswith("#"): continue  # Skip comments - ie lines starting with  #
             if len(row) < self.minfields or len(row) > self.maxfields:
                 self.logger.log("Invalid number of fields on line " + str(self.line_num) + " in "+self.filename, "E" )
                 continue
