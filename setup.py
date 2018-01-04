@@ -5,29 +5,22 @@ __copyright__ = 'Copyright (c) 2014 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __version__ = '1.1.3'
 
-import sys, os
+import sys, os, imp
 
 print sys.argv
 
 try:
-	from setuptools import setup
+    from setuptools import setup
 except ImportError :
     print "pysilfont requires setuptools - see installation notes in README.md"
     sys.exit(1)
 
 warnings = []
 if sys.argv[1] in ('develop', 'install') :
-    try:
-        import fontforge
-    except ImportError : warnings.append("- Some modules require the python fontforge package which is not currently installed")
-
-    try:
-        import fontTools
-    except ImportError : warnings.append("- Some modules require the python fonttools package which is not currently installed")
-
-    try:
-        import odf
-    except ImportError : warnings.append("- Some modules require the python odfpy package which is not currently installed")
+    for m in ('fontforge', 'fonttools', 'odf', 'designspace'):
+        try:
+            imp.find_module(m)
+        except ImportError : warnings.append("- Some modules require the python %s package which is not currently installed" % m)
 
 long_description =  "A growing collection of font utilities mainly written in Python designed to help with various aspects of font design and production.\n"
 long_description += "Developed and maintained by SIL International's Non-Roman Script Initiative (NRSI).\n"
