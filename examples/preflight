@@ -3,4 +3,7 @@
 # Place this in root of a project, adjust the font path, then set it to be executable by typing:
 # chmod +x preflight
 
-UFOsyncMeta source/font.ufo --normalize
+psfnormalize -p checkfix=fix source/font-Regular.ufo
+psfnormalize -p checkfix=fix source/font-Bold.ufo
+
+psfsyncmasters source/font-RB.designspace
