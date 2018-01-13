@@ -13,7 +13,8 @@ import defcon, ufo2ft.outlineCompiler, ufo2ft.preProcessor
 
 argspec = [
     ('iufo', {'help': 'Input UFO folder'}, {}),
-    ('ottf', {'help': 'Output ttf file name'}, {})]
+    ('ottf', {'help': 'Output ttf file name'}, {}),
+    ('--removeOverlap', {'help': 'Remove overlap between glyph components', 'action': 'store_true'}, {})]
 
 PUBLIC_PREFIX = 'public.'
 
@@ -26,8 +27,12 @@ def doit(args):
 #        useProductionNames = False)
 
     args.logger.log('Converting UFO to ttf without OT', 'P')
-    #the args are set to default values -- just being explicit about what's being done
-    preProcessor = ufo2ft.preProcessor.TTFPreProcessor(ufo, removeOverlaps=False, convertCubics=True)
+
+    # default arg value for TTFPreProcessor class: removeOverlaps = False, convertCubics = True
+    removeOverlaps = False
+    if args.removeOverlap:
+        removeOverlaps = True
+    preProcessor = ufo2ft.preProcessor.TTFPreProcessor(ufo, removeOverlaps = removeOverlaps, convertCubics=True)
     glyphSet = preProcessor.process()
     outlineCompiler = ufo2ft.outlineCompiler.OutlineTTFCompiler(ufo,
         glyphSet=glyphSet,
