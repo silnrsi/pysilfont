@@ -17,7 +17,7 @@ except ImportError :
 
 warnings = []
 if sys.argv[1] in ('develop', 'install') :
-    for m in ('fontforge', 'fonttools', 'odf', 'designspace'):
+    for m in ('fontforge', 'fontTools', 'odf', 'designSpaceDocument'):
         try:
             imp.find_module(m)
         except ImportError : warnings.append("- Some modules require the python %s package which is not currently installed" % m)
