@@ -105,7 +105,9 @@ def doit(args) :
 
     for field in libcopy:
         pval = psource.lib.getval(field) if field in psource.lib else None
-        if pval is None: logger.log("lib.plist field " + field + " missing from " + psource.source.filename, "E")
+        if pval is None:
+            logtype = "W" if field[0:7] == "public." else "I"
+            logger.log("lib.plist field " + field + " missing from " + psource.source.filename, logtype)
         libpval[field] = pval
 
     # Now update values in other source fonts
@@ -161,6 +163,7 @@ def doit(args) :
                     logmess = " updated: "
                 logchange(logger, dsource.source.filename + " " + field + logmess, oval, pval)
         if changes: dsource.write("lib")
+        logger.log("psfsyncmasters completed", "P")
 
 class Dsource(object):
     def __init__(self, ds, source, logger, frompds, args):
@@ -237,9 +240,9 @@ def logchange(logger, logmess, old, new):
     logger.log(logmess, "W")
     # Extra verbose logging
     if len(str(old)) > 21 :
-        logger.log("Full old value: " + str(old), "I")
+        logger.log("Full old value: " + str(old), "V")
     if len(str(new)) > 21 :
-        logger.log("Full new value: " + str(new), "I")
+        logger.log("Full new value: " + str(new), "V")
     logger.log("Types: Old - " + str(type(old)) + ", New - " + str(type(new)), "V")
 
 
