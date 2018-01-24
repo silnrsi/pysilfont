@@ -41,7 +41,7 @@ def doit(args):
     infodelete = ("guidelelines", "openTypeOS2Type")
 
     for ufo in ufos:
-        fontname = ufo.info.familyName.replace(" ", "") + "-" + ufo.info.styleName
+        fontname = ufo.info.familyName.replace(" ", "") + "-" + ufo.info.styleName.replace(" ", "")
         # Fixes to the data
         if not args.nofixes:
             logger.log("Fixing data in " + fontname, "P")
