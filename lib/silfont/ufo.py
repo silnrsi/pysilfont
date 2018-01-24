@@ -334,12 +334,12 @@ class Ufont(object):
             # Check required fields, some of which are needed for remaining checks
             missing = []
             for key in fireq:
-                if key not in self.fontinfo: missing.append(key)
+                if key not in self.fontinfo or self.fontinfo.getval(key) is None: missing.append(key)
             # Collect values for contructing other fields, setting dummy values when missing and in check-only mode
             dummies = False
             storedvals = {}
             for key in ("ascender", "copyright", "descender", "familyName", "styleName", "openTypeNameManufacturer"):
-                if key in self.fontinfo:
+                if key in self.fontinfo and self.fontinfo.getval(key) is not None:
                     storedvals[key] = self.fontinfo.getval(key)
                     if key == "styleName": # Capitalise words of stored value
                         storedvals[key] = ' '.join(s[:1].upper() + s[1:] for s in storedvals[key].split(' '))
