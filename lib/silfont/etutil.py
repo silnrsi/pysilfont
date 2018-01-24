@@ -224,14 +224,9 @@ class xmlitem(_container) :
         self.etree = None
         self.type = None
         if filen and dirn :
-            try :
-                inxml=open(os.path.join( dirn, filen), "r")
-            except Exception as e :
-                print e
-                sys.exit(1)
-            for line in inxml.readlines() :
-                self.inxmlstr = self.inxmlstr + line
-            inxml.close()
+            with open(os.path.join( dirn, filen), "r") as inxml:
+                for line in inxml.readlines() :
+                    self.inxmlstr = self.inxmlstr + line
             if parse :
                 self.etree = ET.fromstring(self.inxmlstr)
 
