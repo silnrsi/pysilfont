@@ -42,6 +42,8 @@ def doit(args):
 
     for ufo in ufos:
         fontname = ufo.info.familyName.replace(" ", "") + "-" + ufo.info.styleName.replace(" ", "")
+        fontname = fontname.replace("ItalicItalic", "Italic")         # ) Temp fixes due to glyphLib incorrectly
+        fontname = fontname.replace("ItalicBoldItalic", "BoldItalic") # ) forming styleName
         # Fixes to the data
         if not args.nofixes:
             logger.log("Fixing data in " + fontname, "P")
