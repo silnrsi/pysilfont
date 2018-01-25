@@ -448,8 +448,9 @@ class Ufont(object):
                         logmess = " would be" + logmess
                     self.logchange(logmess, "italicAngle", old, None)
                     changes += 1
-            vm = self.fontinfo.getval("versionMajor")
-            if vm == 0: logger.log("versionMajor is 0", "W")
+            if "versionMajor" in self.fontinfo: # If missing, an error will already have been reported...
+                vm = self.fontinfo.getval("versionMajor")
+                if vm == 0: logger.log("versionMajor is 0", "W")
 
             # lib.plist checks
             if "lib" not in self.__dict__:
