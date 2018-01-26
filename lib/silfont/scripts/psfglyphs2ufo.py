@@ -34,11 +34,11 @@ def doit(args):
 
     inforestorekeys = ("openTypeHeadCreated", "openTypeNamePreferredFamilyName", "openTypeNamePreferredSubfamilyName",
                        "openTypeNameUniqueID", "openTypeOS2WeightClass", "openTypeOS2WidthClass", "postscriptFontName",
-                       "postscriptFullName", "styleMapFamilyName", "styleMapStyleName", "styleName")
+                       "postscriptFullName", "styleMapFamilyName", "styleMapStyleName")
     integerkeys = ("openTypeOS2WeightClass", "openTypeOS2WidthClass")
     infodeleteempty = ("openTypeOS2Selection", "postscriptFamilyBlues", "postscriptFamilyOtherBlues",
-                       "postscriptOtherBlues")
-    infodelete = ("guidelelines", "openTypeOS2Type")
+                       "postscriptOtherBlues", "guidelines")
+    infodelete = ("openTypeOS2Type")
 
     for ufo in ufos:
         fontname = ufo.info.familyName.replace(" ", "") + "-" + ufo.info.styleName.replace(" ", "")

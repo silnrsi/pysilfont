@@ -483,6 +483,7 @@ Note that by default only fontinfo.plist and lib.plist are updated, so fonts are
 
 Also psfsyncmeta does not use Pysilfont's backup mechanism for fonts.
 
+-n (--new) appends \_new to ufo and file names for testing purposes
 
 ---
 ####  psfsyncmasters
@@ -502,6 +503,8 @@ psfsyncmasters CharisSIL.designspace
 ```
 
 Note that only fontinfo.plist and lib.plist files are updated, so fonts are not normalized and Pysilfont's backup mechanism for fonts is not used.
+
+-n (--new) appends \_new to ufo and file names for testing purposes
 
 
 ---
