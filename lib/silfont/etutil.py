@@ -212,10 +212,11 @@ class _container(object) :
     def keys(self) :
         return self._contents.keys()
 
-class xmlitem(_container) :
+class xmlitem(_container):
     """ The xml data item for an xml file"""
 
-    def __init__(self, dirn = None, filen = None, parse = True ) :
+    def __init__(self, dirn = None, filen = None, parse = True, logger=None) :
+        self.logger = logger if logger else silfont.core.loggerobj()
         self._contents = {}
         self.dirn = dirn
         self.filen = filen
@@ -224,11 +225,16 @@ class xmlitem(_container) :
         self.etree = None
         self.type = None
         if filen and dirn :
-            with open(os.path.join( dirn, filen), "r") as inxml:
+            fulln = os.path.join( dirn, filen)
+            with open(fulln, "r") as inxml:
                 for line in inxml.readlines() :
                     self.inxmlstr = self.inxmlstr + line
             if parse :
-                self.etree = ET.fromstring(self.inxmlstr)
+                try:
+                    self.etree = ET.fromstring(self.inxmlstr)
+                except Exception as e:
+                    self.logger.log("Failed to parse xml for " + fulln, "E")
+                    self.logger.log(str(e), "S")
 
     def write_to_xml(self,text) : # Used by ETWriter.serialize_xml()
         self.outxmlstr = self.outxmlstr + text
@@ -238,7 +244,7 @@ class xmlitem(_container) :
         outfile.write(self.outxmlstr)
         outfile.close
 
-class ETelement(_container) :
+class ETelement(_container):
     # Class for an etree element. Mainly used as a parent class
     # For each tag in the element, ETelement[tag] returns a list of sub-elements with that tag
     # process_subelements can set attributes for each tag based on a supplied spec

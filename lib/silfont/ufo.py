@@ -610,6 +610,7 @@ class Ulayer(_Ucontainer):
     def setForOutput(self):
 
         UFOversion = self.font.outparams["UFOversion"]
+        convertg2f1 = True if UFOversion == "2" or self.font.outparams["Format1Glifs"] else False
         dtree = self.font.dtree.subTree(self.layerdir)
         if self.font.outparams["renameGlifs"]: self.renameGlifs()
 
@@ -619,7 +620,7 @@ class Ulayer(_Ucontainer):
 
         for glyphn in self:
             glyph = self._contents[glyphn]
-            if UFOversion == "2": glyph.convertToFormat1()
+            if convertg2f1: glyph.convertToFormat1()
             setFileForOutput(dtree, glyph.filen, glyph, "xml")
 
     def renameGlifs(self):
@@ -663,7 +664,8 @@ class Ulayer(_Ucontainer):
 class Uplist(ETU.xmlitem, _plist):
     def __init__(self, font=None, dirn=None, filen=None, parse=True):
         if dirn is None and font: dirn = font.ufodir
-        ETU.xmlitem.__init__(self, dirn, filen, parse)
+        logger = font.logger if font else silfont.core.loggerobj()
+        ETU.xmlitem.__init__(self, dirn, filen, parse, logger)
         self.type = "plist"
         self.font = font
         self.outparams = None
@@ -686,7 +688,7 @@ class Uglif(ETU.xmlitem):
 
     def __init__(self, layer, filen=None, parse=True, name=None, format=None):
         dirn = os.path.join(layer.font.ufodir, layer.layerdir)
-        ETU.xmlitem.__init__(self, dirn, filen, parse)  # Will read item from file if dirn and filen both present
+        ETU.xmlitem.__init__(self, dirn, filen, parse, layer.font.logger)  # Will read item from file if dirn and filen both present
         self.type = "glif"
         self.layer = layer
         self.format = format if format else '2'

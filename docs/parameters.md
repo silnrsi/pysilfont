@@ -84,6 +84,7 @@ Currently only font output parameters can be changed via lib.plist
 | precision | 6 | decimal precision |  |
 | renameGlifs | True | Name glifs with standard algorithm |  |
 | UFOversion | (existing) |  | Defaults to the version of the UFO when opened |
+| Format1Glifs | False| Force output of format 1 glifs | Includes UFO2-style anchors; for use with FontForge |
 | numAttribs | (list of attributes in the spec that hold numbers) | Used to know if precision needs setting. | May need items adding for lib data |
 | glifElemOrder | (list of elements in the order defined in spec) | Order for outputting elements in a glif |  |
 | attribOrders | (list of attribute orders defined in spec) | Order for outputting attributes in an element.  One list per element type | When setting this, the parameter name is `attribOrders.<element type>`.  Currently only used with attribOrders.glif |
