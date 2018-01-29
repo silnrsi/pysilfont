@@ -16,7 +16,17 @@ argspec = [
 
 def doit(args) :
 
-    if args.version is not None : args.ifont.outparams['UFOversion'] = args.version
+    if args.version is not None :
+        v = args.version.lower()
+        if v in ("2","3","3ff") :
+            if v == "3ff": # Special action for testing with FontForge import
+                v = "3"
+                args.ifont.outparams['format1Glifs'] = True
+            args.ifont.outparams['UFOversion'] = v
+        else:
+            args.logger.log("-v, --version must be one of 2,3 or 3ff", "S")
+
+        print args.ifont.outparams
 
     return args.ifont
 

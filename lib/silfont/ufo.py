@@ -610,7 +610,7 @@ class Ulayer(_Ucontainer):
     def setForOutput(self):
 
         UFOversion = self.font.outparams["UFOversion"]
-        convertg2f1 = True if UFOversion == "2" or self.font.outparams["Format1Glifs"] else False
+        convertg2f1 = True if UFOversion == "2" or self.font.outparams["format1Glifs"] else False
         dtree = self.font.dtree.subTree(self.layerdir)
         if self.font.outparams["renameGlifs"]: self.renameGlifs()
 
