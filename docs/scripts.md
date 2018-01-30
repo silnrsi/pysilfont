@@ -16,6 +16,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfaddanchors](#psfaddanchors) | Read anchor data from XML file and apply to UFO |
 | [psfbuildcomp](#psfbuildcomp) | Add composite glyphs to UFO based on a Composite Definitions file |
 | [psfchangegdlnames](#psfchangegdlnames) | Change graphite names within GDL based on mappings files |
+| [psfchangettfglyphnames](#psfchangettfglyphnames) | Change glyph names in a ttf from working names to production names |
 | [psfcompdef2xml](#psfcompdef2xml) | Convert composite definition file to XML format |
 | [psfcompressgr](#psfcompressgr) | Compress Graphite tables in a ttf font |
 | [psfcopymeta](#psfcopymeta) | Copy basic metadata from one UFO to another, for fonts in related families |
@@ -158,7 +159,22 @@ psfchangegdlnames -n gdlmap.csv --psnames psnames.csv source/graphite
 will update all the .gdl and.gdh files within the source/graphite folder.
 
 ---
+#### psfchangettfglyphnames
+Usage: **`psfchangettfglyphnames iufo ittf ottf`**
 
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Used to change the glyph names in a ttf from working names to production names, typically as the last step in a build sequence.
+
+The name map is obtained from the `public.postscriptNames` attribute in the input UFO and then applied to the input ttf to create the output ttf.
+
+Example usage:
+
+```
+psfchangettfglyphnames source/Harmattan-Regular.ufo results/in.ttf results/out.ttf
+```
+
+---
 #### psfcompdef2xml
 Usage: **`psfcompdef2xml [-p PARAMS] input output log`**
 
