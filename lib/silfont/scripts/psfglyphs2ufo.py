@@ -30,20 +30,22 @@ def doit(args):
                    "org.sil.lcg.transforms", "public.glyphOrder", "public.postscriptNames")
     libdeletekeys = ("UFOFormat", "com.schriftgestaltung.blueFuzz", "com.schriftgestaltung.blueScale",
                      "com.schriftgestaltung.blueShift")
-    libdeleteempty = ("com.schriftgestaltung.DisplayStrings")
+    libdeleteempty = ("com.schriftgestaltung.DisplayStrings",)
 
     inforestorekeys = ("openTypeHeadCreated", "openTypeNamePreferredFamilyName", "openTypeNamePreferredSubfamilyName",
                        "openTypeNameUniqueID", "openTypeOS2WeightClass", "openTypeOS2WidthClass", "postscriptFontName",
                        "postscriptFullName", "styleMapFamilyName", "styleMapStyleName")
     integerkeys = ("openTypeOS2WeightClass", "openTypeOS2WidthClass")
-    infodeleteempty = ("openTypeOS2Selection", "postscriptFamilyBlues", "postscriptFamilyOtherBlues",
-                       "postscriptOtherBlues", "guidelines")
-    infodelete = ("openTypeOS2Type")
+    infodeleteempty = ("openTypeOS2Selection",)
+    infodeletekeys = ("openTypeOS2Type",)
 
     for ufo in ufos:
+        sn = ufo.info.styleName                              # )
+        sn = sn.replace("Italic Italic", "Italic")           # ) Temp fixes due to glyphLib incorrectly
+        sn = sn.replace("Italic Bold Italic", "Bold Italic") # ) forming styleName
+        ufo.info.styleName = sn                              # )
         fontname = ufo.info.familyName.replace(" ", "") + "-" + ufo.info.styleName.replace(" ", "")
-        fontname = fontname.replace("ItalicItalic", "Italic")         # ) Temp fixes due to glyphLib incorrectly
-        fontname = fontname.replace("ItalicBoldItalic", "BoldItalic") # ) forming styleName
+
         # Fixes to the data
         if not args.nofixes:
             logger.log("Fixing data in " + fontname, "P")
@@ -61,7 +63,7 @@ def doit(args):
                     if key in librestorekeys:
                         continue # They will be restored later
                     if key in libdeleteempty:
-                        if ul[key] == "" :
+                        if ul[key] == "" or ul[key] == []:
                             logger.log("Emtpy field ignored: " + key, "I")
                             continue
                     if key in libdeletekeys:
@@ -102,11 +104,18 @@ def doit(args):
                             ufo.lib[key] = new
                             logchange(logger, " restored from backup ufo. ", key, current, new)
 
-                for key in libdeletekeys:
-                    if key in ufo.lib:
-                        current = ufo.lib[key]
-                        del ufo.lib[key]
-                        logchange(logger, " deleted. ", key, current, None)
+            # Delete unneeded keys
+
+            for key in libdeletekeys:
+                if key in ufo.lib:
+                    current = ufo.lib[key]
+                    del ufo.lib[key]
+                    logchange(logger, " deleted. ", key, current, None)
+
+            for key in libdeleteempty:
+                if key in ufo.lib and (ufo.lib[key] == "" or ufo.lib[key] == []):
+                    del ufo.lib[key]
+                    logchange(logger, " empty field deleted. ", key, current, None)
 
             # fontinfo.plist processing
 
@@ -131,8 +140,21 @@ def doit(args):
                             setattr(ufo.info, key, new)
                             logchange(logger, " restored from backup ufo. ", key, current, new)
 
+            # Delete unneeded keys
+            for key in infodeletekeys:
+                if hasattr(ufo.info, key):
+                    current = getattr(ufo.info, key)
+                    setattr(ufo.info, key, None)
+                    logchange(logger, " deleted. ", key, current, None)
+
+            for key in infodeleteempty:
+                if hasattr(ufo.info, key) and getattr(ufo.info, key) == "":
+                    setattr(ufo.info, key, None)
+                    logchange(logger, " empty field deleted. ", key, current, None)
+
         # Write ufo out
         logger.log("Writing out " + fontname, "P")
+
         glyphsLib.write_ufo(ufo, args.masterdir)
 
 def logchange(logger, logmess, key, old, new):
