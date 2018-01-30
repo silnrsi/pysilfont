@@ -113,6 +113,7 @@ def doit(args) :
     # Now update values in other source fonts
 
     for dsource in dsources:
+        logger.log("Processing " + dsource.ufodir, "I")
         changes = False
         for field in fiall:
             sval = dsource.fontinfo.getval(field) if field in dsource.fontinfo else None
@@ -144,8 +145,8 @@ def doit(args) :
                     dsource.fontinfo.remove(field)
                     logmess = " removed: "
                 else:
-                    dsource.fontinfo[field][1].text = str(sval)
-                    logmess = " updated: "
+                    logmess = " added: " if oval is None else " updated: "
+                    dsource.fontinfo.setelem(field, ET.fromstring(ET.tostring(psource.fontinfo[field][1])))
                 logchange(logger, dsource.source.filename + " " + field + logmess, oval, sval)
         if changes: dsource.write("fontinfo")
 
@@ -163,7 +164,7 @@ def doit(args) :
                     logmess = " updated: "
                 logchange(logger, dsource.source.filename + " " + field + logmess, oval, pval)
         if changes: dsource.write("lib")
-        logger.log("psfsyncmasters completed", "P")
+    logger.log("psfsyncmasters completed", "P")
 
 class Dsource(object):
     def __init__(self, ds, source, logger, frompds, args):
