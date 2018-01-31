@@ -147,6 +147,9 @@ def doit(args) :
                 else:
                     logmess = " added: " if oval is None else " updated: "
                     dsource.fontinfo.setelem(field, ET.fromstring(ET.tostring(psource.fontinfo[field][1])))
+                    if field in ("italicAngle", "openTypeOS2WeightClass", "styleName"):
+                        dsource.fontinfo[field][1].text = str(sval) # Not a simple copy of pval
+
                 logchange(logger, dsource.source.filename + " " + field + logmess, oval, sval)
         if changes: dsource.write("fontinfo")
 
