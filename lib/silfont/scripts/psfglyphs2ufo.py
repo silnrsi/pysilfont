@@ -9,6 +9,7 @@ from silfont.core import execute
 
 import glyphsLib
 import silfont.ufo, os # Needed currently to read backup ufos from disk
+from io import open
 
 
 argspec = [
@@ -21,7 +22,9 @@ argspec = [
 def doit(args):
     logger = args.logger
     logger.log("Creating UFO objects from GlyphsApp file", "I")
-    ufos = glyphsLib.load_to_ufos(args.glyphsfont, propagate_anchors=False)
+    with open(args.glyphsfont, 'r', encoding='utf-8') as gfile:
+        gfont = glyphsLib.parser.load(gfile)
+    ufos = glyphsLib.to_ufos(gfont, include_instances=False, family_name=None, propagate_anchors=False)
 
     # Extract directory name for use with backups
     (glyphsdir, filen) = os.path.split(args.glyphsfont)
@@ -52,12 +55,10 @@ def doit(args):
             # lib.plist processing
             logger.log("Checking lib.plist", "P")
 
-            libplist = ufo.lib
-
             # Process UFO.lib if present
-            if "UFO.lib" in libplist:
+            if "UFO.lib" in ufo.lib:
                 logger.log("UFOlib found in lib.plist for " + fontname + ". Values will be copied to root", "P")
-                ul = libplist["UFO.lib"]
+                ul = ufo.lib["UFO.lib"]
                 # Copy fields from UFO.lib to root
                 for key in ul:
                     if key in librestorekeys:
@@ -117,11 +118,12 @@ def doit(args):
                     del ufo.lib[key]
                     logchange(logger, " empty field deleted. ", key, current, None)
 
+            ufo.lib["org.sil.glpyhsappversion"] = gfont.appVersion
+
             # fontinfo.plist processing
 
             logger.log("Checking fontinfo.plist", "P")
 
-            fontinfo = ufo.info
             try:
                 origfontinfo = silfont.ufo.Uplist(font=None, dirn=ufodir, filen="fontinfo.plist")
             except Exception as e:
@@ -151,10 +153,8 @@ def doit(args):
                 if hasattr(ufo.info, key) and getattr(ufo.info, key) == "":
                     setattr(ufo.info, key, None)
                     logchange(logger, " empty field deleted. ", key, current, None)
-
         # Write ufo out
         logger.log("Writing out " + fontname, "P")
-
         glyphsLib.write_ufo(ufo, args.masterdir)
 
 def logchange(logger, logmess, key, old, new):
