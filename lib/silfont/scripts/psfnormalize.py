@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+
 '''Normalize a UFO and optionally convert between UFO2 and UFO3.
 - If no options are chosen, the output font will simply be a normalized version of the font.'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
@@ -25,8 +25,6 @@ def doit(args) :
             args.ifont.outparams['UFOversion'] = v
         else:
             args.logger.log("-v, --version must be one of 2,3 or 3ff", "S")
-
-        print args.ifont.outparams
 
     return args.ifont
 

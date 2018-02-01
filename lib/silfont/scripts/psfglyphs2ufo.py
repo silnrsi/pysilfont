@@ -118,7 +118,7 @@ def doit(args):
                     del ufo.lib[key]
                     logchange(logger, " empty field deleted. ", key, current, None)
 
-            ufo.lib["org.sil.glpyhsappversion"] = gfont.appVersion
+            ufo.lib["org.sil.glyphsappversion"] = gfont.appVersion
 
             # fontinfo.plist processing
 
