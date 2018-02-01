@@ -64,8 +64,8 @@ class Font(object) :
                     elif elem.tag == 'point':
                         currPoint = {'name' : elem.get('type', '')}
                     elif elem.tag == 'location' and currPoint is not None:
-                        currPoint['x'] = elem.get('x', 0)
-                        currPoint['y'] = elem.get('y', 0)
+                        currPoint['x'] = int(elem.get('x', 0))
+                        currPoint['y'] = int(elem.get('y', 0))
                 elif event == 'end':
                     if elem.tag == 'point':
                         if currGlyph and currPoint['name'] not in omittedaps:
@@ -225,12 +225,15 @@ argspec = [
     ('-i', '--input', {'help': 'Fea file to merge'}, {}),
     ('-o', '--output', {'help': 'Output fea file'}, {}),
     ('-c', '--classfile', {'help': 'Classes file'}, {}),
+    ('--debug', {'help': 'Drop into pdb', 'action': 'store_true'}, {}),
     ('--classprops', {'help': 'Include property elements from classes file', 'action': 'store_true'}, {}),
     ('--omitaps', {'help': 'names of attachment points to omit (comma- or space-separated)', 'default': '', 'action': 'store'}, {})
 ]
 
 def doit(args) :
     font = Font()
+    if args.debug:
+        import pdb; pdb.set_trace()
     if args.infile :
         font.readaps(args.infile, args.omitaps, args.paramsobj)
 
