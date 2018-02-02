@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 'General classes and functions for use in pysilfont scripts'
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2014-2017 SIL International (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2014-2018 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
-__version__ = '1.1.3'
+__version__ = '1.2.0'
 
 from glob import glob
 #import re, sys, os, codecs, argparse, datetime, shutil, csv, copy, ConfigParser
@@ -247,7 +247,8 @@ def execute(tool, fn, argspec, chain = None):
     poptions['prog'] = splitfn(argv[0])[1]
     poptions['description'] = basemodule.__doc__
     poptions['formatter_class'] = argparse.RawDescriptionHelpFormatter
-    poptions['epilog'] = "Version: " + params.sets['default']['version'] + "\n" + params.sets['default']['copyright']
+    epilog = "For more help see https://github.com/silnrsi/pysilfont/blob/master/docs/scripts.md#" + poptions['prog'] + "\n\n"
+    poptions['epilog'] = epilog + "Version: " + params.sets['default']['version'] + "\n" + params.sets['default']['copyright']
 
     parser = argparse.ArgumentParser(**poptions)
     parser._optionals.title = "other arguments"
@@ -317,7 +318,7 @@ def execute(tool, fn, argspec, chain = None):
             deftext = deftext + "\n  Other parameters\n"
             for (param, defv) in defother:
                 deftext = deftext + '    {:<20}{}\n'.format(param, defv)
-        parser.epilog = deftext
+        parser.epilog = deftext + "\n\n" + parser.epilog
 
     # Parse the command-line arguments. If errors or -h used, procedure will exit here
     args = parser.parse_args(argv[1:])

@@ -3,11 +3,9 @@
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2014 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
-__version__ = '1.1.3'
+__version__ = '1.2.0'
 
 import sys, os, imp
-
-print sys.argv
 
 try:
     from setuptools import setup
