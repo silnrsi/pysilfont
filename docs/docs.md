@@ -35,9 +35,34 @@ Nearly all scripts support these:
 - `-l LOG, --log LOG`
   - Log file name (if not using default name).  If there is no default for a log file name, a log file will only be created if LOG is specified
 - `-p PARAMS, --params PARAMS`
-  - Other [parameters](#parameters)
+  - Other paramters - see below
 
-The individual script documentation in scripts.md indicates if some don't apply for a particular script
+The individual script documentation in scripts.md should indicate if some don't apply for a particular script
+
+# Parameters
+
+There are many parameters that can be set to change the behaviour of scripts, either on the command line (using -p)  or via a config file.
+
+To set a parameter on the command line, use ``-p <param name>=<param value>``, eg
+```
+psfnormalize font.ufo -p scrlevel=w
+```
+-p can be used multiple times on a single command.
+
+Commonly used command-line parameters include:
+- scrlevel, loglevel
+  - Set the screen/logfile level from increasingly verbose options
+     - E - Errors
+     - P - Progress (default for scrlevel)
+     - W - Warnings (default for loglevel)
+     - I - Infoformatio
+     - V - Verbose
+- checkfix (UFOs only)
+  - Validity tests when opening UFOs.  Choice of None, Check, Fix with default Check
+  - See description of check & fix under [normalization](#normalization)
+
+For a full list of parameters and how to set them via a config file (or in a UFO font) see [parameters.md](parameters.md).
+
 
 ## Default values
 
@@ -110,17 +135,6 @@ By default, the last 5 copies of backups are kept in a sub-directory called “b
 - `backupdir` - alternative directory for backups
 - `backupkeep` - number of backups to keep
 
-# Parameters
-
-There are many parameters that can be set to change the behaviour of scripts, either on the command line (using -p)  or via a config file.
-
-To set a parameter on the command line, use ``-p <param name>=<param value>``, eg
-```
-UFOconvert font.ufo -p backupkeep=3
-```
--p can be used multiple times on a single command.
-
-For a full list of parameters and how to set them via a config file (or in a UFO font) see [parameters.md](parameters.md).
 # UFO support in Pysilfont
 With some limitations, all UFO scripts in Pysilfont should work with UFO2 or UFO3 source files - and can convert from one format to the other.
 
