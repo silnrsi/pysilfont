@@ -26,7 +26,7 @@ def doit(args) :
     infont = args.ifont
     prefix = "U+" if args.Uprefix else ""
 
-    if 'public.glyphOrder' in infont.lib:
+    if hasattr(infont, 'lib') and 'public.glyphOrder' in infont.lib:
         glyphorderlist = [s.text for s in infont.lib['public.glyphOrder'][1].findall('string')]
     else:
         glyphorderlist = []
