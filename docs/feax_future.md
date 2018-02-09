@@ -300,7 +300,7 @@ do  for b = @bases;
     for d = @diacritics;
     let v = (ADVx(d) - APx(d, "_U")) - (ADVx(g) - APx(g, "U"));
     if v > 0; {
-        pos $g' <$v> $d;		#'
+        pos $g' <$v> $d;
     }
 ```
 
@@ -313,7 +313,7 @@ do  for b = @bases;
     for d = @diacritics;
     let v = APx(d, "_U") - APx(g, "U");
     if v > 0; {
-        pos $g' <$v 0 $v 0> $d;		#'
+        pos $g' <$v 0 $v 0> $d;
     }
 ```
 
@@ -338,14 +338,14 @@ do  for y = @c103C_nar;
     for c = @cCons_nar;
     let v = APx(y, "A") - (ADVx(y) + ADVx(c));
     if v > 0; {
-        pos $y' <$v> $c;		#'
+        pos $y' <$v> $c;
     }
 
 do  for y = @c103C_wide;
     for c = @cCons_wide;
     let v = APx(y, "A") - (ADVx(y) + ADVx(c));
     if v > 0; {
-        pos $y' <$v> $c;		#'
+        pos $y' <$v> $c;
     }
 ```
 
@@ -358,7 +358,7 @@ do for b = @cBases;
     for u in @cLVowels;
     let v = APx(b, "L") - APx(u, "_L") + APx(u, "LD") - APx("ldot", "_LD")  + ADVx("ldot") - ADVx(b);
     if v > 0; {
-        pos $b' <$v> $u ldot;		#'
+        pos $b' <$v> $u ldot;
     }
 ```
 
