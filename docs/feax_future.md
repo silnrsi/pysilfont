@@ -243,6 +243,126 @@ ifclass(cno_sc) {
 }
 ```
 
+### do
+
+The `do` statement is a means of setting variables and repeating statement groups with variable expansion. A `do` statement is followed by various substatements that are in effect nested statements. The basic structure of the `do` statement is:
+
+`do` _subexpression_ `;` _subexpression_ `;` _..._ `;`
+`{` _statements_ `};`
+
+Where _statements_ is a sequence of FEA statements. Within these statements, variables may be referenced by preceding them with a `$`.
+There is only a limited set of fea objects that can be replaced by variables, including only: numbers, glyphnames.
+
+One purpose of the `do` statement is to remove the need for the `setadvance` statement which is not generic enough. `do` statements do not nest in a way where variables from one can be used in the nested statement.
+
+#### SubStatements
+
+Each substatement is terminated by a `;`. The various substatements are:
+
+##### for
+
+The `for` substatement is structured as:
+
+`for` _var_ `=` _glyphlist_ `;`
+
+This creates a variable _var_ that will iterate over the _glyphlist_.
+
+##### let
+
+The `let` substatement executes a short python expression, storing the result in the given variable. The structure of the substatement is:
+
+`let` _var_ `=` _expression_ `;`
+
+There are various python functions that are especially supported, along with the builtins. These are:
+
+| Function | Parameters | Description |
+|-------------|----------------|----------------|
+| APx        | _glyphname_, "_apname_" | Returns the x co-ordinate of the given attachment point on the given glyph |
+| APy        | _glyphname_, "_apname_" | Returns the y co-ordinate of the given attachment point on the given glyph |
+| ADVx     | _glyphname_                       | Returns the advanced width of the given glyph |
+
+##### if
+
+The `if` substatement evaluates the given expression and only executes following substatements if the evaluation results in True. The structure is:
+
+`if` _expression_ `;`
+
+#### Examples
+
+The `do` statement is best understood through some examples.
+
+##### Right Guard
+
+It is often desirable to give a base character extra advance width to account for a diacritic hanging over the right hand side of the glyph. Calculating this can be very difficult by hand. This code achieves this:
+
+```
+do  for b = @bases;
+    for d = @diacritics;
+    let v = (ADVx(d) - APx(d, "_U")) - (ADVx(g) - APx(g, "U"));
+    if v > 0; {
+        pos $g' <$v> $d;		#'
+    }
+```
+
+##### Left Guard
+
+A corresponding guarding of space for diacritics may be done on the left side of a glyph:
+
+```
+do  for b = @bases;
+    for d = @diacritics;
+    let v = APx(d, "_U") - APx(g, "U");
+    if v > 0; {
+        pos $g' <$v 0 $v 0> $d;		#'
+    }
+```
+
+##### Left Kern
+
+Consider the case where someone has used an attachment point as a kerning point. In some context they want to adjust the advance of the left glyph based on the position of the attachment point in the right glyph:
+
+```
+do  for r = @rights;
+    let v = APx(r, "K"); {
+        pos @lefts' <$v> $r;
+        pos @lefts' <$v> @diacritics $r;
+    }
+```
+
+##### Myanmar Great Ya
+
+One obscure situation is the Great Ya (U+103C) in the Myanmar script, that visual wraps around the following base glyph. The great ya is given a small advance to then position the following consonant glyph within it. The advance of this consonant needs to be enough to place the next character outside the great ya. So we create an A attachment point on the great ya to emulate this intended final advance. Note that there are many variants of the great ya glyph. Thus:
+
+```
+do  for y = @c103C_nar;
+    for c = @cCons_nar;
+    let v = APx(y, "A") - (ADVx(y) + ADVx(c));
+    if v > 0; {
+        pos $y' <$v> $c;		#'
+    }
+
+do  for y = @c103C_wide;
+    for c = @cCons_wide;
+    let v = APx(y, "A") - (ADVx(y) + ADVx(c));
+    if v > 0; {
+        pos $y' <$v> $c;		#'
+    }
+```
+
+##### Advance for Ldot on U
+
+This example mirrors that used in the `setadvance` statement. Here we want to add sufficient advance on the base to correspond to attaching an u vowel which in turn has a lower dot attached to it.
+
+```
+do for b = @cBases;
+    for u in @cLVowels;
+    let v = APx(b, "L") - APx(u, "_L") + APx(u, "LD") - APx("ldot", "_LD")  + ADVx("ldot") - ADVx(b);
+    if v > 0; {
+        pos $b' <$v> $u ldot;		#'
+    }
+```
+
+
 ## Functions
 
 Functions may be used in the place of a glyph or glyph class and return a list of glyphs.
