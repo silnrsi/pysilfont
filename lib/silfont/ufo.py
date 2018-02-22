@@ -74,7 +74,7 @@ class _plist(object):
         elem = self._contents[key][1]
         return self._valelem(elem)
 
-    def _valelem(self, elem):  # Used by getval to recursively process dict anbd array elements
+    def _valelem(self, elem):  # Used by getval to recursively process dict and array elements
         if elem.tag == "integer": return int(elem.text)
         if elem.tag == "real": return float(elem.text)
         if elem.tag == "string": return elem.text
@@ -325,12 +325,16 @@ class Ufont(object):
             fiint = ("ascender", "capHeight", "descender", "postscriptUnderlinePosition",
                      "postscriptUnderlineThickness", "unitsPerEm", "xHeight")
             ficapitalize = ("styleMapFamilyName", "styleName")
+            fisetifmissing = {"openTypeOS2Type": []}
             fisettoother = {"openTypeHheaAscender": "ascender", "openTypeHheaDescender": "descender",
                             "openTypeNamePreferredFamilyName": "familyName",
                             "openTypeNamePreferredSubfamilyName": "styleName", "openTypeOS2TypoAscender": "ascender",
                             "openTypeOS2TypoDescender": "descender", "openTypeOS2WinAscent": "ascender",
                             "openTypeNameDescription": "copyright"}
             fisetto = {"openTypeHheaLineGap": 0, "openTypeOS2TypoLineGap": 0} # Other values are added below
+
+
+
             # Check required fields, some of which are needed for remaining checks
             missing = []
             for key in fireq:
@@ -364,6 +368,9 @@ class Ufont(object):
             value = storedvals["familyName"] + "-" + storedvals["styleName"]
             fisetto["postscriptFontName"] = value.replace(" ", "") # Strip spaces
             fisetto["postscriptFullName"] = storedvals["familyName"] + " " + storedvals["styleName"]
+            for key in fisetifmissing:
+                if key not in self.fontinfo:
+                    fisetto[key] = fisetifmissing[key]
 
             warnings = 0; changes = 0
             # Warn about missing fields
@@ -431,8 +438,11 @@ class Ufont(object):
                     new = storedvals[fisettoother[key]]
                 if new != old:
                     if self.metafix:
-                        valtype = "integer" if isinstance(new, int) else "string"
-                        self.fontinfo.setval(key, valtype, new)
+                        if isinstance(new, list): # Currently only list handled is openTypeOS2Type, so assume is []
+                            self.fontinfo.setelem(key, ET.fromstring("<array/>"))
+                        else: # Does not cover real at present
+                            valtype = "integer" if isinstance(new, int) else "string"
+                            self.fontinfo.setval(key, valtype, new)
                     else:
                         logmess = " would be" + logmess
                     self.logchange(logmess, key, old, new)
