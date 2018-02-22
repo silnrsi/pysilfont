@@ -40,7 +40,7 @@ def doit(args):
                        "postscriptFullName", "styleMapFamilyName", "styleMapStyleName")
     integerkeys = ("openTypeOS2WeightClass", "openTypeOS2WidthClass")
     infodeleteempty = ("openTypeOS2Selection",)
-    infodeletekeys = ("openTypeOS2Type",)
+    # infodeletekeys = ("openTypeOS2Type",)
 
     for ufo in ufos:
         sn = ufo.info.styleName                              # )
@@ -143,11 +143,12 @@ def doit(args):
                             logchange(logger, " restored from backup ufo. ", key, current, new)
 
             # Delete unneeded keys
-            for key in infodeletekeys:
-                if hasattr(ufo.info, key):
-                    current = getattr(ufo.info, key)
-                    setattr(ufo.info, key, None)
-                    logchange(logger, " deleted. ", key, current, None)
+
+            # for key in infodeletekeys:
+            #     if hasattr(ufo.info, key):
+            #        current = getattr(ufo.info, key)
+            #        setattr(ufo.info, key, None)
+            #        logchange(logger, " deleted. ", key, current, None)
 
             for key in infodeleteempty:
                 if hasattr(ufo.info, key) and getattr(ufo.info, key) == "":
