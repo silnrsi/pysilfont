@@ -121,7 +121,7 @@ class ast_CursivePosStatement(ast.CursivePosStatement):
 #replacement could contain multiple slots
 #TODO: below only supports one RHS class?
 class ast_MultipleSubstStatement(ast.Statement):
-    def __init__(self, location, prefix, glyph, suffix, replacement):
+    def __init__(self, prefix, glyph, suffix, replacement, location=None):
         ast.Statement.__init__(self, location)
         self.prefix, self.glyph, self.suffix = prefix, glyph, suffix
         self.replacement = replacement
@@ -174,8 +174,8 @@ class ast_MultipleSubstStatement(ast.Statement):
 # replacement could contain multiple slots
 #TODO: below only supports one LHS class?
 class ast_LigatureSubstStatement(ast.Statement):
-    def __init__(self, location, prefix, glyphs, suffix, replacement,
-                 forceChain):
+    def __init__(self, prefix, glyphs, suffix, replacement,
+                 forceChain, location=None):
         ast.Statement.__init__(self, location)
         self.prefix, self.glyphs, self.suffix = (prefix, glyphs, suffix)
         self.replacement, self.forceChain = replacement, forceChain
@@ -299,7 +299,7 @@ class feaplus_parser(Parser) :
                 m = self.expect_markClass_reference_()
                 marks.append(m)
         self.expect_symbol_(";")
-        return self.ast.MarkBasePosStatement(location, base, marks)
+        return self.ast.MarkBasePosStatement(base, marks, location=location)
 
     # like base class parse_position_mark_ & overrides it
     def parse_position_mark_(self, enumerated, vertical):
@@ -320,7 +320,7 @@ class feaplus_parser(Parser) :
                 m = self.expect_markClass_reference_()
                 marks.append(m)
         self.expect_symbol_(";")
-        return self.ast.MarkMarkPosStatement(location, baseMarks, marks)
+        return self.ast.MarkMarkPosStatement(baseMarks, marks, location=location)
 
     def parse_position_cursive_(self, enumerated, vertical):
         location = self.cur_token_location_
@@ -336,10 +336,10 @@ class feaplus_parser(Parser) :
             exitAnchor = self.parse_anchor_()
             self.expect_symbol_(";")
             return self.ast.CursivePosStatement(
-                location, glyphclass, entryAnchor, exitAnchor)
+                glyphclass, entryAnchor, exitAnchor, location=location)
         else: # handle pos cursive @baseClass @baseClass;
             mc = self.expect_markClass_reference_()
-            return self.ast.CursivePosStatement(location, glyphclass.markClass, None, mc)
+            return self.ast.CursivePosStatement(glyphclass.markClass, None, mc, location=location)
 
     # like base class parseMarkClass
     # but uses BaseClass and BaseClassDefinition which subclass Mark counterparts
@@ -356,7 +356,7 @@ class feaplus_parser(Parser) :
             baseClass = self.ast.BaseClass(name)
             self.doc_.baseClasses[name] = baseClass
             self.glyphclasses_.define(name, baseClass)
-        bcdef = self.ast.BaseClassDefinition(location, baseClass, anchor, glyphs)
+        bcdef = self.ast.BaseClassDefinition(baseClass, anchor, glyphs, location=location)
         baseClass.addDefinition(bcdef)
         return bcdef
 
@@ -403,7 +403,7 @@ class feaplus_parser(Parser) :
                     'Expected a single glyphclass after "from"',
                     location)
             return self.ast.AlternateSubstStatement(
-                location, old_prefix, old[0], old_suffix, new[0])
+                old_prefix, old[0], old_suffix, new[0], location=location)
 
         num_lookups = len([l for l in lookups if l is not None])
 
@@ -423,22 +423,23 @@ class feaplus_parser(Parser) :
                     'but found a glyph class with %d elements' %
                     (len(glyphs), len(replacements)), location)
             return self.ast.SingleSubstStatement(
-                location, old, new,
+                old, new,
                 old_prefix, old_suffix,
-                forceChain=hasMarks
+                forceChain=hasMarks, location=location
             )
 
         # GSUB lookup type 2: Multiple substitution.
         # Format: "substitute f_f_i by f f i;"
         if (not reverse and
                 len(old) == 1 and len(new) > 1 and num_lookups == 0):
-            return self.ast.MultipleSubstStatement(location, old_prefix, old[0], old_suffix, new)
+            return self.ast.MultipleSubstStatement(old_prefix, old[0], old_suffix, new, location=location)
 
         # GSUB lookup type 4: Ligature substitution.
         # Format: "substitute f f i by f_f_i;"
         if (not reverse and
                 len(old) > 1 and len(new) == 1 and num_lookups == 0):
-            return self.ast.LigatureSubstStatement(location, old_prefix, old, old_suffix, new[0], forceChain=hasMarks)
+            return self.ast.LigatureSubstStatement(old_prefix, old, old_suffix, new[0],
+                                                    forceChain=hasMarks, location=location)
 
         # GSUB lookup type 8: Reverse chaining substitution.
         if reverse:
@@ -466,19 +467,19 @@ class feaplus_parser(Parser) :
                     'but found a glyph class with %d elements' %
                     (len(glyphs), len(replacements)), location)
             return self.ast.ReverseChainSingleSubstStatement(
-                location, old_prefix, old_suffix, old, new)
+                old_prefix, old_suffix, old, new, location=location)
 
         # GSUB lookup type 6: Chaining contextual substitution.
         assert len(new) == 0, new
         rule = self.ast.ChainContextSubstStatement(
-            location, old_prefix, old, old_suffix, lookups)
+            old_prefix, old, old_suffix, lookups, location=location)
         return rule
 
     def parse_glyphclass_(self, accept_glyphname):
         if (accept_glyphname and
                 self.next_token_type_ in (Lexer.NAME, Lexer.CID)):
             glyph = self.expect_glyph_()
-            return self.ast.GlyphName(self.cur_token_location_, glyph)
+            return self.ast.GlyphName(glyph, location=self.cur_token_location_)
         if self.next_token_type_ is Lexer.GLYPHCLASS:
             self.advance_lexer_()
             gc = self.glyphclasses_.resolve(self.cur_token_)
@@ -487,13 +488,13 @@ class feaplus_parser(Parser) :
                     "Unknown glyph class @%s" % self.cur_token_,
                     self.cur_token_location_)
             if isinstance(gc, self.ast.MarkClass):
-                return self.ast.MarkClassName(self.cur_token_location_, gc)
+                return self.ast.MarkClassName(gc, location=self.cur_token_location_)
             else:
-                return self.ast.GlyphClassName(self.cur_token_location_, gc)
+                return self.ast.GlyphClassName(gc, location=self.cur_token_location_)
 
         self.expect_symbol_("[")
         location = self.cur_token_location_
-        glyphs = self.ast.GlyphClass(location)
+        glyphs = self.ast.GlyphClass(location=location)
         while self.next_token_ != "]":
             if self.next_token_type_ is Lexer.NAME:
                 glyph = self.expect_glyph_()
@@ -533,9 +534,9 @@ class feaplus_parser(Parser) :
                         self.cur_token_location_)
                 # fix bug don't output class definition, just the name.
                 if isinstance(gc, self.ast.MarkClass):
-                    gcn = self.ast.MarkClassName(self.cur_token_location_, gc)
+                    gcn = self.ast.MarkClassName(gc, location=self.cur_token_location_)
                 else:
-                    gcn = self.ast.GlyphClassName(self.cur_token_location_, gc)
+                    gcn = self.ast.GlyphClassName(gc, location=self.cur_token_location_)
                 glyphs.add_class(gcn)
             else:
                 raise FeatureLibError(
