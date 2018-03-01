@@ -247,7 +247,7 @@ ifclass(cno_sc) {
 
 The `do` statement is a means of setting variables and repeating statement groups with variable expansion. A `do` statement is followed by various substatements that are in effect nested statements. The basic structure of the `do` statement is:
 
-`do` _subexpression_ `;` _subexpression_ `;` _..._ `;`
+`do` _substatement_ `;` _substatement_ `;` _..._ `;`
 `{` _statements_ `};`
 
 Where _statements_ is a sequence of FEA statements. Within these statements, variables may be referenced by preceding them with a `$`.
@@ -269,7 +269,7 @@ This creates a variable _var_ that will iterate over the _glyphlist_.
 
 ##### let
 
-The `let` substatement executes a short python expression, storing the result in the given variable. The structure of the substatement is:
+The `let` substatement executes a short python expression (via `eval`), storing the result in the given variable. The structure of the substatement is:
 
 `let` _var_ `=` _expression_ `;`
 
@@ -280,6 +280,8 @@ There are various python functions that are especially supported, along with the
 | APx        | _glyphname_, "_apname_" | Returns the x co-ordinate of the given attachment point on the given glyph |
 | APy        | _glyphname_, "_apname_" | Returns the y co-ordinate of the given attachment point on the given glyph |
 | ADVx     | _glyphname_                       | Returns the advanced width of the given glyph |
+
+Security wise, it is not possible to stop people doing nasty things with it. But psfmakefea is not expected to be used in untrusted environments.
 
 ##### if
 
@@ -300,8 +302,8 @@ do  for b = @bases;
     for d = @diacritics;
     let v = (ADVx(d) - APx(d, "_U")) - (ADVx(g) - APx(g, "U"));
     if v > 0; {
-        pos $g' <$v> $d;
-    }
+        pos $b' <$v> $d;
+    };
 ```
 
 ##### Left Guard
@@ -313,8 +315,8 @@ do  for b = @bases;
     for d = @diacritics;
     let v = APx(d, "_U") - APx(g, "U");
     if v > 0; {
-        pos $g' <$v 0 $v 0> $d;
-    }
+        pos $b' <$v 0 $v 0> $d;
+    };
 ```
 
 ##### Left Kern
@@ -326,7 +328,7 @@ do  for r = @rights;
     let v = APx(r, "K"); {
         pos @lefts' <$v> $r;
         pos @lefts' <$v> @diacritics $r;
-    }
+    };
 ```
 
 ##### Myanmar Great Ya
@@ -339,14 +341,14 @@ do  for y = @c103C_nar;
     let v = APx(y, "A") - (ADVx(y) + ADVx(c));
     if v > 0; {
         pos $y' <$v> $c;
-    }
+    };
 
 do  for y = @c103C_wide;
     for c = @cCons_wide;
     let v = APx(y, "A") - (ADVx(y) + ADVx(c));
     if v > 0; {
         pos $y' <$v> $c;
-    }
+    };
 ```
 
 ##### Advance for Ldot on U
