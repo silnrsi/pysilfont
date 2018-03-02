@@ -187,14 +187,14 @@ logger.log(<message text>, [severity level]>
 ```
 Where severity level has a default value of W and can be set to one of:
 - X	Exception - For fatal programming errors
-- S	Severe - For fatal errors
-- E	Errors
-- P	Progress - Reports basic progress messages and all errors
-- W	Warning - As P but with warning messages as well
-- I	Info - As W but with information messages as well
-- V	Verbose - even more messages!
+- S	Severe - For fatal errors - eg input file missing
+- E	Errors - For serious errors that must be reported to screen
+- P	Progress - Progress messages
+- W	Warning - General warnings about anything not correct
+- I	Info - For more detailed reporting - eg the name of each glif file opened
+- V	Verbose - For even more messages!
 
-Errors are reported to screen if the severity level is higher or equal to logger.scrlevel (default E) and to log based on loglevel (default W).  The defaults for these can be set via parameters or within a script, if needed.
+Errors are reported to screen if the severity level is higher or equal to logger.scrlevel (default P) and to log based on loglevel (default W).  The defaults for these can be set via parameters or within a script, if needed.
 
 With X and S, the script is terminated.  S should be used for user problems (eg file does not exist, font is invalid) and X for programming issues (eg an invalid value has been set by code).  Exception errors are mainly used by the libraries and force a stack trace.
 
