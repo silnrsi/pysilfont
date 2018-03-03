@@ -164,19 +164,19 @@ class Font(object) :
     def append_classes(self, parser) :
         # normal glyph classes
         for name in self.order_classes():
-            gc = parser.ast.GlyphClass(0, None)
+            gc = parser.ast.GlyphClass(None, location=None)
             for g in self.classes[name] :
                 gc.append(g)
-            gcd = parser.ast.GlyphClassDefinition(0, name, gc)
+            gcd = parser.ast.GlyphClassDefinition(name, gc, location=None)
             parser.add_statement(gcd)
             parser.define_glyphclass(name, gcd)
 
     def _addGlyphsToClass(self, parser, glyphs, gc, anchor, definer):
         if len(glyphs) > 1 :
-            val = parser.ast.GlyphClass(0, glyphs)
+            val = parser.ast.GlyphClass(glyphs, location=None)
         else :
-            val = parser.ast.GlyphName(0, glyphs[0])
-        classdef = definer(0, gc, anchor, val)
+            val = parser.ast.GlyphName(glyphs[0], location=None)
+        classdef = definer(gc, anchor, val, location=None)
         gc.addDefinition(classdef)
         parser.add_statement(classdef)
 
@@ -209,14 +209,14 @@ class Font(object) :
 
             if ap_nm.startswith("_"):
                 for p, glyphs_w_pt in anchor_cache.items():
-                    anchor = parser.ast.Anchor(0, None, p[0], p[1], None, None, None)
+                    anchor = parser.ast.Anchor(p[0], p[1], location=None)
                     self._addGlyphsToClass(parser, glyphs_w_pt, gc, anchor, parser.ast.MarkClassDefinition)
             else:
                 for p, glyphs_w_pt in anchor_cache.items():
-                    anchor = parser.ast.Anchor(0, None, p[0], p[1], None, None, None)
+                    anchor = parser.ast.Anchor(p[0], p[1], location=None)
                     self._addGlyphsToClass(parser, glyphs_w_pt, gcb, anchor, parser.ast.BaseClassDefinition)
                 for p, glyphs_w_pt in markanchor_cache.items():
-                    anchor = parser.ast.Anchor(0, None, p[0], p[1], None, None, None)
+                    anchor = parser.ast.Anchor(p[0], p[1], location=None)
                     self._addGlyphsToClass(parser, glyphs_w_pt, gcm, anchor, parser.ast.BaseClassDefinition)
 
 #TODO: provide more argument info
