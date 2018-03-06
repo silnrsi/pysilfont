@@ -19,38 +19,53 @@ class loggerobj(object):
         self.logfile = logfile
         self.loglevels = loglevels
         self.leveltext = leveltext
+        self.errorcount = 0
+        self.warningcount = 0
         if not self.loglevels: self.loglevels = {'X': 0,       'S': 1,       'E': 2,       'P': 3,       'W': 4,       'I': 5,       'V': 6}
         if not self.leveltext: self.leveltext = ('Exception ', 'Severe:   ', 'Error:    ', 'Progress: ', 'Warning:  ', 'Info:     ', 'Verbose:  ')
-        self.loglevel = "E"; self.scrlevel = "E"  # Temp values so invalid log levels can be reported
-        if loglevel in self.loglevels:
-            self.loglevel = loglevel
-            if self.loglevels[loglevel] < 2:
-                self.loglevel = "E"
-                self.log("Loglevel increased to minimum level of Error", "E")
-        else:
-            self.log("Invalid loglevel value", "S")
-        if scrlevel in self.loglevels:
-            self.scrlevel = scrlevel
-            if self.loglevels[scrlevel] < 1:
-                self.scrlevel = "S"
-                self.log("Scrlevel increased to minimum level of Severe", "E")
-        else:
-            self.log("Invalid scrlevel value", "S")
+        super(loggerobj, self).__setattr__("loglevel", "E") # Temp values so invalid log levels can be reported
+        super(loggerobj, self).__setattr__("scrlevel", "E") #
+        self.loglevel = loglevel
+        self.scrlevel = scrlevel
+        self._basescrlevel = self.scrlevel # Record it for resetscr()
 
-    def log(self, logmessage, msglevel="I"):
+    def __setattr__(self, name, value):
+        if name in ("loglevel", "scrlevel"):
+            if value in self.loglevels:
+                (minlevel, minnum) = ("E",2) if name == "loglevel" else ("S", 1)
+                if self.loglevels[value] < minnum:
+                    value = minlevel
+                    self.log(name + " increased to minimum level of " + minlevel, "E")
+            else:
+                self.log("Invalid " + name + " value: " + value, "S")
+        super(loggerobj, self).__setattr__(name, value)
+
+    def log(self, logmessage, msglevel="W"):
         levelval = self.loglevels[msglevel]
         message = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S ") + self.leveltext[levelval] + logmessage
         #message = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f ") + self.leveltext[levelval] + logmessage  ## added milliseconds for timing tests
         if levelval <= self.loglevels[self.scrlevel]: print(message)
         if self.logfile and levelval <= self.loglevels[self.loglevel]: self.logfile.write(message + "\n")
         if msglevel == "S":
-            print "\n **** Fatal error - exiting ****"
+            print("\n **** Fatal error - exiting ****")
             sys.exit(1)
         if msglevel == "X": assert False, message
+        if msglevel == "E": self.errorcount += 1
+        if msglevel == "W": self.warningcount += 1
+
+    def raisescrlevel(self, level): # Temproarily increase screen logging
+        if level not in self.loglevels or level == "X" : self.log("Invalid scrlevel: " + level, "X")
+        if self.loglevels[level] > self.loglevels[self.scrlevel]:
+            self.scrlevel = level
+            self.log("scrlevel raised to " + level, "I")
+
+    def resetscrlevel(self):
+        self.scrlevel = self._basescrlevel
 
 
 class parameters(object):
     # Object for holding parameters information, organised by class (eg logging)
+
     # Default parameters for use in pysilfont modules
     #   Names must be case-insensitively unique across all parameter classes
     #   Parameter types are deduced from the default values
@@ -58,7 +73,7 @@ class parameters(object):
     def __init__(self):
         # Default parameters for all modules
         defparams = {}
-        defparams['main'] = {'version': __version__, 'copyright': __copyright__}  ## Need to make these read-only if possible
+        defparams['system'] = {'version': __version__, 'copyright': __copyright__}  # Code treats these as read-only
         defparams['logging'] = {'scrlevel': 'P', 'loglevel': 'W'}
         defparams['backups'] = {'backup': True, 'backupdir': 'backups', 'backupkeep': 5}
         # Default parameters for UFO module
@@ -112,6 +127,8 @@ class parameters(object):
             for classn in config.sections():
                 for item in config.items(classn):
                     parn = item[0]
+                    if self.paramclass[parn] == "system":
+                        self.logger.log("Can't change " + parn + " parameter via config file", "S")
                     val = item[1].strip('"').strip("'")
                     dict[parn] = val
         elif copyset:
@@ -131,12 +148,21 @@ class _paramset(dict):
         self.name = name
         self.sourcedesc = sourcedesc  # Description of source for reporting
         self.params = params  # Parent parameters object
-        for parn in inputdict: self[parn] = inputdict[parn]
+        for parn in inputdict:
+            if params.paramclass[parn] == "system": # system values can't be changed
+                if inputdict[parn] != params.sets["default"][parn]:
+                    self.params.logger.log("Can't change " + parn + " - system parameters can't be changed", "X")
+                else:
+                    super(_paramset, self).__setitem__(parn, inputdict[parn])
+            else:
+                self[parn] = inputdict[parn]
 
     def __setitem__(self, parn, value):
         origvalue = value
         origparn = parn
         parn = parn.lower()
+        if self.params.paramclass[origparn] == "system":
+            self.params.logger.log("Can't change " + parn + " - system parameters are read-only", "X")
         if parn not in self.params.lcase:
             self.params.logger.log("Invalid parameter " + origparn + " from " + self.sourcedesc, "S")
         else:
@@ -560,6 +586,12 @@ def execute(tool, fn, argspec, chain = None):
                 newfont.save(outfont)
             else:  # Must be Pyslifont Ufont
                 newfont.write(outfont)
+    if logger.errorcount or logger.warningcount:
+        level = "E" if logger.errorcount else "P"
+        logger.log("Command completed with " + str(logger.errorcount) + " errors and " + str(logger.warningcount) + " warnings", level)
+        if logger.scrlevel == "P" and logger.warningcount: logger.log("See log file for warning messages or rerun with '-p scrlevel=w'", "P")
+    else:
+        logger.log("Command completed with no warnings", "P")
 
     if logfile: logfile.close()
 

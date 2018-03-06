@@ -124,7 +124,7 @@ Parameters are passed to scripts via a parameters() object as args.paramsobj.  T
 
 Parameters can be accessed from the parameter set by parameter name, eg paramsobj.sets[“main”][“loglevel”].
 
-Although parameters are split into classes (eg main, logging), parameter names need to be unique across all groups to allow simple access by name.
+Although parameters are split into classes (eg backup, logging), parameter names need to be unique across all groups to allow simple access by name.
 
 If logging set set to I or V, changes to parameter values (eg config file values updating default values) are logged.
 
