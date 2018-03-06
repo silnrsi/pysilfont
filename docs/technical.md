@@ -202,6 +202,25 @@ With Ufont objects, font.logger also points to the logger, but this is used prim
 
 There would normally only be a single logger object used by a script.
 
+### Changing reporting levels
+
+loglevel and scrlevel *can* be set by scripts, but care should be taken not to overide values set on the command line.  To increase screen logging temporarily, use logger.raisescrlevel(<new level>) then set to previous value with logger.resetscrlevel(), eg
+
+```
+  if not(args.quiet or "scrlevel" in params.sets["command line"]) :
+    logger.raisescrlevel("W") # Raise level to W if not already W or higher
+
+  <code>
+
+  logger.resetscrlevel()  
+```
+
+### Error and warning counts
+
+These are kept in logger.errorcount and logger.warningcount.
+
+For scripts using the execute() framework, these counts are reported as progress messages when the script completes.
+
 ## Support for csv files
 csv file support has been added to core.py with a csvreader() object (using the python csv module).  In addition to the basic handling that the csv module provides, the following are supported:
 - csvreader.firstline returns the first line of the file, so analyse headers if needed.  Iteration still starts with the first line.
