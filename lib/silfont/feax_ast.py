@@ -1,6 +1,5 @@
 from fontTools.feaLib import ast
 from fontTools.feaLib.ast import asFea
-import StringIO
 
 def asFea(g):
     if hasattr(g, 'asClassFea'):

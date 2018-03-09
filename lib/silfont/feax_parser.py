@@ -3,6 +3,7 @@ from fontTools.feaLib.parser import Parser
 from fontTools.feaLib.lexer import IncludingLexer, Lexer
 from fontTools.feaLib.error import FeatureLibError
 import silfont.feax_ast as astx
+import StringIO
 
 class feaplus_ast(object) :
     MarkBasePosStatement = astx.ast_MarkBasePosStatement
