@@ -59,6 +59,33 @@ pos mark @MARK_BASE_CLASS mark @MARK_MARK_CLASS;
 
 Would expand out to a list of mark mark attachment rules.
 
+### ifinfo
+
+This statement initiates a block either of statements or within another block. The block is only processed if the ifinfo condition is met. ifinfo takes two parameters. The first is a name that is an entry in a fontinfo.plist. The second is a string containing a regular expression that is matched against the given value in the fontinfo.plist. If there is a match, the condition is considered to be met.
+
+```
+ifinfo(familyName, "Doulos") {
+
+# statements
+
+}
+```
+
+Notice the lack of a `;` after the block close.
+
+### ifclass
+
+This statement initiates a block either of statements or within another block. The block is only processed if the given @class is defined and contains at least one glyph.
+
+```
+ifclass(@oddities) {
+
+# statements
+
+}
+```
+
+Notice the lack of a `;` after the block close.
 
 ## Capabilities
 
