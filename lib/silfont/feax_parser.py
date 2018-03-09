@@ -343,7 +343,12 @@ class feaplus_parser(Parser) :
                 return gc is not None and len(gc.glyphSet())
             block = self.ast.IfBlock(ifClassTest, 'ifclass', location=location)
             self.expect_symbol_(")")
-            self.parse_statements_block_(block)
+            import inspect      # oh this is so ugly!
+            calledby = inspect.stack()[2][3]    # called through lambda since extension
+            if calledby == 'parse_block_':
+                self.parse_block_(block, False)
+            else:
+                self.parse_statements_block_(block)
             return block
         else:
             raise FeatureLibError("Syntax error missing glyphclass", location)
@@ -359,7 +364,12 @@ class feaplus_parser(Parser) :
             s = self.fontinfo.get(name, "")
             return re.search(reg, s)
         block = self.ast.IfBlock(ifInfoTest, 'ifinfo', location=location)
-        self.parse_statements_block_(block)
+        import inspect      # oh this is so ugly!
+        calledby = inspect.stack()[2][3]        # called through a lambda since extension
+        if calledby == 'parse_block_':
+            self.parse_block_(block, False)
+        else:
+            self.parse_statements_block_(block)
         return block
         
     def parse_statements_block_(self, block):
@@ -403,5 +413,5 @@ class feaplus_parser(Parser) :
                     self.cur_token_location_)
 
         self.expect_symbol_("}")
-        # self.expect_symbol_(";")
+        # self.expect_symbol_(";")  # can't have }; since tokens are space separated
 
