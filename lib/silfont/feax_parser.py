@@ -3,7 +3,7 @@ from fontTools.feaLib.parser import Parser
 from fontTools.feaLib.lexer import IncludingLexer, Lexer
 from fontTools.feaLib.error import FeatureLibError
 import silfont.feax_ast as astx
-import StringIO
+import StringIO, re
 
 class feaplus_ast(object) :
     MarkBasePosStatement = astx.ast_MarkBasePosStatement
@@ -14,13 +14,16 @@ class feaplus_ast(object) :
     BaseClassDefinition = astx.ast_BaseClassDefinition
     MultipleSubstStatement = astx.ast_MultipleSubstStatement
     LigatureSubstStatement = astx.ast_LigatureSubstStatement
+    IfBlock = astx.ast_IfBlock
 
     def __getattr__(self, name):
         return getattr(ast, name) # retrieve undefined attrs from imported fontTools.feaLib ast module
 
 class feaplus_parser(Parser) :
     extensions = {
-        'baseClass' : lambda s : s.parseBaseClass()
+        'baseClass' : lambda s: s.parseBaseClass(),
+        'ifclass' : lambda s: s.parseIfClass(),
+        'ifinfo' : lambda s: s.parseIfInfo()
     }
     ast = feaplus_ast()
 
@@ -330,4 +333,75 @@ class feaplus_parser(Parser) :
         self.expect_symbol_("]")
         return glyphs
 
+    def parseIfClass(self):
+        location = self.cur_token_location_
+        self.expect_symbol_("(")
+        if self.next_token_type_ is Lexer.GLYPHCLASS:
+            self.advance_lexer_()
+            def ifClassTest():
+                gc = self.glyphclasses_.resolve(self.cur_token_)
+                return gc is not None and len(gc.glyphSet())
+            block = self.ast.IfBlock(ifClassTest, 'ifclass', location=location)
+            self.expect_symbol_(")")
+            self.parse_statements_block_(block)
+            return block
+        else:
+            raise FeatureLibError("Syntax error missing glyphclass", location)
+
+    def parseIfInfo(self):
+        location = self.cur_token_location_
+        self.expect_symbol_("(")
+        name = self.expect_name_()
+        self.expect_symbol_(",")
+        reg = self.expect_string_()
+        self.expect_symbol_(")")
+        def ifInfoTest():
+            s = self.fontinfo.get(name, "")
+            return re.search(reg, s)
+        block = self.ast.IfBlock(ifInfoTest, 'ifinfo', location=location)
+        self.parse_statements_block_(block)
+        return block
+        
+    def parse_statements_block_(self, block):
+        self.expect_symbol_("{")
+        statements = block.statements
+        while self.next_token_ != "}" or self.cur_comments_:
+            self.advance_lexer_(comments=True)
+            if self.cur_token_type_ is Lexer.COMMENT:
+                statements.append(
+                    self.ast.Comment(self.cur_token_,
+                                     location=self.cur_token_location_))
+            elif self.is_cur_keyword_("include"):
+                statements.append(self.parse_include_())
+            elif self.cur_token_type_ is Lexer.GLYPHCLASS:
+                statements.append(self.parse_glyphclass_definition_())
+            elif self.is_cur_keyword_(("anon", "anonymous")):
+                statements.append(self.parse_anonymous_())
+            elif self.is_cur_keyword_("anchorDef"):
+                statements.append(self.parse_anchordef_())
+            elif self.is_cur_keyword_("languagesystem"):
+                statements.append(self.parse_languagesystem_())
+            elif self.is_cur_keyword_("lookup"):
+                statements.append(self.parse_lookup_(vertical=False))
+            elif self.is_cur_keyword_("markClass"):
+                statements.append(self.parse_markClass_())
+            elif self.is_cur_keyword_("feature"):
+                statements.append(self.parse_feature_block_())
+            elif self.is_cur_keyword_("table"):
+                statements.append(self.parse_table_())
+            elif self.is_cur_keyword_("valueRecordDef"):
+                statements.append(
+                    self.parse_valuerecord_definition_(vertical=False))
+            elif self.cur_token_type_ is Lexer.NAME and self.cur_token_ in self.extensions:
+                statements.append(self.extensions[self.cur_token_](self))
+            elif self.cur_token_type_ is Lexer.SYMBOL and self.cur_token_ == ";":
+                continue
+            else:
+                raise FeatureLibError(
+                    "Expected feature, languagesystem, lookup, markClass, "
+                    "table, or glyph class definition, got {} \"{}\"".format(self.cur_token_type_, self.cur_token_),
+                    self.cur_token_location_)
+
+        self.expect_symbol_("}")
+        # self.expect_symbol_(";")
 

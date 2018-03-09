@@ -11,7 +11,7 @@ are no guaranteees that what is in here, will end up in psfmakefea.
 The various features listed here are given priorities:
 
 | Level | Priority
-|---------|----------
+|------|-------------
 | 1	| Intended to be implemented
 | 2	| Probably will be implemented but after priority 1 stuff
 | 3	| Almost certainly won't be implemented

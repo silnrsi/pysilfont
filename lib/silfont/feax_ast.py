@@ -215,4 +215,15 @@ class ast_LigatureSubstStatement(ast.Statement):
             res += ";"
         return res
 
+class ast_IfBlock(ast.Block):
+    def __init__(self, testfn, name, location=None):
+        ast.Block.__init__(self, location=location)
+        self.testfn = testfn
+        self.name = name
+
+    def asFea(self, indent=""):
+        if self.testfn():
+            return ast.Block.asFea(self, indent=indent)
+        else:
+            return ""
 
