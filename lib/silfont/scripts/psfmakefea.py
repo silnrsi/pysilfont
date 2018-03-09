@@ -8,7 +8,7 @@ __author__ = 'Martin Hosken, Alan Ward'
 
 import silfont.ufo as ufo
 from collections import OrderedDict
-from silfont.feaplus import feaplus_parser
+from silfont.feax_parser import feaplus_parser
 from xml.etree import ElementTree as et
 import fontTools.feaLib.ast as ast
 import StringIO
