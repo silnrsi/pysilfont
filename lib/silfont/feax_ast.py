@@ -15,6 +15,14 @@ def asFea(g):
 
 ast.asFea = asFea
 
+def asLiteralFea(self, indent=""):
+    Element.mode = 'literal'
+    return self.asFea(indent=indent)
+    Element.mode = 'flat'
+
+ast.Element.asLiteralFea = asLiteralFea
+ast.Element.mode = 'flat'
+
 class ast_MarkClass(ast.MarkClass):
     # This is better fixed upstream in parser.parse_glyphclass_ to handle MarkClasses
     def asClassFea(self, indent=""):
@@ -27,7 +35,8 @@ class ast_BaseClass(ast_MarkClass) :
 class ast_BaseClassDefinition(ast.MarkClassDefinition):
     def asFea(self, indent="") :
         # like base class asFea
-        return "# {}baseClass {} {} @{};".format(indent, self.glyphs.asFea(),
+        return ("# " if self.mode != 'literal' else "") + \
+                "{}baseClass {} {} @{};".format(indent, self.glyphs.asFea(),
                                                self.anchor.asFea(), self.markClass.name)
 
 class ast_MarkBasePosStatement(ast.MarkBasePosStatement):
@@ -35,12 +44,17 @@ class ast_MarkBasePosStatement(ast.MarkBasePosStatement):
         # handles members added by parse_position_base_ with feax syntax
         if isinstance(self.base, ast.MarkClassName): # flattens pos @BASECLASS mark @MARKCLASS
             res = ""
-            for bcd in self.base.markClass.definitions:
-                if res != "":
-                    res += "\n{}".format(indent)
-                res += "pos base {} {}".format(bcd.glyphs.asFea(), bcd.anchor.asFea())
-                res += "".join(" mark @{}".format(m.name) for m in self.marks)
+            if self.mode == 'literal':
+                res += "pos base @{} ".format(self.base.markClass.name)
+                res += " ".join("mark @{}".format(m.name) for m in self.marks)
                 res += ";"
+            else:
+                for bcd in self.base.markClass.definitions:
+                    if res != "":
+                        res += "\n{}".format(indent)
+                    res += "pos base {} {}".format(bcd.glyphs.asFea(), bcd.anchor.asFea())
+                    res += "".join(" mark @{}".format(m.name) for m in self.marks)
+                    res += ";"
         else: # like base class method
             res = "pos base {}".format(self.base.asFea())
             res += "".join(" {} mark @{}".format(a.asFea(), m.name) for a, m in self.marks)
@@ -61,13 +75,18 @@ class ast_MarkMarkPosStatement(ast.MarkMarkPosStatement):
         # handles members added by parse_position_base_ with feax syntax
         if isinstance(self.baseMarks, ast.MarkClassName): # flattens pos @MARKCLASS mark @MARKCLASS
             res = ""
-            for mcd in self.baseMarks.markClass.definitions:
-                if res != "":
-                    res += "\n{}".format(indent)
-                res += "pos mark {} {}".format(mcd.glyphs.asFea(), mcd.anchor.asFea())
-                for m in self.marks:
-                    res += " mark @{}".format(m.name)
+            if self.mode == 'literal':
+                res += "pos mark @{} ".format(self.base.markClass.name)
+                res += " ".join("mark @{}".format(m.name) for m in self.marks)
                 res += ";"
+            else:
+                for mcd in self.baseMarks.markClass.definitions:
+                    if res != "":
+                        res += "\n{}".format(indent)
+                    res += "pos mark {} {}".format(mcd.glyphs.asFea(), mcd.anchor.asFea())
+                    for m in self.marks:
+                        res += " mark @{}".format(m.name)
+                    res += ";"
         else: # like base class method
             res = "pos mark {}".format(self.baseMarks.asFea())
             for a, m in self.marks:
@@ -90,16 +109,19 @@ class ast_CursivePosStatement(ast.CursivePosStatement):
     def asFea(self, indent=""):
         if isinstance(self.exitAnchor, ast.MarkClass): # pos cursive @BASE1 @BASE2
             res = ""
-            allglyphs = set(self.glyphclass.glyphSet())
-            allglyphs.update(self.exitAnchor.glyphSet())
-            for g in sorted(allglyphs):
-                entry = self.glyphclass.glyphs.get(g, None)
-                exit = self.exitAnchor.glyphs.get(g, None)
-                if res != "":
-                    res += "\n{}".format(indent)
-                res += "pos cursive {} {} {};".format(g,
-                            (entry.anchor.asFea() if entry else "<anchor NULL>"),
-                            (exit.anchor.asFea() if exit else "<anchor NULL>"))
+            if self.mode == 'literal':
+                res += "pos cursive @{} @{};".format(self.glyphclass.name, self.exitAnchor.name)
+            else:
+                allglyphs = set(self.glyphclass.glyphSet())
+                allglyphs.update(self.exitAnchor.glyphSet())
+                for g in sorted(allglyphs):
+                    entry = self.glyphclass.glyphs.get(g, None)
+                    exit = self.exitAnchor.glyphs.get(g, None)
+                    if res != "":
+                        res += "\n{}".format(indent)
+                    res += "pos cursive {} {} {};".format(g,
+                                (entry.anchor.asFea() if entry else "<anchor NULL>"),
+                                (exit.anchor.asFea() if exit else "<anchor NULL>"))
         else:
             res = super(ast_CursivePosStatement, self).asFea(indent)
         return res
@@ -140,20 +162,17 @@ class ast_MultipleSubstStatement(ast.Statement):
 
     def asFea(self, indent=""):
         res = ""
-        pres = " ".join(map(asFea, self.prefix)) if len(self.prefix) else ""
-        sufs = " ".join(map(asFea, self.suffix)) if len(self.suffix) else ""
+        pres = (" ".join(map(asFea, self.prefix)) + " ") if len(self.prefix) else ""
+        sufs = (" " + " ".join(map(asFea, self.suffix))) if len(self.suffix) else ""
+        if self.mode == 'literal':
+            res += "sub " + pres + self.glyph.asFea() + sufs + " by "
+            res += " ".join(map(asFea, self.replacement)) + ";"
+            return res
         glyphs = self.glyph.glyphSet()
         replacements = self.replacement[self.multindex].glyphSet()
         for i in range(min(len(glyphs), len(replacements))) :
-            res += ("\n" + indent if i > 0 else "") + "sub "
-            if len(self.prefix) > 0 or len(self.suffix) > 0 :
-                if len(self.prefix) :
-                    res += pres + " "
-                res += asFea(glyphs[i]) + "'"
-                if len(self.suffix) :
-                    res += " " + sufs
-            else :
-                res += asFea(glyphs[i])
+            res += ("\n" + indent if i > 0 else "") + "sub " + pres
+            res += asFea(glyphs[i]) + sufs
             res += " by "
             res += " ".join(map(asFea, self.replacement[0:self.multindex] + [replacements[i]] + self.replacement[self.multindex+1:]))
             res += ";" 
@@ -196,33 +215,35 @@ class ast_LigatureSubstStatement(ast.Statement):
 
     def asFea(self, indent=""):
         res = ""
-        pres = " ".join(map(asFea, self.prefix)) if len(self.prefix) else ""
-        sufs = " ".join(map(asFea, self.suffix)) if len(self.suffix) else ""
+        pres = (" ".join(map(asFea, self.prefix)) + " ") if len(self.prefix) else ""
+        sufs = (" " + " ".join(map(asFea, self.suffix))) if len(self.suffix) else ""
+        if self.mode == 'literal':
+            res += "sub " + pres + " ".join(map(asFea, self.glyphs)) + sufs + " by "
+            res += self.replacements.asFea() + ";"
+            return res
         glyphs = self.glyphs[self.multindex].glyphSet()
         replacements = self.replacement.glyphSet()
         for i in range(min(len(glyphs), len(replacements))) :
-            res += ("\n" + indent if i > 0 else "") + "sub "
-            if len(self.prefix) > 0 or len(self.suffix) > 0 :
-                if len(self.prefix) :
-                    res += pres + " "
-                res += " ".join(asFea(g) + "'" for g in self.glyphs[:self.multindex] + [glyphs[i]] + self.glyphs[self.multindex+1:])
-                if len(self.suffix) :
-                    res += " " + sufs
-            else :
-                res += " ".join(map(asFea, self.glyphs[:self.multindex] + [glyphs[i]] + self.glyphs[self.multindex+1:]))
-            res += " by "
+            res += ("\n" + indent if i > 0 else "") + "sub " + pres
+            res += " ".join(map(asFea, self.glyphs[:self.multindex] + [glyphs[i]] + self.glyphs[self.multindex+1:]))
+            res += sufs + " by "
             res += asFea(replacements[i])
             res += ";"
         return res
 
 class ast_IfBlock(ast.Block):
-    def __init__(self, testfn, name, location=None):
+    def __init__(self, testfn, name, cond, location=None):
         ast.Block.__init__(self, location=location)
         self.testfn = testfn
         self.name = name
 
     def asFea(self, indent=""):
-        if self.testfn():
+        if self.mode == 'literal':
+            res = "{}if{}({}) {{".format(indent, name, cond)
+            res += ast.Block.asFea(self, indent=indent)
+            res += indent + "}\n"
+            return res
+        elif self.testfn():
             return ast.Block.asFea(self, indent=indent)
         else:
             return ""

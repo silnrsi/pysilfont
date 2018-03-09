@@ -341,7 +341,7 @@ class feaplus_parser(Parser) :
             def ifClassTest():
                 gc = self.glyphclasses_.resolve(self.cur_token_)
                 return gc is not None and len(gc.glyphSet())
-            block = self.ast.IfBlock(ifClassTest, 'ifclass', location=location)
+            block = self.ast.IfBlock(ifClassTest, 'ifclass', '@'+self.cur_token_, location=location)
             self.expect_symbol_(")")
             import inspect      # oh this is so ugly!
             calledby = inspect.stack()[2][3]    # called through lambda since extension
@@ -363,8 +363,8 @@ class feaplus_parser(Parser) :
         def ifInfoTest():
             s = self.fontinfo.get(name, "")
             return re.search(reg, s)
-        block = self.ast.IfBlock(ifInfoTest, 'ifinfo', location=location)
-        import inspect      # oh this is so ugly!
+        block = self.ast.IfBlock(ifInfoTest, 'ifinfo', '{}, "{}"'.format(name, reg), location=location)
+        import inspect      # oh this is so ugly! Instead caller should pass in context
         calledby = inspect.stack()[2][3]        # called through a lambda since extension
         if calledby == 'parse_block_':
             self.parse_block_(block, False)
