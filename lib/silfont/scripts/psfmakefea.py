@@ -41,6 +41,7 @@ class Font(object) :
         omittedaps = set(omitaps.replace(',',' ').split())  # allow comma- and/or space-separated list
         if filename.endswith('.ufo') :
             f = ufo.Ufont(filename, params = params)
+            self.fontinfo = f.fontinfo
             for g in f.deflayer :
                 glyph = Glyph(g)
                 self.glyphs[g] = glyph
@@ -53,6 +54,7 @@ class Font(object) :
         elif filename.endswith('.xml') :
             currGlyph = None
             currPoint = None
+            self.fontinfo = {}
             for event, elem in et.iterparse(filename, events=('start', 'end')):
                 if event == 'start':
                     if elem.tag == 'glyph':
@@ -66,6 +68,17 @@ class Font(object) :
                     elif elem.tag == 'location' and currPoint is not None:
                         currPoint['x'] = int(elem.get('x', 0))
                         currPoint['y'] = int(elem.get('y', 0))
+                    elif elem.tag == 'font':
+                        n = elem.get('name', '')
+                        x = n.split('-')
+                        if len(x) == 2:
+                            self.fontinfo['familyName'] = x[0]
+                            self.fontinfo['openTypeNamePreferredFamilyName'] = x[0]
+                            self.fontinfo['styleMapFamilyName'] = x[0]
+                            self.fontinfo['styleName'] = x[1]
+                            self.fontinfo['openTypeNamePreferredSubfamilyName'] = x[1]
+                            self.fontinfo['postscriptFullName'] = "{0} {1}".format(*x)
+                        self.fontinfo['postscriptFontName'] = n
                 elif event == 'end':
                     if elem.tag == 'point':
                         if currGlyph and currPoint['name'] not in omittedaps:
@@ -243,6 +256,7 @@ def doit(args) :
         font.read_classes(args.classfile, classproperties = args.classprops)
 
     p = feaplus_parser(None, font.glyphs)
+    p.fontinfo = font.fontinfo
     doc_ufo = p.parse() # returns an empty ast.FeatureFile
 
     # Add goodies from the font
