@@ -8,6 +8,13 @@ so shouldn't do things that can't be expressed in FEA.
 
 As things get implemented from here, they will be moved to feaextensions.md. There
 are no guaranteees that what is in here, will end up in psfmakefea.
+The various features listed here are given priorities:
+
+| Level | Priority
+|---------|----------
+| 1	| Intended to be implemented
+| 2	| Probably will be implemented but after priority 1 stuff
+| 3	| Almost certainly won't be implemented
 
 There are a number of possible things that can be added to FEA, the question is whether they are worth adding in terms of meeting actual need (remove from this list if added to the rest of the document):
 
@@ -20,6 +27,8 @@ There are a number of possible things that can be added to FEA, the question is 
 Statements are used to make rules, lookups, etc.
 
 ### setadvance
+
+Priority: 3 (since the do statement has a higher priority and covers this)
 
 This function does the calculations necessary to adjust the advance of a glyph based on information of attachment points, etc. The result is a single shift on each of the glyphs in the class. The syntax is:
 
@@ -106,6 +115,8 @@ lookup advancesShortShortShort {
 *   Appears to leave the base glyph *position* unchanged. Is there a need to handle, for example in LTR scripts, LSB change for a base due to its diacritics? (Think i-tilde, etc.)
 
 ### move
+
+Priority: 2
 
 The move semantic results in a complex of lookups. See this [article](https://github.com/OpenType/opentype-layout/blob/master/docs/ligatures.md) on how to implement a move semantic successfully in OpenType. As such a move semantic can only be expressed as a statement at the highest level since it creates lookups. The move statement takes a number of parameters:
 
@@ -202,6 +213,8 @@ move(split, @cons @medial, km-e);
 
 ### ifinfo
 
+Priority: 1
+
 Like all if type statements, this is a macro statement that is executed during parsing rather than post parsing. ifinfo is designed to be extensible and has a syntax of:
 
 ```
@@ -244,6 +257,8 @@ ifclass(cno_sc) {
 ```
 
 ### do
+
+Priority: 2
 
 The `do` statement is a means of setting variables and repeating statement groups with variable expansion. A `do` statement is followed by various substatements that are in effect nested statements. The basic structure of the `do` statement is:
 
@@ -371,6 +386,8 @@ Functions may be used in the place of a glyph or glyph class and return a list o
 
 ### index
 
+Priority: 2
+
 Used in rules where the expansion of a rule results in a particular glyph from a class being used. Where two classes need to be synchronised, and which two classes are involved, this function specifies the rule element that drives the choice of glyph from this class. This function is motivated by the Keyman language. The parameters of index() are:
 
 ```
@@ -383,6 +400,8 @@ What makes an index() function difficult to implement is that it requires knowle
 
 ### infont
 
+Priority: 2
+
 This function filters the glyph class that is passed to it, and returns only those glyphs, in glyphclass order, which are actually present in the font being compiled for. For example:
 
 ```
@@ -392,6 +411,8 @@ This function filters the glyph class that is passed to it, and returns only tho
 ## Capabilities
 
 ### Permit classes on both sides of GSUB type 2 (multiple) and type 4 (ligature) lookups
+
+Priority: 2
 
 #### Slot correspondence
 
