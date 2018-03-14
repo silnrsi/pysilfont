@@ -46,6 +46,7 @@ def doit(args):
         sn = ufo.info.styleName                              # )
         sn = sn.replace("Italic Italic", "Italic")           # ) Temp fixes due to glyphLib incorrectly
         sn = sn.replace("Italic Bold Italic", "Bold Italic") # ) forming styleName
+        sn = sn.replace("Extra Italic Light Italic", "Extra Light Italic") # )
         ufo.info.styleName = sn                              # )
         fontname = ufo.info.familyName.replace(" ", "") + "-" + ufo.info.styleName.replace(" ", "")
 
