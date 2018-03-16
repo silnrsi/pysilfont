@@ -469,6 +469,8 @@ will set:
 
 If values were originally as in the first example, openTypeNameVersion will be changed to "Version 1.424" and versionMinor to 424
 
+Note that only fontinfo.plist is updated, so the font is not normalized and Pysilfont's backup mechanism for fonts is not used.
+
 ---
 ####  psfsyncmeta
 Usage: **`psfsyncmeta [-s] [-m [MASTER]] [-r] [-n] [--normalize] ifont`**

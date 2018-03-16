@@ -310,18 +310,22 @@ class Ufont(object):
 
         # Run best practices check and fix routines
         if self.metacheck:
+            initwarnings = logger.warningcount
+            initerrors = logger.errorcount
 
             #fontinfo.plist checks
             logger.log("Checking fontinfo.plist metadata", "P")
-            fireq = ("ascender", "copyright", "descender", "familyName", "openTypeNameDesigner",
-                        "openTypeNameDesignerURL", "openTypeNameLicense", "openTypeNameLicenseURL",
-                        "openTypeNameManufacturer", "openTypeNameManufacturerURL", "openTypeNameVersion",
-                        "openTypeOS2CodePageRanges", "openTypeOS2UnicodeRanges", "openTypeOS2VendorID",
+            fireq = ("ascender", "copyright", "descender", "familyName", "openTypeNameManufacturer",
                         "styleName", "unitsPerEm", "versionMajor", "versionMinor")
-            fiwarnifmiss = ("styleMapFamilyName", "styleMapStyleName", "openTypeOS2WeightClass")
-            fiwarnifnot = {"unitsPerEm": (1000, 2048), "openTypeOS2WidthClass": (5,),
+            fiwarnifmiss = ("capHeight", "copyright", "openTypeNameDescription", "openTypeNameDesigner",
+                        "openTypeNameDesignerURL", "openTypeNameLicense", "openTypeNameLicenseURL",
+                        "openTypeNameManufacturerURL", "openTypeOS2CodePageRanges", "openTypeOS2UnicodeRanges",
+                        "openTypeOS2VendorID","styleMapFamilyName", "styleMapStyleName", "openTypeOS2WeightClass")
+            fiwarnifnot = {"unitsPerEm": (1000, 2048),
                            "styleMapStyleName": ("regular", "bold", "italic", "bold italic")}
             fidel = ("macintoshFONDFamilyID", "macintoshFONDName", "openTypeNameCompatibleFullName", "year")
+            fidelifempty = ("guidelines", "postscriptBlueValues", "postscriptFamilyBlues", "postscriptFamilyOtherBlues",
+                            "postscriptOtherBlues")
             fiint = ("ascender", "capHeight", "descender", "postscriptUnderlinePosition",
                      "postscriptUnderlineThickness", "unitsPerEm", "xHeight")
             ficapitalize = ("styleMapFamilyName", "styleName")
@@ -329,10 +333,8 @@ class Ufont(object):
             fisettoother = {"openTypeHheaAscender": "ascender", "openTypeHheaDescender": "descender",
                             "openTypeNamePreferredFamilyName": "familyName",
                             "openTypeNamePreferredSubfamilyName": "styleName", "openTypeOS2TypoAscender": "ascender",
-                            "openTypeOS2TypoDescender": "descender", "openTypeOS2WinAscent": "ascender",
-                            "openTypeNameDescription": "copyright"}
-            fisetto = {"openTypeHheaLineGap": 0, "openTypeOS2TypoLineGap": 0} # Other values are added below
-
+                            "openTypeOS2TypoDescender": "descender", "openTypeOS2WinAscent": "ascender"}
+            fisetto = {"openTypeHheaLineGap": 0, "openTypeOS2TypoLineGap": 0, "openTypeOS2WidthClass": 5} # Other values are added below
 
 
             # Check required fields, some of which are needed for remaining checks
@@ -342,7 +344,7 @@ class Ufont(object):
             # Collect values for contructing other fields, setting dummy values when missing and in check-only mode
             dummies = False
             storedvals = {}
-            for key in ("ascender", "copyright", "descender", "familyName", "styleName", "openTypeNameManufacturer"):
+            for key in ("ascender", "copyright", "descender", "familyName", "styleName", "openTypeNameManufacturer", "versionMajor", "versionMinor"):
                 if key in self.fontinfo and self.fontinfo.getval(key) is not None:
                     storedvals[key] = self.fontinfo.getval(key)
                     if key == "styleName": # Capitalise words of stored value
@@ -351,12 +353,12 @@ class Ufont(object):
                         storedvals[key] = int(storedvals[key])
                 else:
                     dummies = True
-                    if key in ("ascender", "descender"):
+                    if key in ("ascender", "descender", "versionMajor", "versionMinor"):
                         storedvals[key] = 999
                     else:
                         storedvals[key] = "Dummy"
             if missing:
-                logtype = "S" if self.metafix else "E"
+                logtype = "S" if self.metafix else "W"
                 logger.log("Required fields missing from fontinfo.plist: " + str(missing), logtype)
             if dummies:
                 logger.log("Checking will continue with values of 'Dummy' or 999 for missing fields", "W")
@@ -367,37 +369,49 @@ class Ufont(object):
             fisetto["openTypeOS2WinDescent"] = -storedvals["descender"]
             value = storedvals["familyName"] + "-" + storedvals["styleName"]
             fisetto["postscriptFontName"] = value.replace(" ", "") # Strip spaces
-            fisetto["postscriptFullName"] = storedvals["familyName"] + " " + storedvals["styleName"]
+            if "openTypeNameVersion" not in self.fontinfo:
+                fisetto["openTypeNameVersion"] = "Version " + str(storedvals["versionMajor"]) + "."\
+                                                 + str(storedvals["versionMinor"])
+            if "openTypeOS2WeightClass" not in self.fontinfo:
+                sn = storedvals["styleName"]
+                sn2wc = {"Regular": 400, "Italic": 400, "Bold": 700, "BoldItalic": 700}
+                if sn in sn2wc: fisetto["openTypeOS2WeightClass"] = sn2wc[sn]
+            if "xHeight" not in self.fontinfo:
+                fisetto["xHeight"] = int(storedvals["ascender"] * 0.6)
+
             for key in fisetifmissing:
                 if key not in self.fontinfo:
                     fisetto[key] = fisetifmissing[key]
 
-            warnings = 0; changes = 0
+
+            changes = 0
             # Warn about missing fields
             for key in fiwarnifmiss:
                 if key not in self.fontinfo:
-                    logger.log(key + " is missing from fontinfo.plist", "W")
-                    warnings += 1
+                    logmess = key + " is missing from fontinfo.plist"
+                    if key in ("styleMapFamilyName", "styleMapStyleName") :
+                        logmess = logmess + " (not needed for complex masters)"
+                    logger.log(logmess, "W")
             # Warn about bad values
             for key in fiwarnifnot:
                 if key in self.fontinfo:
                     value = self.fontinfo.getval(key)
                     if value not in fiwarnifnot[key]:
-                        logger.log(key + " should be one of " + str(fiwarnifnot[key]))
-                        warnings += 1
+                        logger.log(key + " should be one of " + str(fiwarnifnot[key]), "W")
 
             # Now do all remaining checks - which will lead to values being changed
-            for key in fidel:
+            for key in fidel + fidelifempty:
                 if key in self.fontinfo:
                     old = self.fontinfo.getval(key)
+                    if not(key in fidelifempty and old != []): # Delete except for non-empty fidelifempty
+                        if self.metafix:
+                            self.fontinfo.remove(key)
+                            logmess = " removed from fontinfo. "
+                        else:
+                            logmess = " would be removed from fontinfo "
+                        self.logchange(logmess, key, old, None)
+                        changes += 1
 
-                    if self.metafix:
-                        self.fontinfo.remove(key)
-                        logmess = " removed from fontinfo. "
-                    else:
-                        logmess = " would be removed from fontinfo "
-                    self.logchange(logmess, key, old, None)
-                    changes += 1
             # Set to integer values
             for key in fiint:
                 if key in self.fontinfo:
@@ -467,33 +481,38 @@ class Ufont(object):
                 logger.log("lib.plist missing so not checked by check & fix routines", "E")
             else:
                 logger.log("Checking lib.plist metadata", "P")
+                libwarnifnot = {"com.schriftgestaltung.disablesAutomaticAlignment": True,
+                                "com.schriftgestaltung.disablesLastChange": True,
+                                "com.schriftgestaltung.useNiceNames": False}
+                libwarnifmissing = ("public.glyphOrder",)
+                libcheckinvalid = ("com.schriftgestaltung.Disable Last Change",
+                                   "com.schriftgestaltung.font.Disable Last Change", "UFO.lib", "UFOFormat")
 
-                for key in ("com.schriftgestaltung.disablesAutomaticAlignment", "com.schriftgestaltung.disablesLastChange"):
-                    if key in self.lib and self.lib.getval(key) is not True:
-                        val = str(self.lib.getval(key))
-                        logger.log(key + " should normally be True; currently set to " + val, "W")
-                        warnings += 1
-                if "com.schriftgestaltung.useNiceNames" in self.lib and self.lib.getval("com.schriftgestaltung.useNiceNames") is not False:
-                        val = str(self.lib.getval("com.schriftgestaltung.useNiceNames"))
-                        logger.log("com.schriftgestaltung.useNiceNames should normally be False; currently set to " + val, "W")
-                        warnings += 1
-                for key in ("com.schriftgestaltung.Disable Last Change",
-                            "com.schriftgestaltung.font.Disable Last Change", "UFO.lib", "UFOFormat"):
+                for key in libwarnifnot:
+
+                    value = self.lib.getval(key) if key in self.lib else None
+                    if value != libwarnifnot[key]:
+                        addmess = "; currently missing" if value is None else "; currently set to " + str(value)
+                        logger.log(key + " should normally be " + str(libwarnifnot[key]) + addmess, "W")
+
+                for key in libwarnifmissing:
+                    if key not in self.lib:
+                        logger.log(key + " is missing from lib.plist", "W")
+
+                for key in libcheckinvalid: # For invalid keys sometimes generated by other tools, mainly historic
                     if key in self.lib:
                         logger.log(key + " is not a valid key", "W")
-                        warnings += 1
 
             # If screen logging is less that "W", flag up if there have been warnings
-            if warnings or changes:
-                if logger.scrlevel not in "WIV":
-
-                    if changes and self.metafix:
-                        logger.log("***** NOTE ***** Changes were made by check & fix routines.                  *****",
-                                   "P")
-                    else:
-                        logger.log("***** NOTE ***** Warnings were generated by check & fix routines.            *****",
-                                   "P")
-                    logger.log("***** NOTE ***** See log file or re-run with screen logging set to W, I or V *****", "P")
+            warnings = logger.warningcount - initwarnings
+            errors = logger.errorcount - initerrors
+            if errors or warnings or changes:
+                changemess = "Changes made: " if self.metafix else "Changes to make: "
+                logger.log("Check & fix results:- " + changemess + str(changes) + ", Errors: " + str(errors) +
+                           ", Warnings: " + str(warnings), "P")
+                if logger.scrlevel not in "WIV": logger.log("See log file for details", "P")
+            else:
+                logger.log("Check & Fix ran cleanly", "P")
 
     def _readPlist(self, filen):
         if filen in self.dtree:
@@ -558,7 +577,6 @@ class Ufont(object):
         self.logger.log("Writing font to " + outdir, "P")
 
         writeToDisk(dtree, outdir, self, odtree, )
-        self.logger.log("All done!", "P")  ## Just for timing tests
 
     def addfile(self, filetype):  # Add empty plist file for optional files
         if filetype not in ("fontinfo", "groups", "kerning", "lib"): self.logger.log("Invalid file type to add", "X")

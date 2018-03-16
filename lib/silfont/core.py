@@ -27,7 +27,6 @@ class loggerobj(object):
         super(loggerobj, self).__setattr__("scrlevel", "E") #
         self.loglevel = loglevel
         self.scrlevel = scrlevel
-        self._basescrlevel = self.scrlevel # Record it for resetscr()
 
     def __setattr__(self, name, value):
         if name in ("loglevel", "scrlevel"):
@@ -39,6 +38,7 @@ class loggerobj(object):
             else:
                 self.log("Invalid " + name + " value: " + value, "S")
         super(loggerobj, self).__setattr__(name, value)
+        if name == "scrlevel" : self._basescrlevel = value # Used by resetscrlevel
 
     def log(self, logmessage, msglevel="W"):
         levelval = self.loglevels[msglevel]
@@ -56,7 +56,9 @@ class loggerobj(object):
     def raisescrlevel(self, level): # Temproarily increase screen logging
         if level not in self.loglevels or level == "X" : self.log("Invalid scrlevel: " + level, "X")
         if self.loglevels[level] > self.loglevels[self.scrlevel]:
+            current = self.scrlevel
             self.scrlevel = level
+            self._basescrlevel = current
             self.log("scrlevel raised to " + level, "I")
 
     def resetscrlevel(self):
@@ -243,7 +245,7 @@ def execute(tool, fn, argspec, chain = None):
     # Supports opening (and saving) fonts using FontForge (FF), PysilFont UFO (UFO) or fontTools (FT)
     # Special handling for:
     #   -d  variation on -h to print extra info about defaults
-    #   -q  quiet mode - suppresses progress messages and sets screen logging to errors only
+    #   -q  quiet mode - only output a single line with count of errors (if there are any)
     #   -l  opens log file and also creates a logger function to write to the log file
     #   -p  other parameters. Includes backup settings and loglevel/scrlevel settings for logger
     #       for UFOlib scripts, also includes all outparams keys and ufometadata settings
@@ -305,7 +307,7 @@ def execute(tool, fn, argspec, chain = None):
         defother = []
 
     quiet = True if "-q" in argv else False
-    if quiet: logger.scrlevel = "E"
+    if quiet: logger.scrlevel = "S"
 
     # Process the supplied argument specs, add args to parser, store other info in arginfo
     arginfo = []
@@ -394,8 +396,8 @@ def execute(tool, fn, argspec, chain = None):
         args.logfile = logger.logfile
     else:
         logfile = None
+        logname = args.log if 'log' in args.__dict__ and args.log is not None else ""
         if 'log' in args.__dict__:
-            logname = args.log if args.log else ""
             if logdef is not None:
                 (path, base, ext) = splitfn(logname)
                 (dpath, dbase, dext) = splitfn(logdef)
@@ -419,7 +421,7 @@ def execute(tool, fn, argspec, chain = None):
                 (logname, logpath, exists) = fullpath(logname)
                 if not exists:
                     logger.log("Log file directory " + logpath + " does not exist", "S")
-                if not quiet: logger.log('Opening log file for output: ' + logname, "P")
+                logger.log('Opening log file for output: ' + logname, "P")
                 try:
                     logfile = open(logname, "w")
                 except Exception as e:
@@ -487,20 +489,20 @@ def execute(tool, fn, argspec, chain = None):
                 logger.log("Can't specify a font without a font tool", "X")
             infontlist.append((ainfo['name'], aval))  # Build list of fonts to open when other args processed
         elif atype == 'infile':
-            if not quiet: logger.log('Opening file for input: '+aval, "P")
+            logger.log('Opening file for input: '+aval, "P")
             try:
                 aval = open(aval, "r")
             except Exception as e:
                 print e
                 sys.exit(1)
         elif atype == 'incsv':
-            if not quiet: logger.log('Opening file for input: '+aval, "P")
+            logger.log('Opening file for input: '+aval, "P")
             aval = csvreader(aval)
         elif atype == 'outfile':
             (aval, path, exists) = fullpath(aval)
             if not exists:
                 logger.log("Output file directory " + path + " does not exist", "S")
-            if not quiet: logger.log('Opening file for output: ' + aval, "P")
+            logger.log('Opening file for output: ' + aval, "P")
             try:
                 aval = codecs.open(aval, 'w', 'utf-8')
             except Exception as e:
@@ -577,18 +579,25 @@ def execute(tool, fn, argspec, chain = None):
                     newfont.logger.log("No font backup done due to backup parameter setting", "W")
             # Output the font
             if tool == "FF":
-                if not quiet: logger.log("Saving font to " + outfont, "P")
+                logger.log("Saving font to " + outfont, "P")
                 if outfontext.lower() == ".ufo" or outfontext.lower() == '.ttf':
                     newfont.generate(outfont)
                 else: newfont.save(outfont)
             elif tool == "FT":
-                if not quiet: logger.log("Saving font to " + outfont, "P")
+                logger.log("Saving font to " + outfont, "P")
                 newfont.save(outfont)
             else:  # Must be Pyslifont Ufont
                 newfont.write(outfont)
     if logger.errorcount or logger.warningcount:
-        level = "E" if logger.errorcount else "P"
-        logger.log("Command completed with " + str(logger.errorcount) + " errors and " + str(logger.warningcount) + " warnings", level)
+        message = "Command completed with " + str(logger.errorcount) + " errors and " + str(logger.warningcount) + " warnings"
+        if logger.scrlevel in ("S", "E") and logname is not "":
+            if logger.scrlevel == "S" or logger.warningcount: message = message + " - see " + logname
+        if logger.errorcount:
+            if quiet: logger.raisescrlevel("E")
+            logger.log(message, "E")
+            logger.resetscrlevel()
+        else:
+            logger.log(message, "P")
         if logger.scrlevel == "P" and logger.warningcount: logger.log("See log file for warning messages or rerun with '-p scrlevel=w'", "P")
     else:
         logger.log("Command completed with no warnings", "P")
@@ -601,14 +610,14 @@ def chain(argv, function, argspec, font, params, logger, quiet):  # Chain multpl
     Although input font name must be supplied for the command line to be parsed correctly by execute() it is not used - instead the supplied
     font object is used. Similarly -params, logfile and quiet settings in argv are not used by execute() when chaining is used'''
     if quiet and "-q" not in argv: argv.append("-q")
-    if not quiet: logger.log("Chaining to " + argv[0], "P")
+    logger.log("Chaining to " + argv[0], "P")
     font = execute("UFO", function, argspec, 
         {'argv' : argv, 
             'font'  : font,
             'params': params,
             'logger': logger,
             'quiet' : quiet})
-    if not quiet: logger.log("Returning from " + argv[0], "P")
+    logger.log("Returning from " + argv[0], "P")
     return font
 
 
