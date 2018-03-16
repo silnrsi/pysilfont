@@ -15,10 +15,10 @@ except ImportError :
 
 warnings = []
 if sys.argv[1] in ('develop', 'install') :
-    for m in ('fontforge', 'fontTools', 'odf', 'designSpaceDocument'):
+    for m in ('fontforge', 'fontTools', 'ufo2ft', 'defcon', 'ufoLib', 'cu2qu', 'robofab', 'glyphsLib', 'compreffor', 'booleanOperations', 'fontMath', 'mutatorMath', 'odf', 'designSpaceDocument', 'fontParts'):
         try:
             imp.find_module(m)
-        except ImportError : warnings.append("- Some modules require the python %s package which is not currently installed" % m)
+        except ImportError : warnings.append("- Some modules/scripts require the python %s package which is not currently installed" % m)
 
 long_description =  "A growing collection of font utilities mainly written in Python designed to help with various aspects of font design and production.\n"
 long_description += "Developed and maintained by SIL International's Non-Roman Script Initiative (NRSI).\n"
