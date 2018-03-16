@@ -59,7 +59,7 @@ def doit(args):
 
             # Process UFO.lib if present
             if "UFO.lib" in ufo.lib:
-                logger.log("UFOlib found in lib.plist for " + fontname + ". Values will be copied to root", "P")
+                logger.log("UFO.lib field found in lib.plist for " + fontname + ". Values will be copied to root", "P")
                 ul = ufo.lib["UFO.lib"]
                 # Copy fields from UFO.lib to root
                 for key in ul:
