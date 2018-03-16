@@ -8,7 +8,8 @@ __author__ = 'Victor Gaultney'
 from silfont.core import execute
 
 import glyphsLib
-import silfont.ufo, os # Needed currently to read backup ufos from disk
+import silfont.ufo, os
+import silfont.etutil
 from io import open
 
 
@@ -158,6 +159,25 @@ def doit(args):
         # Write ufo out
         logger.log("Writing out " + fontname, "P")
         glyphsLib.write_ufo(ufo, args.masterdir)
+
+        # Now correct the newly-written fontinfo.plist with changes that can't be made via glyphsLib
+        newufodir = os.path.join(args.masterdir,fontname+".ufo")
+        fontinfo = silfont.ufo.Uplist(font=None, dirn=newufodir, filen="fontinfo.plist")
+        changes = False
+        for key in ("guidelines", "postscriptBlueValues", "postscriptFamilyBlues", "postscriptFamilyOtherBlues",
+                    "postscriptOtherBlues"):
+            if fontinfo.getval(key) == [] :
+                fontinfo.remove(key)
+                changes = True
+                logchange(logger, " empty list deleted", key, None, [])
+        if changes:
+            # Create outparams.  Just need any valid values, since font will need normalizing later
+            params = args.paramsobj
+            paramset = params.sets["main"]
+            outparams = {"attribOrders": {}}
+            for parn in params.classes["outparams"]: outparams[parn] = paramset[parn]
+            logger.log("Writing updated fontinfo.plist", "I")
+            silfont.ufo.writeXMLobject(fontinfo, params=outparams,dirn=newufodir, filen="fontinfo.plist", exists=True, fobject=True)
 
 def logchange(logger, logmess, key, old, new):
     oldstr = str(old) if len(str(old)) < 22 else str(old)[0:20] + "..."
