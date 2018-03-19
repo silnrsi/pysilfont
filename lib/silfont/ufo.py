@@ -329,12 +329,13 @@ class Ufont(object):
             fiint = ("ascender", "capHeight", "descender", "postscriptUnderlinePosition",
                      "postscriptUnderlineThickness", "unitsPerEm", "xHeight")
             ficapitalize = ("styleMapFamilyName", "styleName")
-            fisetifmissing = {"openTypeOS2Type": []}
+            fisetifmissing = {}
             fisettoother = {"openTypeHheaAscender": "ascender", "openTypeHheaDescender": "descender",
                             "openTypeNamePreferredFamilyName": "familyName",
                             "openTypeNamePreferredSubfamilyName": "styleName", "openTypeOS2TypoAscender": "ascender",
                             "openTypeOS2TypoDescender": "descender", "openTypeOS2WinAscent": "ascender"}
-            fisetto = {"openTypeHheaLineGap": 0, "openTypeOS2TypoLineGap": 0, "openTypeOS2WidthClass": 5} # Other values are added below
+            fisetto = {"openTypeHheaLineGap": 0, "openTypeOS2TypoLineGap": 0, "openTypeOS2WidthClass": 5,
+                       "openTypeOS2Type": []} # Other values are added below
 
 
             # Check required fields, some of which are needed for remaining checks
@@ -504,12 +505,12 @@ class Ufont(object):
                         logger.log(key + " is not a valid key", "W")
 
             # If screen logging is less that "W", flag up if there have been warnings
-            warnings = logger.warningcount - initwarnings
+            warnings = logger.warningcount - initwarnings - changes
             errors = logger.errorcount - initerrors
             if errors or warnings or changes:
-                changemess = "Changes made: " if self.metafix else "Changes to make: "
-                logger.log("Check & fix results:- " + changemess + str(changes) + ", Errors: " + str(errors) +
-                           ", Warnings: " + str(warnings), "P")
+                changemess = ", Changes made: " if self.metafix else ", Changes to make: "
+                logger.log("Check & fix results:- Errors: " + str(errors) + changemess + str(changes) +
+                           ", Other warnings: " + str(warnings), "P")
                 if logger.scrlevel not in "WIV": logger.log("See log file for details", "P")
             else:
                 logger.log("Check & Fix ran cleanly", "P")
