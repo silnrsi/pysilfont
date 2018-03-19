@@ -562,9 +562,7 @@ class Ufont(object):
         # Set standard UFO files for output
         dtree = self.dtree
         setFileForOutput(dtree, "metainfo.plist", self.metainfo, "xml")
-        if "fontinfo" in self.__dict__:
-            self.fontinfo.setval("openTypeHeadCreated", "string", datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
-            setFileForOutput(dtree, "fontinfo.plist", self.fontinfo, "xml")
+        if "fontinfo" in self.__dict__: setFileForOutput(dtree, "fontinfo.plist", self.fontinfo, "xml")
         if "groups" in self.__dict__: setFileForOutput(dtree, "groups.plist", self.groups, "xml")
         if "kerning" in self.__dict__: setFileForOutput(dtree, "kerning.plist", self.kerning, "xml")
         if "lib" in self.__dict__: setFileForOutput(dtree, "lib.plist", self.lib, "xml")
@@ -577,7 +575,13 @@ class Ufont(object):
 
         self.logger.log("Writing font to " + outdir, "P")
 
-        writeToDisk(dtree, outdir, self, odtree, )
+        changes = writeToDisk(dtree, outdir, self, odtree)
+        if changes: # Need to update openTypeHeadCreated if there have been any changes to the font
+            if "fontinfo" in self.__dict__:
+                self.fontinfo.setval("openTypeHeadCreated", "string",
+                                     datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
+                self.fontinfo.outxmlstr="" # Need to reset since writeXMLobject has already run once
+                writeXMLobject(self.fontinfo, self.outparams, outdir, "fontinfo.plist", True, fobject=True)
 
     def addfile(self, filetype):  # Add empty plist file for optional files
         if filetype not in ("fontinfo", "groups", "kerning", "lib"): self.logger.log("Invalid file type to add", "X")
@@ -1047,6 +1051,7 @@ def writeXMLobject(dtreeitem, params, dirn, filen, exists, fobject=False):
 
     if changed: object.write_to_file(dirn, filen)
     if not fobject: dtreeitem.written = True  # Mark as True, even if not changed - the file should still be there!
+    return changed # Boolean to indicate file updated on disk
 
 
 def setFileForOutput(dtree, filen, fileObject, fileType):  # Put details in dtree, creating item if needed
@@ -1056,7 +1061,7 @@ def setFileForOutput(dtree, filen, fileObject, fileType):  # Put details in dtre
     dtree[filen].setinfo(fileObject=fileObject, fileType=fileType, towrite=True)
 
 
-def writeToDisk(dtree, outdir, font, odtree=None, logindent=""):
+def writeToDisk(dtree, outdir, font, odtree=None, logindent="", changes = False):
     if odtree is None: odtree = {}
     # Make lists of items in dtree and odtree with type prepended for sorting and comparison purposes
     dtreelist = []
@@ -1108,11 +1113,13 @@ def writeToDisk(dtree, outdir, font, odtree=None, logindent=""):
                                 if glif["lib"].__len__() == 0:
                                     glif.remove("lib")
                             glif.rebuildET()
-                        writeXMLobject(dtreeitem, font.outparams, outdir, filen, exists)
+                        result = writeXMLobject(dtreeitem, font.outparams, outdir, filen, exists)
+                        if result: changes = True
                     else:  # Delete existing item if the current object is empty
                         if exists:
                             font.logger.log('Deleting empty item ' + filen + ' from existing output UFO', "I")
                             os.remove(os.path.join(outdir, filen))
+                            changes = True
                 elif dtreeitem.fileType == "text":
                     dtreeitem.fileObject.write(dtreeitem, outdir, filen, exists)
                     ## Need to add code for other file types
@@ -1120,11 +1127,13 @@ def writeToDisk(dtree, outdir, font, odtree=None, logindent=""):
                 if filen in dtree.removedfiles:
                     if exists:
                         os.remove(os.path.join(outdir, filen))  # Silently remove old file for renamed files
+                        changes = True
                         exists = False
                 else:  # File should not have been in original UFO
                     if exists == "same":
                         font.logger.log('Deleting ' + filen + ' from existing UFO', "W")
                         os.remove(os.path.join(outdir, filen))
+                        changes = True
                         exists = False
                     else:
                         if not dtreeitem.added:
@@ -1132,6 +1141,7 @@ def writeToDisk(dtree, outdir, font, odtree=None, logindent=""):
                 if exists:
                     font.logger.log('Deleting ' + filen + ' from existing output UFO', "W")
                     os.remove(os.path.join(outdir, filen))
+                    changes = True
 
         else:  # Must be directory
             if not dtreeitem.read:
@@ -1139,6 +1149,7 @@ def writeToDisk(dtree, outdir, font, odtree=None, logindent=""):
                 if exists:
                     font.logger.log('Deleting directory ' + filen + ' from existing output UFO', "W")
                     shutil.rmtree(os.path.join(outdir, filen))
+                    changes = True
                 continue
             font.logger.log(logindent + "Processing " + filen + " directory", "I")
             subdir = os.path.join(outdir, filen)
@@ -1151,26 +1162,31 @@ def writeToDisk(dtree, outdir, font, odtree=None, logindent=""):
                     except Exception as e:
                         print(e)
                         sys.exit(1)
+                    changes = True
 
                 if exists:
                     subodtree = odtree[filen].dirtree
                 else:
                     subodtree = {}
                 subindent = logindent + "  "
-                writeToDisk(dtreeitem.dirtree, subdir, font, subodtree, subindent)
-                if os.listdir(subdir) == []: os.rmdir(subdir)  # Delete directory if empty
+                changes = writeToDisk(dtreeitem.dirtree, subdir, font, subodtree, subindent, changes)
+                if os.listdir(subdir) == []:
+                    os.rmdir(subdir)  # Delete directory if empty
+                    changes = True
 
     while okey:  # Any remaining items in odree list are no longer needed
         ofilen = okey[1:]
         if okey[0:1] == "f":
             logmess = 'Deleting ' + ofilen + ' from existing output UFO'
             os.remove(os.path.join(outdir, ofilen))
+            changes = True
         else:
             logmess = 'Deleting directory ' + ofilen + ' from existing output UFO', "W"
             shutil.rmtree(os.path.join(outdir, ofilen))
+            changes = True
         if ofilen not in dtree.removedfiles: font.logger.log(logmess, "W")  # No need to log warning for removed files
         okey = odtreelist.pop(0) if odtreelist != [] else None
-
+    return changes
 
 def normETdata(element, params, type):
     # Recursively normalise the data an an ElementTree element
