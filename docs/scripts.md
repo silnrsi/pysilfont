@@ -175,6 +175,20 @@ psfchangettfglyphnames source/Harmattan-Regular.ufo results/in.ttf results/out.t
 ```
 
 ---
+#### psfcheckbasicchars
+Usage: **`psfcheckbasicchars ufo`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Used to check a UFO for the presence of glyphs that represent the characters in the list of [Recommended characters for Non-Roman fonts](http://scriptsource.org/entry/gg5wm9hhd3). Any missing characters are noted in the resulting log file along with the recommended AGL glyph name.
+
+Example usage:
+
+```
+psfcheckbasicchars Nokyung-Regular.ufo
+```
+
+---
 #### psfcompdef2xml
 Usage: **`psfcompdef2xml [-p PARAMS] input output log`**
 
