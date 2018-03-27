@@ -17,6 +17,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfbuildcomp](#psfbuildcomp) | Add composite glyphs to UFO based on a Composite Definitions file |
 | [psfchangegdlnames](#psfchangegdlnames) | Change graphite names within GDL based on mappings files |
 | [psfchangettfglyphnames](#psfchangettfglyphnames) | Change glyph names in a ttf from working names to production names |
+| [psfcheckbasicchars](#psfcheckbasicchars) | Check UFO for glyphs that represent recommended basic characters |
 | [psfcompdef2xml](#psfcompdef2xml) | Convert composite definition file to XML format |
 | [psfcompressgr](#psfcompressgr) | Compress Graphite tables in a ttf font |
 | [psfcopymeta](#psfcopymeta) | Copy basic metadata from one UFO to another, for fonts in related families |
