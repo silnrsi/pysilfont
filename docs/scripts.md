@@ -21,6 +21,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfcompdef2xml](#psfcompdef2xml) | Convert composite definition file to XML format |
 | [psfcompressgr](#psfcompressgr) | Compress Graphite tables in a ttf font |
 | [psfcopymeta](#psfcopymeta) | Copy basic metadata from one UFO to another, for fonts in related families |
+| [psfdeleteglyphs](#psfdeleteglyphs) | Deletes glyphs from a UFO based on a list |
 | [psfexpandstroke](#psfexpandstroke) | Expand an unclosed UFO stroke font into monoline forms |
 | [psfexportanchors](#psfexportanchors) | Export UFO anchor data to a separate XML file |
 | [psfexportpsnames](#psfexportpsnames) | Export a map of glyph name to PS name to a csv file |
@@ -240,6 +241,20 @@ If run with -r or \-\-reportonly it just reports what values would be updated.
 Look in psfcopymeta.py for a full list of metadata copied.  Note that only fontinfo.plist and lib.plist are updated; the target font is not normalized.
 
 Also psfcopymeta does not use Pysilfont's backup mechanism for fonts.
+
+---
+####  psfdeleteglyphs
+Usage: **`psfdeleteglyphs [-i DELETELIST] [--reverse] infont [outfont]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+This deletes glyphs in a UFO based on an external file with one glyphname per line. The `--reverse` option will instead delete all glyphs in the UFO that are not in the list. it does not analyze composites, so be careful not to delete glyphs that are referenced as components in other glyphs.
+
+The following example will delete all glyphs that are _not_ listed in `keepthese.txt`:
+
+```
+psfdeleteglyphs Andika-Regular.ufo -i keepthese.txt --reverse
+```
 
 ---
 #### psfexpandstroke
