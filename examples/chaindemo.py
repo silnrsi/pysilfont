@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-''' Demo of how to chain calls to multple scripts together.
+''' Demo of how to chain calls to multiple scripts together.
 Running
    python chaindemo.py infont outfont --featfile feat.csv --uidsfile uids.csv
 will run execute() against psfnormalize, psfsetassocfeat and psfsetassocuids passing the font, parameters

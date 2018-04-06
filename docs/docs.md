@@ -55,7 +55,7 @@ Commonly used command-line parameters include:
      - E - Errors
      - P - Progress (default for scrlevel)
      - W - Warnings (default for loglevel)
-     - I - Infoformatio
+     - I - Information
      - V - Verbose
 - checkfix (UFOs only)
   - Validity tests when opening UFOs.  Choice of None, Check, Fix with default Check
