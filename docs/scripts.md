@@ -332,13 +332,15 @@ If the font specified with the -f parameter contains a '.' it is assumed to be a
 
 ---
 ####  psfglyphs2ufo
-Usage: **`psfglyphs2ufo fontfile.glyphs masterdir`**
+Usage: **`psfglyphs2ufo [--nofixes] [--nofea] fontfile.glyphs masterdir`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
 Exports one UFO file per master found in the fontfile.glyphs file, and places it in the directory specified as masterdir.
 
-In a round-trip ufo -> glyphs -> ufo there is currently there is some data loss in the standard glyphs -> ufo conversion, so the script restores some fields from the original ufos if they are present in the masterdir.
+In a round-trip ufo -> glyphs -> ufo there is currently there is some data loss in the standard glyphs -> ufo conversion, so (unless `--nofixes` is set) the script fixes some data and restores some fields from the original ufos if they are present in the masterdir.
+
+Currently features.fea does not round-trip sucessfully, so `--nofea` can be used to suppress the production of a features.fea file.
 
 Example usage:
 
@@ -351,7 +353,6 @@ If this Glyphs file contains two masters, Regular and Bold, then it will export 
 ```
 psfglyphs2ufo CharisSIL-RB.glyphs ""
 ```
-
 ---
 #### psfmakewoffmetadata
 Usage: **`psfmakewoffmetadata -n PRIMARYFONTNAME -i ORGID [-f FONTLOG]  [-o OUTPUT] fontfile.ufo`**

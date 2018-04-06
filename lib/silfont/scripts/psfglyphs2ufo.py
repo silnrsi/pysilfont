@@ -8,15 +8,16 @@ __author__ = 'Victor Gaultney'
 from silfont.core import execute
 
 import glyphsLib
-import silfont.ufo, os
+import silfont.ufo
 import silfont.etutil
 from io import open
-
+import os, shutil
 
 argspec = [
     ('glyphsfont', {'help': 'Input font file'}, {'type': 'filename'}),
     ('masterdir', {'help': 'Output directory for masters'}, {}),
     ('--nofixes', {'help': 'Bypass code fixing data', 'action': 'store_true', 'default': False}, {}),
+    ('--nofea', {'help': "Don't output features.fea", 'action': 'store_true', 'default': False}, {}),
     ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': '_glyphs2ufo.log'})]
 
 
@@ -44,6 +45,7 @@ def doit(args):
     # infodeletekeys = ("openTypeOS2Type",)
 
     for ufo in ufos:
+
         sn = ufo.info.styleName                              # )
         sn = sn.replace("Italic Italic", "Italic")           # ) Temp fixes due to glyphLib incorrectly
         sn = sn.replace("Italic Bold Italic", "Bold Italic") # ) forming styleName
@@ -117,6 +119,7 @@ def doit(args):
 
             for key in libdeleteempty:
                 if key in ufo.lib and (ufo.lib[key] == "" or ufo.lib[key] == []):
+                    current = ufo.lib[key]
                     del ufo.lib[key]
                     logchange(logger, " empty field deleted. ", key, current, None)
 
@@ -156,28 +159,32 @@ def doit(args):
                 if hasattr(ufo.info, key) and getattr(ufo.info, key) == "":
                     setattr(ufo.info, key, None)
                     logchange(logger, " empty field deleted. ", key, current, None)
+        if args.nofea:ufo.features.text = "" # Suppress output of features.fea
+
         # Write ufo out
-        logger.log("Writing out " + fontname, "P")
-        glyphsLib.write_ufo(ufo, args.masterdir)
+        ufopath = os.path.join(args.masterdir, fontname + ".ufo")
+        logger.log("Writing out " + ufopath, "P")
+        if os.path.exists(ufopath): shutil.rmtree(ufopath)
+        ufo.save(ufopath)
 
         # Now correct the newly-written fontinfo.plist with changes that can't be made via glyphsLib
-        newufodir = os.path.join(args.masterdir,fontname+".ufo")
-        fontinfo = silfont.ufo.Uplist(font=None, dirn=newufodir, filen="fontinfo.plist")
-        changes = False
-        for key in ("guidelines", "postscriptBlueValues", "postscriptFamilyBlues", "postscriptFamilyOtherBlues",
-                    "postscriptOtherBlues"):
-            if fontinfo.getval(key) == [] :
-                fontinfo.remove(key)
-                changes = True
-                logchange(logger, " empty list deleted", key, None, [])
-        if changes:
-            # Create outparams.  Just need any valid values, since font will need normalizing later
-            params = args.paramsobj
-            paramset = params.sets["main"]
-            outparams = {"attribOrders": {}}
-            for parn in params.classes["outparams"]: outparams[parn] = paramset[parn]
-            logger.log("Writing updated fontinfo.plist", "I")
-            silfont.ufo.writeXMLobject(fontinfo, params=outparams,dirn=newufodir, filen="fontinfo.plist", exists=True, fobject=True)
+        if not args.nofixes:
+            fontinfo = silfont.ufo.Uplist(font=None, dirn=ufopath, filen="fontinfo.plist")
+            changes = False
+            for key in ("guidelines", "postscriptBlueValues", "postscriptFamilyBlues", "postscriptFamilyOtherBlues",
+                        "postscriptOtherBlues"):
+                if fontinfo.getval(key) == [] :
+                    fontinfo.remove(key)
+                    changes = True
+                    logchange(logger, " empty list deleted", key, None, [])
+            if changes:
+                # Create outparams.  Just need any valid values, since font will need normalizing later
+                params = args.paramsobj
+                paramset = params.sets["main"]
+                outparams = {"attribOrders": {}}
+                for parn in params.classes["outparams"]: outparams[parn] = paramset[parn]
+                logger.log("Writing updated fontinfo.plist", "I")
+                silfont.ufo.writeXMLobject(fontinfo, params=outparams,dirn=ufopath, filen="fontinfo.plist", exists=True, fobject=True)
 
 def logchange(logger, logmess, key, old, new):
     oldstr = str(old) if len(str(old)) < 22 else str(old)[0:20] + "..."
