@@ -10,7 +10,7 @@
 #  and the 'name' attribute value for an 'instance' element in the designspace file
 # Or it can be identified using the -a and -v options
 #  to specify any attribute and value pair for an 'instance' in the designspace file
-# If more than one instances matches, both will be built
+# If more than one instances matches, all will be built
 
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2018 SIL International  (http://www.sil.org)'
@@ -84,10 +84,10 @@ def doit(args):
         #  but it always interpolates all instances
         #  and only generates those instances without building ttfs
         # It does NOT accept a folder of designspace files
-        reader = DesignSpaceDocumentReader(designspace_path, ufoVersion=3,
-                                           roundGeometry=round_instances,
-                                           progressFunc=progress_func)
-        reader.readInstances()
+        # reader = DesignSpaceDocumentReader(designspace_path, ufoVersion=3,
+        #                                    roundGeometry=round_instances,
+        #                                    progressFunc=progress_func)
+        # reader.readInstances()
 
     args.logger.log('Done', 'P')
 
