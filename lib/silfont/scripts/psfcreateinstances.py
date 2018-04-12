@@ -24,22 +24,28 @@ from silfont.core import execute
 
 argspec = [
     ('designspace_path', {'help': 'Path to designspace document or a folder of them'}, {}),
-    ('-i', '--instanceName', {'help': 'Font name for instance to build', 'action': 'store'}, {}),
+    ('-i', '--instanceName', {'help': 'Font name for instance to build'}, {}),
     ('-a', '--instanceAttr', {'help': 'Attribute used to specify instance to build'}, {}),
     ('-v', '--instanceVal', {'help': 'Value of attribute specifying instance to build'}, {}),
     ('--roundInstances', {'help': 'Apply integer rounding to all geometry when interpolating',
                            'action': 'store_true'}, {}),
-    ('--progress', {'help': 'Show progress and errors', 'action': 'store_true'}, {}),
+#    ('--progress', {'help': 'Show progress and errors', 'action': 'store_true'}, {}),
     ('-l','--log',{'help': 'Log file (default: *_createinstances.log)'}, {'type': 'outfile', 'def': '_createinstances.log'}),
 ]
 
 logger = None
+severe_error = False
 def progressFunc(state="update", action=None, text=None, tick=0):
+    global severe_error
     if logger:
-        if (state == 'error'):
-            logger.log("%s: %s\n%s" % (state, str(action), str(text)), 'W')
+        if state == 'error':
+            if str(action) == 'unicodes':
+                logger.log("%s: %s\n%s" % (state, str(action), str(text)), 'W')
+            else:
+                logger.log("%s: %s\n%s" % (state, str(action), str(text)), 'E')
+                severe_error = True
         else:
-            logger.log("%s: %s\n%s" % (state, str(action), str(text)), 'P')
+            logger.log("%s: %s\n%s" % (state, str(action), str(text)), 'I')
 
 def doit(args):
     global logger
@@ -51,14 +57,15 @@ def doit(args):
     instance_attr = args.instanceAttr
     instance_val = args.instanceVal
     round_instances = args.roundInstances
-    show_progress = args.progress
+#    show_progress = args.progress
 
     if instance_font_name and (instance_attr or instance_val):
         args.logger.log('--instanceName is mutually exclusive with --instanceAttr or --instanceVal','S')
     if (instance_attr and not instance_val) or (instance_val and not instance_attr):
         args.logger.log('--instanceAttr and --instanceVal must be used together', 'S')
 
-    progress_func = progressFunc if show_progress else None
+#    progress_func = progressFunc if show_progress else None
+    progress_func = progressFunc
 
     if instance_font_name or instance_attr:
         if not os.path.isfile(designspace_path):
@@ -73,7 +80,7 @@ def doit(args):
         # The below uses a utility function that's part of mutatorMath
         #  In addition to accepting a designspace file,
         #  it will accept a folder and processes all designspace files there
-        progressFn = progressFunc if show_progress else None
+
         build_designspace(designspace_path,
                           outputUFOFormatVersion=3, roundGeometry=round_instances,
                           progressFunc=progress_func)
@@ -84,12 +91,16 @@ def doit(args):
         #  but it always interpolates all instances
         #  and only generates those instances without building ttfs
         # It does NOT accept a folder of designspace files
+        #
         # reader = DesignSpaceDocumentReader(designspace_path, ufoVersion=3,
         #                                    roundGeometry=round_instances,
         #                                    progressFunc=progress_func)
         # reader.readInstances()
 
-    args.logger.log('Done', 'P')
+    if not severe_error:
+        args.logger.log('Done', 'P')
+    else:
+        args.logger.log('Done with severe error', 'S')
 
 def cmd(): execute(None, doit, argspec)
 if __name__ == '__main__': cmd()
@@ -97,8 +108,8 @@ if __name__ == '__main__': cmd()
 # Future development might use: fonttools\Lib\fontTools\designspaceLib to read
 #  the designspace file (which is the most up-to-date approach)
 #  then pass that object to mutatorMath, but there's no way to do that today.
-#
-#
+
+
 # For reference:
 # from mutatorMath/ufo/__init__.py:
 # 	build() is a convenience function for reading and executing a designspace file.
