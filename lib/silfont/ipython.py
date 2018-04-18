@@ -45,7 +45,9 @@ def _bbox(f, gnames, points, scale=1):
     gset = f.glyphSet
     bbox = (0, 0, 0, 0)
     for i, gname in enumerate(gnames):
-        pt = points[i] if hasattr(points, '__len__') and i < len(points) else (0, 0)
+        if hasattr(points, '__len__') and i == len(points):
+            points.append((bbox[2] / scale, 0))
+        pt = points[i] if i < len(points) else (0, 0)
         g = gset[gname]._glyph
         if g is None or not hasattr(g, 'xMin') :
             gbox = (0, 0, 0, 0)
@@ -54,12 +56,15 @@ def _bbox(f, gnames, points, scale=1):
         bbox = arrayTools.unionRect(bbox, arrayTools.offsetRect(gbox, pt[0] * scale, pt[1] * scale))
     return bbox
 
+glyphsetcount = 0
 def _defglyphs(f, gnames, scale=1):
+    global glyphsetcount
+    glyphsetcount += 1
     gset = f.glyphSet
     p = SVGPen(gset, scale)
     res = "<defs><g>\n"
     for gname in sorted(set(gnames)):
-        res += '<symbol overflow="visible" id="{}">\n'.format(gname)
+        res += '<symbol overflow="visible" id="{}_{}">\n'.format(gname, glyphsetcount)
         g = gset[gname]
         p.clear()
         g.draw(p)
@@ -78,20 +83,22 @@ def displayGlyphs(f, gnames, points=None, scale=None):
     if not hasattr(f, 'glyphSet'):
         f.glyphSet = f.getGlyphSet()
     res = _svgheader()
+    if points is None:
+        points = []
     bbox = _bbox(f, gnames, points, scale or 1)
     maxh = 100.
-    if scale is None and bbox[3] > maxh:
-        h = bbox[3]
-        bbox = [x / h * maxh for x in bbox]
-        scale = maxh / h
+    height = bbox[3] - (bbox[1] if bbox[1] < 0 else 0)
+    if scale is None and height > maxh:
+        scale = maxh / height
+        bbox = [x  * scale for x in bbox]
     res += _defglyphs(f, gnames, scale)
-    res += '<g id="surface1" transform="matrix(1,0,0,-1,{},{})">\n'.format(-bbox[0], bbox[3] + 10*scale)
+    res += '<g id="surface1" transform="matrix(1,0,0,-1,{},{})">\n'.format(-bbox[0], bbox[3])
     res += '  <rect x="{}" y="{}" width="{}" height="{}" style="fill:white;stroke:none"/>\n'.format(
-        bbox[0], bbox[1], bbox[2]-bbox[0], bbox[3] + 10*scale)
+        bbox[0], bbox[1], bbox[2]-bbox[0], bbox[3])
     res += '  <g style="fill:black">\n'
     for i, gname in enumerate(gnames):
         pt = points[i] if i < len(points) else (0, 0)
-        res += '    <use xlink:href="#{0}" x="{1}" y="{2}"/>\n'.format(gname, pt[0] * scale, pt[1] * scale)
+        res += '    <use xlink:href="#{0}_{3}" x="{1}" y="{2}"/>\n'.format(gname, pt[0] * scale, pt[1] * scale, glyphsetcount)
     res += '  </g></g>\n</svg>\n'
     return SVG(data=res)
     #return res
