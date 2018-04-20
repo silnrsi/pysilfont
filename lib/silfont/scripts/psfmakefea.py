@@ -248,7 +248,7 @@ def doit(args) :
     if args.debug:
         import pdb; pdb.set_trace()
     if "checkfix" not in args.params:
-        args.paramsobj.sets["main"]["checkfix"] = None
+        args.paramsobj.sets["main"]["checkfix"] = "None"
     if args.infile :
         font.readaps(args.infile, args.omitaps, args.paramsobj)
 
