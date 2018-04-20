@@ -1,12 +1,12 @@
 #!/usr/bin/python
 'IPython support for fonttools'
 
-__all__ = ['displayGlyphs', 'loadFont', 'displayText']
+__all__ = ['displayGlyphs', 'loadFont', 'displayText', 'displayRaw']
 
 from fontTools import ttLib
 from fontTools.pens.basePen import BasePen
 from fontTools.misc import arrayTools
-from IPython.display import SVG
+from IPython.display import SVG, HTML
 
 class SVGPen(BasePen) :
 
@@ -122,3 +122,6 @@ def displayText(f, text, features = [], lang=None, dir="", script="", shapers=""
         scale = 4. * size / (upem * 3.)
     return displayGlyphs(f, gnames, points, scale=scale)
 
+def displayRaw(text):
+    res = "<html><body>"+text.encode('utf-8')+"</body></html>"
+    return HTML(res)
