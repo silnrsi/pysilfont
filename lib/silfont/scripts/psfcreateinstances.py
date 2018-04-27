@@ -3,14 +3,17 @@
 
 # Python 2.7 script to build instance UFOs from a designspace document
 # If a file is given, all instances are built
-# If a folder is given, all instances in all designspace files are built
 # A particular instance to build can be specified
-#  though only if a file (not a folder) is specified
 # The particular instance can be identified using the -i option
 #  and the 'name' attribute value for an 'instance' element in the designspace file
 # Or it can be identified using the -a and -v options
 #  to specify any attribute and value pair for an 'instance' in the designspace file
 # If more than one instances matches, all will be built
+# An option exists to copy glyphs instead of calculating them
+#  if the location of an instance UFO matches a master's location
+#  This allows instances to build with glyphs that are not interpolatable
+# If a folder is given, all instances in all designspace files are built
+#  Specifying an instance to build and copying glyhs are not supported with a folder
 
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2018 SIL International  (http://www.sil.org)'
@@ -33,17 +36,16 @@ argspec = [
     ('-c', '--copy', {'help': 'Copy glyphs if instance matches a master', 'action': 'store_true'}, {}),
     ('--roundInstances', {'help': 'Apply integer rounding to all geometry when interpolating',
                            'action': 'store_true'}, {}),
-#    ('--progress', {'help': 'Show progress and errors', 'action': 'store_true'}, {}),
     ('-l','--log',{'help': 'Log file (default: *_createinstances.log)'}, {'type': 'outfile', 'def': '_createinstances.log'}),
 ]
 
 class InstanceWriterOrCopier(InstanceWriter):
-    # override method used to calculate glyph geometry
-    # if the glyph being processed is in the same location (has all the same axes values)
+    # Override method used to calculate glyph geometry
+    # If the glyph being processed is in the same location (has all the same axes values)
     #  as a master UFO, then extract the glyph geometry directly into the target glyph.
-    # fyi, in the super class method, m = buildMutator(); m.makeInstance() returns a MathGlyph
+    # Fyi, in the superclass method, m = buildMutator(); m.makeInstance() returns a MathGlyph
     def _calculateGlyph(self, targetGlyphObject, instanceLocationObject, glyphMasters):
-        # search for a glyphMaster with the same location as instanceLocationObject
+        # Search for a glyphMaster with the same location as instanceLocationObject
         found = False
         for item in glyphMasters:
             locationObject = item['location'] # mutatorMath Location
@@ -53,9 +55,10 @@ class InstanceWriterOrCopier(InstanceWriter):
                 glyphName = item['glyphName'] # string
                 glyphObject = MathGlyph(fontObject[glyphName])
                 glyphObject.extractGlyph(targetGlyphObject, onlyGeometry=True)
+                break
 
         if not found:
-            super(MyInstanceWriter, self)._calculateGlyph(targetGlyphObject, instanceLocationObject, glyphMasters)
+            super(InstanceWriterOrCopier, self)._calculateGlyph(targetGlyphObject, instanceLocationObject, glyphMasters)
 
 logger = None
 severe_error = False
@@ -80,47 +83,39 @@ def doit(args):
     instance_font_name = args.instanceName
     instance_attr = args.instanceAttr
     instance_val = args.instanceVal
+    copy_glyphs = args.copy
+    build_folder = args.folder
     round_instances = args.roundInstances
-#    show_progress = args.progress
 
     if instance_font_name and (instance_attr or instance_val):
         args.logger.log('--instanceName is mutually exclusive with --instanceAttr or --instanceVal','S')
     if (instance_attr and not instance_val) or (instance_val and not instance_attr):
         args.logger.log('--instanceAttr and --instanceVal must be used together', 'S')
+    if (build_folder and (instance_font_name or instance_attr or instance_val or copy_glyphs)):
+        args.logger.log('--folder cannot be used with options: -i, -a, -v, -c', 'S')
 
-#    progress_func = progressFunc if show_progress else None
     progress_func = progressFunc
 
-    if instance_font_name or instance_attr:
+    if not build_folder:
         if not os.path.isfile(designspace_path):
             args.logger.log('Specifying an instance requires a designspace file--not a folder', 'S')
         reader = DesignSpaceDocumentReader(designspace_path, ufoVersion=3,
                                            roundGeometry=round_instances,
                                            progressFunc=progress_func)
-        reader._instanceWriterClass = InstanceWriterOrCopier # kludge, probably should use subclassing instead
-        key_attr = instance_attr if instance_val else 'name'
-        key_val = instance_val if instance_attr else instance_font_name
-        reader.readInstance((key_attr, key_val))
+        if copy_glyphs:
+            reader._instanceWriterClass = InstanceWriterOrCopier # kludge, probably should use subclassing instead
+        if instance_font_name or instance_attr:
+            key_attr = instance_attr if instance_val else 'name'
+            key_val = instance_val if instance_attr else instance_font_name
+            reader.readInstance((key_attr, key_val))
+        else:
+            reader.readInstances()
     else:
         # The below uses a utility function that's part of mutatorMath
-        #  In addition to accepting a designspace file,
-        #  it will accept a folder and processes all designspace files there
-
+        #  It will accept a folder and processes all designspace files there
         build_designspace(designspace_path,
                           outputUFOFormatVersion=3, roundGeometry=round_instances,
                           progressFunc=progress_func)
-
-        # The below is an alternative implementation that uses DesignSpaceDocumentReader
-        #  instead of the build_designspace utililty function
-        # It's based loosely on fontmake's FontProject.run_from_designspace()
-        #  but it always interpolates all instances
-        #  and only generates those instances without building ttfs
-        # It does NOT accept a folder of designspace files
-        #
-        # reader = DesignSpaceDocumentReader(designspace_path, ufoVersion=3,
-        #                                    roundGeometry=round_instances,
-        #                                    progressFunc=progress_func)
-        # reader.readInstances()
 
     if not severe_error:
         args.logger.log('Done', 'P')
