@@ -19,19 +19,43 @@ __author__ = 'Alan Ward'
 
 import os
 from mutatorMath.ufo.document import DesignSpaceDocumentReader
+from mutatorMath.ufo.instance import InstanceWriter
+from fontMath.mathGlyph import MathGlyph
 from mutatorMath.ufo import build as build_designspace
 from silfont.core import execute
 
 argspec = [
-    ('designspace_path', {'help': 'Path to designspace document or a folder of them'}, {}),
+    ('designspace_path', {'help': 'Path to designspace document (or folder of them)'}, {}),
     ('-i', '--instanceName', {'help': 'Font name for instance to build'}, {}),
     ('-a', '--instanceAttr', {'help': 'Attribute used to specify instance to build'}, {}),
     ('-v', '--instanceVal', {'help': 'Value of attribute specifying instance to build'}, {}),
+    ('-f', '--folder', {'help': 'Build all designspace files in a folder','action': 'store_true'}, {}),
+    ('-c', '--copy', {'help': 'Copy glyphs if instance matches a master', 'action': 'store_true'}, {}),
     ('--roundInstances', {'help': 'Apply integer rounding to all geometry when interpolating',
                            'action': 'store_true'}, {}),
 #    ('--progress', {'help': 'Show progress and errors', 'action': 'store_true'}, {}),
     ('-l','--log',{'help': 'Log file (default: *_createinstances.log)'}, {'type': 'outfile', 'def': '_createinstances.log'}),
 ]
+
+class InstanceWriterOrCopier(InstanceWriter):
+    # override method used to calculate glyph geometry
+    # if the glyph being processed is in the same location (has all the same axes values)
+    #  as a master UFO, then extract the glyph geometry directly into the target glyph.
+    # fyi, in the super class method, m = buildMutator(); m.makeInstance() returns a MathGlyph
+    def _calculateGlyph(self, targetGlyphObject, instanceLocationObject, glyphMasters):
+        # search for a glyphMaster with the same location as instanceLocationObject
+        found = False
+        for item in glyphMasters:
+            locationObject = item['location'] # mutatorMath Location
+            if locationObject.sameAs(instanceLocationObject) == 0:
+                found = True
+                fontObject = item['font'] # defcon Font
+                glyphName = item['glyphName'] # string
+                glyphObject = MathGlyph(fontObject[glyphName])
+                glyphObject.extractGlyph(targetGlyphObject, onlyGeometry=True)
+
+        if not found:
+            super(MyInstanceWriter, self)._calculateGlyph(targetGlyphObject, instanceLocationObject, glyphMasters)
 
 logger = None
 severe_error = False
@@ -73,6 +97,7 @@ def doit(args):
         reader = DesignSpaceDocumentReader(designspace_path, ufoVersion=3,
                                            roundGeometry=round_instances,
                                            progressFunc=progress_func)
+        reader._instanceWriterClass = InstanceWriterOrCopier # kludge, probably should use subclassing instead
         key_attr = instance_attr if instance_val else 'name'
         key_val = instance_val if instance_attr else instance_font_name
         reader.readInstance((key_attr, key_val))
