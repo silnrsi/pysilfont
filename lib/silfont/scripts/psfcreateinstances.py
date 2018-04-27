@@ -77,7 +77,6 @@ def progressFunc(state="update", action=None, text=None, tick=0):
 def doit(args):
     global logger
     logger = args.logger
-    args.logger.log('Interpolating master UFOs from designspace', 'P')
 
     designspace_path = args.designspace_path
     instance_font_name = args.instanceName
@@ -96,13 +95,15 @@ def doit(args):
 
     progress_func = progressFunc
 
+    args.logger.log('Interpolating master UFOs from designspace', 'P')
     if not build_folder:
         if not os.path.isfile(designspace_path):
-            args.logger.log('Specifying an instance requires a designspace file--not a folder', 'S')
+            args.logger.log('A designspace file (not a folder) is required', 'S')
         reader = DesignSpaceDocumentReader(designspace_path, ufoVersion=3,
                                            roundGeometry=round_instances,
                                            progressFunc=progress_func)
         if copy_glyphs:
+            args.logger.log('Copying glyphs where an instance font location matches a master', 'P')
             reader._instanceWriterClass = InstanceWriterOrCopier # kludge, probably should use subclassing instead
         if instance_font_name or instance_attr:
             key_attr = instance_attr if instance_val else 'name'
