@@ -33,7 +33,7 @@ argspec = [
     ('-a', '--instanceAttr', {'help': 'Attribute used to specify instance to build'}, {}),
     ('-v', '--instanceVal', {'help': 'Value of attribute specifying instance to build'}, {}),
     ('-f', '--folder', {'help': 'Build all designspace files in a folder','action': 'store_true'}, {}),
-    ('-c', '--copy', {'help': 'Copy glyphs if instance matches a master', 'action': 'store_true'}, {}),
+#    ('-c', '--copy', {'help': 'Copy glyphs if instance matches a master', 'action': 'store_true'}, {}),
     ('-o', '--output', {'help': 'Prepend path to all output paths'}, {}),
     ('--roundInstances', {'help': 'Apply integer rounding to all geometry when interpolating',
                            'action': 'store_true'}, {}),
@@ -56,16 +56,16 @@ def InstanceWriterOrCopier(args):
         def _calculateGlyph(self, targetGlyphObject, instanceLocationObject, glyphMasters):
             # Search for a glyphMaster with the same location as instanceLocationObject
             found = False
-            if args.copy:
-                for item in glyphMasters:
-                    locationObject = item['location'] # mutatorMath Location
-                    if locationObject.sameAs(instanceLocationObject) == 0:
-                        found = True
-                        fontObject = item['font'] # defcon Font
-                        glyphName = item['glyphName'] # string
-                        glyphObject = MathGlyph(fontObject[glyphName])
-                        glyphObject.extractGlyph(targetGlyphObject, onlyGeometry=True)
-                        break
+#            if args.copy:
+#                for item in glyphMasters:
+#                    locationObject = item['location'] # mutatorMath Location
+#                    if locationObject.sameAs(instanceLocationObject) == 0:
+#                        found = True
+#                        fontObject = item['font'] # defcon Font
+#                        glyphName = item['glyphName'] # string
+#                        glyphObject = MathGlyph(fontObject[glyphName])
+#                        glyphObject.extractGlyph(targetGlyphObject, onlyGeometry=True)
+#                        break
 
             if not found:
                 super(LocalInstanceWriterOrCopier, self)._calculateGlyph(targetGlyphObject, instanceLocationObject, glyphMasters)
@@ -94,7 +94,7 @@ def doit(args):
     instance_font_name = args.instanceName
     instance_attr = args.instanceAttr
     instance_val = args.instanceVal
-    copy_glyphs = args.copy
+#    copy_glyphs = args.copy
     build_folder = args.folder
     round_instances = args.roundInstances
 
@@ -115,8 +115,8 @@ def doit(args):
                                            roundGeometry=round_instances,
                                            progressFunc=progress_func)
         reader._instanceWriterClass = InstanceWriterOrCopier(args) # kludge, probably should use subclassing instead
-        if copy_glyphs:
-            args.logger.log('Copying glyphs where an instance font location matches a master', 'P')
+#        if copy_glyphs:
+#            args.logger.log('Copying glyphs where an instance font location matches a master', 'P')
         if instance_font_name or instance_attr:
             key_attr = instance_attr if instance_val else 'name'
             key_val = instance_val if instance_attr else instance_font_name
