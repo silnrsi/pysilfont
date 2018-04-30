@@ -33,30 +33,30 @@ argspec = [
     ('-a', '--instanceAttr', {'help': 'Attribute used to specify instance to build'}, {}),
     ('-v', '--instanceVal', {'help': 'Value of attribute specifying instance to build'}, {}),
     ('-f', '--folder', {'help': 'Build all designspace files in a folder','action': 'store_true'}, {}),
-    ('-c', '--copy', {'help': 'Copy glyphs if instance matches a master', 'action': 'store_true'}, {}),
     ('-o', '--output', {'help': 'Prepend path to all output paths'}, {}),
+    ('-c', '--copy', {'help': 'Copy glyphs if instance matches a master', 'action': 'store_true'}, {}),
     ('--roundInstances', {'help': 'Apply integer rounding to all geometry when interpolating',
                            'action': 'store_true'}, {}),
     ('-l','--log',{'help': 'Log file (default: *_createinstances.log)'}, {'type': 'outfile', 'def': '_createinstances.log'}),
 ]
 
-def InstanceWriterOrCopier(args):
+def InstanceWriterOrCopier(args_obj):
 
     class LocalInstanceWriterOrCopier(InstanceWriter):
 
-        def __init__(self, path, **kw):
-            if args.output:
-                path = os.path.join(args.output, path)
-            return super(LocalInstanceWriterOrCopier, self).__init__(path, **kw)
+        def __init__(self, path, *args, **kw):
+            if args_obj.output:
+                path = os.path.join(args_obj.output, path)
+            return super(LocalInstanceWriterOrCopier, self).__init__(path, *args, **kw)
 
-    # Override method used to calculate glyph geometry
-    # If the glyph being processed is in the same location (has all the same axes values)
-    #  as a master UFO, then extract the glyph geometry directly into the target glyph.
-    # Fyi, in the superclass method, m = buildMutator(); m.makeInstance() returns a MathGlyph
+        # Override method used to calculate glyph geometry
+        # If the glyph being processed is in the same location (has all the same axes values)
+        #  as a master UFO, then extract the glyph geometry directly into the target glyph.
+        # Fyi, in the superclass method, m = buildMutator(); m.makeInstance() returns a MathGlyph
         def _calculateGlyph(self, targetGlyphObject, instanceLocationObject, glyphMasters):
             # Search for a glyphMaster with the same location as instanceLocationObject
             found = False
-            if args.copy:
+            if args_obj.copy:
                 for item in glyphMasters:
                     locationObject = item['location'] # mutatorMath Location
                     if locationObject.sameAs(instanceLocationObject) == 0:
@@ -68,13 +68,15 @@ def InstanceWriterOrCopier(args):
                         break
 
             if not found:
-                super(LocalInstanceWriterOrCopier, self)._calculateGlyph(targetGlyphObject, instanceLocationObject, glyphMasters)
+                super(LocalInstanceWriterOrCopier, self)._calculateGlyph(targetGlyphObject,
+                                                                         instanceLocationObject,
+                                                                         glyphMasters)
 
     return LocalInstanceWriterOrCopier
 
 logger = None
 severe_error = False
-def progressFunc(state="update", action=None, text=None, tick=0):
+def progress_func(state="update", action=None, text=None, tick=0):
     global severe_error
     if logger:
         if state == 'error':
@@ -104,8 +106,6 @@ def doit(args):
         args.logger.log('--instanceAttr and --instanceVal must be used together', 'S')
     if (build_folder and (instance_font_name or instance_attr or instance_val or copy_glyphs)):
         args.logger.log('--folder cannot be used with options: -i, -a, -v, -c', 'S')
-
-    progress_func = progressFunc
 
     args.logger.log('Interpolating master UFOs from designspace', 'P')
     if not build_folder:
