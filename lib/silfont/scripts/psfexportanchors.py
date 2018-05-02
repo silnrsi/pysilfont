@@ -60,7 +60,7 @@ def doit(args) :
         glyphElement = ET.SubElement(fontElement, 'glyph', attrib)
         anchorlist = []
         for a in infont.deflayer[g]['anchor']:
-            anchorlist.append( (a.element.get('name'), a.element.get('x'), a.element.get('y') ) )
+            anchorlist.append( (a.element.get('name'), int(float(a.element.get('x'))), int(float(a.element.get('y'))) ) )
         anchorlist.sort()
         for a, x, y in anchorlist:
             anchorElement = ET.SubElement(glyphElement, 'point', attrib = {'type': a})
