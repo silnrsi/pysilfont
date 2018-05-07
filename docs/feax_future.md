@@ -315,7 +315,7 @@ It is often desirable to give a base character extra advance width to account fo
 ```
 do  for b = @bases;
     for d = @diacritics;
-    let v = (ADVx(d) - APx(d, "_U")) - (ADVx(g) - APx(g, "U"));
+    let v = (ADVx(d) - APx(d, "_U")) - (ADVx(g) - APx(b, "U"));
     if v > 0; {
         pos $b' <$v> $d;
     };
@@ -328,7 +328,7 @@ A corresponding guarding of space for diacritics may be done on the left side of
 ```
 do  for b = @bases;
     for d = @diacritics;
-    let v = APx(d, "_U") - APx(g, "U");
+    let v = APx(d, "_U") - APx(b, "U");
     if v > 0; {
         pos $b' <$v 0 $v 0> $d;
     };
