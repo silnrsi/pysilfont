@@ -49,7 +49,7 @@ metricsinfo=re.compile(r"""^\s*
 
 # Parse glyph information (up to =)
 glyphdef=re.compile(r"""^\s*
-    (?P<PSName>[._A-Za-z][._A-Za-z0-9]*)                # glyphname
+    (?P<PSName>[._A-Za-z][._A-Za-z0-9-]*)               # glyphname
     \s*=\s*
     (?P<remainder>.*?)
     \s*$""",re.VERBOSE)
@@ -64,7 +64,7 @@ initialtokens=[ (inputline,   'commenttext', ""),
 
 # Parse base and diacritic information
 compdef=re.compile(r"""^\s*
-    (?P<compname>[._A-Za-z][._A-Za-z0-9]*)              # name of base or diacritic in composite definition
+    (?P<compname>[._A-Za-z][._A-Za-z0-9-]*)             # name of base or diacritic in composite definition
         (?:@                                            # @ preceeds position information
         (?:(?:\s*(?P<base>[^: ]+)):)?                   # optional base glyph followed by :
         \s*
