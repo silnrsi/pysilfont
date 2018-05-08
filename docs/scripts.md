@@ -21,6 +21,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfcompdef2xml](#psfcompdef2xml) | Convert composite definition file to XML format |
 | [psfcompressgr](#psfcompressgr) | Compress Graphite tables in a ttf font |
 | [psfcopymeta](#psfcopymeta) | Copy basic metadata from one UFO to another, for fonts in related families |
+| [psfcreateinstances](#psfcreateinstances) | Create one or more instance UFOs from one or more designspace files |
 | [psfcsv2comp](#psfcsv2comp) | Create composite definition file from csv |
 | [psfdeleteglyphs](#psfdeleteglyphs) | Deletes glyphs from a UFO based on a list |
 | [psfexpandstroke](#psfexpandstroke) | Expand an unclosed UFO stroke font into monoline forms |
@@ -244,8 +245,39 @@ Look in psfcopymeta.py for a full list of metadata copied.  Note that only fonti
 Also psfcopymeta does not use Pysilfont's backup mechanism for fonts.
 
 ---
+#### psfcreateinstances
+Usage:
+
+**`psfcreateinstances -f [--roundInstances] designspace_file_or_folder`**
+
+**`psfcreateinstances [-i INSTANCENAME] [-a INSTANCEATTR] [-v INSTANCEVAL] [-o OUTPUT]
+[--forceInterpolation] [--roundInstances] designspace_file`**
+
+
+Create one or more instance UFOs from one or more designspace files.
+
+There are two modes of operation, differentiated by the `-f` (folder) option:
+
+When `-f` is specified:
+- the final parameter can be either:
+  - a single designspace file
+  - a folder, in which case all designspace files within the folder are processed.
+- all instances specified in the designspace file(s) are created.
+- interpolation is always done, even if for instances that match a master.
+
+Omitting the `-f` requires that the final parameter be a designspace file (not a folder) but gives more control over instance creation, as follows:
+
+- Specific instance(s) to be created can be identified by either:
+  - instance name, specified by `-i`, or
+  - a point on one of the defined axes, specified by `-a` and `-v`. If more than one instance matches this axis value, all are built.
+- The default location for the generated UFO(s) can be changed using `-o` option to specify a path to be prefixed to that specified in the designspace.
+- In cases where the instance parameters match a master, glyphs will be copied rather than interpolated, which is useful for masters that do not have compatible glyph designs and thus cannot be interpolated. This behavior can be overridden using the `--forceInterpolation` option.  
+
+Whenever interpolation is done, the calculations can result in non-integer values within the instance UFOs. The `--roundInstances` option will apply integer rounding to all such values.
+
+---
 #### psfcsv2comp
-Usage: **`psfcsv2comp [-i INPUT] [--gname GNAME] [--base BASE] [--usv USV] --anchors ANCHORS output.txt`**
+Usage: **`psfcsv2comp [-i INPUT] [--gname GNAME] [--base BASE] [--anchors ANCHORS] [--usv USV] output.txt`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
@@ -263,8 +295,10 @@ Command-line options:
 - INPUT: Name of input csv file (default `glyph_data.csv`)
 - GNAME:  the column header for the column that contains the name of the composite glyph (default `gname`)
 - BASE: the column header for the column that contains the base of the composites (default `base`)
-- USV: the column header for the column that contains hexadecimal USV
 - ANCHORS: comma-separated list of column headers naming the attachment points (default `above,below`).
+- USV: the column header for the column that contains hexadecimal USV
+
+**Limitations:** At present, this tool supports only a small subset of the capabilities of composite definition syntax. Note, in particular, that it assumes all components are attached to the _base_ rather than the _previous glyph_.
 
 ---
 ####  psfdeleteglyphs
