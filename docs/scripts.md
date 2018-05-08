@@ -21,6 +21,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfcompdef2xml](#psfcompdef2xml) | Convert composite definition file to XML format |
 | [psfcompressgr](#psfcompressgr) | Compress Graphite tables in a ttf font |
 | [psfcopymeta](#psfcopymeta) | Copy basic metadata from one UFO to another, for fonts in related families |
+| [psfcsv2comp](#psfcsv2comp) | Create composite definition file from csv |
 | [psfdeleteglyphs](#psfdeleteglyphs) | Deletes glyphs from a UFO based on a list |
 | [psfexpandstroke](#psfexpandstroke) | Expand an unclosed UFO stroke font into monoline forms |
 | [psfexportanchors](#psfexportanchors) | Export UFO anchor data to a separate XML file |
@@ -241,6 +242,29 @@ If run with -r or \-\-reportonly it just reports what values would be updated.
 Look in psfcopymeta.py for a full list of metadata copied.  Note that only fontinfo.plist and lib.plist are updated; the target font is not normalized.
 
 Also psfcopymeta does not use Pysilfont's backup mechanism for fonts.
+
+---
+#### psfcsv2comp
+Usage: **`psfcsv2comp [-i INPUT] [--gname GNAME] [--base BASE] [--usv USV] --anchors ANCHORS output.txt`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Create a composite definitions file based on data extracted from a csv file.
+
+The INPUT csv file must have column headers and must include columns for the following data:
+- the name of the composite glyph
+- the name of the base glyph used to create the composites
+- one column for each possible anchor to which a component can be attached. The column headers identify the name of the anchor to be used, and the column content names the glyph (if any) to be attached at that anchor.
+
+Optionally, another column can be used to specify the USV (codepoint) for the composite.
+
+Command-line options:
+
+- INPUT: Name of input csv file (default `glyph_data.csv`)
+- GNAME:  the column header for the column that contains the name of the composite glyph (default `gname`)
+- BASE: the column header for the column that contains the base of the composites (default `base`)
+- USV: the column header for the column that contains hexadecimal USV
+- ANCHORS: comma-separated list of column headers naming the attachment points (default `above,below`).
 
 ---
 ####  psfdeleteglyphs
