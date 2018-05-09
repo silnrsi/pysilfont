@@ -281,7 +281,6 @@ class ast_DoBlock(ast.Block):
             res += "{}    }}\n".format(indent)
             return res
         else:
-            # import pdb; pdb.set_trace()
             for state in self.iterateValues():
                 self.scope.push_scope(state)
                 res += ast.Block.asFea(self, indent=indent)
@@ -316,14 +315,18 @@ class ast_DoForSubStatement(ast_DoSubStatement):
             yield(self.name, g)
 
 class ast_DoLetSubStatement(ast_DoSubStatement):
-    def __init__(self, varname, expression, location=None):
+    def __init__(self, varname, expression, glyphs, location=None):
         ast_DoSubStatement.__init__(self, varname, location=location)
         self.expr = expression
+        self.fns = {
+            'APx': lambda g, a: glyphs[g].anchors[a][0],
+            'APy': lambda g, a: glyphs[g].anchors[a][1],
+            'ADVx': lambda g: glyphs[g].advance
+        }
 
     def items(self, variables):
-        glbls = variables.copy()
-        # add in special functions
-        v = eval(self.expr, glbls)
+        lcls = variables.copy()
+        v = eval(self.expr, self.fns, lcls)
         yield(self.name, v)
 
 class ast_DoIfSubStatement(ast_DoLetSubStatement):
