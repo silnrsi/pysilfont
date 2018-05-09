@@ -1,6 +1,7 @@
 from fontTools.feaLib import ast
 from fontTools.feaLib.parser import Parser
 from fontTools.feaLib.lexer import IncludingLexer, Lexer
+import silfont.feax_lexer as feax_lexer
 from fontTools.feaLib.error import FeatureLibError
 import silfont.feax_ast as astx
 import StringIO, re
@@ -14,7 +15,12 @@ class feaplus_ast(object) :
     BaseClassDefinition = astx.ast_BaseClassDefinition
     MultipleSubstStatement = astx.ast_MultipleSubstStatement
     LigatureSubstStatement = astx.ast_LigatureSubstStatement
+    Variable = astx.ast_Variable
     IfBlock = astx.ast_IfBlock
+    DoStatement = astx.ast_DoBlock
+    DoForSubStatement = astx.ast_DoForSubStatement
+    DoLetSubStatement = astx.ast_DoLetSubStatement
+    DoIfSubStatement = astx.ast_DoIfSubStatement
 
     def __getattr__(self, name):
         return getattr(ast, name) # retrieve undefined attrs from imported fontTools.feaLib ast module
@@ -23,7 +29,8 @@ class feaplus_parser(Parser) :
     extensions = {
         'baseClass' : lambda s: s.parseBaseClass(),
         'ifclass' : lambda s: s.parseIfClass(),
-        'ifinfo' : lambda s: s.parseIfInfo()
+        'ifinfo' : lambda s: s.parseIfInfo(),
+        'do': lambda s: s.parseDoStatement()
     }
     ast = feaplus_ast()
 
@@ -33,10 +40,11 @@ class feaplus_parser(Parser) :
             super(feaplus_parser, self).__init__(empty_file, glyphmap)
         else :
             super(feaplus_parser, self).__init__(filename, glyphmap)
+        self.scope_ = astx.Scope()
 
     def parse(self, filename=None) :
         if filename is not None :
-            self.lexer_ = IncludingLexer(filename)
+            self.lexer_ = feax_lexer.feax_IncludingLexer(filename)
             self.advance_lexer_(comments=True)
         return super(feaplus_parser, self).parse()
 
@@ -264,8 +272,12 @@ class feaplus_parser(Parser) :
 
     def parse_glyphclass_(self, accept_glyphname):
         if (accept_glyphname and
-                self.next_token_type_ in (Lexer.NAME, Lexer.CID)):
-            glyph = self.expect_glyph_()
+                self.next_token_type_ in (Lexer.NAME, Lexer.CID, feax_lexer.VARIABLE)):
+            if self.next_token_type_ is feax_lexer.VARIABLE:
+                self.advance_lexer_()
+                glyph = self.cur_token_
+            else:
+                glyph = self.expect_glyph_()
             return self.ast.GlyphName(glyph, location=self.cur_token_location_)
         if self.next_token_type_ is Lexer.GLYPHCLASS:
             self.advance_lexer_()
@@ -414,4 +426,188 @@ class feaplus_parser(Parser) :
 
         self.expect_symbol_("}")
         # self.expect_symbol_(";")  # can't have }; since tokens are space separated
+
+    def parse_block_(self, block, vertical, stylisticset=None,
+                     size_feature=False, cv_feature=None, anonymous=False):
+        self.expect_symbol_("{")
+        for symtab in self.symbol_tables_:
+            symtab.enter_scope()
+
+        statements = block.statements
+        while self.next_token_ != "}" or self.cur_comments_:
+            self.advance_lexer_(comments=True)
+            if self.cur_token_type_ is Lexer.COMMENT:
+                statements.append(self.ast.Comment(
+                    self.cur_token_, location=self.cur_token_location_))
+            elif self.cur_token_type_ is Lexer.GLYPHCLASS:
+                statements.append(self.parse_glyphclass_definition_())
+            elif self.is_cur_keyword_("anchorDef"):
+                statements.append(self.parse_anchordef_())
+            elif self.is_cur_keyword_({"enum", "enumerate"}):
+                statements.append(self.parse_enumerate_(vertical=vertical))
+            elif self.is_cur_keyword_("feature"):
+                statements.append(self.parse_feature_reference_())
+            elif self.is_cur_keyword_("ignore"):
+                statements.append(self.parse_ignore_())
+            elif self.is_cur_keyword_("language"):
+                statements.append(self.parse_language_())
+            elif self.is_cur_keyword_("lookup"):
+                statements.append(self.parse_lookup_(vertical))
+            elif self.is_cur_keyword_("lookupflag"):
+                statements.append(self.parse_lookupflag_())
+            elif self.is_cur_keyword_("markClass"):
+                statements.append(self.parse_markClass_())
+            elif self.is_cur_keyword_({"pos", "position"}):
+                statements.append(
+                    self.parse_position_(enumerated=False, vertical=vertical))
+            elif self.is_cur_keyword_("script"):
+                statements.append(self.parse_script_())
+            elif (self.is_cur_keyword_({"sub", "substitute",
+                                        "rsub", "reversesub"})):
+                statements.append(self.parse_substitute_())
+            elif self.is_cur_keyword_("subtable"):
+                statements.append(self.parse_subtable_())
+            elif self.is_cur_keyword_("valueRecordDef"):
+                statements.append(self.parse_valuerecord_definition_(vertical))
+            elif stylisticset and self.is_cur_keyword_("featureNames"):
+                statements.append(self.parse_featureNames_(stylisticset))
+            elif cv_feature and self.is_cur_keyword_("cvParameters"):
+                statements.append(self.parse_cvParameters_(cv_feature))
+            elif size_feature and self.is_cur_keyword_("parameters"):
+                statements.append(self.parse_size_parameters_())
+            elif size_feature and self.is_cur_keyword_("sizemenuname"):
+                statements.append(self.parse_size_menuname_())
+            elif self.cur_token_type_ is Lexer.NAME and self.cur_token_ in self.extensions:
+                statements.append(self.extensions[self.cur_token_](self))
+            elif self.cur_token_ == ";":
+                continue
+            else:
+                raise FeatureLibError(
+                    "Expected glyph class definition or statement: got {} {}".format(self.cur_token_type_, self.cur_token_),
+                    self.cur_token_location_)
+
+        self.expect_symbol_("}")
+        for symtab in self.symbol_tables_:
+            symtab.exit_scope()
+
+        if not anonymous:
+            name = self.expect_name_()
+            if str(name) != str(block.name).strip():
+                raise FeatureLibError("Expected \"%s\"" % str(block.name).strip(),
+                                      self.cur_token_location_)
+            self.expect_symbol_(";")
+
+        # A multiple substitution may have a single destination, in which case
+        # it will look just like a single substitution. So if there are both
+        # multiple and single substitutions, upgrade all the single ones to
+        # multiple substitutions.
+
+        # Check if we have a mix of non-contextual singles and multiples.
+        has_single = False
+        has_multiple = False
+        for s in statements:
+            if isinstance(s, self.ast.SingleSubstStatement):
+                has_single = not any([s.prefix, s.suffix, s.forceChain])
+            elif isinstance(s, self.ast.MultipleSubstStatement):
+                has_multiple = not any([s.prefix, s.suffix])
+
+        # Upgrade all single substitutions to multiple substitutions.
+        if has_single and has_multiple:
+            for i, s in enumerate(statements):
+                if isinstance(s, self.ast.SingleSubstStatement):
+                    statements[i] = self.ast.MultipleSubstStatement(
+                        s.prefix, s.glyphs[0].glyphSet()[0], s.suffix,
+                        [r.glyphSet()[0] for r in s.replacements],
+                        location=s.location)
+
+    def parseDoStatement(self):
+        location = self.cur_token_location_
+        substatements = []
+        while self.next_token_type_ is not Lexer.SYMBOL or self.next_token_ != "{":
+            self.advance_lexer_()
+            if self.is_cur_keyword_("for"):
+                substatements.append(self.parseDoFor())
+            elif self.is_cur_keyword_("let"):
+                substatements.append(self.parseDoLet())
+            elif self.is_cur_keyword_("if"):
+                substatements.append(self.parseDoLet())
+            else:
+                raise FeatureLibError("Unknown substatement type in do statement", self.cur_token_location_)
+        res = self.ast.DoStatement(substatements, self.scope_, location=location)
+        self.parse_block_(res, False, anonymous=True)
+        return res
+
+    def parseDoFor(self):
+        location = self.cur_token_location_
+        self.advance_lexer_()
+        if self.cur_token_type_ is Lexer.NAME:
+            name = self.cur_token_
+        else:
+            raise FeatureLibError("Bad name in do for statement", location)
+        self.expect_symbol_("=")
+        glyphs = self.parse_glyphclass_(True)
+        self.expect_symbol_(";")
+        res = self.ast.DoForSubStatement(name, glyphs, location=location)
+        return res
+
+    def parseDoLet(self):
+        location = self.cur_token_location_
+        self.advance_lexer_()
+        if self.cur_token_type_ is Lexer.NAME:
+            name = self.cur_token_
+        else:
+            raise FeatureLibError("Bad name in do let statement", location)
+        if self.next_token_type_ != Lexer.SYMBOL or self.next_token_ != "=":
+            raise FeatureLibError("Missing = in do let statement", self.next_token_location_)
+        lex = self.lexer_.lexers_[-1]
+        lex.scan_over_(Lexer.CHAR_WHITESPACE_)
+        start = lex.pos_
+        lex.scan_until_(";")
+        expr = lex.text_[start:lex.pos_]
+        self.advance_lexer_()
+        self.expect_symbol_(";")
+        return self.ast.DoLetSubStatement(name, expr, location=location)
+
+    def parseDoIf(self):
+        location = self.cur_token_location_
+        start = self.next_token_location_
+        lex = self.lexer_.lexers_[-1]
+        lex.scan_until_(";")
+        expr = lex.text_[start:lex.pos_]
+        self.advance_lexer_()
+        self.expect_symbol_(";")
+        return self.ast.DoIfSubStatement(expr, location=location)
+
+    def expect_name_(self):
+        self.advance_lexer_()
+        if self.cur_token_type_ is Lexer.NAME:
+            return self.cur_token_
+        elif self.cur_token_type_ is feax_lexer.VARIABLE:
+            return self.ast.Variable(self.cur_token_, self.scope_) 
+        raise FeatureLibError("Expected a name", self.cur_token_location_)
+
+    def expect_number_(self):
+        self.advance_lexer_()
+        if self.cur_token_type_ is Lexer.NUMBER:
+            return self.cur_token_
+        elif self.cur_token_type_ is feax_lexer.VARIABLE:
+            return self.ast.Variable(self.cur_token_, self.scope_) 
+        raise FeatureLibError("Expected a number", self.cur_token_location_)
+
+    def expect_float_(self):
+        self.advance_lexer_()
+        if self.cur_token_type_ is Lexer.FLOAT:
+            return self.cur_token_
+        elif self.cur_token_type_ is feax_lexer.VARIABLE:
+            return self.ast.Variable(self.cur_token_, self.scope_) 
+        raise FeatureLibError("Expected a floating-point number",
+                              self.cur_token_location_)
+
+    def expect_string_(self):
+        self.advance_lexer_()
+        if self.cur_token_type_ is Lexer.STRING:
+            return self.cur_token_
+        elif self.cur_token_type_ is feax_lexer.VARIABLE:
+            return self.ast.Variable(self.cur_token_, self.scope_) 
+        raise FeatureLibError("Expected a string", self.cur_token_location_)
 
