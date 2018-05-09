@@ -144,6 +144,37 @@ The `if` substatement evaluates the given expression and only executes following
 
 The `do` statement is best understood through some examples.
 
+##### Simple calculation
+
+This calculates a simple offset shift and creates a lookup to apply it:
+
+```
+do  let a = -int(ADVx("u16F61") / 2);
+    {
+        lookup left_shift_vowel {
+            pos @_H <$a 0 0 0>;
+        } left_shift_vowel;
+    }
+```
+
+Notice the lack of iteration here.
+
+##### More complex calculation
+
+This calculates the guard spaces on either side of a base glyph in response to applied diacritics.
+
+```
+lookup advance_base {
+do  for g = @H;
+    let a = APx(g, "H") - ADVx(g) + int(1.5 * ADVx("u16F61"));
+    let b = int(1.5 * ADVx("u16F61")) - APx(g, "H");
+    let c = a + b;
+    {
+        pos $g <$b 0 $c 0>;
+    }
+} advance_base;
+```
+
 ##### Right Guard
 
 It is often desirable to give a base character extra advance width to account for a diacritic hanging over the right hand side of the glyph. Calculating this can be very difficult by hand. This code achieves this:
