@@ -263,7 +263,7 @@ When `-f` is specified:
   - a single designspace file
   - a folder, in which case all designspace files within the folder are processed.
 - all instances specified in the designspace file(s) are created.
-- interpolation is always done, even if for instances that match a master.
+- interpolation is always done, even when the designspace coordinates of an instance match a master.
 
 Omitting the `-f` requires that the final parameter be a designspace file (not a folder) but gives more control over instance creation, as follows:
 
@@ -271,7 +271,7 @@ Omitting the `-f` requires that the final parameter be a designspace file (not a
   - instance name, specified by `-i`, or
   - a point on one of the defined axes, specified by `-a` and `-v`. If more than one instance matches this axis value, all are built.
 - The default location for the generated UFO(s) can be changed using `-o` option to specify a path to be prefixed to that specified in the designspace.
-- In cases where the instance parameters match a master, glyphs will be copied rather than interpolated, which is useful for masters that do not have compatible glyph designs and thus cannot be interpolated. This behavior can be overridden using the `--forceInterpolation` option.  
+- In cases where the designspace coordinates of an instance match a master, glyphs will be copied rather than interpolated, which is useful for masters that do not have compatible glyph designs and thus cannot be interpolated. This behavior can be overridden using the `--forceInterpolation` option.  
 
 Whenever interpolation is done, the calculations can result in non-integer values within the instance UFOs. The `--roundInstances` option will apply integer rounding to all such values.
 
