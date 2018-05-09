@@ -248,21 +248,6 @@ class ast_IfBlock(ast.Block):
         else:
             return ""
 
-class ast_Variable(ast.Element):
-    def __init__(self, name, scope, location=None):
-        ast.Element.__init__(self, location=location)
-        self.scope = scope
-        self.name = name
-
-    def __str__(self):      # used for str(x)
-        return self.scope.get_variable(self.name, "")
-
-    def __trunc__(self):    # used for int(x)
-        return int(float(self))
-
-    def __float__(self):    # used for float(x)
-        return float(self.scope.get_variable(self.name, 0))
-
 
 class ast_DoSubStatement(ast.Statement):
     def __init__(self, varname, location=None):
@@ -304,18 +289,3 @@ class ast_DoIfSubStatement(ast_DoLetSubStatement):
         (_, v) = ast_DoLetSubStatement.items(self, variables)
         yield (None, (v if v else None))
 
-class Scope(object):
-    def __init__(self):
-        self.scopes = [{}]
-
-    def push_scope(self, variables):
-        self.scopes.append(variables)
-
-    def pop_scope(self):
-        self.scopes.pop()
-
-    def get_variable(self, name, default=""):
-        for s in self.scopes:
-            if name in s:
-                return s[name]
-        return default

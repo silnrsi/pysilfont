@@ -15,9 +15,7 @@ class feaplus_ast(object) :
     BaseClassDefinition = astx.ast_BaseClassDefinition
     MultipleSubstStatement = astx.ast_MultipleSubstStatement
     LigatureSubstStatement = astx.ast_LigatureSubstStatement
-    Variable = astx.ast_Variable
     IfBlock = astx.ast_IfBlock
-    DoStatement = astx.ast_DoBlock
     DoForSubStatement = astx.ast_DoForSubStatement
     DoLetSubStatement = astx.ast_DoLetSubStatement
     DoIfSubStatement = astx.ast_DoIfSubStatement
@@ -40,7 +38,6 @@ class feaplus_parser(Parser) :
             super(feaplus_parser, self).__init__(empty_file, glyphmap)
         else :
             super(feaplus_parser, self).__init__(filename, glyphmap)
-        self.scope_ = astx.Scope()
 
     def parse(self, filename=None) :
         if filename is not None :
