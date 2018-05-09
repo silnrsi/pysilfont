@@ -34,6 +34,12 @@ It should be borne in mind that both markClasses and baseClasses can also be use
 
 The baseClass statement is a high priority need in order to facilitate auto generation of attachment point information without having to create what might be redundant lookups in the wrong order.
 
+Given a set of base glyphs with attachment point A and marks with attachment point \_A, psfmakefea will generate the following:
+
+* baseClass A - containing all bases with attachment point A
+* markClass \_A - containing all marks with attachment point \_A
+* baseClass A\_MarkBase - containing all marks with attachment point A
+
 #### Cursive Attachment
 
 Cursive attachment involves two base anchors, one for the entry and one for the exit. We can extend the use of baseClasses to support this, by passing two baseClasses to the pos cursive statement:
@@ -112,8 +118,6 @@ are the only ones using the  'by' keyword that have a *sequence* of glyphs or
 classes on one side of the rule. The other side will, necessarily, contain a
 single term -- which Adobe currently requires to be a glyph.  For convenience of
 expression, we'll call the sides of the rule the *sequence side* and the *singleton side*.
-
-Rules that we need to expand meet the following criteria:
 
 *   Non-contextual substitution
 *   Uses the 'by' keyword

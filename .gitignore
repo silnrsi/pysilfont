@@ -1,6 +1,7 @@
 *.pyc
 *.log
 *~
+*.sw?
 
 installed-files.txt
 pysilfont.cfg

@@ -17,10 +17,11 @@ import os
 from silfont.core import execute
 
 class Glyph(object) :
-    def __init__(self, name) :
+    def __init__(self, name, advance=0) :
         self.name = name
         self.anchors = {}
         self.is_mark = False
+        self.advance = int(float(advance))
 
     def add_anchor(self, info) :
         self.anchors[info['name']] = (int(float(info['x'])), int(float(info['y'])))
@@ -43,9 +44,11 @@ class Font(object) :
             f = ufo.Ufont(filename, params = params)
             self.fontinfo = f.fontinfo
             for g in f.deflayer :
-                glyph = Glyph(g)
-                self.glyphs[g] = glyph
                 ufo_g = f.deflayer[g]
+                advb = ufo_g['advance']
+                adv = advb.width if advb is not None else 0
+                glyph = Glyph(g, advance = adv)
+                self.glyphs[g] = glyph
                 if 'anchor' in ufo_g._contents :
                     for a in ufo_g._contents['anchor'] :
                         if a.element.attrib['name'] not in omittedaps:
@@ -259,6 +262,7 @@ def doit(args) :
 
     p = feaplus_parser(None, font.glyphs)
     p.fontinfo = font.fontinfo
+    p.glyphs = font.glyphs
     doc_ufo = p.parse() # returns an empty ast.FeatureFile
 
     # Add goodies from the font
