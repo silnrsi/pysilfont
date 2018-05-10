@@ -565,11 +565,11 @@ class feaplus_parser(Parser) :
 
     def parseDoIf_(self):
         location = self.cur_token_location_
-        start = self.next_token_location_
         lex = self.lexer_.lexers_[-1]
+        start = lex.pos_
         lex.scan_until_(";")
-        expr = lex.text_[start:lex.pos_]
+        expr = self.next_token_ + " " + lex.text_[start:lex.pos_]
         self.advance_lexer_()
         self.expect_symbol_(";")
-        return self.ast.DoIfSubStatement(expr, location=location)
+        return self.ast.DoIfSubStatement(expr, getattr(self, 'glyphs', None), location=location)
 
