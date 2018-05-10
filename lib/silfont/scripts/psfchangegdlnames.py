@@ -75,7 +75,7 @@ def doit(args) :
         for line in names2 :
             n1 = line[0]
             n2 = line[1]
-            if n1 in names and n2 <> names[n1] :
+            if n1 in names and n2 != names[n1] :
                 logger.log(n1 + " in both names and names2 with different values","E")
             else :
                 names[n1] = n2
@@ -109,7 +109,7 @@ def doit(args) :
                 continue
             if commentblock :
                 outfile.write(line + "\n")
-                if line.find("*/") <> -1 : commentblock = False
+                if line.find("*/") != -1 : commentblock = False
                 continue
             # Scan for graphite names
             cpos = line.find("//")
@@ -140,7 +140,7 @@ def doit(args) :
             '''dbg=False ##
             for m in re.finditer('[\s(\[,]g\w+?[\s)\],?]'," "+scan) :
                 gname = m.group(0)[1:-1]
-                if gname.find("gcommaaccent") <> -1 :
+                if gname.find("gcommaaccent") != -1 :
                     print scan
                     dbg=True ##
                 if dbg : print gname ##
@@ -155,7 +155,7 @@ def doit(args) :
             tmpline = tmpline + line[lastend:]
             '''
             # Scan for postscript statements
-            scan = tmpline[0:tmpline.find("//")] if tmpline.find("//") <> -1 else tmpline
+            scan = tmpline[0:tmpline.find("//")] if tmpline.find("//") != -1 else tmpline
             newline = ""
             lastend = 0
 
@@ -174,7 +174,7 @@ def doit(args) :
             outfile.write(newline + "\n")
     file.close()
     outfile.close()
-    if missed <> [] : logger.log("Names were missed from the csv file - see log file for details","E")
+    if missed != [] : logger.log("Names were missed from the csv file - see log file for details","E")
     return
 
 def cmd() : execute(None,doit,argspec) 

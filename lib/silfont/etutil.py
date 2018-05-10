@@ -62,7 +62,7 @@ class ETWriter(object) :
         outstr += u'{}<{}'.format(i, tag)
 
         for k in sorted(attribs.keys(), cmp=lambda x,y: cmp(self.attributeOrder.get(x, 999), self.attributeOrder.get(y, 999)) or cmp(x, y)) :
-            if k[0] <> '.' :
+            if k[0] != '.' :
                 att = attribs[k]
                 if self.precision is not None and k in self.numAttribs :
                     num = round(float(attribs[k]), self.precision)

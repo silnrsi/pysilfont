@@ -48,7 +48,7 @@ def doit(args) :
     for name in namescheck : # Any names left in namescheck were in csv but not ttf
         logger.log(name + " in csv but not in font","W")
 
-    if namescheck <> [] : logger.log("csv file names missing from font - see log for details","E")
+    if namescheck != [] : logger.log("csv file names missing from font - see log for details","E")
 
     return font
 

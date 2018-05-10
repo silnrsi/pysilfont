@@ -56,12 +56,12 @@ def doit(args) :
                     line = nextline()
                     headers = headers + "\n"+line
                     if line[0:3] == "'''" :
-                        while line[-3:] <> "'''" :
+                        while line[-3:] != "'''" :
                             line = nextline()
                             if line =="EOF" : break # Must be EOF
                             headers = headers + "\n"+line
                         if line =="EOF" : headererror.append("No closing ''' to description")
-                    elif line[0:1] <> "'" : headererror.append("No description")
+                    elif line[0:1] != "'" : headererror.append("No description")
                     if headererror :
                         for line in headererror : logger.log(fulln + ": "+line,"E")
                         continue
@@ -91,7 +91,7 @@ def doit(args) :
                                 cdate = cyear
                                 valid = True
                                 datpos = headval.find("20")
-                                if datpos <> -1 :
+                                if datpos != -1 :
                                     # read any more digits
                                     cdate='20'
                                     nextpos = datpos+2
@@ -102,7 +102,7 @@ def doit(args) :
                                     rest = headval[nextpos:]
                                     datpos = rest.find("20")
                                     date2 = ""
-                                    if datpos <> -1 :
+                                    if datpos != -1 :
                                         date2 = '20'
                                         nextpos = datpos+2
                                         while rest[nextpos] in '0123456789' and nextpos < len(rest) :
@@ -110,15 +110,15 @@ def doit(args) :
                                             nextpos += 1
                                     cval=int(cdate)
                                     if cval < 2000 or cval > int(cyear) : valid = False
-                                    if date2 <> "" :
+                                    if date2 != "" :
                                         val2 = int(date2)
                                         if val2 < cval or val2 > int(cyear) : valid = False
                                     if not valid : cdate = cyear
                                 copyright = copyrightpre + cdate + copyrightpost
-                                if headval <> copyright :
+                                if headval != copyright :
                                     updatevars[varn] = ("updated" if valid else "update (invalid dates)")
                             else :
-                                if headval <> standards[varn] :
+                                if headval != standards[varn] :
                                     updatevars[varn] = "updated"
                         else :
                             if varn == 'author' :

@@ -20,7 +20,7 @@ def doit(args) :
     logf = args.log
     options = args.options
     logf.write("Comparing fonts: \n %s (%s)\n %s (%s)\n" % (font1.path,font1.fontname,font2.path,font2.fontname))
-    if options <> None : logf.write('with options: %s\n' % (options))
+    if options != None : logf.write('with options: %s\n' % (options))
     logf.write("\n")
     compare(font1,font2,logf,options)
     compare(font2,font1,logf,None) # Compare again the other way around, just looking for missing Glyphs
@@ -30,12 +30,12 @@ def doit(args) :
 def compare(fonta,fontb,logf,options) :
     for glyph in fonta :
         if glyph in fontb :
-            if options <> None : # Do extra checks based on options supplied
+            if options != None : # Do extra checks based on options supplied
                 ga=fonta[glyph]
                 gb=fontb[glyph]
                 for opt in options :
                     if opt == "c" :
-                        if len(ga.references) <> len(gb.references) :
+                        if len(ga.references) != len(gb.references) :
                             logf.write("Glyph %s: number of components is different - %s v %s\n" % (glyph,len(ga.references),len(gb.references)))
         else :
             logf.write("Glyph %s missing from %s\n" % (glyph,fonta.path))

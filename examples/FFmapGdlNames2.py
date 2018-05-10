@@ -26,7 +26,7 @@ def doit(args) :
     logger = args.paramsobj.logger
     # Check input font is a ttf
     fontfile = args.cmdlineargs[1]
-    if fontfile[-3:] <> "ttf" :
+    if fontfile[-3:] != "ttf" :
         logger.log("Input font needs to be a ttf file", "S")
 
     font = args.ifont

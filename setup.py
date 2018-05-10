@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import print_function
 'Setuptools installation file'
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2014 SIL International (http://www.sil.org)'
@@ -10,7 +11,7 @@ import sys, os, imp
 try:
     from setuptools import setup
 except ImportError :
-    print "pysilfont requires setuptools - see installation notes in README.md"
+    print("pysilfont requires setuptools - see installation notes in README.md")
     sys.exit(1)
 
 warnings = []
@@ -54,7 +55,6 @@ setup(
 )
 
 if warnings :
-    print
-    print "***** Warnings *****"
-    for warning in warnings : print warning
+    print ("\n***** Warnings *****")
+    for warning in warnings : print(warning)
 

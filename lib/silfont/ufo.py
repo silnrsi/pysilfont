@@ -17,7 +17,7 @@ _glifElemMulti = ('unicode', 'guideline', 'anchor')  # glif elements that can oc
 _glifElemF1 = ('advance', 'unicode', 'outline', 'lib')  # glif elements valid in format 1 glifs (ie UFO2 glfis)
 
 # Define illegal characters and reserved names for makeFileName
-_illegalChars = "\"*+/:<>?[\]|" + chr(0x7F)
+_illegalChars = "\"*+/:><?[\]|" + chr(0x7F)
 for i in range(0, 32): _illegalChars += chr(i)
 _illegalChars = list(_illegalChars)
 _reservedNames = "CON PRN AUX CLOCK$ NUL COM1 COM2 COM3 COM4 PT1 LPT2 LPT3".lower().split(" ")

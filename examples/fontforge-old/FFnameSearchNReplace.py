@@ -24,7 +24,7 @@ def doit(args) :
     changes=False
     for glyph in font :
         newname = re.sub(search, replace, glyph)
-        if newname <> glyph :
+        if newname != glyph :
             font[glyph].glyphname=newname
             changes=True
             logf.write('Glyph %s renamed to %s\n' % (glyph,newname))

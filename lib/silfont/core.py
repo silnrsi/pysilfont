@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import print_function
 'General classes and functions for use in pysilfont scripts'
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2014-2018 SIL International (http://www.sil.org)'
@@ -216,7 +217,7 @@ class csvreader(object):    # Iterator for csv files, skipping comments and chec
         try:
             file = open(filename, "rb")
         except Exception as e:
-            print e
+            print(e)
             sys.exit(1)
         self.reader = csv.reader(file)
         # Read first line then reset; this is so scripts can analyse first line before starting iterating
@@ -425,7 +426,7 @@ def execute(tool, fn, argspec, chain = None):
                 try:
                     logfile = open(logname, "w")
                 except Exception as e:
-                    print e
+                    print(e)
                     sys.exit(1)
                 args.log = logfile
         # Set up logger details
@@ -493,7 +494,7 @@ def execute(tool, fn, argspec, chain = None):
             try:
                 aval = open(aval, "r")
             except Exception as e:
-                print e
+                print(e)
                 sys.exit(1)
         elif atype == 'incsv':
             logger.log('Opening file for input: '+aval, "P")
@@ -506,7 +507,7 @@ def execute(tool, fn, argspec, chain = None):
             try:
                 aval = codecs.open(aval, 'w', 'utf-8')
             except Exception as e:
-                print e
+                print(e)
                 sys.exit(1)
         elif atype == 'outfont':
             if tool is None:
@@ -560,7 +561,7 @@ def execute(tool, fn, argspec, chain = None):
                         try:
                             os.mkdir(backupdir)
                         except Exception as e:
-                            print e
+                            print(e)
                             sys.exit(1)
                     backupbase = os.path.join(backupdir, outfontbase+outfontext)
                     # Work out backup name based on existing backups
@@ -588,6 +589,8 @@ def execute(tool, fn, argspec, chain = None):
                 newfont.save(outfont)
             else:  # Must be Pyslifont Ufont
                 newfont.write(outfont)
+    elif newfont:
+        logger.log("Font returned to execute() but no output font is specified in arg spec", "X")
     if logger.errorcount or logger.warningcount:
         message = "Command completed with " + str(logger.errorcount) + " errors and " + str(logger.warningcount) + " warnings"
         if logger.scrlevel in ("S", "E") and logname is not "":

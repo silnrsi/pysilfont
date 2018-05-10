@@ -29,7 +29,7 @@ def doit(args) :
     fontfile1 = args.cmdlineargs[1]
     fontfile2 = args.cmdlineargs[2]
 
-    if fontfile1[-3:] <> "ttf" or fontfile2[-3:] <> "ttf" :
+    if fontfile1[-3:] != "ttf" or fontfile2[-3:] != "ttf" :
         logger.log("Input fonts needs to be ttf files", "S")
 
     font1 = args.ifont1
