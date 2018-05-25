@@ -120,13 +120,9 @@ def doit(args) :
                 scan = line[0:cpos]
                 comment = line[cpos:]
             tmpline = ""
-            #if dbg :
-            #    print line
-            #    print scan + comment
             while re.search('[\s(\[,]g\w+?[\s)\],?:;=]'," "+scan+" ") :
                 m = re.search('[\s(\[,]g\w+?[\s)\],?:;=]'," "+scan+" ")
                 gname = m.group(0)[1:-1]
-                #if dbg : print gname
                 if gname in names :
                     gname = names[gname]
                 else :
@@ -137,23 +133,6 @@ def doit(args) :
                 scan = scan[m.end()-2:]
             tmpline = tmpline + scan + comment
 
-            '''dbg=False ##
-            for m in re.finditer('[\s(\[,]g\w+?[\s)\],?]'," "+scan) :
-                gname = m.group(0)[1:-1]
-                if gname.find("gcommaaccent") != -1 :
-                    print scan
-                    dbg=True ##
-                if dbg : print gname ##
-                if gname in names :
-                    gname = names[gname]
-                else :
-                    if gname not in missed and gname not in exceptions :
-                        logger.log(gname + " from '" + line.strip() + "' in " + filen + " missing from csv", "W")
-                        missed.append(gname) # only log each missed name once
-                tmpline = tmpline + line[lastend:m.start()] + gname
-                lastend = m.end()-2
-            tmpline = tmpline + line[lastend:]
-            '''
             # Scan for postscript statements
             scan = tmpline[0:tmpline.find("//")] if tmpline.find("//") != -1 else tmpline
             newline = ""

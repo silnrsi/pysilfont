@@ -7,6 +7,7 @@ __author__ = 'David Raymond'
 
 from xml.etree import cElementTree as ET
 import sys, os, shutil, filecmp
+import warnings
 import collections
 import datetime
 import silfont.core
@@ -1047,7 +1048,9 @@ def writeXMLobject(dtreeitem, params, dirn, filen, exists, fobject=False):
             for line in oxml.readlines():
                 oxmlstr += line
             oxml.close()
-        if oxmlstr == object.outxmlstr: changed = False
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", UnicodeWarning)
+            if oxmlstr == object.outxmlstr: changed = False
 
     if changed: object.write_to_file(dirn, filen)
     if not fobject: dtreeitem.written = True  # Mark as True, even if not changed - the file should still be there!

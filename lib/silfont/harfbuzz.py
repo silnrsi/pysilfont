@@ -68,4 +68,4 @@ if __name__ == '__main__':
     text = sys.argv[2]
     f = TTFont(font)
     glyphs = shape_text(f, text)
-    print glyphs
+    print(glyphs)

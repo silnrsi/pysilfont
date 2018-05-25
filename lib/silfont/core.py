@@ -287,7 +287,7 @@ def execute(tool, fn, argspec, chain = None):
             ('-d', '--defaults', {'help': 'Display help with info on default values', 'action': 'store_true'}, {}), 
             ('-q', '--quiet', {'help': 'Quiet mode - only display errors', 'action': 'store_true'}, {}), 
             ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile'}), 
-            ('-p', '--params', {'help': 'Other parameters', 'action': 'append'}, {'type': 'optiondict'})]
+            ('-p', '--params', {'help': 'Other parameters - see parameters.md for details', 'action': 'append'}, {'type': 'optiondict'})]
     standardargsindex = ['defaults', 'quiet', 'log', 'params']
 
     suppliedargs = []
@@ -605,7 +605,7 @@ def execute(tool, fn, argspec, chain = None):
     else:
         logger.log("Command completed with no warnings", "P")
 
-    if logfile: logfile.close()
+    return (args, newfont)
 
 
 def chain(argv, function, argspec, font, params, logger, quiet):  # Chain multple command-line scripts using UFO module together without writing font to disk
