@@ -36,6 +36,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfsetassocfeat](#psfsetassocfeat) | Add associate feature info to glif lib based on a csv file |
 | [psfsetassocuids](#psfsetassocuids) | Add associate UID info to glif lib based on a csv file |
 | [psfsetglyphorder](#psfsetglyphorder) | Load glyph order data into public.glyphOrder based on a text file |
+| [psfsetkey](#psfsetkey) | Set key with given values in a UFO fontinfo.plist file |
 | [psfsetpsnames](#psfsetpsnames) | Add public.postscriptname to glif lib based on a csv file |
 | [psfsetunicodes](#psfsetunicodes) | Set unicode values for a glif based on a csv file |
 | [psfsetversion](#psfsetversion) | Change all the version-related info in a UFO's fontinfo.plist |
@@ -499,6 +500,13 @@ With the csv file:
 - The glyph names are sorted by the values in the sort_final column, which can be integer or real. HEADER can be used to specify alternate column header to sort_final.  Multiple comma-separated values can be used with `--header` and `--field` to update two or more orders in a single command call.
 - GNAME can be used to specify column header to use instead of glyph_name.
 
+---
+####  psfsetkey
+Usage: **`psfsetkey [-k KEY] [-v VALUE] ifont [ofont]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Set key KEY to value VALUE in fontinfo.plist.
 ---
 ####  psfsetpsnames
 Usage: **`psfsetpsnames [--gname GNAME] [-i INPUT] ifont [ofont]`**
