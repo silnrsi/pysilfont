@@ -455,7 +455,7 @@ If you are a macOS user, see _pysilfont/actionsosx/README.txt_ to install an act
 
 ---
 ####  psfrenameglyphs
-Usage: **`psfrenameglyphs -i INPUT ifont [ofnt]`**
+Usage: **`psfrenameglyphs [--mergecomps] -i INPUT ifont [ofnt]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
@@ -466,7 +466,15 @@ glyph2,glyph1
 ```
 Unless default value for `renameGlyphs` [parameter](parameters.md) is overridden, the .glif filenames in the UFO will also be adjusted.
 
-This program modifies the glyphs themselves and, if present in lib.plist, the `public.glyphOrder`,  `com.schriftgestaltung.glyphOrder` and `public.postscriptNames` definitions.
+This program modifies the glyphs themselves and, if present in lib.plist, the `public.glyphOrder`,  `com.schriftgestaltung.glyphOrder` and `public.postscriptNames` definitions. Any composite glyphs that reference renamed glyphs are adjusted accordingly.
+
+In normal usage, all oldnames and all newnames mentioned in the csv must be unique. The `--mergecomps` option enables special processing that allows newnames to occur more than once in the csv, with the result that the first mention is a normal rename while subsequent mentions indicate glyphs that should be deleted but any references updated to the first (renamed) glyph. Any moving anchors (i.e., those whose names start with `_`) on the deleted glyphs will be copied to the first glyph. For example:
+```
+dotabove,dot1      # this glyph has _above anchor
+dotbelow,dot1      # this glyph has _below anchor
+dotcenter,dot1     # this glyph has _center anchor
+```
+would cause `dotabove` to be renamed `dot1` while `dotbelow` and `dotabove` would be deleted. Any composite glyphs that reference any of `dotabove`, `dotbelow`, or `dotcenter` will be adjusted to refer to `dot1`. The `_below` anchor from `dotbelow` and the `_center` anchor from `dotcenter` will be copied to `dot1` (overwriting any anchors by the same names).
 
 ---
 ####  psfsetassocfeat

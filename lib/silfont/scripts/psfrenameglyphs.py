@@ -13,12 +13,14 @@ argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
     ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
     ('-i','--input',{'help': 'Input csv file'}, {'type': 'incsv', 'def': 'namemap.csv'}),
+    ('--mergecomps',{'help': 'turn on component merge', 'action': 'store_true', 'default': False},{}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': 'renameglyphs.log'})]
 
 def doit(args) :
     font = args.ifont
     incsv = args.input
     logger = args.logger
+    mergemode = args.mergecomps
 
     # remember all glyphs actually renamed:
     nameMap = {}
@@ -58,6 +60,7 @@ def doit(args) :
     saveforlaterPGO = []    # For public.GlyphOrder
     saveforlaterCSGO = []   # For GlyphsApp GlyphOrder (com.schriftgestaltung.glyphOrder)
     saveforlaterPSN = []    # For public.postscriptNames
+    deletelater = []        # Glyphs we'll delete after merging
 
     for r in incsv:
         oldname = r[0]
@@ -74,6 +77,25 @@ def doit(args) :
             font.deflayer[oldname].name = newname
             nameMap[oldname] = newname
             logger.log("Pass 1 (Font): Renamed %s to %s" % (oldname, newname), "I")
+        elif mergemode:
+            # Assumption: we are merging one or more component references to just one component; deleting the others
+            # first step is to copy any "moving" anchors (i.e., those starting with '_') to the glyph we're keeping:
+            existingGlyph = font.deflayer[newname]
+            for a in font.deflayer[oldname]['anchor']:
+                aname = a.element.get('name')
+                if aname.startswith('_'):
+                    # We want to copy this anchor to the glyph being kept:
+                    for i, a2 in enumerate(existingGlyph['anchor']):
+                        if a2.element.get('name') == aname:
+                            # Overwrite existing anchor of same name
+                            font.deflayer[newname]['anchor'][i] = a
+                            break
+                    else:
+                        # Append anchor to glyph
+                        existingGlyph['anchor'].append(a)
+            nameMap[oldname] = newname
+            deletelater.append(oldname)
+            logger.log("Pass 1 (Font): merged %s to %s" % (oldname, newname), "I")
         else:
             # newname already in font -- but it might get renamed later in which case this isn't actually a problem.
             # For now, then, rename glyph to a temporary name and remember it for second pass
@@ -91,6 +113,10 @@ def doit(args) :
                     publicGlyphOrder[x] = newname
                     nameMap[oldname] = newname
                     logger.log("Pass 1 (PGO): Renamed %s to %s" % (oldname, newname), "I")
+                elif mergemode:
+                    del publicGlyphOrder[x]
+                    nameMap[oldname] = newname
+                    logger.log("Pass 1 (PGO): Removed %s (now using %s)" % (oldname, newname), "I")
                 else:
                     tempname = gettempname(lambda n : n not in publicGlyphOrder)
                     publicGlyphOrder[x] = tempname
@@ -106,6 +132,10 @@ def doit(args) :
                     csGlyphOrder[x] = newname
                     nameMap[oldname] = newname
                     logger.log("Pass 1 (csGO): Renamed %s to %s" % (oldname, newname), "I")
+                elif mergemode:
+                    del csGlyphOrder[x]
+                    nameMap[oldname] = newname
+                    logger.log("Pass 1 (csGO): Removed %s (now using %s)" % (oldname, newname), "I")
                 else:
                     tempname = gettempname(lambda n : n not in csGlyphOrder)
                     csGlyphOrder[x] = tempname
@@ -119,6 +149,10 @@ def doit(args) :
                 psnames[newname] = psnames.pop(oldname)
                 nameMap[oldname] = newname
                 logger.log("Pass 1 (psn): Renamed %s to %s" % (oldname, newname), "I")
+            elif mergemode:
+                del psnames[oldname]
+                nameMap[oldname] = newname
+                logger.log("Pass 1 (psn): Removed %s (now using %s)" % (oldname, newname), "I")
             else:
                 tempname = gettempname(lambda n: n not in psnames)
                 psnames[tempname] = psnames.pop(oldname)
@@ -196,6 +230,11 @@ def doit(args) :
             oldname = component.get('base')
             if oldname in nameMap:
                 component.set('base', nameMap[oldname])
+
+    # Finally delete anything we no longer need:
+    for name in deletelater:
+        font.deflayer.delGlyph(name)
+        logger.log("glyph %s removed" % name, "I")
 
     logger.log("%d glyphs renamed" % (len(nameMap)), "P")
     return font
