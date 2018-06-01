@@ -36,7 +36,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfsetassocfeat](#psfsetassocfeat) | Add associate feature info to glif lib based on a csv file |
 | [psfsetassocuids](#psfsetassocuids) | Add associate UID info to glif lib based on a csv file |
 | [psfsetglyphorder](#psfsetglyphorder) | Load glyph order data into public.glyphOrder based on a text file |
-| [psfsetkeys](#psfsetkeys) | Set keys with given values in a UFO fontinfo.plist file |
+| [psfsetkeys](#psfsetkeys) | Set key(s) with given value(s) in a UFO p-list file |
 | [psfsetpsnames](#psfsetpsnames) | Add public.postscriptname to glif lib based on a csv file |
 | [psfsetunicodes](#psfsetunicodes) | Set unicode values for a glif based on a csv file |
 | [psfsetversion](#psfsetversion) | Change all the version-related info in a UFO's fontinfo.plist |
@@ -510,11 +510,23 @@ With the csv file:
 
 ---
 ####  psfsetkeys
-Usage: **`psfsetkeys [-k KEY] [-v VALUE] ifont [ofont]`**
+Usage: **`psfsetkeys [--plist PLIST] [-i INPUT] [-k KEY] [-v VALUE] ifont [ofont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-Set key KEY to value VALUE in fontinfo.plist.
+Set keys in a UFO p-list file.
+A single key can be set by specifying KEY and VALUE.
+Multiple keys can be set using a csv INPUT file, format "key,value".
+
+PLIST selects which p-list to modify.
+If not specified defaults to `fontinfo` which means the `fontinfo.plist` file is modified.
+
+Example:
+
+Set a key in the file `lib.plist`.
+```
+psfsetkeys --plist lib -k com.schriftgestaltung.width -v Regular font.ufo
+```
 
 ---
 ####  psfsetpsnames
