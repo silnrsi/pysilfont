@@ -263,7 +263,7 @@ class Ftestgroup(ETU.ETelement) :
         self.logger = parent.logger
         if not exactlyoneof(element, label) : self.logger.log("Must supply exactly one of element and label","X")
 
-        if label : element = "<testgroup> label='" + label + "'</testgroup>"
+        if label : element = ET.fromstring("<testgroup> label='" + label + "'</testgroup>")
 
         super(Ftestgroup,self).__init__(element)
 
@@ -304,7 +304,7 @@ class Ftest(ETU.ETelement) :
         self.logger = parent.logger
         if not exactlyoneof(element, (label, string)) : self.logger.log("Must supply exactly one of element and label/string","X")
 
-        if label : element = "<test> label='" + label + "' string='" + string + "' </test>"
+        if label : element = ET.fromstring("<test> label='" + label + "'> <string>" + string + "</string></test>")
 
         super(Ftest,self).__init__(element)
 
