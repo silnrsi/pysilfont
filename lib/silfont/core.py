@@ -252,6 +252,11 @@ def execute(tool, fn, argspec, chain = None):
     #       for UFOlib scripts, also includes all outparams keys and ufometadata settings
     # infont and returnfont are used when chaining calls to execute together, passing ifont on without writing to disk
 
+    chainfirst = False
+    if chain == "first": # If fist call to execute has this set, only to the final return part of chaining
+        chainfirst = True
+        chain = None
+
     params = chain["params"] if chain else parameters()
     logger = chain["logger"] if chain else params.logger  # paramset has already created a basic logger
     argv   = chain["argv"]   if chain else sys.argv
@@ -546,51 +551,56 @@ def execute(tool, fn, argspec, chain = None):
     setattr(args, "cmdlineargs", argv)
     newfont = fn(args)
 # If an output font is expected and one is returned, output the font
-    if outfont and newfont is not None:
+    if chainfirst: chain = True # Special handling for first call of chaining
+    if newfont:
         if chain:  # return font to be handled by chain()
-            return newfont
+            return (args, newfont)
         else:
-            # Backup the font if output is overwriting original input font
-            if outfont == infontlist[0][1]:
-                backupdir = os.path.join(outfontpath, execparams['backupdir'])
-                backupmax = int(execparams['backupkeep'])
-                backup = str2bool(execparams['backup'])
+            if outfont:
+                # Backup the font if output is overwriting original input font
+                if outfont == infontlist[0][1]:
+                    backupdir = os.path.join(outfontpath, execparams['backupdir'])
+                    backupmax = int(execparams['backupkeep'])
+                    backup = str2bool(execparams['backup'])
 
-                if backup:
-                    if not os.path.isdir(backupdir):  # Create backup directory if not present
-                        try:
-                            os.mkdir(backupdir)
-                        except Exception as e:
-                            print(e)
-                            sys.exit(1)
-                    backupbase = os.path.join(backupdir, outfontbase+outfontext)
-                    # Work out backup name based on existing backups
-                    nums = sorted([int(i[len(backupbase)+1-len(i):-1]) for i in glob(backupbase+".*~")])  # Extract list of backup numbers from existing backups
-                    newnum = max(nums)+1 if nums else 1
-                    backupname = backupbase+"."+str(newnum)+"~"
-                    # Backup the font
-                    newfont.logger.log("Backing up input font to "+backupname, "P")
-                    shutil.copytree(outfont, backupname)
-                    # Purge old backups
-                    for i in range(0, len(nums) - backupmax + 1):
-                        backupname = backupbase+"."+str(nums[i])+"~"
-                        newfont.logger.log("Purging old backup "+backupname, "I")
-                        shutil.rmtree(backupname)
-                else:
-                    newfont.logger.log("No font backup done due to backup parameter setting", "W")
-            # Output the font
-            if tool == "FF":
-                logger.log("Saving font to " + outfont, "P")
-                if outfontext.lower() == ".ufo" or outfontext.lower() == '.ttf':
-                    newfont.generate(outfont)
-                else: newfont.save(outfont)
-            elif tool == "FT":
-                logger.log("Saving font to " + outfont, "P")
-                newfont.save(outfont)
-            else:  # Must be Pyslifont Ufont
-                newfont.write(outfont)
-    elif newfont:
-        logger.log("Font returned to execute() but no output font is specified in arg spec", "X")
+                    if backup:
+                        if not os.path.isdir(backupdir):  # Create backup directory if not present
+                            try:
+                                os.mkdir(backupdir)
+                            except Exception as e:
+                                print(e)
+                                sys.exit(1)
+                        backupbase = os.path.join(backupdir, outfontbase+outfontext)
+                        # Work out backup name based on existing backups
+                        nums = sorted([int(i[len(backupbase)+1-len(i):-1]) for i in glob(backupbase+".*~")])  # Extract list of backup numbers from existing backups
+                        newnum = max(nums)+1 if nums else 1
+                        backupname = backupbase+"."+str(newnum)+"~"
+                        # Backup the font
+                        newfont.logger.log("Backing up input font to "+backupname, "P")
+                        shutil.copytree(outfont, backupname)
+                        # Purge old backups
+                        for i in range(0, len(nums) - backupmax + 1):
+                            backupname = backupbase+"."+str(nums[i])+"~"
+                            newfont.logger.log("Purging old backup "+backupname, "I")
+                            shutil.rmtree(backupname)
+                    else:
+                        newfont.logger.log("No font backup done due to backup parameter setting", "W")
+                # Output the font
+                if tool == "FF":
+                    logger.log("Saving font to " + outfont, "P")
+                    if outfontext.lower() == ".ufo" or outfontext.lower() == '.ttf':
+                        newfont.generate(outfont)
+                    else: newfont.save(outfont)
+                elif tool == "FT":
+                    logger.log("Saving font to " + outfont, "P")
+                    newfont.save(outfont)
+                else:  # Must be Pyslifont Ufont
+                    newfont.write(outfont)
+            else:
+                logger.log("Font returned to execute() but no output font is specified in arg spec", "X")
+    elif chain:             # When chaining return just args - the font can be accessed by args.ifont
+        return (args, None) # assuming that the script has not changed the input font
+
     if logger.errorcount or logger.warningcount:
         message = "Command completed with " + str(logger.errorcount) + " errors and " + str(logger.warningcount) + " warnings"
         if logger.scrlevel in ("S", "E") and logname is not "":

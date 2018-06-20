@@ -5,7 +5,7 @@ __copyright__ = 'Copyright (c) 2014 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
-import os
+import os, subprocess, difflib, sys
 
 class dirTree(dict) :
     """ An object to hold list of all files and directories in a directory
@@ -70,3 +70,77 @@ class dirTreeItem(object) :
         if fileType : self.fileType = fileType
         if flags : self.flags = flags
 
+class ufo_diff(object): # For diffing 2 ufos as part of testing
+    # returncodes:
+    #   0 - ufos are the same
+    #   1 - Differences were found
+    #   2 - Errors running the difference (eg can't open file
+    # diff - text of the differences
+    # errors - text of the errors
+
+    def __init__(self, ufo1, ufo2, ignoreOHCtime=True):
+
+        diffcommand = ["diff", "-r", "-c1", ufo1, ufo2]
+
+        # By default, if only difference in fontinfo is the openTypeHeadCreated timestamp ignore that
+
+        if ignoreOHCtime: # Exclude fontinfo if only diff is openTypeHeadCreated
+                          # Otherwise leave it in so differences are reported by main diff
+            fi1 = os.path.join(ufo1,"fontinfo.plist")
+            fi2 = os.path.join(ufo2, "fontinfo.plist")
+            fitest = subprocess.Popen(["diff", fi1, fi2, "-c1"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            text = fitest.communicate()
+            if fitest.returncode == 1:
+                difftext = text[0].split("\n")
+                if difftext[4].strip() == "<key>openTypeHeadCreated</key>" and len(difftext) == 12:
+                    diffcommand.append("--exclude=fontinfo.plist")
+
+        # Now do the main diff
+        test = subprocess.Popen(diffcommand, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        text = test.communicate()
+        self.returncode = test.returncode
+        self.diff = text[0]
+        self.errors = text[1]
+
+    def print_text(self): # Print diff info or errors from the diffcommand
+        if self.returncode == 0:
+            print("UFOs are the same")
+        elif self.returncode == 1:
+            print("UFOs are different")
+            print(self.diff)
+        elif self.returncode == 2:
+            print("Failed to compare UFOs")
+            print(self.errors)
+
+class text_diff(object): # For diffing 2 text files with option to ignore timestamps
+    # See ufo_diff for class attribute details
+
+    def __init__(self, log1, log2, ignore=0): # ignore - characters to ignore from left; typically 20 for timestamps
+        errors = []
+        try:
+            l1 = [x[ignore:-1] for x in open(log1, "r").readlines()]
+        except IOError:
+            errors.append("Can't open " + log1)
+        try:
+            l2 = [x[ignore:-1] for x in open(log2, "r").readlines()]
+        except IOError:
+            errors.append("Can't open " + log2)
+
+        if errors == []:
+            self.errors = ""
+            self.diff = "\n".join([x for x in difflib.unified_diff(l1, l2, log1, log2, n=0)])
+            self.returncode = 0 if self.diff == "" else 1
+        else:
+            self.diff = ""
+            self.errors = "\n".join(errors)
+            self.returncode = 2
+
+    def print_text(self): # Print diff info or errors the unified_diff command
+        if self.returncode == 0:
+            print("Files are the same")
+        elif self.returncode == 1:
+            print("Files are different")
+            print(self.diff)
+        elif self.returncode == 2:
+            print("Failed to compare Files")
+            print(self.errors)
