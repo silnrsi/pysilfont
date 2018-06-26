@@ -24,19 +24,21 @@ def doit(args) :
     deflayer = font.deflayer
 
     # Create mappings to find glyph name from decimal usv:
-    dusv2gname = {int(deflayer[gname]['unicode'][0].hex, 16): gname for gname in deflayer if len(deflayer[gname]['unicode']) == 1}
+    dusv2gname = {int(unicode.hex, 16): gname for gname in deflayer for unicode in deflayer[gname]['unicode']}
 
     # check for headers in the csv
     fl = incsv.firstline
     if fl is None: logger.log("Empty imput file", "S")
     numfields = len(fl)
-    if numfields == 1:
-        dataCol = 0    # Default for plain csv
-    elif numfields > 1:  # More than 1 column, so must have standard headers
-        if args.header in fl:
+    if numfields == 1 and args.header not in fl:
+        dataCol = 0       # Default for plain csv
+    elif numfields >= 1:  # Must have headers
+        try:
             dataCol = fl.index(args.header)
-        else:
-            logger.log("No " + args.header + " field in csv headers", "S")
+        except ValueError as e:
+            logger.log('Missing csv input field: ' + e.message, 'S')
+        except Exception as e:
+            logger.log('Error reading csv input field: ' + e.message, 'S')
         next(incsv.reader, None)  # Skip first line with headers in
     else:
         logger.log("Invalid csv file", "S")
@@ -54,7 +56,7 @@ def doit(args) :
                 continue
             # The USV wasn't in the font... try it as a glyph name
         if gname not in deflayer:
-            logger.log("glyph %s not in font: ignored" % gname, 'W')
+            logger.log("Glyph '%s' not in font; line %d ignored" % (gname, incsv.line_num), 'W')
             continue
         toProcess.add(gname)
 
