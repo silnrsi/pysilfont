@@ -74,7 +74,7 @@ class ufo_diff(object): # For diffing 2 ufos as part of testing
     # returncodes:
     #   0 - ufos are the same
     #   1 - Differences were found
-    #   2 - Errors running the difference (eg can't open file
+    #   2 - Errors running the difference (eg can't open file)
     # diff - text of the differences
     # errors - text of the errors
 

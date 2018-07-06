@@ -271,7 +271,6 @@ Code to support xml handling based on xml.etree cElementTree objects.  It covers
 - xmlitem() class
   - For reading and writing xml files
   - Keeps record of original and final xml strings, so only needs to write to disk if changed
-  - write_to_xml() function to create outxmlstr using ETWriter()
 - ETelement() class
   - For handling an ElementTree element
   - For each tag in the element, ETelement[tag] returns a list of sub-elements with that tag

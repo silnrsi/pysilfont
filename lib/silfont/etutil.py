@@ -20,13 +20,14 @@ _attribprotect['"'] = '&quot;' # Copy of element protect with double quote added
 
 class ETWriter(object) :
     """ General purpose ElementTree pretty printer complete with options for attribute order
-        beyond simple sorting, and which elements should use cdata """
+        beyond simple sorting, and which elements should use cdata
 
-    def __init__(self, etree, namespaces = None, attributeOrder = {}, takesCData = set(),
+        Note there is no support for namespaces.  Originally there was, and if it is needed in the future look at
+        commits from 10th May 2018 or earlier.  The code there would need reworking!"""
+
+    def __init__(self, etree, attributeOrder = {}, takesCData = set(),
             indentIncr = "  ", indentFirst = "  ", indentML = False, inlineelem=[], precision = None, numAttribs = []):
         self.root = etree
-        if namespaces is None : namespaces = {}
-        self.namespaces = namespaces
         self.attributeOrder = attributeOrder    # Sort order for attributes - just one list for all elements
         self.takesCData = takesCData
         self.indentIncr = indentIncr            # Incremental increase in indent
@@ -39,11 +40,10 @@ class ETWriter(object) :
     def _protect(self, txt, base=_attribprotect) :
         return re.sub(ur'['+ur"".join(base.keys())+ur"]", lambda m: base[m.group(0)], txt)
 
-    def serialize_xml(self, write, base = None, indent = '') :
-        """Output the object using write() in a normalised way:
-                If namespaces are used, use serialize_nsxml instead"""
+    def serialize_xml(self, base = None, indent = '') :
+        # Create the xml and return as a string
+        outstrings = []
         outstr=""
-
         if base is None :
             base = self.root
             outstr += '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -85,8 +85,8 @@ class ETWriter(object) :
                     incr = self.indentFirst
                 else:
                     incr = self.indentIncr
-                write(outstr); outstr=""
-                for b in base : self.serialize_xml(write, base=b, indent=indent + incr)
+                outstrings.append(outstr); outstr=""
+                for b in base : outstrings.append(self.serialize_xml(base=b, indent=indent + incr))
                 if base[-1].tag not in self.inlineelem : outstr += indent
             outstr += '</{}>'.format(tag)
         else :
@@ -98,104 +98,8 @@ class ETWriter(object) :
         if '.commentsafter' in base.attrib :
             for c in base.attrib['.commentsafter'].split(",") : outstr += u'{}<!--{}-->\n'.format(indent, c)
 
-        write(outstr)
-
-    def _localisens(self, tag) :
-        if tag[0] == '{' :
-            ns, localname = tag[1:].split('}', 1)
-            qname = self.namespaces.get(ns, '')
-            if qname :
-                return ('{}:{}'.format(qname, localname), qname, ns)
-            else :
-                self.nscount += 1
-                return (localname, 'ns_' + str(self.nscount), ns)
-        else :
-            return (tag, None, None)
-
-    def _nsprotectattribs(self, attribs, localattribs, namespaces) :
-        if attribs is not None :
-            for k, v in attribs.items() :
-                (lt, lq, lns) = self._localisens(k)
-                if lns and lns not in namespaces :
-                    namespaces[lns] = lq
-                    localattribs['xmlns:'+lq] = lns
-                localattribs[lt] = v
-
-    def serialize_nsxml(self, write, base = None, indent = '', topns = True, namespaces = {}) :
-        ## Not currently used.  Needs amending to mirror changes in serialize_xml for dummy attributes (and efficiency)"""
-        """Output the object using write() in a normalised way:
-                topns if set puts all namespaces in root element else put them as low as possible"""
-        if base is None :
-            base = self.root
-            write('<?xml version="1.0" encoding="UTF-8"?>\n')
-            doctype = base.attrib['_doctype'] if '_doctype' in base.attrib else None
-            if doctype is not None:
-                del base.attrib["_doctype"]
-                write(u'<!DOCTYPE {}>\n'.format(doctype))
-        (tag, q, ns) = self._localisens(base.tag)
-
-        localattribs = {}
-        if ns and ns not in namespaces :
-            namespaces[ns] = q
-            localattribs['xmlns:'+q] = ns
-        if topns :
-            if base == self.root :
-                for n,q in self.namespaces.items() :
-                    localattribs['xmlns:'+q] = n
-                    namespaces[n] = q
-        else :
-            for c in base :
-                (lt, lq, lns) = self._localisens(c.tag)
-                if lns and lns not in namespaces :
-                    namespaces[lns] = q
-                    localattribs['xmlns:'+lq] = lns
-        self._nsprotectattribs(getattr(base, 'attrib', None), localattribs, namespaces)
-
-        if '_comments' in base.attrib :
-            for c in base.attrib['_comments'].split(",") :
-               write(u'{}<!--{}-->\n'.format(indent, c))
-            del base.attrib["_comments"]
-
-        write(u'{}<{}'.format(indent, tag))
-        if len(localattribs) :
-            maxAts = len(self.attributeOrder) + 1
-            def cmpattrib(x, y) :
-                return cmp(self.attributeOrder.get(x, maxAts), self.attributeOrder.get(y, maxAts)) or cmp(x, y)
-            for k in sorted(localattribs.keys(), cmp=cmpattrib) :
-                write(u' {}="{}"'.format(self._localisens(k)[0], self._protect(localattribs[k])))
-        if len(base) :
-            write('>\n')
-            for b in base :
-                if base == self.root:
-                    incr = self.indentFirst
-                else:
-                    incr = self.indentIncr
-                self.serialize_nsxml(write, base=b, indent=indent + incr, topns=topns, namespaces=namespaces.copy())
-            write('{}</{}>\n'.format(indent, tag))
-        elif base.text :
-            if base.text.strip() :
-                if tag not in self.takesCData :
-                    t = base.text
-
-                    if self.indentML : t = t.replace('\n', '\n' + indent)
-                    t = self._protect(t, base=_elementprotect)
-                else :
-                    t = "<![CDATA[\n\t" + indent + base.text.replace('\n', '\n\t' + indent) + "\n" + indent + "]]>"
-                write(u'>{}</{}>\n'.format(t, tag))
-            else :
-                write('/>\n')
-        else :
-            write('/>\n')
-
-        if '_commentsafter' in base.attrib :
-            for c in base.attrib['_commentsafter'].split(",") :
-               write(u'{}<!--{}-->\n'.format(indent, c))
-            del base.attrib["_commentsafter"]
-
-    def add_namespace(self, q, ns) :
-        if ns in self.namespaces : return self.namespaces[ns]
-        self.namespaces[ns] = q
-        return q
+        outstrings.append(outstr)
+        return "".join(outstrings)
 
 class _container(object) :
     # Parent class for other objects
@@ -235,9 +139,6 @@ class xmlitem(_container):
                 except Exception as e:
                     self.logger.log("Failed to parse xml for " + fulln, "E")
                     self.logger.log(str(e), "S")
-
-    def write_to_xml(self,text) : # Used by ETWriter.serialize_xml()
-        self.outxmlstr = self.outxmlstr + text
 
     def write_to_file(self,dirn,filen) :
         outfile=codecs.open(os.path.join(dirn,filen),'w','utf-8')

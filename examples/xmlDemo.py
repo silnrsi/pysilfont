@@ -27,22 +27,23 @@ def doit(args) :
     xmlobj.etree = ET.fromstring(xmlstring)
     
     etwobj = etutil.ETWriter(xmlobj.etree)
-    etwobj.serialize_xml(xmlobj.write_to_xml)
-    
+    xmlobj.outxmlstr = etwobj.serialize_xml()
+
     ofile1.write(xmlobj.outxmlstr)
     
     # Just using ETWriter
     
     etwobj = etutil.ETWriter( ET.fromstring(xmlstring) )
-    etwobj.serialize_xml(ofile2.write)
-    
+    xmlstr = etwobj.serialize_xml()
+    ofile2.write(xmlstr)
     # Changing parameters
     
     etwobj = etutil.ETWriter( ET.fromstring(xmlstring) )
     etwobj.indentIncr = "    "
     etwobj.indentFirst = ""
-    etwobj.serialize_xml(ofile3.write)
-    
+    xmlstr = etwobj.serialize_xml()
+    ofile3.write(xmlstr)
+
     # Close files and exit
     ofile1.close()
     ofile2.close()

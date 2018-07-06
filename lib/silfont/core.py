@@ -250,10 +250,9 @@ def execute(tool, fn, argspec, chain = None):
     #   -l  opens log file and also creates a logger function to write to the log file
     #   -p  other parameters. Includes backup settings and loglevel/scrlevel settings for logger
     #       for UFOlib scripts, also includes all outparams keys and ufometadata settings
-    # infont and returnfont are used when chaining calls to execute together, passing ifont on without writing to disk
 
     chainfirst = False
-    if chain == "first": # If fist call to execute has this set, only to the final return part of chaining
+    if chain == "first": # If first call to execute has this set, only do the final return part of chaining
         chainfirst = True
         chain = None
 
@@ -598,8 +597,8 @@ def execute(tool, fn, argspec, chain = None):
                     newfont.write(outfont)
             else:
                 logger.log("Font returned to execute() but no output font is specified in arg spec", "X")
-    elif chain:             # When chaining return just args - the font can be accessed by args.ifont
-        return (args, None) # assuming that the script has not changed the input font
+    elif chain:             # ) When chaining return just args - the font can be accessed by args.ifont
+        return (args, None) # ) assuming that the script has not changed the input font
 
     if logger.errorcount or logger.warningcount:
         message = "Command completed with " + str(logger.errorcount) + " errors and " + str(logger.warningcount) + " warnings"

@@ -76,7 +76,7 @@ class Fxml(ETU.ETelement) :
         self.outxmlstr=""
         element = self.create_element()
         etw = ETU.ETWriter(element, inlineelem = ["em"])
-        etw.serialize_xml(self.write_to_xml)
+        self.outxmlstr = etw.serialize_xml()
         file.write(self.outxmlstr)
 
     def create_element(self) : # Create a new Elementtree element based on current object contents
@@ -88,9 +88,6 @@ class Fxml(ETU.ETelement) :
         element.append(self.head.create_element())
         for testgroup in self.testgroups : element.append(testgroup.create_element())
         return element
-
-    def write_to_xml(self,text) : # Used by ETWriter.serialize_xml()
-        self.outxmlstr = self.outxmlstr + text
 
 class Fhead(ETU.ETelement) :
     def __init__(self, parent, element) :
