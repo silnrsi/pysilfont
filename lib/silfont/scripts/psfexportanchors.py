@@ -79,7 +79,7 @@ def doit(args) :
     x = attOrder.split(',')
     attributeOrder = dict(zip(x,range(len(x))))
     etwobj=ETWriter(fontElement, indentFirst=indentFirst, indentIncr=indentIncr, attributeOrder=attributeOrder)
-    etwobj.serialize_xml(ofile.write)
+    ofile.write(etwobj.serialize_xml())
 
 def cmd() : execute("UFO",doit,argspec)
 if __name__ == "__main__": cmd()
