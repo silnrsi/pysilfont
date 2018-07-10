@@ -29,7 +29,7 @@ def doit(args) :
     for line in args.input.readlines():
         filelinecount += 1
         testline = line.strip()
-	if len(testline) > 0 and testline[0] != '#':  # not whitespace or comment
+        if len(testline) > 0 and testline[0] != '#':  # not whitespace or comment
             linecount += 1
             cgobj.CDline=line
             cgobj.CDelement=None
@@ -38,7 +38,7 @@ def doit(args) :
                 if cgobj.CDelement != None:
                     f.append(cgobj.CDelement)
                     elementcount += 1
-            except ValueError, e:
+            except ValueError as e:
                 lfile.write("Line "+str(filelinecount)+": "+str(e)+'\n')
     if linecount != elementcount:
         lfile.write("Lines read from input file: " + str(filelinecount)+'\n')
@@ -56,7 +56,7 @@ def doit(args) :
     x = attOrder.split(',')
     attributeOrder = dict(zip(x,range(len(x))))
     etwobj=ETWriter(f, indentFirst=indentFirst, indentIncr=indentIncr, attributeOrder=attributeOrder)
-    etwobj.serialize_xml(ofile.write)
+    ofile.write(etwobj.serialize_xml())
     
     return
 
