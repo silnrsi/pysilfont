@@ -511,14 +511,17 @@ With the csv file:
 
 ---
 ####  psfsetkeys
-Usage: **`psfsetkeys [--plist PLIST] [-i INPUT] [-k KEY] [-v VALUE] ifont [ofont]`**
+Usage: **`psfsetkeys [--plist PLIST] [-i INPUT] [-k KEY] [-v VALUE] [--file FILE] [--filepart FILEPART] ifont [ofont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
 Set keys in a UFO p-list file.
-A single key can be set by specifying KEY and VALUE.
-Multiple keys can be set using a csv INPUT file, format "key,value".
+A single key can be set by specifying KEY and one of VALUE, FILE, or FILEPART.
+VALUE should be a single line string, FILE and FILEPARTS are filenames.
+With FILEPART, the contents of the file are read until the first blank line.
+This is useful for setting the copyright key from the OFL.txt file.
 Values of True or False are converted to the integers 1 or 0.
+Multiple keys can be set using a csv INPUT file, format "key,value".
 
 PLIST selects which p-list to modify.
 If not specified defaults to `fontinfo` which means the `fontinfo.plist` file is modified.

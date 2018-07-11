@@ -6,6 +6,7 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'Bobby de Vos'
 
 from silfont.core import execute
+import codecs
 
 suffix = "_setkeys"
 argspec = [
@@ -15,6 +16,8 @@ argspec = [
     ('-i','--input',{'help': 'Input csv file'}, {'type': 'incsv', 'def': None}),
     ('-k','--key',{'help': 'Name of key to set'},{}),
     ('-v','--value',{'help': 'Value to set key to'},{}),
+    ('--file',{'help': 'Use contents of file to set key to'},{}),
+    ('--filepart',{'help': 'Use contents of part of the file to set key to'},{}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': suffix+'.log'})
     ]
 
@@ -26,13 +29,35 @@ def doit(args) :
     else:
         font_plist = args.ifont.fontinfo
 
-    # Set one key
-    if args.key and not args.value:
+    # Ensure enough options were specified
+    value = args.value or args.file or args.filepart
+    if args.key and not value:
         args.logger.log('Value needs to be specified')
-    if not args.key and args.value:
+    if not args.key and value:
         args.logger.log('Key needs to be specified')
+
+    # Use a one line string to set the key
     if args.key and args.value:
         set_key_value(font_plist, args.key, args.value)
+
+    # Use entire file contents to set the key
+    if args.key and args.file:
+        fh = codecs.open(args.file, 'r', 'utf-8')
+        contents = ''.join(fh.readlines())
+        set_key_value(font_plist, args.key, contents)
+        fh.close()
+
+    # Use some of the file contents to set the key
+    if args.key and args.filepart:
+        fh = codecs.open(args.filepart, 'r', 'utf-8')
+        lines = list()
+        for line in fh:
+            if line == '\n':
+                break
+            lines.append(line)
+        contents = ''.join(lines)
+        set_key_value(font_plist, args.key, contents)
+        fh.close()
 
     # Set many keys
     if args.input:
