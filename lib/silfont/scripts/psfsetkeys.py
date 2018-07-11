@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-'''Set keys with given values in a UFO fontinfo.plist file.'''
+'''Set keys with given values in a UFO plist file.'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2018 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
@@ -20,9 +20,6 @@ argspec = [
 
 def doit(args) :
 
-    # Currently setval() only works for integer, real or string.
-    # For other items you need to construct an elementtree element and use setelem()
-
     # Determine which plist to modify
     if args.plist == 'lib':
         font_plist = args.ifont.lib
@@ -35,7 +32,7 @@ def doit(args) :
     if not args.key and args.value:
         args.logger.log('Key needs to be specified')
     if args.key and args.value:
-        font_plist.setval(args.key, 'string', args.value)
+        set_key_value(font_plist, args.key, args.value)
 
     # Set many keys
     if args.input:
@@ -46,9 +43,29 @@ def doit(args) :
         for line in incsv:
             key = line[0]
             value = line[1]
-            font_plist.setval(key, 'string', value)
+            set_key_value(font_plist, key, value)
 
     return args.ifont
+
+
+def set_key_value(font_plist, key, value):
+    """Set key to value in font."""
+
+    # Currently setval() only works for integer, real or string.
+    # For other items you need to construct an elementtree element and use setelem()
+
+    value_type = 'string'
+
+    # Handle boolean values
+    if value == 'True':
+        value_type = 'integer'
+        value = 1
+    if value == 'False':
+        value_type = 'integer'
+        value = 0
+
+    font_plist.setval(key, value_type, value)
+
 
 def cmd() : execute("UFO",doit, argspec)
 if __name__ == "__main__": cmd()

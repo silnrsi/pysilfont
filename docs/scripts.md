@@ -518,6 +518,7 @@ _([Standard options](docs.md#standard-command-line-options) also apply)_
 Set keys in a UFO p-list file.
 A single key can be set by specifying KEY and VALUE.
 Multiple keys can be set using a csv INPUT file, format "key,value".
+Values of True or False are converted to the integers 1 or 0.
 
 PLIST selects which p-list to modify.
 If not specified defaults to `fontinfo` which means the `fontinfo.plist` file is modified.
