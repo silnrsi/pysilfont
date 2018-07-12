@@ -517,10 +517,10 @@ _([Standard options](docs.md#standard-command-line-options) also apply)_
 
 Set keys in a UFO p-list file.
 A single key can be set by specifying KEY and one of VALUE, FILE, or FILEPART.
-VALUE should be a single line string, FILE and FILEPARTS are filenames.
+VALUE should be a single line string, FILE and FILEPART should be a filename.
 With FILEPART, the contents of the file are read until the first blank line.
 This is useful for setting the copyright key from the OFL.txt file.
-Values of True or False are converted to the integers 1 or 0.
+Values of true or false are converted to boolean values.
 Multiple keys can be set using a csv INPUT file, format "key,value".
 
 PLIST selects which p-list to modify.

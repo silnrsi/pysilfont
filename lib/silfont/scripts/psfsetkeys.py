@@ -6,6 +6,7 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'Bobby de Vos'
 
 from silfont.core import execute
+from xml.etree import cElementTree as ET
 import codecs
 
 suffix = "_setkeys"
@@ -79,17 +80,12 @@ def set_key_value(font_plist, key, value):
     # Currently setval() only works for integer, real or string.
     # For other items you need to construct an elementtree element and use setelem()
 
-    value_type = 'string'
-
-    # Handle boolean values
-    if value == 'True':
-        value_type = 'integer'
-        value = 1
-    if value == 'False':
-        value_type = 'integer'
-        value = 0
-
-    font_plist.setval(key, value_type, value)
+    if value == 'true' or value == 'false':
+        # Handle boolean values
+        font_plist.setelem(key, ET.fromstring('<' + value + '/>'))
+    else:
+        # Handle string (including multi-line strings) values
+        font_plist.setval(key, 'string', value)
 
 
 def cmd() : execute("UFO",doit, argspec)
