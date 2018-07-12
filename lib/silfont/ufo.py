@@ -681,7 +681,7 @@ class Ulayer(_Ucontainer):
         glifn = makeFileName(glyphn)
         names = []
         while glifn in self.contents:  # need to check for duplicate glif names
-            names.append(glfin)
+            names.append(glifn)
             glifn = makeFileName(glyphn, names)
         glifn += ".glif"
         glyph.filen = glifn
@@ -807,7 +807,7 @@ class Uglif(ETU.xmlitem):
                         et.append(item.element)
 
     def add(self, ename, attrib=None):
-        # Add an element and corrensponding object to a glif
+        # Add an element and corresponding object to a glif
         element = ET.Element(ename)
         if attrib: element.attrib = attrib
         if ename == "lib": ET.SubElement(element, "dict")
