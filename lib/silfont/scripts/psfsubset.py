@@ -13,7 +13,7 @@ import re
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
     ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
-    ('-i','--input',{'help': 'Input csv file'}, {'type': 'incsv', 'def': 'glyphlist.csv'}),
+    ('-i','--input',{'help': 'Input csv file'}, {'type': 'incsv'}),
     ('--header', {'help': 'Column header for glyphlist', 'default': 'glyph_name'}, {}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_subset.log'})]
 
