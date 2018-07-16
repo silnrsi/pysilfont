@@ -5,11 +5,9 @@ __copyright__ = 'Copyright (c) 2018 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Bob Hallissy'
 
+from xml.etree import cElementTree as ET
 from silfont.core import execute
 from silfont.ufo import makeFileName, Uglif
-import silfont.util as UT
-from shutil import copyfile
-import os
 import re
 
 argspec = [
@@ -19,7 +17,6 @@ argspec = [
     ('-i','--input',{'help': 'Input csv file'}, {'type': 'incsv', 'def': 'glyphlist.csv'}),
     ('-l','--log',{'help': 'Set log file name'}, {'type': 'outfile', 'def': '_copy.log'}),
     ('-n', '--name', {'help': 'Include glyph named name', 'action': 'append'}, {}),
-#    ('-a','--anchors',{'help' : 'Copy across anchor points', 'action' : 'store_true'}, {}),
     ('-f','--force',{'help' : 'Overwrite existing glyphs in the font', 'action' : 'store_true'}, {}),
     ('--rename',{'help' : 'Rename glyphs to names in this column'}, {}),
     ('--unicode', {'help': 'Re-encode glyphs to USVs in this column'}, {}),
@@ -56,58 +53,53 @@ def copyglyph(sfont, tfont, g, args):
     """copy glyph from source font to target font"""
     # Generally, 't' variables are target, 's' are source. E.g., tfont is target font.
 
-    # at present, this is a really poor algorithm: it first copies the physical .glif file into the target UFO, and
-    # then parses it. This means that if a separate output font was specified on the command line, the target font
-    # is corrupted.
-
     global dusv2gname
     if not dusv2gname:
         # Create mappings to find exsting glyph name from decimal usv:
         dusv2gname = {int(unicode.hex, 16): gname for gname in tfont.deflayer for unicode in tfont.deflayer[gname]['unicode']}
         # NB: Assumes font is well-formed and has at most one glyph with any particular Unicode value.
 
-    # The glif we want to copy and its path:
-    sglif = sfont.deflayer[g.oldname]
-    sfile = os.path.join(sglif.layer.font.ufodir, sglif.layer.layerdir, sglif.filen)
+    # Create a new etree from the source glyph's xmlstr:
+    etree = ET.fromstring(sfont.deflayer[g.oldname].inxmlstr)
 
     # The layer where we want it:
     tlayer = tfont.deflayer
 
-    # if new name present in target layer, re-use its file name else create new.
+    # if new name present in target layer, re-use the glyph else create new.
     if g.newname in tlayer:
-        # New name is already in font: copy the .glif file over the existing one and re-parse it:
-        tfilen = tlayer[g.newname].filen
-        tfont.logger.log("Replacing glyph {0} with new glyph".format(g.newname), "V")
+        # New name is already in font: re-use the corresponding glyph
+        glyph = tlayer[g.newname]
+        # While here, remove any Unicodes from the old glyph from our mapping:
+        for unicode in glyph["unicode"]:
+            dusv = int(unicode.hex, 16)
+            if dusv in dusv2gname:
+                del dusv2gname[dusv]
+        # Now set the glyph's etree and process it:
+        glyph.etree = etree
+        glyph.process_etree()
+        # Rename the glyph if needed.
+        if glyph.name != g.newname:
+            glyph.name = g.newname
+        tfont.logger.log("Replaced glyph '{0}' with new glyph".format(g.newname), "V")
     else:
-        # New name is not in the font: make up a new filename and then copy the file over
-        tfilen = makeFileName(g.newname)
-        names = []
-        while tfilen in tlayer.contents:  # need to check for duplicate glif names
-            names.append(tfilen)
-            tfilen = makeFileName(g.newname, names)
-        tfilen += ".glif"
-        tfont.logger.log("Adding glyph {0}".format(g.newname), "V")
-        tlayer.contents.addval(g.newname, "string", tfilen)
-
-
-    # Copy over the .glif file and parse it
-    tfile = os.path.join(tfont.ufodir, tlayer.layerdir, tfilen)
-    copyfile(sfile, tfile)
-    # The following adapted from Ulayer.__init__
-    glyph = Uglif(layer=tlayer, filen=tfilen)
-    tlayer._contents[g.newname] = glyph
-    if tfilen in tlayer.dtree:
-        tlayer.dtree[tfilen].setinfo(read=True, fileObject=glyph, fileType="xml")
-    else:
-        tlayer.dtree[tfilen] = UT.dirTreeItem(read=True, added=True, fileObject=glyph, fileType="xml")
-    if glyph.name != g.newname:
-        super(Uglif, glyph).__setattr__("name", g.newname)  # Need to use super to bypass normal glyph renaming logic
+        # New name is not in the font: create a new glyph
+        glyph = Uglif(layer = tlayer)
+        # Now set the glyph's etree and process it:
+        glyph.etree = etree
+        glyph.process_etree()
+        # Rename the glyph if needed
+        if glyph.name != g.newname:
+            # Use super to bypass normal glyph renaming logic since it isn't yet in the layer
+            super(Uglif, glyph).__setattr__("name", g.newname)
+        # add new glyph to layer:
+        tlayer.addGlyph(glyph)
+        tfont.logger.log("Added glyph '{0}'".format(g.newname), "V")
 
     # todo: set psname if requested; adjusting any other glyphs in the font as needed.
 
     # Adjust encoding of new glyph
     if args.unicode:
-        # First remove any encodings this glyph had in the source font:
+        # First remove any encodings the copied glyph had in the source font:
         for i in xrange(len(glyph['unicode']) - 1, -1, -1):
             glyph.remove('unicode', index=i)
         if g.dusv:
@@ -148,7 +140,7 @@ def copyComponent(sfont, tfont, oldname, args):
     # if oldname is already in the target font, make up a new name by adding ".copy1", incrementing as necessary
     if oldname not in tfont.deflayer:
         newname = oldname
-        tfont.logger.log("Copying component {0} with existing name".format(oldname), "V")
+        tfont.logger.log("Copying component '{0}' with existing name".format(oldname), "V")
     else:
         x = gcopyRE.match(oldname)
         base = x.group(1)
@@ -156,7 +148,7 @@ def copyComponent(sfont, tfont, oldname, args):
         while "{0}.copy{1}".format(base,i) in tfont.deflayer:
             i += 1
         newname = "{0}.copy{1}".format(base,i)
-        tfont.logger.log("Copying component {0} with new name {1}".format(oldname, newname), "V")
+        tfont.logger.log("Copying component '{0}' with new name '{1}'".format(oldname, newname), "V")
 
     # todo: something similar to above but for psname
 
@@ -247,7 +239,7 @@ def doit(args) :
     # copy glyphs by name
     while len(glist) :
         g = glist.pop(0)
-        tfont.logger.log("Copying source glyph {0} as {1}".format(g.oldname, g.newname), "I")
+        tfont.logger.log("Copying source glyph '{0}' as '{1}'".format(g.oldname, g.newname), "I")
         copyglyph(sfont, tfont, g, args)
 
     return tfont
