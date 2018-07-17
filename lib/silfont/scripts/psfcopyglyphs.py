@@ -59,41 +59,37 @@ def copyglyph(sfont, tfont, g, args):
         dusv2gname = {int(unicode.hex, 16): gname for gname in tfont.deflayer for unicode in tfont.deflayer[gname]['unicode']}
         # NB: Assumes font is well-formed and has at most one glyph with any particular Unicode value.
 
-    # Create a new etree from the source glyph's xmlstr:
-    etree = ET.fromstring(sfont.deflayer[g.oldname].inxmlstr)
-
-    # The layer where we want it:
+    # The layer where we want the copied glyph:
     tlayer = tfont.deflayer
 
-    # if new name present in target layer, re-use the glyph else create new.
+    # if new name present in target layer, delete it.
     if g.newname in tlayer:
-        # New name is already in font: re-use the corresponding glyph
+        # New name is already in font:
+        tfont.logger.log("Replacing glyph '{0}' with new glyph".format(g.newname), "V")
         glyph = tlayer[g.newname]
-        # While here, remove any Unicodes from the old glyph from our mapping:
+        # While here, remove from our mapping any Unicodes from the old glyph:
         for unicode in glyph["unicode"]:
             dusv = int(unicode.hex, 16)
             if dusv in dusv2gname:
                 del dusv2gname[dusv]
-        # Now set the glyph's etree and process it:
-        glyph.etree = etree
-        glyph.process_etree()
-        # Rename the glyph if needed.
-        if glyph.name != g.newname:
-            glyph.name = g.newname
-        tfont.logger.log("Replaced glyph '{0}' with new glyph".format(g.newname), "V")
+        # Ok, remove old glyph from the layer
+        tlayer.delGlyph(g.newname)
     else:
-        # New name is not in the font: create a new glyph
-        glyph = Uglif(layer = tlayer)
-        # Now set the glyph's etree and process it:
-        glyph.etree = etree
-        glyph.process_etree()
-        # Rename the glyph if needed
-        if glyph.name != g.newname:
-            # Use super to bypass normal glyph renaming logic since it isn't yet in the layer
-            super(Uglif, glyph).__setattr__("name", g.newname)
-        # add new glyph to layer:
-        tlayer.addGlyph(glyph)
-        tfont.logger.log("Added glyph '{0}'".format(g.newname), "V")
+        # New name is not in the font:
+        tfont.logger.log("Adding glyph '{0}'".format(g.newname), "V")
+
+    # Create new glyph
+    glyph = Uglif(layer = tlayer)
+    # Set etree from source glyph
+    glyph.etree = ET.fromstring(sfont.deflayer[g.oldname].inxmlstr)
+    glyph.process_etree()
+    # Rename the glyph if needed
+    if glyph.name != g.newname:
+        # Use super to bypass normal glyph renaming logic since it isn't yet in the layer
+        super(Uglif, glyph).__setattr__("name", g.newname)
+    # add new glyph to layer:
+    tlayer.addGlyph(glyph)
+    tfont.logger.log("Added glyph '{0}'".format(g.newname), "V")
 
     # todo: set psname if requested; adjusting any other glyphs in the font as needed.
 
