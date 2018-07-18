@@ -11,16 +11,16 @@ from silfont.ufo import makeFileName, Uglif
 import re
 
 argspec = [
-    ('sfont',{'help': 'Font to get glyphs from'}, {'type': 'infont'}),
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
-    ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont', 'def': 'new'}),
+    ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
+    ('-s','--source',{'help': 'Font to get glyphs from'}, {'type': 'infont'}),
     ('-i','--input',{'help': 'Input csv file'}, {'type': 'incsv', 'def': 'glyphlist.csv'}),
+    ('-f','--force',{'help' : 'Overwrite existing glyphs in the font', 'action' : 'store_true'}, {}),
     ('-l','--log',{'help': 'Set log file name'}, {'type': 'outfile', 'def': '_copy.log'}),
     ('-n', '--name', {'help': 'Include glyph named name', 'action': 'append'}, {}),
-    ('-f','--force',{'help' : 'Overwrite existing glyphs in the font', 'action' : 'store_true'}, {}),
     ('--rename',{'help' : 'Rename glyphs to names in this column'}, {}),
     ('--unicode', {'help': 'Re-encode glyphs to USVs in this column'}, {}),
-    ('-s','--scale',{'type' : float, 'help' : 'Scale glyphs by this factor'}, {})
+    ('--scale',{'type' : float, 'help' : 'Scale glyphs by this factor'}, {})
 ]
 
 class Glyph:
@@ -140,7 +140,8 @@ def copyComponent(sfont, tfont, oldname, args):
     else:
         x = gcopyRE.match(oldname)
         base = x.group(1)
-        i = int(x.group(2)) if not None else 1
+        try: i = int(x.group(2))
+        except: i = 1
         while "{0}.copy{1}".format(base,i) in tfont.deflayer:
             i += 1
         newname = "{0}.copy{1}".format(base,i)
@@ -154,8 +155,8 @@ def copyComponent(sfont, tfont, oldname, args):
     return newname
 
 def doit(args) :
-    sfont = args.sfont  # source UFO
-    tfont = args.ifont  # target UFO
+    sfont = args.source  # source UFO
+    tfont = args.ifont   # target UFO
     incsv = args.input
     logger = args.logger
 
@@ -171,7 +172,7 @@ def doit(args) :
     renameCol = None
     psCol = None
     usvCol = None
-    if numfields > 1:
+    if numfields > 1 or args.rename or args.unicode:
         # required columns:
         try:
             nameCol = fl.index('glyph_name');
@@ -186,8 +187,6 @@ def doit(args) :
         # optional columns
         psCol  = fl.index('ps_name') if 'ps_name' in fl else None
         next(incsv.reader, None)  # Skip first line with headers in
-    else:
-        logger.log("Invalid csv file", "S")
 
     # list of glyphs to copy
     glist = list()
