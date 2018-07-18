@@ -160,9 +160,6 @@ def doit(args) :
     incsv = args.input
     logger = args.logger
 
-    if args.name and (args.rename or args.unicode):
-        logger.log("--name cannot be used with --rename or --unicode", "S")
-
     # Get headings from csvfile:
     fl = incsv.firstline
     if fl is None: logger.log("Empty imput file", "S")
@@ -186,6 +183,7 @@ def doit(args) :
             logger.log('Error reading csv input field: ' + e.message, 'S')
         # optional columns
         psCol  = fl.index('ps_name') if 'ps_name' in fl else None
+    if 'glyph_name' in fl:
         next(incsv.reader, None)  # Skip first line with headers in
 
     # list of glyphs to copy
@@ -234,7 +232,8 @@ def doit(args) :
     # copy glyphs by name
     while len(glist) :
         g = glist.pop(0)
-        tfont.logger.log("Copying source glyph '{0}' as '{1}'".format(g.oldname, g.newname), "I")
+        tfont.logger.log("Copying source glyph '{0}' as '{1}'{2}".format(g.oldname, g.newname,
+                         " (U+{0:04X})".format(g.dusv) if g.dusv else ""), "I")
         copyglyph(sfont, tfont, g, args)
 
     return tfont

@@ -20,6 +20,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfcheckbasicchars](#psfcheckbasicchars) | Check UFO for glyphs that represent recommended basic characters |
 | [psfcompdef2xml](#psfcompdef2xml) | Convert composite definition file to XML format |
 | [psfcompressgr](#psfcompressgr) | Compress Graphite tables in a ttf font |
+| [psfcopyglyphs](#psfcopyglyphs) | Copy glyphs from one UFO to another with optional scale and rename |
 | [psfcopymeta](#psfcopymeta) | Copy basic metadata from one UFO to another, for fonts in related families |
 | [psfcreateinstances](#psfcreateinstances) | Create one or more instance UFOs from one or more designspace files |
 | [psfcsv2comp](#psfcsv2comp) | Create composite definition file from csv |
@@ -223,6 +224,56 @@ Usage: **`psfcompressgr ifont [ofont]`**
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
 Compress Graphite tables in a font
+
+---
+####  psfcopyglyphs
+Usage: **`psfcopyglyphs [-i INPUT] -s SOURCE ifont [ofont]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Copy selected glyphs from a source UFO to a target UFO.
+
+required arguments:
+
+```
+  ifont                 Target font into which glyphs will be copied
+  -s SOURCE, --source SOURCE
+                        Font to get glyphs from
+```
+
+optional arguments:
+```
+  ofont                 output font to create instead of rewriting ifont
+  -i INPUT, --input INPUT
+                        CSV file identifying glyphs to copy
+  -n NAME, --name NAME  Include glyph named NAME
+  -f, --force           Overwrite existing glyphs in the target font
+  --scale SCALE         Scale glyphs by this factor
+  --rename COLHEADER    Names column in CSV containing new names for glyphs
+  --unicode COLHEADER   Names column in CSV containing USVs to assign to glyphs
+```
+
+Glyphs to be copied are specified by the `INPUT` CSV file and/or on the command line.
+
+When provided, if the CSV file has only one column, a column header is not needed and each line names one glyph to be copied.
+
+If the CSV file has more than one column, then it must have headers, including at least:
+
+- `glyph_name`  contains the name of the glyph in the SOURCE that is to be copied.
+
+If `--rename` parameter is supplied, it identifies the column that will provide a new name for the glyph in the target font. For any particular glyph, if this column is empty then the glyph is not renamed.
+
+If `--unicode` parameter is supplied, it identifies the column that provides an optional Unicode Scalar Value (USV) for the glyph in the target font. For any particular glyph, if this column is empty then the glyph will not be encoded.
+
+Glyphs to be copied can also be specified on the command line via one or more `--name` parameters. Glyphs specified in this way will not be renamed or encoded.
+
+If any glyph identified by the CSV or `--name` parameter already exists in the target font, it will not be overwritten unless the `--force` parameter is supplied.
+
+If any glyph being copied is a composite glyph, then its components are also copied. In the case that a component has the same name as a glyph already in the font, the component is renamed by appending `.copyN` (where N is 1, 2, 3, etc.) before being copied.
+
+Limitations:
+
+- At present, the postscript glyph names in the target font are left unchanged and may therefore be inaccurate. Use `psfsetpsnames` if needed.
 
 ---
 ####  psfcopymeta
