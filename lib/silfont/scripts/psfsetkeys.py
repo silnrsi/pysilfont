@@ -84,8 +84,13 @@ def set_key_value(font_plist, key, value):
         # Handle boolean values
         font_plist.setelem(key, ET.fromstring('<' + value + '/>'))
     else:
-        # Handle string (including multi-line strings) values
-        font_plist.setval(key, 'string', value)
+        try:
+            # Handle integers values
+            number = int(value)
+            font_plist.setval(key, 'integer', number)
+        except ValueError:
+            # Handle string (including multi-line strings) values
+            font_plist.setval(key, 'string', value)
 
 
 def cmd() : execute("UFO",doit, argspec)

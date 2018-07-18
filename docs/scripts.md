@@ -571,8 +571,10 @@ A single key can be set by specifying KEY and one of VALUE, FILE, or FILEPART.
 VALUE should be a single line string, FILE and FILEPART should be a filename.
 With FILEPART, the contents of the file are read until the first blank line.
 This is useful for setting the copyright key from the OFL.txt file.
-Values of true or false are converted to boolean values.
 Multiple keys can be set using a csv INPUT file, format "key,value".
+By default keys are stored with type string in the UFO.
+Values of true or false are converted to type boolean.
+Values that can be converted to integer are stored as type integer.
 
 PLIST selects which p-list to modify.
 If not specified defaults to `fontinfo` which means the `fontinfo.plist` file is modified.
