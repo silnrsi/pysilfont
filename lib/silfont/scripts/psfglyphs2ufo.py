@@ -32,7 +32,8 @@ def doit(args):
     (glyphsdir, filen) = os.path.split(args.glyphsfont)
 
     librestorekeys = ("org.sil.pysilfontparams", "org.sil.altLineMetrics", "org.sil.lcg.toneLetters",
-                   "org.sil.lcg.transforms", "public.glyphOrder", "public.postscriptNames", "com.schriftgestaltung.disablesLastChange")
+                   "org.sil.lcg.transforms", "public.glyphOrder", "public.postscriptNames",
+                   "com.schriftgestaltung.disablesLastChange", "com.schriftgestaltung.disablesAutomaticAlignment")
     libdeletekeys = ("UFOFormat", "com.schriftgestaltung.blueFuzz", "com.schriftgestaltung.blueScale",
                      "com.schriftgestaltung.blueShift", "com.schriftgestaltung.customParameter.GSFont.note", "org.sil.glyphsappversion")
     libdeleteempty = ("com.schriftgestaltung.DisplayStrings",)
