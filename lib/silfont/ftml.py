@@ -9,6 +9,7 @@ from xml.etree import cElementTree as ET ## Apparently cElementTree is now depre
 from fontTools import ttLib
 import os, re
 #import sys, os, copy, shutil, filecmp
+from xml.sax.saxutils import quoteattr
 import silfont.core
 import silfont.etutil as ETU
 
@@ -28,7 +29,7 @@ class Fxml(ETU.ETelement) :
         if not exactlyoneof(file, xmlstring, testgrouplabel) : self.logger.log("Must supply exactly one of file, xmlstring and testgroup","X")
 
         if testgrouplabel : # Create minimal valid ftml
-            xmlstring = '<ftml version="1.0"><head></head><testgroup label="' + testgrouplabel +'"></testgroup></ftml>'
+            xmlstring = '<ftml version="1.0"><head></head><testgroup label=' + quoteattr(testgrouplabel) +'></testgroup></ftml>'
 
         if file and not hasattr(file, 'read') : self.logger.log("'file' is not a file object", "X") # ET.parse would also work on file name, but other code assumes file object
 
@@ -173,7 +174,7 @@ class Ffontsrc(ETU.ETelement) :
             txt = text if text else element.text
             self.parseerrors.append(str(e) + ": " + txt)
         else :
-            if text : element = ET.fromstring("<fontsrc>" + txt + "</fontsrc>")
+            if text : element = ET.Element("fontsrc") ; element.text = txt
             super(Ffontsrc,self).__init__(element)
             self.text = txt
             self.url = url
@@ -200,7 +201,7 @@ class Fstyle(ETU.ETelement) :
             if name or feats or lang : parent.logger("Can't supply element and other parameters", "X")
         else :
             if name is None : self.logger.log("Must supply element or name to Fstyle", "X")
-            element = self.element = ET.fromstring('<style name="'+name+'"/>')
+            element = self.element = ET.Element("style", name = name)
             if feats is not None :
                 if type(feats) is dict : feats = self.dict_to_string(feats)
                 element.set('feats',feats)
@@ -332,8 +333,8 @@ class Ftest(ETU.ETelement) :
         element.set("label", self.label)
         if self.rtl :        element.set("rtl",        self.rtl)
         if self.stylename :  element.set("stylename",  self.stylename)
-        if self.comment : x = ET.SubElement(element, 'comment') ; x.text = self.comment
-        element.append(ET.fromstring("<string>" + self.string.encode('utf-8') + "</string>"))
+        if self.comment : x = ET.SubElement(element, "comment") ; x.text = self.comment
+        x = ET.SubElement(element, "string") ; x.text = self.string.encode('utf-8')
 
         return element
 
