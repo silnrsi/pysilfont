@@ -334,7 +334,7 @@ class Ftest(ETU.ETelement) :
         if self.rtl :        element.set("rtl",        self.rtl)
         if self.stylename :  element.set("stylename",  self.stylename)
         if self.comment : x = ET.SubElement(element, "comment") ; x.text = self.comment
-        x = ET.SubElement(element, "string") ; x.text = self.string.encode('utf-8')
+        x = ET.SubElement(element, "string") ; x.text = self.string
 
         return element
 
