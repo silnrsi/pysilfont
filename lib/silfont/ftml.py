@@ -140,7 +140,12 @@ class Fhead(ETU.ETelement) :
         # Add in-spec sub-elements in alphabetic order
         if self.comment   : x = ET.SubElement(element, 'comment') ; x.text = self.comment
         if self.fontscale : x = ET.SubElement(element, 'fontscale') ; x.text = str(self.fontscale)
-        if not self.fontsrc is None : x = ET.SubElement(element, 'fontsrc') ; x.text = self.fontsrc.text
+        if isinstance(self.fontsrc, list):
+            # Not officially part of spec to allow multiple fontsrc
+            for fontsrc in self.fontsrc:
+                x = ET.SubElement(element, 'fontsrc') ; x.text = fontsrc.text
+        elif self.fontsrc is not None:
+            x = ET.SubElement(element, 'fontsrc') ; x.text = self.fontsrc.text
         if self.styles :
             x = ET.SubElement(element, 'styles')
             for style in sorted(self.styles) : x.append(self.styles[style].create_element())
