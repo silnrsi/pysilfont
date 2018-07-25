@@ -15,7 +15,7 @@ argspec = [
     ('-r','--report',{'help': 'Set reporting level for log', 'type':str, 'choices':['X','S','E','P','W','I','V']},{}),
     ('-l','--log',{'help': 'Set log file name'}, {'type': 'outfile', 'def': '_anc.log'}),
     ('-g','--gid',{'help': 'Include GID attribute in <glyph> elements', 'action': 'store_true'},{}),
-    ('-s','--sort',{'help': 'Sort by PSName attribute in <glyph> elements', 'action': 'store_true'},{}),
+    ('-s','--sort',{'help': 'Sort by public.glyphOrder in lib.plist', 'action': 'store_true'},{}),
     ('-u','--Uprefix',{'help': 'Include U+ prefix on UID attribute in <glyph> elements', 'action': 'store_true'},{}),
     ('-p','--params',{'help': 'XML formatting parameters: indentFirst, indentIncr, attOrder','action': 'append'}, {'type': 'optiondict'})
     ]

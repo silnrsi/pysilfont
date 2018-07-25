@@ -42,8 +42,8 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfsetunicodes](#psfsetunicodes) | Set unicode values for a glif based on a csv file |
 | [psfsetversion](#psfsetversion) | Change all the version-related info in a UFO's fontinfo.plist |
 | [psfsubset](#psfsubset) | Create a subset of an existing UFO |
-| [psfsyncmeta](#psfsyncmeta) | Copy basic metadata from one member of a font family to other family members |
 | [psfsyncmasters](#psfsyncmasters) | Sync metadata in master UFO files based on a Designspace file |
+| [psfsyncmeta](#psfsyncmeta) | Copy basic metadata from one member of a font family to other family members |
 | [psftoneletters](#psftoneletters) | Add Latin script tone letters (pitch contours) to a UFO |
 | [psfufo2ttf](#psfufo2ttf) | Generate a ttf file without OpenType tables from a UFO |
 | [psfxml2compdef](#psfxml2compdef) | Convert composite definition file from XML format |
@@ -393,7 +393,7 @@ _([Standard options](docs.md#standard-command-line-options) also apply)_
 
 This exports anchor data from a UFO font to an XML file. (An "anchor" is also called an "attachment point" which is sometimes abbreviated to "AP".)
 
-Example that exports the anchors contained in the UFO font `CharisSIL-Regular.ufo`, sorts the resulting glyph elements by name (PSName) rather than glyph ID (GID), and writes them to an XML file `CharisSIL-Regular_ap.xml`.
+Example that exports the anchors contained in the UFO font `CharisSIL-Regular.ufo`, sorts the resulting glyph elements by public.glyphOrder rather than glyph ID (GID), and writes them to an XML file `CharisSIL-Regular_ap.xml`.
 
 ```
 psfexportanchors -s font-charis/source/CharisSIL-Regular.ufo CharisSIL-Regular_ap.xml
@@ -402,7 +402,7 @@ psfexportanchors -s font-charis/source/CharisSIL-Regular.ufo CharisSIL-Regular_a
 If the command line includes
 
 - -g, then the GID attribute will be present in the glyph element.
-- -s, then the glyph elements will be sorted by PSName attribute (rather than by GID attribute).
+- -s, then the glyph elements will be sorted by public.glyphOrder in lib.plist (rather than by GID attribute).
 - -u, then the UID attribute will include a "U+" prefix
 
 ---
@@ -669,6 +669,27 @@ Glyphs can be identified either by their name or the Unicode codepoint (USV). Gl
 Glyph orders and psname mappings, if present in the font, are likewise subsetted.
 
 ---
+####  psfsyncmasters
+Usage: **`psfsyncmasters primaryds [secondds] [-n]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Synchronises some fontinfo.plist and lib.plist metadata across a family of fonts based
+on a designspace file. It looks in the designspace file for a master with `info copy="1"` set then syncs the values from that master to other masters defined in the file.
+
+If a second designspace file is supplied, it also syncs to masters found in there (not yet tested!)
+
+Example usage:
+
+```
+psfsyncmasters CharisSIL.designspace
+```
+
+Note that only fontinfo.plist and lib.plist files are updated, so fonts are not normalized and Pysilfont's backup mechanism for fonts is not used.
+
+-n (--new) appends \_new to ufo and file names for testing purposes
+
+---
 ####  psfsyncmeta
 Usage: **`psfsyncmeta [-s] [-m [MASTER]] [-r] [-n] [--normalize] ifont`**
 
@@ -699,28 +720,6 @@ Note that by default only fontinfo.plist and lib.plist are updated, so fonts are
 Also psfsyncmeta does not use Pysilfont's backup mechanism for fonts.
 
 -n (--new) appends \_new to ufo and file names for testing purposes
-
----
-####  psfsyncmasters
-Usage: **`psfsyncmasters primaryds [secondds] [-n]`**
-
-_([Standard options](docs.md#standard-command-line-options) also apply)_
-
-Synchronises some fontinfo.plist and lib.plist metadata across a family of fonts based
-on a designspace file. It looks in the designspace file for a master with `info copy="1"` set then syncs the values from that master to other masters defined in the file.
-
-If a second designspace file is supplied, it also syncs to masters found in there (not yet tested!)
-
-Example usage:
-
-```
-psfsyncmasters CharisSIL.designspace
-```
-
-Note that only fontinfo.plist and lib.plist files are updated, so fonts are not normalized and Pysilfont's backup mechanism for fonts is not used.
-
--n (--new) appends \_new to ufo and file names for testing purposes
-
 
 ---
 ####  psftoneletters
