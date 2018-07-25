@@ -1,0 +1,29 @@
+# 2018-07-24 17:47:29 psfexportunicodes
+# tests/input/ufo/test.ufo -o local/testresults/ufo/psfexportunicodes.csv -l local/testresults/ufo/psfexportunicodes.log
+
+SupThree,00B3
+LtnCapUAcute,00DA
+CircumAccent,005E
+LtnSmIAcute,00ED
+LtnCapYAcute,00DD
+ReverseSolidus,005C
+VulgFracThreeQuarters,00BE
+SupOne,00B9
+LtnSmAAcute,00E1
+LtnSmEAcute,00E9
+LtnSmOAcute,00F3
+BulletOperator,2219
+CombAcute,0301
+Bullet,2022
+LtnCapAAcute,00C1
+ModCircumAccent,02C6
+VulgFracOneHalf,00BD
+LtnCapEAcute,00C9
+DblAcuteAccent,02DD
+LtnSmUAcute,00FA
+LtnCapIAcute,00CD
+HyphenMinus,002D
+LtnCapOAcute,00D3
+VulgFracOneQuarter,00BC
+AcuteAccent,00B4
+LtnSmYAcute,00FD

@@ -6,6 +6,7 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'David Raymond'
 
 import os, subprocess, difflib, sys
+from silfont.core import execute
 
 class dirTree(dict) :
     """ An object to hold list of all files and directories in a directory
@@ -112,23 +113,27 @@ class ufo_diff(object): # For diffing 2 ufos as part of testing
             print("Failed to compare UFOs")
             print(self.errors)
 
-class text_diff(object): # For diffing 2 text files with option to ignore timestamps
+class text_diff(object): # For diffing 2 text files with option to ignore common timestamps
     # See ufo_diff for class attribute details
 
-    def __init__(self, log1, log2, ignore=0): # ignore - characters to ignore from left; typically 20 for timestamps
+    def __init__(self, file1, file2, ignore_chars=0, ignore_firstlinechars = 0):
+        # ignore_chars - characters to ignore from left of each line; typically 20 for timestamps
+        # ignore_firstlinechars - as above, but just for first line, eg for initial comment in csv files, typically 22
         errors = []
         try:
-            l1 = [x[ignore:-1] for x in open(log1, "r").readlines()]
+            f1 = [x[ignore_chars:-1] for x in open(file1, "r").readlines()]
         except IOError:
-            errors.append("Can't open " + log1)
+            errors.append("Can't open " + file1)
         try:
-            l2 = [x[ignore:-1] for x in open(log2, "r").readlines()]
+            f2 = [x[ignore_chars:-1] for x in open(file2, "r").readlines()]
         except IOError:
-            errors.append("Can't open " + log2)
-
-        if errors == []:
+            errors.append("Can't open " + file2)
+        if errors == []: # Indicates both files were opened OK
+            if ignore_firstlinechars:  # Ignore first line for files with first line comment with timestamp
+                f1[0] = f1[0][ignore_firstlinechars:-1]
+                f2[0] = f2[0][ignore_firstlinechars:-1]
             self.errors = ""
-            self.diff = "\n".join([x for x in difflib.unified_diff(l1, l2, log1, log2, n=0)])
+            self.diff = "\n".join([x for x in difflib.unified_diff(f1, f2, file1, file2, n=0)])
             self.returncode = 0 if self.diff == "" else 1
         else:
             self.diff = ""
@@ -144,3 +149,33 @@ class text_diff(object): # For diffing 2 text files with option to ignore timest
         elif self.returncode == 2:
             print("Failed to compare Files")
             print(self.errors)
+
+def test_run(tool, commandline, testcommand, outfont, exp_errors, exp_warnings): # Used by tests to run commands
+    sys.argv = commandline.split(" ")
+    (args, font) = execute(tool, testcommand.doit, testcommand.argspec, chain="first")
+    if outfont: font.write(outfont)
+    args.logger.logfile.close() # Need to close the log so that the diff test can be run
+    exp_counts = (exp_errors, exp_warnings)
+    actual_counts = (args.logger.errorcount, args.logger.warningcount)
+    result = exp_counts == actual_counts
+    if not result: print("Mis-match of logger errors/warnings: " + str(exp_counts) + " vs " + str(actual_counts))
+    return result
+
+def test_diffs(dirname, testname, extensions): # Used by test to run diffs on results files based on extensions
+    result = True
+    for ext in extensions:
+        resultfile = os.path.join("local/testresults", dirname, testname + ext)
+        referencefile = os.path.join("tests/reference", dirname, testname + ext)
+        if ext == ".ufo":
+            diff = ufo_diff(resultfile, referencefile)
+        elif ext == ".csv":
+            diff = text_diff(resultfile, referencefile, ignore_firstlinechars=22)
+        elif ext == ".log":
+            diff = text_diff(resultfile, referencefile, ignore_chars=20)
+        else:
+            diff = text_diff(resultfile, referencefile)
+
+        if diff.returncode:
+                    diff.print_text()
+                    result = False
+    return result
