@@ -15,4 +15,5 @@ pysilfont.cfg
 /pysilfont.egg-info
 /setuptools-*
 /.idea
+/.pytest_cache
 
