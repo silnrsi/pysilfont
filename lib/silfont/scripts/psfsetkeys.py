@@ -82,7 +82,7 @@ def set_key_value(font_plist, key, value):
 
     if value == 'true' or value == 'false':
         # Handle boolean values
-        font_plist.setelem(key, ET.fromstring('<' + value + '/>'))
+        font_plist.setelem(key, ET.Element(value))
     else:
         try:
             # Handle integers values
