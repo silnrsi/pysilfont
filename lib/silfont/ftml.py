@@ -26,7 +26,7 @@ class Fxml(ETU.ETelement) :
         self.logger = logger if logger is not None else silfont.core.loggerobj()
         self.params = params if params is not None else silfont.core.parameters()
         self.parseerrors=None
-        if not exactlyoneof(file, xmlstring, testgrouplabel) : self.logger.log("Must supply exactly one of file, xmlstring and testgroup","X")
+        if not exactlyoneof(file, xmlstring, testgrouplabel) : self.logger.log("Must supply exactly one of file, xmlstring and testgrouplabel","X")
 
         if testgrouplabel : # Create minimal valid ftml
             xmlstring = '<ftml version="1.0"><head></head><testgroup label=' + quoteattr(testgrouplabel) +'></testgroup></ftml>'
@@ -121,15 +121,18 @@ class Fhead(ETU.ETelement) :
         self.elements = dict(self._contents) # Dictionary of all elements, particularly for handling non-standard elements
 
     def findstyle(self, name = None, feats = None, lang = None) :
-        for s in self.styles :
-            style = self.styles[s]
-            if cmp(style.feats,feats) == 0 and style.lang == lang :
-                if name is None or name == style.name : return style # if name is supplied it must match
+        if self.styles is not None:
+            for s in self.styles :
+                style = self.styles[s]
+                if cmp(style.feats,feats) == 0 and style.lang == lang :
+                    if name is None or name == style.name : return style # if name is supplied it must match
         return None
 
     def addstyle(self, name, feats = None, lang = None) : # Return style if it exists otherwaise create new style with newname
         s = self.findstyle(name, feats, lang)
         if s is None :
+            if self.styles is None:
+                self.styles = {}
             if name in self.styles : self.logger.log("Adding duplicate style name " + name, "X")
             s = Fstyle(self, name = name, feats = feats, lang = lang)
             self.styles[name] = s
