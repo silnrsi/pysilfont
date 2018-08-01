@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>AcuteAccent</key>
+  <string>A_cuteA_ccent.glif</string>
+  <key>BulletOperator</key>
+  <string>B_ulletO_perator.glif</string>
+  <key>CircumAccent</key>
+  <string>C_ircumA_ccent.glif</string>
+  <key>CombAcute</key>
+  <string>C_ombA_cute.glif</string>
+  <key>DblAcuteAccent</key>
+  <string>D_blA_cuteA_ccent.glif</string>
+  <key>HyphenMinus</key>
+  <string>H_yphenM_inus.glif</string>
+  <key>LtnCapAAcute</key>
+  <string>L_tnC_apA_A_cute.glif</string>
+  <key>LtnCapEAcute</key>
+  <string>L_tnC_apE_A_cute.glif</string>
+  <key>LtnCapIAcute</key>
+  <string>L_tnC_apI_A_cute.glif</string>
+  <key>LtnCapOAcute</key>
+  <string>L_tnC_apO_A_cute.glif</string>
+  <key>LtnCapUAcute</key>
+  <string>L_tnC_apU_A_cute.glif</string>
+  <key>LtnCapYAcute</key>
+  <string>L_tnC_apY_A_cute.glif</string>
+  <key>LtnSmAAcute</key>
+  <string>L_tnS_mA_A_cute.glif</string>
+  <key>LtnSmEAcute</key>
+  <string>L_tnS_mE_A_cute.glif</string>
+  <key>LtnSmIAcute</key>
+  <string>L_tnS_mI_A_cute.glif</string>
+  <key>LtnSmOAcute</key>
+  <string>L_tnS_mO_A_cute.glif</string>
+  <key>LtnSmUAcute</key>
+  <string>L_tnS_mU_A_cute.glif</string>
+  <key>LtnSmYAcute</key>
+  <string>L_tnS_mY_A_cute.glif</string>
+  <key>ModCircumAccent</key>
+  <string>M_odC_ircumA_ccent.glif</string>
+  <key>ReverseSolidus</key>
+  <string>R_everseS_olidus.glif</string>
+  <key>SupOne</key>
+  <string>S_upO_ne.glif</string>
+  <key>SupThree</key>
+  <string>S_upT_hree.glif</string>
+  <key>VulgFracOneHalf</key>
+  <string>V_ulgF_racO_neH_alf.glif</string>
+  <key>VulgFracOneQuarter</key>
+  <string>V_ulgF_racO_neQ_uarter.glif</string>
+  <key>VulgFracThreeQuarters</key>
+  <string>V_ulgF_racT_hreeQ_uarters.glif</string>
+  <key>nonmarkingreturn</key>
+  <string>nonmarkingreturn.glif</string>
+</dict>
+</plist>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="NewGlyph" format="2">
+  <advance width="860"/>
+  <unicode hex="0202"/>
+  <anchor x="430" y="1635" name="U"/>
+  <outline>
+    <component base="HyphenMinus"/>
+    <component base="CombAcute" xOffset="1000"/>
+  </outline>
+</glyph>

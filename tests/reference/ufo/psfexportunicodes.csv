@@ -1,5 +1,5 @@
 # 2018-07-24 17:47:29 psfexportunicodes
-# tests/input/ufo/test.ufo -o local/testresults/ufo/psfexportunicodes.csv -l local/testresults/ufo/psfexportunicodes.log
+# tests/input/ufo/test.ufo -o local/testresults/ufo/psfexportunicodes.csv -l local/testresults/ufo/psfexportunicodes.lg
 
 SupThree,00B3
 LtnCapUAcute,00DA

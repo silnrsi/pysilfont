@@ -170,7 +170,7 @@ def test_diffs(dirname, testname, extensions): # Used by test to run diffs on re
             diff = ufo_diff(resultfile, referencefile)
         elif ext == ".csv":
             diff = text_diff(resultfile, referencefile, ignore_firstlinechars=22)
-        elif ext == ".log":
+        elif ext in (".log", ".lg"):
             diff = text_diff(resultfile, referencefile, ignore_chars=20)
         else:
             diff = text_diff(resultfile, referencefile)

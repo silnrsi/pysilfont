@@ -1,0 +1,1 @@
+NewGlyph = HyphenMinus + CombAcute@U | 0202
