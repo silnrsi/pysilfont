@@ -31,6 +31,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfexportunicodes](#psfexportunicodes) | Export a map of glyph name to unicode value to a csv file |
 | [psfftml2odt](#psfftml2odt) | Create a LibreOffice Writer file from an FTML test description |
 | [psfglyphs2ufo](#psfglyphs2ufo) | Export all the masters in a .glyphs file to UFOs |
+| [psfmakefea](#psfmakefea) | Make a features file base on input UFO or AP database |
 | [psfmakewoffmetadata](#psfmakewoffmetadata) | Make the WOFF metadata xml file based on input UFO and FONTLOG.txt |
 | [psfnormalize](#psfnormalize) | Normalize a UFO and optionally converts it between UFO2 and UFO3 versions |
 | [psfrenameglyphs](#psfrenameglyphs) | Within a UFO, assign new working names to glyphs based on csv input file |
@@ -464,6 +465,30 @@ If this Glyphs file contains two masters, Regular and Bold, then it will export 
 ```
 psfglyphs2ufo CharisSIL-RB.glyphs ""
 ```
+---
+#### psfmakefea
+Usage: **`usage: psfmakefea [-i INPUT] [-o OUTPUT] [-c CLASSFILE]
+                  [--classprops] [--omitaps OMITAPS] infile`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Creates OUTPUT feature (FEA) file by merging the INPUT feature (FEA or FEAX) file with information gleaned from an input UFO or [attachment point (AP)](https://metacpan.org/pod/distribution/Font-TTF-Scripts/scripts/ttfbuilder#Attachment-Points) xml file. For more information about FEAX see [Fea Extensions](feaextensions.md) documentation.
+
+required arguments:
+
+```
+  infile      UFO or AP xml files
+  INPUT       FEA or FEAX input file
+```
+
+optional arguments:
+```
+  OUTPUT       name of FEA file to create (if not supplied, only error checking is done)
+  CLASSFILE    name of xml class definition file
+  --classprops  if specified, class properties will be read from CLASSFILE
+  OMITAPS       comma-separated list of attachment points to ignore when creating classes
+```
+
 ---
 #### psfmakewoffmetadata
 Usage: **`psfmakewoffmetadata -n PRIMARYFONTNAME -i ORGID [-f FONTLOG]  [-o OUTPUT] fontfile.ufo`**
