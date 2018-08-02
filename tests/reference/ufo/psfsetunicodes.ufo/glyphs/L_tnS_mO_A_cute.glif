@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnSmOAcute" format="2">
+  <advance width="1140"/>
+  <unicode hex="00F3"/>
+  <outline>
+    <component base="LtnSmO"/>
+    <component base="CombAcute" xOffset="1140"/>
+  </outline>
+</glyph>

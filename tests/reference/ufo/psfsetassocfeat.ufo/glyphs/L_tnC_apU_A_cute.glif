@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnCapUAcute" format="2">
+  <advance width="1440"/>
+  <unicode hex="00DA"/>
+  <outline>
+    <component base="LtnCapU"/>
+    <component base="CombAcute" xOffset="1277" yOffset="430"/>
+  </outline>
+  <lib>
+    <dict>
+      <key>org.sil.assocFeature</key>
+      <string>fea2</string>
+    </dict>
+  </lib>
+</glyph>

@@ -1,0 +1,9 @@
+2018-08-01 16:47:22 Progress: Opening file for input: tests/input/ufo/psfsetassocfeat.csv
+2018-08-01 16:47:22 Progress: Reading UFO: tests/input/ufo/test.ufo
+2018-08-01 16:47:22 Progress: Checking fontinfo.plist metadata
+2018-08-01 16:47:22 Progress: Checking lib.plist metadata
+2018-08-01 16:47:22 Warning:  public.glyphOrder is missing from lib.plist
+2018-08-01 16:47:22 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 1
+2018-08-01 16:47:22 Progress: Processing font for output
+2018-08-01 16:47:22 Progress: Output UFO already exists - reading for comparison
+2018-08-01 16:47:22 Progress: Writing font to local/testresults/ufo/psfsetassocfeat.ufo

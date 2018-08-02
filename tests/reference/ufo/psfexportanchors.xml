@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<font name="AndikaMtihani-Regular" upem="2048">
+<glyph PSName="AcuteAccent" UID="00B4"/>
+<glyph PSName="Bullet" UID="2022"/>
+<glyph PSName="BulletOperator" UID="2219"/>
+<glyph PSName="CircumAccent" UID="005E"/>
+<glyph PSName="CombAcute" UID="0301">
+  <point type="U">
+    <location x="-570" y="1635"/>
+  </point>
+  <point type="_U">
+    <location x="-570" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="DblAcuteAccent" UID="02DD"/>
+<glyph PSName="HyphenMinus" UID="002D">
+  <point type="U">
+    <location x="430" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapAAcute" UID="00C1"/>
+<glyph PSName="LtnCapEAcute" UID="00C9"/>
+<glyph PSName="LtnCapIAcute" UID="00CD"/>
+<glyph PSName="LtnCapOAcute" UID="00D3"/>
+<glyph PSName="LtnCapUAcute" UID="00DA"/>
+<glyph PSName="LtnCapYAcute" UID="00DD"/>
+<glyph PSName="LtnSmAAcute" UID="00E1"/>
+<glyph PSName="LtnSmEAcute" UID="00E9"/>
+<glyph PSName="LtnSmIAcute" UID="00ED"/>
+<glyph PSName="LtnSmOAcute" UID="00F3"/>
+<glyph PSName="LtnSmUAcute" UID="00FA"/>
+<glyph PSName="LtnSmYAcute" UID="00FD"/>
+<glyph PSName="ModCircumAccent" UID="02C6"/>
+<glyph PSName="ReverseSolidus" UID="005C"/>
+<glyph PSName="SupOne" UID="00B9"/>
+<glyph PSName="SupThree" UID="00B3"/>
+<glyph PSName="VulgFracOneHalf" UID="00BD"/>
+<glyph PSName="VulgFracOneQuarter" UID="00BC"/>
+<glyph PSName="VulgFracThreeQuarters" UID="00BE"/>
+<glyph PSName="nonmarkingreturn"/>
+</font>

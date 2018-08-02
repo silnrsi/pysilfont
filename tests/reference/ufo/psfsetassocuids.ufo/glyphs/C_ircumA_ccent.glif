@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="CircumAccent" format="2">
+  <advance width="850"/>
+  <unicode hex="005E"/>
+  <outline>
+    <component base="CombCircum" xOffset="995"/>
+  </outline>
+  <lib>
+    <dict>
+      <key>org.sil.assocUIDs</key>
+      <array>
+        <string>003E</string>
+      </array>
+    </dict>
+  </lib>
+</glyph>
