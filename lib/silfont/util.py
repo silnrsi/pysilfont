@@ -121,11 +121,11 @@ class text_diff(object): # For diffing 2 text files with option to ignore common
         # ignore_firstlinechars - as above, but just for first line, eg for initial comment in csv files, typically 22
         errors = []
         try:
-            f1 = [x[ignore_chars:-1] for x in open(file1, "r").readlines()]
+            f1 = [x[ignore_chars:-1].replace('\\','/') for x in open(file1, "r").readlines()]
         except IOError:
             errors.append("Can't open " + file1)
         try:
-            f2 = [x[ignore_chars:-1] for x in open(file2, "r").readlines()]
+            f2 = [x[ignore_chars:-1].replace('\\','/') for x in open(file2, "r").readlines()]
         except IOError:
             errors.append("Can't open " + file2)
         if errors == []: # Indicates both files were opened OK
