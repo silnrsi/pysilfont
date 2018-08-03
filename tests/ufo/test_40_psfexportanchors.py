@@ -10,9 +10,9 @@ import silfont.util
 # Next 5 lines of code are test-specific
 import silfont.scripts.psfexportanchors as testcommand
 testname = "psfexportanchors"
-cl = "psfexportanchors tests/input/ufo/test.ufo local/testresults/ufo/psfexportanchors.xml -l local/testresults/ufo/psfexportanchors.lg"
+cl = "psfexportanchors tests/input/ufo/test.ufo local/testresults/ufo/psfexportanchors.xml -l local/testresults/ufo/psfexportanchors.log"
 outfont = None
-diffexts = [".xml", ".lg"]
+diffexts = [".xml", ".log"]
 exp_errors = 0   # These may need updating if test.ufo is updated
 exp_warnings = 28 # test.ufo should have some errors/warnings to test the code!
 

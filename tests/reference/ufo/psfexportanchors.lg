@@ -1,34 +1,34 @@
-2018-08-02 15:33:12 Progress: Opening file for output: /home/david/src/pysilfont/local/testresults/ufo/psfexportanchors.xml
-2018-08-02 15:33:12 Progress: Reading UFO: tests/input/ufo/test.ufo
-2018-08-02 15:33:12 Progress: Checking fontinfo.plist metadata
-2018-08-02 15:33:12 Progress: Checking lib.plist metadata
-2018-08-02 15:33:12 Warning:  public.glyphOrder is missing from lib.plist
-2018-08-02 15:33:12 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 1
-2018-08-02 15:33:12 Progress: See log file for details
-2018-08-02 15:33:12 Warning:  AcuteAccent in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  Bullet in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  BulletOperator in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  CircumAccent in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  CombAcute in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  DblAcuteAccent in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  HyphenMinus in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  LtnCapAAcute in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  LtnCapEAcute in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  LtnCapIAcute in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  LtnCapOAcute in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  LtnCapUAcute in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  LtnCapYAcute in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  LtnSmAAcute in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  LtnSmEAcute in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  LtnSmIAcute in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  LtnSmOAcute in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  LtnSmUAcute in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  LtnSmYAcute in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  ModCircumAccent in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  ReverseSolidus in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  SupOne in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  SupThree in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  VulgFracOneHalf in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  VulgFracOneQuarter in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  VulgFracThreeQuarters in UFO but not in public.glyphOrder list
-2018-08-02 15:33:12 Warning:  nonmarkingreturn in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Progress: Opening file for output: @cwd@/local/testresults/ufo/psfexportanchors.xml
+2018-08-03 11:56:28 Progress: Reading UFO: tests/input/ufo/test.ufo
+2018-08-03 11:56:28 Progress: Checking fontinfo.plist metadata
+2018-08-03 11:56:28 Progress: Checking lib.plist metadata
+2018-08-03 11:56:28 Warning:  public.glyphOrder is missing from lib.plist
+2018-08-03 11:56:28 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 1
+2018-08-03 11:56:28 Progress: See log file for details
+2018-08-03 11:56:28 Warning:  AcuteAccent in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  Bullet in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  BulletOperator in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  CircumAccent in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  CombAcute in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  DblAcuteAccent in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  HyphenMinus in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  LtnCapAAcute in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  LtnCapEAcute in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  LtnCapIAcute in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  LtnCapOAcute in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  LtnCapUAcute in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  LtnCapYAcute in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  LtnSmAAcute in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  LtnSmEAcute in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  LtnSmIAcute in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  LtnSmOAcute in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  LtnSmUAcute in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  LtnSmYAcute in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  ModCircumAccent in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  ReverseSolidus in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  SupOne in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  SupThree in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  VulgFracOneHalf in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  VulgFracOneQuarter in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  VulgFracThreeQuarters in UFO but not in public.glyphOrder list
+2018-08-03 11:56:28 Warning:  nonmarkingreturn in UFO but not in public.glyphOrder list

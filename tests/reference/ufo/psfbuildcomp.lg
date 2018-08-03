@@ -1,9 +1,9 @@
-2018-08-01 14:08:42 Progress: Opening file for input: tests/input/ufo/psfbuildcomp.txt
-2018-08-01 14:08:42 Progress: Reading UFO: tests/input/ufo/test.ufo
-2018-08-01 14:08:42 Progress: Checking fontinfo.plist metadata
-2018-08-01 14:08:42 Progress: Checking lib.plist metadata
-2018-08-01 14:08:42 Warning:  public.glyphOrder is missing from lib.plist
-2018-08-01 14:08:42 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 1
-2018-08-01 14:08:42 Progress: Processing font for output
-2018-08-01 14:08:42 Progress: Output UFO already exists - reading for comparison
-2018-08-01 14:08:42 Progress: Writing font to local/testresults/ufo/psfbuildcomp.ufo
+2018-08-03 11:56:28 Progress: Opening file for input: tests/input/ufo/psfbuildcomp.txt
+2018-08-03 11:56:28 Progress: Reading UFO: tests/input/ufo/test.ufo
+2018-08-03 11:56:28 Progress: Checking fontinfo.plist metadata
+2018-08-03 11:56:28 Progress: Checking lib.plist metadata
+2018-08-03 11:56:28 Warning:  public.glyphOrder is missing from lib.plist
+2018-08-03 11:56:28 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 1
+2018-08-03 11:56:28 Progress: Processing font for output
+2018-08-03 11:56:28 Progress: Output UFO already exists - reading for comparison
+2018-08-03 11:56:28 Progress: Writing font to local/testresults/ufo/psfbuildcomp.ufo

@@ -10,9 +10,9 @@ import silfont.util
 # Next 5 lines of code are test-specific
 import silfont.scripts.psfexportunicodes as testcommand
 testname = "psfexportunicodes"
-cl = "psfexportunicodes tests/input/ufo/test.ufo -o local/testresults/ufo/psfexportunicodes.csv -l local/testresults/ufo/psfexportunicodes.lg"
+cl = "psfexportunicodes tests/input/ufo/test.ufo -o local/testresults/ufo/psfexportunicodes.csv -l local/testresults/ufo/psfexportunicodes.log"
 outfont = None
-diffexts = [".csv", ".lg"]
+diffexts = [".csv", ".log"]
 exp_errors = 0   # These may need updating if test.ufo is updated
 exp_warnings = 1 # test.ufo should have some errors/warnings to test the code!
 

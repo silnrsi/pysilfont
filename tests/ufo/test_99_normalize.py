@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-''' Initial test of basic ufo.py & scripts based on it
+''' Test of script named in testname below
 '''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2018 SIL International (http://www.sil.org)'
@@ -11,9 +11,9 @@ import silfont.util
 # Next 7 lines of code may be test-specific
 import silfont.scripts.psfnormalize as testcommand
 testname = "psfnormalize"
-cl = "psfnormalize tests/input/ufo/test.ufo -l local/testresults/ufo/psfnormalize.lg -p checkfix=fix"
+cl = "psfnormalize tests/input/ufo/test.ufo -l local/testresults/ufo/psfnormalize.log -p checkfix=fix"
 outfont = "local/testresults/ufo/psfnormalize.ufo" # Set to None for commands which don't output a font
-diffexts = [".ufo", ".lg"] # List of extensions of all output files
+diffexts = [".ufo", ".log"] # List of extensions of all output files
 exp_errors = 0   # These may need updating if test.ufo is updated
 exp_warnings = 1 # test.ufo should have some errors/warnings to test the code!
 

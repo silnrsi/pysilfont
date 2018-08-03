@@ -11,9 +11,9 @@ import silfont.util
 import silfont.scripts.psfmakewoffmetadata as testcommand
 testname = "psfmakewoffmetadata"
 cl = "psfmakewoffmetadata tests/input/ufo/test.ufo -n Test -i SIL -f tests/input/ufo/psfmakewoffmetadata.txt" \
-      + " -o local/testresults/ufo/psfmakewoffmetadata.xml -l local/testresults/ufo/psfmakewoffmetadata.lg"
+      + " -o local/testresults/ufo/psfmakewoffmetadata.xml -l local/testresults/ufo/psfmakewoffmetadata.log"
 outfont = None
-diffexts = [".xml", ".lg"]
+diffexts = [".xml", ".log"]
 exp_errors = 0   # These may need updating if test.ufo is updated
 exp_warnings = 1 # test.ufo should have some errors/warnings to test the code!
 
