@@ -12,7 +12,7 @@ argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
     ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_normalize.log'}),
-    ('-v','--version',{'help': 'UFO version to convert to'},{})]
+    ('-v','--version',{'help': 'UFO version to convert to (2, 3 or 3ff)'},{})]
 
 def doit(args) :
 

@@ -19,6 +19,8 @@ if os.path.split(cwd)[1] != "pysilfont":
 
 if len(sys.argv) != 2:
     print("Usage: resetReferenceLogs testgroupname")
+    print("*** Should only be run when reference logs in the local/testresults/<testgorupname> directory"
+          " are known to be good ***")
     sys.exit()
 
 testgroup = sys.argv[1]

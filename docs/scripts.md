@@ -528,6 +528,8 @@ psfnormalize Nokyung-Regular.ufo
 
 The normalization follows the [default behaviours](docs.md#normalization), but these can be overridden using [custom parameters](parameters.md)
 
+VESRION can be 2, 3 or 3ff. 3ff produces a hybrid UFO for use with FontForge input which is UFO3 but with format 1 glyphs
+
 If you are a macOS user, see _pysilfont/actionsosx/README.txt_ to install an action that will enable you to run psfnormalize without using the command line.
 
 ---
