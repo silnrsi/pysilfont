@@ -51,7 +51,24 @@ def doit(args) :
         listorder.append( (g, None) )
         logfile.log(g + " in UFO but not in public.glyphOrder list", "W")
 
-    fontElement= ET.Element('font', upem=infont.fontinfo['unitsPerEm'][1].text, name=infont.fontinfo['postscriptFontName'][1].text)
+    if 'postscriptFontName' in infont.fontinfo:
+        postscriptFontName = infont.fontinfo['postscriptFontName'][1].text
+    else:
+        if 'styleMapFamilyName' in infont.fontinfo:
+            family = infont.fontinfo['styleMapFamilyName'][1].text
+        elif 'familyName' in infont.fontinfo:
+            family = infont.fontinfo['familyName'][1].text
+        else:
+            family = "UnknownFamily"
+        if 'styleMapStyleName' in infont.fontinfo:
+            style = infont.fontinfo['styleMapStyleName'][1].text.capitalize()
+        elif 'styleName' in infont.fontinfo:
+            style = infont.fontinfo['styleName'][1].text
+        else:
+            style = "UnknownStyle"
+
+        postscriptFontName = '-'.join((family,style)).replace(' ','')
+    fontElement= ET.Element('font', upem=infont.fontinfo['unitsPerEm'][1].text, name=postscriptFontName)
     for g, i in listorder:
         attrib = {'PSName': g}
         if args.gid and i != None: attrib['GID'] = str(i)
