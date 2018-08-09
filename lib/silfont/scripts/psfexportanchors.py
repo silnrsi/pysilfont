@@ -30,6 +30,9 @@ def doit(args) :
         glyphorderlist = [s.text for s in infont.lib['public.glyphOrder'][1].findall('string')]
     else:
         glyphorderlist = []
+        if args.gid:
+            logfile.log("public.glyphOrder is absent; ignoring --gid option", "E")
+            args.gid = False
     glyphorderset = set(glyphorderlist)
     if len(glyphorderlist) != len(glyphorderset):
         logfile.log("At least one duplicate name in public.glyphOrder", "W")
