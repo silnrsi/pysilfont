@@ -89,13 +89,9 @@ def doit(args) :
 #   instead of simple serialization with: ofile.write(ET.tostring(fontElement))
 #   create ETWriter object and specify indentation and attribute order to get normalized output
     ofile = args.output
-    indentFirst = ""
-    indentIncr = "  "
-    attOrder = "name,upem,PSName,GID,UID,type,x,y"
-    for k in args.params:
-        if k == 'indentIncr': indentIncr = args.params['indentIncr']
-        elif k == 'indentFirst': indentFirst = args.params['indentFirst']
-        elif k == 'attOrder': attOrder = args.params['attOrder']
+    indentFirst = args.params.get('indentFirst', "")
+    indentIncr = args.params.get('indentIncr', "  ")
+    attOrder = args.params.get('attOrder', "name,upem,PSName,GID,UID,type,x,y")
     x = attOrder.split(',')
     attributeOrder = dict(zip(x,range(len(x))))
     etwobj=ETWriter(fontElement, indentFirst=indentFirst, indentIncr=indentIncr, attributeOrder=attributeOrder)
