@@ -65,7 +65,8 @@ class ETWriter(object) :
             if k[0] != '.' :
                 att = attribs[k]
                 if self.precision is not None and k in self.numAttribs :
-                    att = "{:g}".format(round(float(attribs[k]), self.precision))
+                    num = round(float(attribs[k]), self.precision)
+                    att = "{}".format(int(num)) if num == int(num) else "{}".format(num)
                 elif isinstance(att, (str,unicode)):
                     att = self._protect(att)
                 outstr += u' {}="{}"'.format(k, att)
