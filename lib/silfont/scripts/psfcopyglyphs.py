@@ -106,7 +106,7 @@ def copyglyph(sfont, tfont, g, args):
                 for unicode in oglyph["unicode"]:
                     if int(unicode.hex,16) == g.dusv:
                         oglyph.remove("unicode", object=unicode)
-                        tfont.logger.log("Removed USV {0:04X} from existing glyph '{1}'".format(g.dusv,g.dust2gname[g.dusv]), "V")
+                        tfont.logger.log("Removed USV {0:04X} from existing glyph '{1}'".format(g.dusv,dusv2gname[g.dusv]), "V")
                         break
             # Now add and record it:
             glyph.add("unicode", {"hex": '{:04X}'.format(g.dusv)})
