@@ -117,7 +117,7 @@ def copyglyph(sfont, tfont, g, args):
     if args.scale:
         for e in glyph.etree.getiterator():
             for attr in ('width', 'height', 'x', 'y', 'xOffset', 'yOffset'):
-                if attr in e.attrib: e.set(attr, int(float(e.get(attr))* args.scale))
+                if attr in e.attrib: e.set(attr, str(int(float(e.get(attr))* args.scale)))
 
     # Look through components, adjusting names and finding out if we need to copy some.
     for component in glyph.etree.findall('./outline/component[@base]'):

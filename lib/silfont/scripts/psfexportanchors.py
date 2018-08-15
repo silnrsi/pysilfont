@@ -84,7 +84,7 @@ def doit(args) :
         anchorlist.sort()
         for a, x, y in anchorlist:
             anchorElement = ET.SubElement(glyphElement, 'point', attrib = {'type': a})
-            locationElement = ET.SubElement(anchorElement, 'location', attrib = {'x': x, 'y': y})
+            locationElement = ET.SubElement(anchorElement, 'location', attrib = {'x': str(x), 'y': str(y)})
 
 #   instead of simple serialization with: ofile.write(ET.tostring(fontElement))
 #   create ETWriter object and specify indentation and attribute order to get normalized output
