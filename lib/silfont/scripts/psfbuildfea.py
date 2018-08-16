@@ -14,13 +14,14 @@ from silfont.core import execute
 
 def keepIndexBuilder(self, tag):
     assert tag in ('GPOS', 'GSUB'), tag
-#    for lookup in self.lookups_:
-#        lookup.lookup_index = None
+    for lookup in self.lookups_:
+        lookup.lookup_index = None
     lookups = []
     for lookup in self.lookups_:
         if lookup.table != tag:
             continue
         lookup.lookup_index = len(lookups)
+        lookup.map_index = lookup.lookup_index
         lookups.append(lookup)
     return [l.build() for l in lookups]
 
@@ -44,7 +45,7 @@ def doit(args) :
     if args.lookupmap:
         with open(args.lookupmap, "w") as outf:
             for n, l in sorted(builder.named_lookups_.items()):
-                outf.write("{},{},{}\n".format(n, l.table, l.lookup_index))
+                outf.write("{},{},{}\n".format(n, l.table, l.map_index))
     font.save(args.output)
 
 def cmd(): execute(None, doit, argspec)
