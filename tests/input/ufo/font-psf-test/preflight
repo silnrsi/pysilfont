@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# This normalization will also run check and fix routines
+psfnormalize -p checkfix=fix source/PsfTest-Regular.ufo -l source/logs/normR.log
+psfnormalize -p checkfix=fix source/PsfTest-Bold.ufo  -l source/logs/normB.log
+psfnormalize -p checkfix=fix source/PsfTest-Italic.ufo -l source/logs/normI.log
+psfnormalize -p checkfix=fix source/PsfTest-BoldItalic.ufo -l source/logs/normBI.log
+
+# Building composites - needs to be done after normalization or may complain due to bad anchor coordinates
+psfbuildcomp -i source/composites.txt source/PsfTest-Regular.ufo -l source/logs/compsR.log
+psfbuildcomp -i source/composites.txt source/PsfTest-Bold.ufo -l source/logs/compsB.log
+psfbuildcomp -i source/composites.txt source/PsfTest-Italic.ufo -l source/logs/compsI.log
+psfbuildcomp -i source/composites.txt source/PsfTest-BoldItalic.ufo -l source/logs/compsBI.log
+
+psfsetpsnames -i source/glyph_data.csv source/PsfTest-Regular.ufo -l source/logs/psnames.log
+psfsetglyphorder --header sort_final -i source/glyph_data.csv source/PsfTest-Regular.ufo -l source/logs/sortorder.log
+
+# Following sync will copy psnames and glyphorder updates to all fonts
+psfsyncmasters source/PsfTestRoman.designspace source/PsfTestItalic.designspace -l source/logs/sync.log

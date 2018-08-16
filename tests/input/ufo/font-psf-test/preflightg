@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Produce individual UFOs from Glyphs files
+psfglyphs2ufo --nofea source/PsfTestRoman.glyphs source -l source/logs/glyphs2ufoR.log
+psfglyphs2ufo --nofea source/PsfTestItalic.glyphs source -l source/logs/glyphs2ufoI.log
+
+./preflight

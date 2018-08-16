@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnSmIDiaerAcute.sc" format="2">
+  <advance width="0"/>
+  <anchor x="0" y="940" name="U"/>
+  <outline>
+    <component base="CombDiaer" xOffset="570" yOffset="-1100"/>
+    <component base="CombAcute" xOffset="570" yOffset="-695"/>
+  </outline>
+</glyph>

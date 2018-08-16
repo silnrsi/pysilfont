@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnCapUHornTilde" format="2">
+  <advance width="0"/>
+  <unicode hex="1EEE"/>
+  <anchor x="0" y="375" name="U"/>
+  <outline>
+    <component base="CombTilde" xOffset="575" yOffset="-1100"/>
+  </outline>
+</glyph>

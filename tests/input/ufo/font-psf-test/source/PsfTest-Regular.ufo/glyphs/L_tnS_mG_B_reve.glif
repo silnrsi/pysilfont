@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnSmGBreve" format="2">
+  <advance width="1095"/>
+  <anchor x="545" y="-432" name="H"/>
+  <anchor x="1095" y="1000" name="R"/>
+  <anchor x="515" y="1100" name="U"/>
+  <anchor x="545" y="-535" name="L"/>
+  <outline>
+    <component base="LtnSmG"/>
+  </outline>
+</glyph>

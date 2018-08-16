@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnSmARingAbv.2StorySItal" format="2">
+  <advance width="0"/>
+  <anchor x="2" y="535" name="U"/>
+  <outline>
+    <component base="CombRingAbv" xOffset="572" yOffset="-1100"/>
+  </outline>
+</glyph>

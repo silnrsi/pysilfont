@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnCapPAcute" format="2">
+  <advance width="1195"/>
+  <unicode hex="1E54"/>
+  <anchor x="637" y="2065" name="U"/>
+  <anchor x="637" y="-100" name="L"/>
+  <outline>
+    <component base="LtnCapP"/>
+    <component base="CombAcute" xOffset="1207" yOffset="430"/>
+  </outline>
+</glyph>

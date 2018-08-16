@@ -1,9 +1,19 @@
-2018-08-03 11:56:28 Progress: Opening file for input: tests/input/ufo/psfbuildcomp.txt
-2018-08-03 11:56:28 Progress: Reading UFO: tests/input/ufo/test.ufo
-2018-08-03 11:56:28 Progress: Checking fontinfo.plist metadata
-2018-08-03 11:56:28 Progress: Checking lib.plist metadata
-2018-08-03 11:56:28 Warning:  public.glyphOrder is missing from lib.plist
-2018-08-03 11:56:28 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 1
-2018-08-03 11:56:28 Progress: Processing font for output
-2018-08-03 11:56:28 Progress: Output UFO already exists - reading for comparison
-2018-08-03 11:56:28 Progress: Writing font to local/testresults/ufo/psfbuildcomp.ufo
+2018-08-16 17:36:52 Progress: Opening file for input: tests/input/ufo/psfbuildcomp.txt
+2018-08-16 17:36:52 Progress: Reading UFO: tests/input/ufo/font-psf-test/source/PsfTest-Regular.ufo
+2018-08-16 17:36:53 Progress: Checking fontinfo.plist metadata
+2018-08-16 17:36:53 Progress: Checking lib.plist metadata
+2018-08-16 17:36:53 Warning:  com.schriftgestaltung.useNiceNames should normally be False; currently missing
+2018-08-16 17:36:53 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 1
+2018-08-16 17:36:53 Progress: See log file for details
+2018-08-16 17:36:53 Error:    LtnSmDotlessI not found in font
+2018-08-16 17:36:53 Error:    The AP 'U' does not exist on base glyph when building LtnSmITildeGrave
+2018-08-16 17:36:53 Error:    CombCedilla not found in font
+2018-08-16 17:36:53 Error:    CombCedilla not found in font
+2018-08-16 17:36:53 Error:    LtnSmDotlessI not found in font
+2018-08-16 17:36:53 Error:    The AP 'U' does not exist on base glyph when building LtnSmITilde
+2018-08-16 17:36:53 Error:    LtnSmDotlessI not found in font
+2018-08-16 17:36:53 Error:    CombCedilla not found in font
+2018-08-16 17:36:53 Error:    The AP 'U' does not exist on base glyph when building LtnSmITildeGraveCedilla
+2018-08-16 17:36:53 Progress: Processing font for output
+2018-08-16 17:36:53 Progress: Output UFO already exists - reading for comparison
+2018-08-16 17:36:53 Progress: Writing font to local/testresults/ufo/psfbuildcomp.ufo

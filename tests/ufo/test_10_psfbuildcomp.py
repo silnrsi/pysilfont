@@ -11,10 +11,10 @@ import silfont.util
 # Next 7 lines of code may be test-specific
 import silfont.scripts.psfbuildcomp as testcommand
 testname = "psfbuildcomp"
-cl = "psfbuildcomp tests/input/ufo/test.ufo -i tests/input/ufo/psfbuildcomp.txt -l local/testresults/ufo/psfbuildcomp.log -p scrlevel=v"
+cl = "psfbuildcomp tests/input/ufo/font-psf-test/source/PsfTest-Regular.ufo -i tests/input/ufo/psfbuildcomp.txt -l local/testresults/ufo/psfbuildcomp.log -p loglevel=w"
 outfont = "local/testresults/ufo/psfbuildcomp.ufo" # Set to None for commands which don't output a font
 diffexts = [".ufo", ".log"] # List of extensions of all output files
-exp_errors = 0   # These may need updating if test.ufo is updated
+exp_errors = 9   # These may need updating if test.ufo is updated
 exp_warnings = 1 # test.ufo should have some errors/warnings to test the code!
 
 # Code after this can be the same for most/all tests; if needed to be different for a test remove this comment!

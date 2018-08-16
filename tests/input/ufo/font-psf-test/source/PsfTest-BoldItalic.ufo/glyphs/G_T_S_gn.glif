@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="GTSgn" format="2">
+  <advance width="1180"/>
+  <unicode hex="003E"/>
+  <outline>
+    <contour>
+      <point x="130" y="243" type="line"/>
+      <point x="1186" y="629" type="line"/>
+      <point x="1233" y="817" type="line"/>
+      <point x="369" y="1203" type="line"/>
+      <point x="313" y="975" type="line"/>
+      <point x="930" y="733" type="line"/>
+      <point x="187" y="470" type="line"/>
+    </contour>
+  </outline>
+</glyph>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="RtParen" format="2">
+  <advance width="860"/>
+  <unicode hex="0029"/>
+  <outline>
+    <contour>
+      <point x="185" y="1455" type="line"/>
+      <point x="395" y="1261"/>
+      <point x="485" y="938"/>
+      <point x="485" y="635" type="curve" smooth="yes"/>
+      <point x="485" y="335"/>
+      <point x="399" y="11"/>
+      <point x="175" y="-240" type="curve"/>
+      <point x="326" y="-410" type="line"/>
+      <point x="601" y="-125"/>
+      <point x="746" y="218"/>
+      <point x="746" y="625" type="curve" smooth="yes"/>
+      <point x="746" y="1062"/>
+      <point x="571" y="1444"/>
+      <point x="306" y="1640" type="curve"/>
+    </contour>
+  </outline>
+</glyph>

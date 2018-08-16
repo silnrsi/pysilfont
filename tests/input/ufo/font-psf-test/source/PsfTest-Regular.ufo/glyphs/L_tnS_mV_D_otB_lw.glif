@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnSmVDotBlw" format="2">
+  <advance width="1070"/>
+  <unicode hex="1E7F"/>
+  <anchor x="549" y="0" name="H"/>
+  <anchor x="535" y="1100" name="U"/>
+  <anchor x="535" y="-100" name="L"/>
+  <anchor x="725" y="0" name="O"/>
+  <outline>
+    <component base="LtnSmV"/>
+  </outline>
+</glyph>

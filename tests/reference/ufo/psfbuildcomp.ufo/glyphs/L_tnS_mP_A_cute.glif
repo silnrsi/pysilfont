@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnSmPAcute" format="2">
+  <advance width="1170"/>
+  <unicode hex="1E55"/>
+  <anchor x="265" y="-435" name="H"/>
+  <anchor x="1170" y="1000" name="R"/>
+  <anchor x="590" y="1635" name="U"/>
+  <anchor x="590" y="-500" name="L"/>
+  <outline>
+    <component base="LtnSmP"/>
+    <component base="CombAcute" xOffset="1160"/>
+  </outline>
+</glyph>

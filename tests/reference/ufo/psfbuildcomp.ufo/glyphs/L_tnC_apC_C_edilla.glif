@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnCapCCedilla" format="2">
+  <advance width="1355"/>
+  <unicode hex="00C7"/>
+  <anchor x="750" y="0" name="H"/>
+  <anchor x="750" y="1530" name="U"/>
+  <anchor x="750" y="-100" name="L"/>
+  <outline>
+    <component base="LtnCapC"/>
+  </outline>
+</glyph>

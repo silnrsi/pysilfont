@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LowLine" format="2">
+  <advance width="1254"/>
+  <unicode hex="005F"/>
+  <outline>
+    <contour>
+      <point x="-146" y="-347" type="line"/>
+      <point x="1127" y="-347" type="line"/>
+      <point x="1179" y="-139" type="line"/>
+      <point x="-94" y="-139" type="line"/>
+    </contour>
+  </outline>
+</glyph>

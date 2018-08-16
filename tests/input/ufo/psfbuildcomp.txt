@@ -1,1 +1,30 @@
-NewGlyph = HyphenMinus + CombAcute@U | 0202
+# Copyright (c) 2008-2015, SIL International (http://www.sil.org) with Reserved Font Names 'Andika' and 'SIL'.
+# This Font Software is licensed under the SIL Open Font License, Version 1.1 (http://scripts.sil.org/OFL)
+# and is from the Andika Mtihani project (https://github.com/silnrsi/font-andika-mtihani)
+
+# Within each section, lines are in order of resulting Unicode value
+# Invented combinations are assigned Unicode values starting with E000
+# Version 2, DLR 2015-06-25 use & for joining two base glyphs
+#
+# Test & for joining two base glyphs
+LtnCapIJ = LtnCapI & LtnCapJ |0132
+LtnSmIJ = LtnSmI & LtnSmJ |0133
+#
+# Test base + diacritic@AP
+LtnCapCAcute = LtnCapC + CombAcute@U |0106
+LtnSmCAcute = LtnSmC + CombAcute@U |0107
+LtnCapCCircum = LtnCapC + CombCircum@U |0108
+LtnSmCCircum = LtnSmC + CombCircum@U |0109
+#
+# Test base + stacked diactrics (second diacritic attaching to first)
+LtnSmITildeGrave = LtnSmDotlessI + CombTilde@U + CombGrave@U | E000
+#
+#Test base + two diacritics attached to base (that is, second diacritic doesn't attach to first, but to base)
+LtnCapCAcuteCedilla = LtnCapC + CombCedilla@H + CombAcute@LtnCapC:U | 1E08
+LtnSmCAcuteCedilla = LtnSmC + CombCedilla@H + CombAcute@LtnSmC:U | 1E09
+#
+# Test ^200,200 (is this a realistic use of this function to add extra space on either side since the tilde is wider than the base character??)
+LtnSmITilde = LtnSmDotlessI + CombTilde@U ^200,200 | 0129
+#
+# Test three diacritics, ^200,200 and comment on end of line
+LtnSmITildeGraveCedilla = LtnSmDotlessI + CombCedilla@H + CombTilde@LtnSmDotlessI:U + CombGrave@U ^200,200 | E010 # i cedilla tilde grave

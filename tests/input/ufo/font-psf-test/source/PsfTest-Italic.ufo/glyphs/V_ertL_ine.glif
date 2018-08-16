@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="VertLine" format="2">
+  <advance width="670"/>
+  <unicode hex="007C"/>
+  <outline>
+    <contour>
+      <point x="602" y="1578" type="line"/>
+      <point x="112" y="-392" type="line"/>
+      <point x="262" y="-392" type="line"/>
+      <point x="752" y="1578" type="line"/>
+    </contour>
+  </outline>
+</glyph>
