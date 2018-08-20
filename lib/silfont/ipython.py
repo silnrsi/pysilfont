@@ -7,6 +7,8 @@ from fontTools import ttLib
 from fontTools.pens.basePen import BasePen
 from fontTools.misc import arrayTools
 from IPython.display import SVG, HTML
+from defcon import Font
+from ufo2ft import compileTTF
 
 class SVGPen(BasePen) :
 
@@ -19,7 +21,7 @@ class SVGPen(BasePen) :
         return " ".join(self.__commands)
 
     def scale(self, pt) :
-        return (pt[0] * self.__scale, pt[1] * self.__scale)
+        return ((pt[0] or 0) * self.__scale, (pt[1] or 0) * self.__scale)
 
     def _moveTo(self, pt):
         self.__commands.append("M {0[0]} {0[1]}".format(self.scale(pt)))
@@ -73,7 +75,12 @@ def _defglyphs(f, gnames, scale=1):
     return res
 
 def loadFont(fname):
-    return ttLib.TTFont(fname)
+    if fname.lower().endswith(".ufo"):
+        ufo = Font(fname)
+        f = compileTTF(ufo)
+    else:
+        f = ttLib.TTFont(fname)
+    return f
 
 def displayGlyphs(f, gnames, points=None, scale=None):
     if not hasattr(gnames, '__len__') or isinstance(gnames, basestring):

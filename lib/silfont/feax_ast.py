@@ -267,13 +267,20 @@ class ast_DoForSubStatement(ast_DoSubStatement):
             yield(self.name, g)
 
 class ast_DoLetSubStatement(ast_DoSubStatement):
-    def __init__(self, varname, expression, glyphs, location=None):
+    def __init__(self, varname, expression, parser, location=None):
         ast_DoSubStatement.__init__(self, varname, location=location)
+        glyphs = getattr(parser, 'glyphs', None) 
         self.expr = expression
         self.fns = {
-            'APx': lambda g, a: glyphs[g].anchors[a][0],
-            'APy': lambda g, a: glyphs[g].anchors[a][1],
-            'ADVx': lambda g: glyphs[g].advance
+            'APx': lambda g, a: int(glyphs[g].anchors[a][0]),
+            'APy': lambda g, a: int(glyphs[g].anchors[a][1]),
+            'ADVx': lambda g: int(glyphs[g].advance),
+            'MINx': lambda g: int(glyphs[g].bbox[0]),
+            'MINy': lambda g: int(glyphs[g].bbox[1]),
+            'MAXx': lambda g: int(glyphs[g].bbox[2]),
+            'MAXy': lambda g: int(glyphs[g].bbox[3]),
+            'feaclass': lambda c: parser.glyphclasses_.resolve(c).glyphSet(),
+            'info': lambda s: parser.fontinfo.get(s, "")
         }
 
     def items(self, variables):

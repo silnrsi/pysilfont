@@ -45,7 +45,8 @@ def doit(args) :
     if args.lookupmap:
         with open(args.lookupmap, "w") as outf:
             for n, l in sorted(builder.named_lookups_.items()):
-                outf.write("{},{},{}\n".format(n, l.table, l.map_index))
+                if l is not None:
+                    outf.write("{},{},{}\n".format(n, l.table, l.map_index))
     font.save(args.output)
 
 def cmd(): execute(None, doit, argspec)

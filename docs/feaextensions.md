@@ -79,6 +79,8 @@ ifinfo(familyName, "Doulos") {
 
 Notice the lack of a `;` after the block close.
 
+ifinfo acts as a kind of macro, this means that the test is executed in the parser rather than collecting everything inside the block and processing it later like say the `do` statement. Notice that if you want to do something more complex than a regular expression test, then you may need to use a `do` statement and the `info()` function.
+
 ### ifclass
 
 This statement initiates a block either of statements or within another block. The block is only processed if the given @class is defined and contains at least one glyph.
@@ -128,9 +130,15 @@ There are various python functions that are especially supported, along with the
 
 | Function | Parameters | Description |
 |-------------|----------------|----------------|
+| ADVx       | _glyphname_             | Returns the advanced width of the given glyph |
 | APx        | _glyphname_, "_apname_" | Returns the x co-ordinate of the given attachment point on the given glyph |
 | APy        | _glyphname_, "_apname_" | Returns the y co-ordinate of the given attachment point on the given glyph |
-| ADVx     | _glyphname_                       | Returns the advanced width of the given glyph |
+| feaclass   | _classname_             | Returns a list of the glyph names in a class as a python list |
+| info       | _finfoelement_          | Looks up the entry in the fontinfo plist and returns its value |
+| MINx       | _glyphname_             | Returns the minimum x value of the bounding box of the glyph |
+| MINy       | _glyphname_             | Returns the minimum y value of the bounding box of the glyph |
+| MAXx       | _glyphname_             | Returns the maximum x value of the bounding box of the glyph |
+| MAXy       | _glyphname_             | Returns the maximum y value of the bounding box of the glyph |
 
 Security wise, it is not possible to stop people doing nasty things with it. But psfmakefea is not expected to be used in untrusted environments.
 

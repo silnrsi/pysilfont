@@ -16,12 +16,23 @@ import os
 
 from silfont.core import execute
 
+def getbbox(g):
+    res = (65536, 65536, -65536, -65536)
+    for c in g['outline'].contours:
+        for p in c['point']:
+            if 'type' in p.attrib:      # any actual point counts
+                x = float(p.get('x', '0'))
+                y = float(p.get('y', '0'))
+                res = (min(x, res[0]), min(y, res[1]), max(x, res[2]), max(y, res[3]))
+    return res
+
 class Glyph(object) :
-    def __init__(self, name, advance=0) :
+    def __init__(self, name, advance=0, bbox=None) :
         self.name = name
         self.anchors = {}
         self.is_mark = False
         self.advance = int(float(advance))
+        self.bbox = bbox or (0, 0, 0, 0)
 
     def add_anchor(self, info) :
         self.anchors[info['name']] = (int(float(info['x'])), int(float(info['y'])))
@@ -47,7 +58,8 @@ class Font(object) :
                 ufo_g = f.deflayer[g]
                 advb = ufo_g['advance']
                 adv = advb.width if advb is not None else 0
-                glyph = Glyph(g, advance = adv)
+                bbox = getbbox(ufo_g)
+                glyph = Glyph(g, advance=adv, bbox=bbox)
                 self.glyphs[g] = glyph
                 if 'anchor' in ufo_g._contents :
                     for a in ufo_g._contents['anchor'] :

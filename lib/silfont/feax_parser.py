@@ -528,7 +528,8 @@ class feaplus_parser(Parser) :
             return d
         results = [{}]
         for s in substatements:
-            results = [updated(x.copy(), {yk:yv}) for x in results for yk, yv in s.items(x) if yk is not None or yv is not None]
+            results = [updated(x.copy(), {yk:yv}) for x in results for yk, yv in s.items(x) \
+                        if yk is not None or yv is not None]
         for r in results:
             yield r
 
@@ -561,7 +562,7 @@ class feaplus_parser(Parser) :
         expr = lex.text_[start:lex.pos_]
         self.advance_lexer_()
         self.expect_symbol_(";")
-        return self.ast.DoLetSubStatement(name, expr, getattr(self, 'glyphs', None), location=location)
+        return self.ast.DoLetSubStatement(name, expr, self, location=location)
 
     def parseDoIf_(self):
         location = self.cur_token_location_
