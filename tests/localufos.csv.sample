@@ -1,0 +1,6 @@
+# Local fonts to be used with pysilfont tests
+# font-path,type
+# where type is "copy" or "insitu".  Use copy for fonts likely to be updated during testing
+/home/david/src/font-andika-mtihani/source/AndikaMtihani-Regular.ufo,copy
+/home/david/src/font-andika/source/Andika-Regular.ufo,insitu
+

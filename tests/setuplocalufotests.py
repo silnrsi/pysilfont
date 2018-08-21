@@ -36,6 +36,7 @@ for type in ("source", "results", "reference", "logs"): os.makedirs("local/ufote
 ufolist = []
 for ufo,type in cfg:
     (path,ufoname) = os.path.split(ufo)
+    logname = ufoname[:-4] + ".log"
     if not os.path.isdir(ufo):
         print (ufo + "is not a directory")
         continue
@@ -48,10 +49,15 @@ for ufo,type in cfg:
         print("Invlaid type '" + type + "' for " + ufo)
         continue
 
-    sys.argv = ["psfnormalize", sourcedir, "local/ufotests/reference/" + ufoname, "-q", "-p", "checkfix=fix"]
+    sys.argv = ["psfnormalize", sourcedir, "-l", "local/ufotests/results/" + logname,  "-q", "-p", "checkfix=fix"]
     print("Normalizing " + sourcedir + " for reference")
-    (args, font) = execute("UFO", psfnormalize.doit, psfnormalize.argspec)
-    ufolist.append((sourcedir, ufoname, str(args.logger.errorcount), str(args.logger.warningcount)))
+    (args, font) = execute("UFO", psfnormalize.doit, psfnormalize.argspec, chain="first")
+    font.write("local/ufotests/results/" + ufoname)
+    # Move from results to reference - originally written to results to get reference log file correct
+    os.rename("local/ufotests/results/" + ufoname, "local/ufotests/reference/" + ufoname)
+    os.rename("local/ufotests/results/" + logname, "local/ufotests/reference/" + logname)
+    #errorcount = args.logger.errorcount -1 if args.logger.errorcount else 0 # If there is an error, reduce count for extra error reporting that there were errors!
+    ufolist.append((sourcedir, ufoname[:-4], str(args.logger.errorcount), str(args.logger.warningcount)))
 
 # Create ufolist.csv
 ufofile = open("local/ufotests/ufolist.csv", "w")
