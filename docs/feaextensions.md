@@ -99,14 +99,15 @@ Notice the lack of a `;` after the block close.
 
 The `do` statement is a means of setting variables and repeating statement groups with variable expansion. A `do` statement is followed by various substatements that are in effect nested statements. The basic structure of the `do` statement is:
 
-`do` _substatement_ `;` _substatement_ `;` _..._ `;`
-`{` _statements_ `}`
+`do` _substatement_ _substatement_ _..._ [ `{` _statements_ `}` ]
 
 Where _statements_ is a sequence of FEA statements. Within these statements, variables may be referenced by preceding them with a `$`.
 Anything, including statement words, can be the result of variable expantion. The only constraints are:
 
 - The item stands on its own as a single token, to the lexer. It cannot be joined to something preceding or following it to create a single name, token, whatever.
 - The expansion may result in only one token not more than one. So it can be a single name, but not multiple glyphs, etc.
+
+In effect a `{}` type block following a `for` or `let` substatement is the equivalent of inserting the substatement `if True;` before the block.
 
 #### SubStatements
 
@@ -144,9 +145,11 @@ Security wise, it is not possible to stop people doing nasty things with it. But
 
 ##### if
 
-The `if` substatement evaluates the given expression and only executes following substatements if the evaluation results in True. The structure is:
+The `if` substatement consists of an expression and a block of statements. `if` substatements only make sense at the end of a sequence of substatements and are executed at the end of the `do` statement, in the order they occur but after all other `for` and `let` substatements. The expression is calculated and if the result is True then the _statements_ are expanded using variable expansion.
 
-`if` _expression_ `;`
+`if` _expression_ `;` `{` _statements_ `}`
+
+There can be multiple `if` substatements, each with their own block, in a `do` statement.
 
 #### Examples
 
