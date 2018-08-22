@@ -518,6 +518,8 @@ class feaplus_parser(Parser) :
                 self.back_lexer_()
                 ifs.append(self.parseEmptyIf_())
                 break
+            elif self.cur_token_type_ == Lexer.COMMENT:
+                continue
             else:
                 self.back_lexer_()
                 break
