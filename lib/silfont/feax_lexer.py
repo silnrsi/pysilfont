@@ -37,6 +37,9 @@ class feax_Lexer(Lexer):
         else:
             raise FeatureLibError("Unexpected character: %r" % cur_char, location)
 
+    def pushback(self, token_type, token):
+        self.tokens.insert(0, [token_type, token])
+        
     def parse_variable(self, vname):
         t = self.scope.get(vname, '')
         stack = (self.text_, self.pos_)

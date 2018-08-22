@@ -45,6 +45,12 @@ class feaplus_parser(Parser) :
             self.advance_lexer_(comments=True)
         return super(feaplus_parser, self).parse()
 
+    def back_lexer_(self):
+        self.lexer_.lexers_[-1].pushback(self.next_token_type_, self.next_token_)
+        self.next_token_type_ = self.cur_token_type_
+        self.next_token_ = self.cur_token_
+        self.next_token_location_ = self.cur_token_location_
+
     # methods to limit layer violations
     def define_glyphclass(self, ap_nm, gc) :
         self.glyphclasses_.define(ap_nm, gc)
@@ -499,27 +505,35 @@ class feaplus_parser(Parser) :
     def parseDoStatement_(self):
         location = self.cur_token_location_
         substatements = []
-        while self.next_token_type_ is not Lexer.SYMBOL or self.next_token_ != "{":
+        ifs = []
+        while True:
             self.advance_lexer_()
             if self.is_cur_keyword_("for"):
                 substatements.append(self.parseDoFor_())
             elif self.is_cur_keyword_("let"):
                 substatements.append(self.parseDoLet_())
             elif self.is_cur_keyword_("if"):
-                substatements.append(self.parseDoIf_())
+                ifs.append(self.parseDoIf_())
+            elif self.cur_token_ == '{':
+                self.back_lexer_()
+                ifs.append(self.parseEmptyIf_())
+                break
             else:
-                raise FeatureLibError("Unknown substatement type in do statement", self.cur_token_location_)
-        block = self.collect_block_()
-        lex = self.lexer_.lexers_[-1]
+                self.back_lexer_()
+                break
         res = self.ast.Block()
-        keep = (self.next_token_type_, self.next_token_)
-        block = [keep] + block + [keep]
+        lex = self.lexer_.lexers_[-1]
+        keep = lex.tokens
         for s in self.DoIterateValues_(substatements):
-            lex.scope = s
-            lex.tokens = block[:]
-            self.advance_lexer_()
-            self.advance_lexer_()
-            self.parse_subblock_(res, False)
+            for i in ifs:
+                (_, v) = next(i.items(s))
+                if v:
+                    lex.scope = s
+                    lex.tokens = i.block[:]
+                    self.advance_lexer_()
+                    self.advance_lexer_()
+                    self.parse_subblock_(res, False)
+        lex.tokens = keep
         return res
 
     def DoIterateValues_(self, substatements):
@@ -572,5 +586,18 @@ class feaplus_parser(Parser) :
         expr = self.next_token_ + " " + lex.text_[start:lex.pos_]
         self.advance_lexer_()
         self.expect_symbol_(";")
-        return self.ast.DoIfSubStatement(expr, getattr(self, 'glyphs', None), location=location)
+        block = self.collect_block_()
+        keep = (self.next_token_type_, self.next_token_)
+        block = [keep] + block + [keep]
+        return self.ast.DoIfSubStatement(expr, getattr(self, 'glyphs', None), block, location=location)
+
+    def parseEmptyIf_(self):
+        location = self.cur_token_location_
+        lex = self.lexer_.lexers_[-1]
+        start = lex.pos_
+        expr = "True"
+        block = self.collect_block_()
+        keep = (self.next_token_type_, self.next_token_)
+        block = [keep] + block + [keep]
+        return self.ast.DoIfSubStatement(expr, getattr(self, 'glyphs', None), block, location=location)
 

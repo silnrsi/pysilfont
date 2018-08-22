@@ -289,8 +289,9 @@ class ast_DoLetSubStatement(ast_DoSubStatement):
         yield(self.name, v)
 
 class ast_DoIfSubStatement(ast_DoLetSubStatement):
-    def __init__(self, expression, glyphs, location=None):
+    def __init__(self, expression, glyphs, block, location=None):
         ast_DoLetSubStatement.__init__(self, None, expression, glyphs, location=None)
+        self.block = block
 
     def items(self, variables):
         (_, v) = list(ast_DoLetSubStatement.items(self, variables))[0]
