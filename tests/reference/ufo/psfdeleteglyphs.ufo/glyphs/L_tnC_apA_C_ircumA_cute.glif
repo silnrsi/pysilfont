@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnCapACircumAcute" format="2">
+  <advance width="1395"/>
+  <unicode hex="1EA4"/>
+  <anchor x="707" y="0" name="H"/>
+  <anchor x="687" y="2600" name="U"/>
+  <anchor x="687" y="-100" name="L"/>
+  <anchor x="1450" y="0" name="O"/>
+  <outline>
+    <component base="LtnCapA"/>
+    <component base="CombCircum" xOffset="1257" yOffset="430"/>
+    <component base="CombAcute" xOffset="1257" yOffset="965"/>
+  </outline>
+</glyph>

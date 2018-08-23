@@ -1,41 +1,928 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<font name="AndikaMtihani-Regular" upem="2048">
-<glyph PSName="AcuteAccent" UID="00B4"/>
-<glyph PSName="Bullet" UID="2022"/>
-<glyph PSName="BulletOperator" UID="2219"/>
-<glyph PSName="CircumAccent" UID="005E"/>
-<glyph PSName="CombAcute" UID="0301">
-  <point type="U">
-    <location x="-570" y="1635"/>
-  </point>
-  <point type="_U">
-    <location x="-570" y="1100"/>
-  </point>
-</glyph>
-<glyph PSName="DblAcuteAccent" UID="02DD"/>
+<font name="PsfTest-Italic" upem="2048">
+<glyph PSName=".notdef"/>
+<glyph PSName=".null"/>
+<glyph PSName="nonmarkingreturn"/>
+<glyph PSName="Space" UID="0020"/>
+<glyph PSName="ExclamationMrk" UID="0021"/>
+<glyph PSName="QuotMrk" UID="0022"/>
+<glyph PSName="NumSgn" UID="0023"/>
+<glyph PSName="DollarSgn" UID="0024"/>
+<glyph PSName="PercentSgn" UID="0025"/>
+<glyph PSName="Ampersand" UID="0026"/>
+<glyph PSName="Apos" UID="0027"/>
+<glyph PSName="LftParen" UID="0028"/>
+<glyph PSName="RtParen" UID="0029"/>
+<glyph PSName="Asterisk" UID="002A"/>
+<glyph PSName="PlusSgn" UID="002B"/>
+<glyph PSName="Comma" UID="002C"/>
 <glyph PSName="HyphenMinus" UID="002D">
   <point type="U">
-    <location x="430" y="1100"/>
+    <location x="645" y="1100"/>
   </point>
 </glyph>
-<glyph PSName="LtnCapAAcute" UID="00C1"/>
-<glyph PSName="LtnCapEAcute" UID="00C9"/>
-<glyph PSName="LtnCapIAcute" UID="00CD"/>
-<glyph PSName="LtnCapOAcute" UID="00D3"/>
-<glyph PSName="LtnCapUAcute" UID="00DA"/>
-<glyph PSName="LtnCapYAcute" UID="00DD"/>
-<glyph PSName="LtnSmAAcute" UID="00E1"/>
-<glyph PSName="LtnSmEAcute" UID="00E9"/>
-<glyph PSName="LtnSmIAcute" UID="00ED"/>
-<glyph PSName="LtnSmOAcute" UID="00F3"/>
-<glyph PSName="LtnSmUAcute" UID="00FA"/>
-<glyph PSName="LtnSmYAcute" UID="00FD"/>
-<glyph PSName="ModCircumAccent" UID="02C6"/>
+<glyph PSName="FullStop" UID="002E"/>
+<glyph PSName="Solidus" UID="002F"/>
+<glyph PSName="DigitZero" UID="0030">
+  <point type="L">
+    <location x="520" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="927" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="DigitOne" UID="0031">
+  <point type="L">
+    <location x="515" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="922" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="DigitTwo" UID="0032">
+  <point type="L">
+    <location x="515" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="882" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="DigitThree" UID="0033">
+  <point type="L">
+    <location x="515" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="922" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="DigitFour" UID="0034">
+  <point type="L">
+    <location x="522" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="929" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="DigitFive" UID="0035">
+  <point type="L">
+    <location x="515" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="922" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="DigitSix" UID="0036">
+  <point type="L">
+    <location x="515" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="922" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="DigitSeven" UID="0037">
+  <point type="L">
+    <location x="515" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="922" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="DigitEight" UID="0038">
+  <point type="L">
+    <location x="515" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="922" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="DigitNine" UID="0039">
+  <point type="L">
+    <location x="515" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="922" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="Colon" UID="003A"/>
+<glyph PSName="Semicolon" UID="003B"/>
+<glyph PSName="LTSgn" UID="003C"/>
+<glyph PSName="EqSgn" UID="003D"/>
+<glyph PSName="GTSgn" UID="003E"/>
+<glyph PSName="QstnMrk" UID="003F"/>
+<glyph PSName="AtSgn" UID="0040"/>
+<glyph PSName="LtnCapA" UID="0041">
+  <point type="H">
+    <location x="1170" y="0"/>
+  </point>
+  <point type="L">
+    <location x="602" y="-100"/>
+  </point>
+  <point type="O">
+    <location x="1390" y="0"/>
+  </point>
+  <point type="U">
+    <location x="1009" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapB" UID="0042">
+  <point type="L">
+    <location x="530" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="937" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapC" UID="0043">
+  <point type="H">
+    <location x="690" y="0"/>
+  </point>
+  <point type="L">
+    <location x="665" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="1072" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapD" UID="0044">
+  <point type="L">
+    <location x="630" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="1037" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapE" UID="0045">
+  <point type="H">
+    <location x="540" y="0"/>
+  </point>
+  <point type="L">
+    <location x="515" y="-100"/>
+  </point>
+  <point type="O">
+    <location x="857" y="0"/>
+  </point>
+  <point type="R">
+    <location x="1400" y="1200"/>
+  </point>
+  <point type="U">
+    <location x="922" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapF" UID="0046">
+  <point type="L">
+    <location x="510" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="917" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapG" UID="0047">
+  <point type="H">
+    <location x="685" y="0"/>
+  </point>
+  <point type="L">
+    <location x="660" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="1067" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapH" UID="0048">
+  <point type="H">
+    <location x="225" y="0"/>
+  </point>
+  <point type="L">
+    <location x="640" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="1047" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapI" UID="0049">
+  <point type="H">
+    <location x="417" y="0"/>
+  </point>
+  <point type="L">
+    <location x="392" y="-100"/>
+  </point>
+  <point type="O">
+    <location x="613" y="0"/>
+  </point>
+  <point type="R">
+    <location x="1215" y="1200"/>
+  </point>
+  <point type="U">
+    <location x="799" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapJ" UID="004A">
+  <point type="L">
+    <location x="325" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="997" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapK" UID="004B">
+  <point type="H">
+    <location x="210" y="0"/>
+  </point>
+  <point type="L">
+    <location x="610" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="972" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapL" UID="004C">
+  <point type="H">
+    <location x="532" y="0"/>
+  </point>
+  <point type="L">
+    <location x="507" y="-100"/>
+  </point>
+  <point type="R">
+    <location x="780" y="1200"/>
+  </point>
+  <point type="U">
+    <location x="914" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapM" UID="004D">
+  <point type="L">
+    <location x="800" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="1207" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapN" UID="004E">
+  <point type="H">
+    <location x="1170" y="0"/>
+  </point>
+  <point type="L">
+    <location x="652" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="1059" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapO" UID="004F">
+  <point type="H">
+    <location x="657" y="0"/>
+  </point>
+  <point type="L">
+    <location x="632" y="-100"/>
+  </point>
+  <point type="O">
+    <location x="896" y="0"/>
+  </point>
+  <point type="R">
+    <location x="1700" y="1200"/>
+  </point>
+  <point type="U">
+    <location x="1039" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapP" UID="0050">
+  <point type="L">
+    <location x="552" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="959" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapQ" UID="0051">
+  <point type="L">
+    <location x="589" y="-270"/>
+  </point>
+  <point type="U">
+    <location x="1039" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapR" UID="0052">
+  <point type="H">
+    <location x="590" y="0"/>
+  </point>
+  <point type="L">
+    <location x="525" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="932" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapS" UID="0053">
+  <point type="H">
+    <location x="520" y="0"/>
+  </point>
+  <point type="L">
+    <location x="495" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="902" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapT" UID="0054">
+  <point type="H">
+    <location x="562" y="0"/>
+  </point>
+  <point type="L">
+    <location x="562" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="944" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapU" UID="0055">
+  <point type="H">
+    <location x="647" y="0"/>
+  </point>
+  <point type="L">
+    <location x="622" y="-100"/>
+  </point>
+  <point type="O">
+    <location x="865" y="0"/>
+  </point>
+  <point type="R">
+    <location x="1640" y="1200"/>
+  </point>
+  <point type="U">
+    <location x="1029" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapV" UID="0056">
+  <point type="H">
+    <location x="620" y="0"/>
+  </point>
+  <point type="L">
+    <location x="587" y="-100"/>
+  </point>
+  <point type="O">
+    <location x="820" y="0"/>
+  </point>
+  <point type="U">
+    <location x="994" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapW" UID="0057">
+  <point type="L">
+    <location x="942" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="1349" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapX" UID="0058">
+  <point type="L">
+    <location x="565" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="972" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LtnCapY" UID="0059">
+  <point type="L">
+    <location x="565" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="972" y="1530"/>
+  </point>
+</glyph>
+<glyph PSName="LftSqrBrac" UID="005B"/>
 <glyph PSName="ReverseSolidus" UID="005C"/>
-<glyph PSName="SupOne" UID="00B9"/>
-<glyph PSName="SupThree" UID="00B3"/>
-<glyph PSName="VulgFracOneHalf" UID="00BD"/>
-<glyph PSName="VulgFracOneQuarter" UID="00BC"/>
-<glyph PSName="VulgFracThreeQuarters" UID="00BE"/>
-<glyph PSName="nonmarkingreturn"/>
+<glyph PSName="RtSqrBrac" UID="005D"/>
+<glyph PSName="CircumAccent" UID="005E">
+  <point type="U">
+    <location x="705" y="1635"/>
+  </point>
+</glyph>
+<glyph PSName="LowLine" UID="005F"/>
+<glyph PSName="GraveAccent" UID="0060">
+  <point type="U">
+    <location x="738" y="1635"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmA" UID="0061">
+  <point type="H">
+    <location x="860" y="0"/>
+  </point>
+  <point type="L">
+    <location x="455" y="-100"/>
+  </point>
+  <point type="O">
+    <location x="1065" y="0"/>
+  </point>
+  <point type="R">
+    <location x="1310" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="755" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmB" UID="0062">
+  <point type="H">
+    <location x="530" y="0"/>
+  </point>
+  <point type="L">
+    <location x="505" y="-100"/>
+  </point>
+  <point type="R">
+    <location x="1345" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="938" y="1635"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmC" UID="0063">
+  <point type="H">
+    <location x="520" y="0"/>
+  </point>
+  <point type="L">
+    <location x="495" y="-100"/>
+  </point>
+  <point type="R">
+    <location x="1210" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="785" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmD" UID="0064">
+  <point type="H">
+    <location x="545" y="0"/>
+  </point>
+  <point type="L">
+    <location x="520" y="-100"/>
+  </point>
+  <point type="R">
+    <location x="1380" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="953" y="1635"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmE" UID="0065">
+  <point type="H">
+    <location x="485" y="0"/>
+  </point>
+  <point type="L">
+    <location x="484" y="-100"/>
+  </point>
+  <point type="O">
+    <location x="840" y="0"/>
+  </point>
+  <point type="R">
+    <location x="1285" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="784" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmF" UID="0066">
+  <point type="H">
+    <location x="290" y="0"/>
+  </point>
+  <point type="L">
+    <location x="315" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="908" y="1635"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmG" UID="0067">
+  <point type="H">
+    <location x="368" y="-465"/>
+  </point>
+  <point type="L">
+    <location x="351" y="-535"/>
+  </point>
+  <point type="R">
+    <location x="1285" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="730" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmH" UID="0068">
+  <point type="H">
+    <location x="190" y="0"/>
+  </point>
+  <point type="L">
+    <location x="550" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="933" y="1635"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmI" UID="0069">
+  <point type="H">
+    <location x="235" y="0"/>
+  </point>
+  <point type="L">
+    <location x="250" y="-100"/>
+  </point>
+  <point type="O">
+    <location x="455" y="0"/>
+  </point>
+  <point type="R">
+    <location x="745" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="472" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmJ" UID="006A">
+  <point type="L">
+    <location x="-60" y="-500"/>
+  </point>
+  <point type="U">
+    <location x="510" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmK" UID="006B">
+  <point type="H">
+    <location x="840" y="0"/>
+  </point>
+  <point type="L">
+    <location x="537" y="-100"/>
+  </point>
+  <point type="R">
+    <location x="1225" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="920" y="1635"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmL" UID="006C">
+  <point type="H">
+    <location x="230" y="0"/>
+  </point>
+  <point type="L">
+    <location x="255" y="-100"/>
+  </point>
+  <point type="R">
+    <location x="740" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="630" y="1635"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmM" UID="006D">
+  <point type="H">
+    <location x="805" y="0"/>
+  </point>
+  <point type="L">
+    <location x="780" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="1080" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmN" UID="006E">
+  <point type="H">
+    <location x="540" y="0"/>
+  </point>
+  <point type="L">
+    <location x="565" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="815" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmO" UID="006F">
+  <point type="H">
+    <location x="510" y="0"/>
+  </point>
+  <point type="L">
+    <location x="505" y="-100"/>
+  </point>
+  <point type="O">
+    <location x="800" y="0"/>
+  </point>
+  <point type="R">
+    <location x="1330" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="785" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmP" UID="0070">
+  <point type="H">
+    <location x="105" y="-435"/>
+  </point>
+  <point type="L">
+    <location x="405" y="-500"/>
+  </point>
+  <point type="R">
+    <location x="1360" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="805" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmQ" UID="0071">
+  <point type="L">
+    <location x="370" y="-500"/>
+  </point>
+  <point type="R">
+    <location x="1320" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="770" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmR" UID="0072">
+  <point type="H">
+    <location x="210" y="0"/>
+  </point>
+  <point type="L">
+    <location x="220" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="670" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmS" UID="0073">
+  <point type="H">
+    <location x="435" y="0"/>
+  </point>
+  <point type="L">
+    <location x="440" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="710" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmT" UID="0074">
+  <point type="H">
+    <location x="455" y="0"/>
+  </point>
+  <point type="L">
+    <location x="390" y="-100"/>
+  </point>
+  <point type="R">
+    <location x="1025" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="605" y="1360"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmU" UID="0075">
+  <point type="H">
+    <location x="465" y="0"/>
+  </point>
+  <point type="L">
+    <location x="504" y="-100"/>
+  </point>
+  <point type="O">
+    <location x="640" y="0"/>
+  </point>
+  <point type="R">
+    <location x="1375" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="804" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmV" UID="0076">
+  <point type="H">
+    <location x="359" y="0"/>
+  </point>
+  <point type="L">
+    <location x="350" y="-100"/>
+  </point>
+  <point type="O">
+    <location x="565" y="0"/>
+  </point>
+  <point type="U">
+    <location x="650" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmW" UID="0077">
+  <point type="L">
+    <location x="690" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="990" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmX" UID="0078">
+  <point type="H">
+    <location x="840" y="0"/>
+  </point>
+  <point type="L">
+    <location x="457" y="-100"/>
+  </point>
+  <point type="U">
+    <location x="657" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmY" UID="0079">
+  <point type="L">
+    <location x="710" y="-100"/>
+  </point>
+  <point type="R">
+    <location x="1270" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="630" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="LftCurlyBrac" UID="007B"/>
+<glyph PSName="VertLine" UID="007C"/>
+<glyph PSName="RtCurlyBrac" UID="007D"/>
+<glyph PSName="Tilde" UID="007E"/>
+<glyph PSName="LtnCapADiaer" UID="00C4">
+  <point type="H">
+    <location x="1170" y="0"/>
+  </point>
+  <point type="L">
+    <location x="602" y="-100"/>
+  </point>
+  <point type="O">
+    <location x="1390" y="0"/>
+  </point>
+  <point type="U">
+    <location x="1106" y="1935"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmAAcute" UID="00E1">
+  <point type="H">
+    <location x="860" y="0"/>
+  </point>
+  <point type="L">
+    <location x="455" y="-100"/>
+  </point>
+  <point type="O">
+    <location x="1065" y="0"/>
+  </point>
+  <point type="R">
+    <location x="1310" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="889" y="1635"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmAGrave" UID="00E0">
+  <point type="H">
+    <location x="860" y="0"/>
+  </point>
+  <point type="L">
+    <location x="455" y="-100"/>
+  </point>
+  <point type="O">
+    <location x="1065" y="0"/>
+  </point>
+  <point type="R">
+    <location x="1310" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="889" y="1635"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmACircum" UID="00E2">
+  <point type="H">
+    <location x="860" y="0"/>
+  </point>
+  <point type="L">
+    <location x="455" y="-100"/>
+  </point>
+  <point type="O">
+    <location x="1065" y="0"/>
+  </point>
+  <point type="R">
+    <location x="1310" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="854" y="1635"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmADiaer" UID="00E4">
+  <point type="H">
+    <location x="860" y="0"/>
+  </point>
+  <point type="L">
+    <location x="455" y="-100"/>
+  </point>
+  <point type="O">
+    <location x="1065" y="0"/>
+  </point>
+  <point type="R">
+    <location x="1310" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="852" y="1505"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmATilde" UID="00E3">
+  <point type="H">
+    <location x="860" y="0"/>
+  </point>
+  <point type="L">
+    <location x="455" y="-100"/>
+  </point>
+  <point type="O">
+    <location x="1065" y="0"/>
+  </point>
+  <point type="R">
+    <location x="1310" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="850" y="1475"/>
+  </point>
+</glyph>
+<glyph PSName="LtnSmARingAbv" UID="00E5">
+  <point type="H">
+    <location x="860" y="0"/>
+  </point>
+  <point type="L">
+    <location x="455" y="-100"/>
+  </point>
+  <point type="O">
+    <location x="1065" y="0"/>
+  </point>
+  <point type="R">
+    <location x="1310" y="1000"/>
+  </point>
+  <point type="U">
+    <location x="919" y="1635"/>
+  </point>
+</glyph>
+<glyph PSName="DottedCirc" UID="25CC">
+  <point type="H">
+    <location x="493" y="0"/>
+  </point>
+  <point type="L">
+    <location x="468" y="-100"/>
+  </point>
+  <point type="O">
+    <location x="750" y="0"/>
+  </point>
+  <point type="U">
+    <location x="743" y="1000"/>
+  </point>
+</glyph>
+<glyph PSName="Hyphen" UID="2010">
+  <point type="U">
+    <location x="645" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="NonBreakingHyphen" UID="2011">
+  <point type="U">
+    <location x="645" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="Hyphen_Soft" UID="00AD">
+  <point type="U">
+    <location x="645" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="CombAcute" UID="0301">
+  <point type="U">
+    <location x="-221" y="1635"/>
+  </point>
+  <point type="_U">
+    <location x="-355" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="CombGrave" UID="0300">
+  <point type="U">
+    <location x="-201" y="1635"/>
+  </point>
+  <point type="_U">
+    <location x="-335" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="CombCircum" UID="0302">
+  <point type="U">
+    <location x="-221" y="1635"/>
+  </point>
+  <point type="_U">
+    <location x="-320" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="CombTilde" UID="0303">
+  <point type="U">
+    <location x="-290" y="1475"/>
+  </point>
+  <point type="_U">
+    <location x="-385" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="CombDiaer" UID="0308">
+  <point type="U">
+    <location x="-253" y="1505"/>
+  </point>
+  <point type="_U">
+    <location x="-350" y="1100"/>
+  </point>
+</glyph>
+<glyph PSName="CombRingAbv" UID="030A">
+  <point type="U">
+    <location x="-221" y="1635"/>
+  </point>
+  <point type="_U">
+    <location x="-385" y="1100"/>
+  </point>
+</glyph>
 </font>

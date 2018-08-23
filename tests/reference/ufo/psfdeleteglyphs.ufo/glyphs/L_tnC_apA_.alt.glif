@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnCapA.alt" format="2">
+  <advance width="1395"/>
+  <anchor x="668" y="1460" name="H"/>
+  <anchor x="688" y="1560" name="L"/>
+  <anchor x="-75" y="1460" name="O"/>
+  <anchor x="688" y="-70" name="U"/>
+  <outline>
+    <contour>
+      <point x="1130" y="1460" type="line"/>
+      <point x="996" y="1075" type="line"/>
+      <point x="381" y="1075" type="line"/>
+      <point x="245" y="1460" type="line"/>
+      <point x="40" y="1460" type="line"/>
+      <point x="75" y="1380"/>
+      <point x="113" y="1291"/>
+      <point x="180" y="1105" type="curve" smooth="yes"/>
+      <point x="580" y="0" type="line"/>
+      <point x="795" y="0" type="line"/>
+      <point x="1195" y="1105" type="line" smooth="yes"/>
+      <point x="1263" y="1292"/>
+      <point x="1299" y="1379"/>
+      <point x="1335" y="1460" type="curve"/>
+    </contour>
+    <contour>
+      <point x="435" y="920" type="line"/>
+      <point x="942" y="920" type="line"/>
+      <point x="690" y="195" type="line"/>
+    </contour>
+  </outline>
+</glyph>

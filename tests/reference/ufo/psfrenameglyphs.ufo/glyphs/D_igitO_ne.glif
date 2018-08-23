@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="DigitOne" format="2">
+  <advance width="1200"/>
+  <unicode hex="0031"/>
+  <anchor x="600" y="-100" name="L"/>
+  <anchor x="600" y="1530" name="U"/>
+  <outline>
+    <contour>
+      <point x="1075" y="0" type="line"/>
+      <point x="1075" y="235" type="line"/>
+      <point x="767" y="235" type="line"/>
+      <point x="767" y="1460" type="line"/>
+      <point x="492" y="1460" type="line"/>
+      <point x="177" y="1278" type="line"/>
+      <point x="212" y="1018" type="line"/>
+      <point x="492" y="1170" type="line"/>
+      <point x="492" y="235" type="line"/>
+      <point x="185" y="235" type="line"/>
+      <point x="185" y="0" type="line"/>
+    </contour>
+  </outline>
+</glyph>

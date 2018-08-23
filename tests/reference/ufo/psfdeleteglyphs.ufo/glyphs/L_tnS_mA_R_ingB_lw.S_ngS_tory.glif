@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnSmARingBlw.SngStory" format="2">
+  <advance width="0"/>
+  <unicode hex="1E01"/>
+  <outline>
+    <component base="LtnSmA.SngStory"/>
+  </outline>
+</glyph>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnSmTDiaer" format="2">
+  <advance width="835"/>
+  <unicode hex="1E97"/>
+  <anchor x="475" y="0" name="H"/>
+  <anchor x="835" y="1000" name="R"/>
+  <anchor x="325" y="1765" name="U"/>
+  <anchor x="475" y="-100" name="L"/>
+  <outline>
+    <component base="LtnSmT"/>
+    <component base="CombDiaer" xOffset="895" yOffset="260"/>
+  </outline>
+</glyph>

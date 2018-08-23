@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="QuotMrk" format="2">
+  <advance width="1005"/>
+  <unicode hex="0022"/>
+  <outline>
+    <contour>
+      <point x="600" y="1024" type="line"/>
+      <point x="639" y="1162"/>
+      <point x="683" y="1312"/>
+      <point x="772" y="1553" type="curve"/>
+      <point x="567" y="1553" type="line"/>
+      <point x="538" y="1312"/>
+      <point x="505" y="1162"/>
+      <point x="475" y="1024" type="curve"/>
+    </contour>
+    <contour>
+      <point x="940" y="1024" type="line"/>
+      <point x="979" y="1162"/>
+      <point x="1023" y="1312"/>
+      <point x="1112" y="1553" type="curve"/>
+      <point x="907" y="1553" type="line"/>
+      <point x="878" y="1312"/>
+      <point x="845" y="1162"/>
+      <point x="815" y="1024" type="curve"/>
+    </contour>
+  </outline>
+</glyph>

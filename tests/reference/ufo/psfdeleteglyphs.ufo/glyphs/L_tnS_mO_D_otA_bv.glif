@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnSmODotAbv" format="2">
+  <advance width="1140"/>
+  <unicode hex="022F"/>
+  <anchor x="570" y="0" name="H"/>
+  <anchor x="1140" y="1000" name="R"/>
+  <anchor x="570" y="1100" name="U"/>
+  <anchor x="570" y="-100" name="L"/>
+  <anchor x="835" y="0" name="O"/>
+  <outline>
+    <component base="LtnSmO"/>
+  </outline>
+</glyph>

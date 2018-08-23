@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnSmX" format="2">
+  <advance width="1009"/>
+  <unicode hex="0078"/>
+  <anchor x="840" y="0" name="H"/>
+  <anchor x="457" y="-100" name="L"/>
+  <anchor x="657" y="1100" name="U"/>
+  <outline>
+    <contour>
+      <point x="945" y="0" type="line"/>
+      <point x="765" y="133"/>
+      <point x="558" y="867"/>
+      <point x="439" y="1000" type="curve"/>
+      <point x="181" y="1000" type="line"/>
+      <point x="410" y="832"/>
+      <point x="578" y="141"/>
+      <point x="698" y="0" type="curve"/>
+    </contour>
+    <contour>
+      <point x="504" y="572" type="line"/>
+      <point x="286" y="463"/>
+      <point x="57" y="230"/>
+      <point x="30" y="0" type="curve"/>
+      <point x="230" y="0" type="line"/>
+      <point x="231" y="156"/>
+      <point x="375" y="380"/>
+      <point x="563" y="467" type="curve"/>
+    </contour>
+    <contour>
+      <point x="659" y="471" type="line"/>
+      <point x="838" y="591"/>
+      <point x="1092" y="798"/>
+      <point x="1099" y="1000" type="curve"/>
+      <point x="889" y="1000" type="line"/>
+      <point x="883" y="842"/>
+      <point x="758" y="675"/>
+      <point x="601" y="581" type="curve"/>
+    </contour>
+  </outline>
+</glyph>

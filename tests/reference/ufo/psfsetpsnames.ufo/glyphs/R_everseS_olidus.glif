@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <glyph name="ReverseSolidus" format="2">
-  <advance width="1000"/>
+  <advance width="1060"/>
   <unicode hex="005C"/>
   <outline>
     <contour>
-      <point x="990" y="-245" type="line"/>
-      <point x="160" y="1600" type="line"/>
-      <point x="10" y="1600" type="line"/>
-      <point x="840" y="-245" type="line"/>
+      <point x="344" y="1584" type="line"/>
+      <point x="719" y="-243" type="line"/>
+      <point x="949" y="-243" type="line"/>
+      <point x="574" y="1584" type="line"/>
     </contour>
   </outline>
 </glyph>

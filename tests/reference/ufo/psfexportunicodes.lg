@@ -1,7 +1,10 @@
-2018-08-16 17:36:53 Progress: Opening file for output: @cwd@/local/testresults/ufo/psfexportunicodes.csv
-2018-08-16 17:36:53 Progress: Reading UFO: tests/input/ufo/test.ufo
-2018-08-16 17:36:53 Progress: Checking fontinfo.plist metadata
-2018-08-16 17:36:53 Progress: Checking lib.plist metadata
-2018-08-16 17:36:53 Warning:  public.glyphOrder is missing from lib.plist
-2018-08-16 17:36:53 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 1
-2018-08-16 17:36:53 Progress: See log file for details
+2018-08-23 17:34:17 Progress: Opening file for output: @cwd@/local/testresults/ufo/psfexportunicodes.csv
+2018-08-23 17:34:17 Progress: Reading UFO: tests/input/ufo/font-psf-test/source/PsfTest-BoldItalic.ufo
+2018-08-23 17:34:17 Progress: Checking fontinfo.plist metadata
+2018-08-23 17:34:17 Warning:  macintoshFONDName would be removed from fontinfo  Old value: My Test
+2018-08-23 17:34:17 Warning:  postscriptFamilyBlues would be removed from fontinfo  Old value: []
+2018-08-23 17:34:17 Warning:  openTypeHheaAscender would be updated  Old value: 2200, new value: 2100
+2018-08-23 17:34:17 Progress: Checking lib.plist metadata
+2018-08-23 17:34:17 Warning:  com.schriftgestaltung.useNiceNames should normally be False; currently missing
+2018-08-23 17:34:17 Progress: Check & fix results:- Errors: 0, Changes to make: 3, Other warnings: 1
+2018-08-23 17:34:17 Progress: See log file for details

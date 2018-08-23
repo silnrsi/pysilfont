@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnCapM" format="2">
+  <advance width="1785"/>
+  <unicode hex="004D"/>
+  <anchor x="800" y="-100" name="L"/>
+  <anchor x="1207" y="1530" name="U"/>
+  <outline>
+    <contour>
+      <point x="880" y="201" type="line"/>
+      <point x="751" y="1431" type="line"/>
+      <point x="591" y="1431" type="line"/>
+      <point x="740" y="0" type="line"/>
+      <point x="935" y="0" type="line"/>
+      <point x="1793" y="1431" type="line"/>
+      <point x="1616" y="1431" type="line"/>
+    </contour>
+    <contour>
+      <point x="536" y="1431" type="line"/>
+      <point x="536" y="1431"/>
+      <point x="184" y="194"/>
+      <point x="110" y="0" type="curve"/>
+      <point x="295" y="0" type="line"/>
+      <point x="621" y="1181" type="line"/>
+      <point x="711" y="1431" type="line"/>
+    </contour>
+    <contour>
+      <point x="1560" y="0" type="line"/>
+      <point x="1579" y="194"/>
+      <point x="1846" y="1431"/>
+      <point x="1846" y="1431" type="curve"/>
+      <point x="1671" y="1431" type="line"/>
+      <point x="1641" y="1181" type="line"/>
+      <point x="1375" y="0" type="line"/>
+    </contour>
+  </outline>
+</glyph>

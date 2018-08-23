@@ -85,7 +85,7 @@ def doit(args) :
             processed.add(glyphn)
             dusv2gname[dusv] = glyphn
         else :
-            logger.log("Glyph '%s' not in font; line %d ignored." % (glyphn, str(incsv.line_num)), "I")
+            logger.log("Glyph '%s' not in font; line %d ignored." % (glyphn, incsv.line_num), "I")
 
     return font
 

@@ -1,9 +1,131 @@
-2018-08-16 17:36:53 Progress: Opening file for input: tests/input/ufo/psfsetunicodes.csv
-2018-08-16 17:36:53 Progress: Reading UFO: tests/input/ufo/test.ufo
-2018-08-16 17:36:53 Progress: Checking fontinfo.plist metadata
-2018-08-16 17:36:53 Progress: Checking lib.plist metadata
-2018-08-16 17:36:53 Warning:  public.glyphOrder is missing from lib.plist
-2018-08-16 17:36:53 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 1
-2018-08-16 17:36:53 Progress: Processing font for output
-2018-08-16 17:36:53 Progress: Output UFO already exists - reading for comparison
-2018-08-16 17:36:53 Progress: Writing font to local/testresults/ufo/psfsetunicodes.ufo
+2018-08-23 17:34:18 Progress: Opening file for input: tests/input/ufo/psfsetunicodes.csv
+2018-08-23 17:34:18 Progress: Reading UFO: tests/input/ufo/font-psf-test/source/PsfTest-Italic.ufo
+2018-08-23 17:34:18 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2018-08-23 17:34:19 Progress: Checking fontinfo.plist metadata
+2018-08-23 17:34:19 Progress: Checking lib.plist metadata
+2018-08-23 17:34:19 Warning:  com.schriftgestaltung.useNiceNames should normally be False; currently missing
+2018-08-23 17:34:19 Progress: Check & fix results:- Errors: 0, Changes made: 0, Other warnings: 1
+2018-08-23 17:34:19 Progress: See log file for details
+2018-08-23 17:34:19 Info:     Glyph 'Notthere' not in font; line 3 ignored.
+2018-08-23 17:34:19 Progress: Processing font for output
+2018-08-23 17:34:19 Progress: Output UFO already exists - reading for comparison
+2018-08-23 17:34:19 Progress: Writing font to local/testresults/ufo/psfsetunicodes.ufo
+2018-08-23 17:34:19 Info:     Processing glyphs directory
+2018-08-23 17:34:19 Verbose:    A_mpersand.glif
+2018-08-23 17:34:19 Verbose:    A_pos.glif
+2018-08-23 17:34:19 Verbose:    A_sterisk.glif
+2018-08-23 17:34:19 Verbose:    A_tS_gn.glif
+2018-08-23 17:34:19 Verbose:    C_ircumA_ccent.glif
+2018-08-23 17:34:19 Verbose:    C_olon.glif
+2018-08-23 17:34:19 Verbose:    C_ombA_cute.glif
+2018-08-23 17:34:19 Verbose:    C_ombC_ircum.glif
+2018-08-23 17:34:19 Verbose:    C_ombD_iaer.glif
+2018-08-23 17:34:19 Verbose:    C_ombG_rave.glif
+2018-08-23 17:34:19 Verbose:    C_ombR_ingA_bv.glif
+2018-08-23 17:34:19 Verbose:    C_ombT_ilde.glif
+2018-08-23 17:34:19 Verbose:    C_omma.glif
+2018-08-23 17:34:19 Verbose:    D_igitE_ight.glif
+2018-08-23 17:34:19 Verbose:    D_igitF_ive.glif
+2018-08-23 17:34:19 Verbose:    D_igitF_our.glif
+2018-08-23 17:34:19 Verbose:    D_igitN_ine.glif
+2018-08-23 17:34:19 Verbose:    D_igitO_ne.glif
+2018-08-23 17:34:19 Verbose:    D_igitS_even.glif
+2018-08-23 17:34:19 Verbose:    D_igitS_ix.glif
+2018-08-23 17:34:19 Verbose:    D_igitT_hree.glif
+2018-08-23 17:34:19 Verbose:    D_igitT_wo.glif
+2018-08-23 17:34:19 Verbose:    D_igitZ_ero.glif
+2018-08-23 17:34:19 Verbose:    D_ollarS_gn.glif
+2018-08-23 17:34:19 Verbose:    D_ottedC_irc.glif
+2018-08-23 17:34:19 Verbose:    E_qS_gn.glif
+2018-08-23 17:34:19 Verbose:    E_xclamationM_rk.glif
+2018-08-23 17:34:19 Verbose:    F_ullS_top.glif
+2018-08-23 17:34:19 Verbose:    G_T_S_gn.glif
+2018-08-23 17:34:19 Verbose:    G_raveA_ccent.glif
+2018-08-23 17:34:19 Verbose:    H_yphen.glif
+2018-08-23 17:34:19 Verbose:    H_yphenM_inus.glif
+2018-08-23 17:34:19 Verbose:    H_yphen_S_oft.glif
+2018-08-23 17:34:19 Verbose:    L_T_S_gn.glif
+2018-08-23 17:34:19 Verbose:    L_ftC_urlyB_rac.glif
+2018-08-23 17:34:19 Verbose:    L_ftP_aren.glif
+2018-08-23 17:34:19 Verbose:    L_ftS_qrB_rac.glif
+2018-08-23 17:34:19 Verbose:    L_owL_ine.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apA_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apA_D_iaer.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apB_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apC_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apD_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apE_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apF_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apG_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apH_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apI_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apJ_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apK_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apL_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apM_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apN_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apO_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apP_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apQ_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apR_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apS_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apT_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apU_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apV_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apW_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apX_.glif
+2018-08-23 17:34:19 Verbose:    L_tnC_apY_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mA_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mA_A_cute.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mA_C_ircum.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mA_D_iaer.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mA_G_rave.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mA_R_ingA_bv.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mA_T_ilde.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mB_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mC_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mD_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mE_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mF_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mG_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mH_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mI_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mJ_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mK_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mL_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mM_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mN_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mO_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mP_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mQ_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mR_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mS_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mT_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mU_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mV_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mW_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mX_.glif
+2018-08-23 17:34:19 Verbose:    L_tnS_mY_.glif
+2018-08-23 17:34:19 Verbose:    N_onB_reakingH_yphen.glif
+2018-08-23 17:34:19 Verbose:    N_umS_gn.glif
+2018-08-23 17:34:19 Verbose:    P_ercentS_gn.glif
+2018-08-23 17:34:19 Verbose:    P_lusS_gn.glif
+2018-08-23 17:34:19 Verbose:    Q_stnM_rk.glif
+2018-08-23 17:34:19 Verbose:    Q_uotM_rk.glif
+2018-08-23 17:34:19 Verbose:    R_everseS_olidus.glif
+2018-08-23 17:34:19 Verbose:    R_tC_urlyB_rac.glif
+2018-08-23 17:34:19 Verbose:    R_tP_aren.glif
+2018-08-23 17:34:19 Verbose:    R_tS_qrB_rac.glif
+2018-08-23 17:34:19 Verbose:    S_emicolon.glif
+2018-08-23 17:34:19 Verbose:    S_olidus.glif
+2018-08-23 17:34:19 Verbose:    S_pace.glif
+2018-08-23 17:34:19 Verbose:    T_ilde.glif
+2018-08-23 17:34:19 Verbose:    V_ertL_ine.glif
+2018-08-23 17:34:19 Verbose:    _notdef.glif
+2018-08-23 17:34:19 Verbose:    _null.glif
+2018-08-23 17:34:19 Verbose:    contents.plist
+2018-08-23 17:34:19 Verbose:    nonmarkingreturn.glif
+2018-08-23 17:34:19 Verbose:  fontinfo.plist
+2018-08-23 17:34:19 Verbose:  layercontents.plist
+2018-08-23 17:34:19 Verbose:  lib.plist
+2018-08-23 17:34:19 Verbose:  metainfo.plist

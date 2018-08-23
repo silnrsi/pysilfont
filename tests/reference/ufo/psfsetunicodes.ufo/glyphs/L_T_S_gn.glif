@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LTSgn" format="2">
+  <advance width="1180"/>
+  <unicode hex="003C"/>
+  <outline>
+    <contour>
+      <point x="1123" y="417" type="line"/>
+      <point x="408" y="705" type="line"/>
+      <point x="1272" y="1014" type="line"/>
+      <point x="1316" y="1191" type="line"/>
+      <point x="239" y="799" type="line"/>
+      <point x="197" y="632" type="line"/>
+      <point x="1079" y="240" type="line"/>
+    </contour>
+  </outline>
+</glyph>

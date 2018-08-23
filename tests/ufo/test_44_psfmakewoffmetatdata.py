@@ -10,12 +10,12 @@ import silfont.util
 # Next 5 lines of code are test-specific
 import silfont.scripts.psfmakewoffmetadata as testcommand
 testname = "psfmakewoffmetadata"
-cl = "psfmakewoffmetadata tests/input/ufo/test.ufo -n Test -i SIL -f tests/input/ufo/psfmakewoffmetadata.txt" \
+cl = "psfmakewoffmetadata tests/input/ufo/font-psf-test/source/PsfTest-Regular.ufo -n Test -i SIL -f tests/input/ufo/psfmakewoffmetadata.txt" \
       + " -o local/testresults/ufo/psfmakewoffmetadata.xml -l local/testresults/ufo/psfmakewoffmetadata.log"
 outfont = None
 diffexts = [".xml", ".log"]
-exp_errors = 0   # These may need updating if test.ufo is updated
-exp_warnings = 1 # test.ufo should have some errors/warnings to test the code!
+exp_errors = 0   # These may need updating if the test ufo is updated
+exp_warnings = 6 # The test ufo should have some errors/warnings to test the code!
 
 # Code after this can be the same for most tests; if needed to be different for a test remove this comment!
 

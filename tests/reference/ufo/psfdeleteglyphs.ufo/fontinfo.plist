@@ -5,13 +5,13 @@
   <key>ascender</key>
   <integer>2100</integer>
   <key>capHeight</key>
-  <integer>1485</integer>
+  <real>1485.3</real>
   <key>copyright</key>
   <string>Copyright (c) 2004-2018 SIL International</string>
   <key>descender</key>
   <integer>-550</integer>
   <key>familyName</key>
-  <string>Andika Mtihani</string>
+  <string>Psf Test</string>
   <key>guidelines</key>
   <array>
     <dict>
@@ -34,7 +34,7 @@ Second line
 Third line
 </string>
   <key>openTypeHeadCreated</key>
-  <string>2018/07/31 14:14:57</string>
+  <string>2018/08/23 15:13:09</string>
   <key>openTypeHheaAscender</key>
   <integer>2100</integer>
   <key>openTypeHheaDescender</key>
@@ -98,11 +98,11 @@ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
   <key>openTypeNameManufacturerURL</key>
   <string>http://scripts.sil.org</string>
   <key>openTypeNamePreferredFamilyName</key>
-  <string>Andika Mtihani</string>
+  <string>Psf Testing</string>
   <key>openTypeNamePreferredSubfamilyName</key>
   <string>Regular</string>
   <key>openTypeNameUniqueID</key>
-  <string>SIL International: Andika Mtihani Regular: 2018</string>
+  <string>SIL International: Psf Test Regular: 2018</string>
   <key>openTypeNameVersion</key>
   <string>Version 5.550</string>
   <key>openTypeOS2CodePageRanges</key>
@@ -159,7 +159,7 @@ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
   <key>openTypeOS2TypoDescender</key>
   <integer>-550</integer>
   <key>openTypeOS2TypoLineGap</key>
-  <integer>0</integer>
+  <integer>1</integer>
   <key>openTypeOS2UnicodeRanges</key>
   <array>
     <integer>0</integer>
@@ -209,9 +209,9 @@ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
     <integer>1620</integer>
   </array>
   <key>postscriptFontName</key>
-  <string>AndikaMtihani-Regular</string>
+  <string>PsfTest-Regular</string>
   <key>postscriptFullName</key>
-  <string>Andika Mtihani Regular</string>
+  <string>Psf Test Regular</string>
   <key>postscriptStemSnapH</key>
   <array>
     <integer>140</integer>
@@ -241,7 +241,7 @@ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
   <key>postscriptUnderlineThickness</key>
   <integer>80</integer>
   <key>styleMapFamilyName</key>
-  <string>Andika Mtihani</string>
+  <string>Psf test</string>
   <key>styleMapStyleName</key>
   <string>regular</string>
   <key>styleName</key>
@@ -256,5 +256,7 @@ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
   <integer>550</integer>
   <key>xHeight</key>
   <integer>1040</integer>
+  <key>year</key>
+  <string>2018</string>
 </dict>
 </plist>

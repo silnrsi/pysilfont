@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="EqSgn" format="2">
+  <advance width="1180"/>
+  <unicode hex="003D"/>
+  <outline>
+    <contour>
+      <point x="168" y="436" type="line"/>
+      <point x="1128" y="436" type="line"/>
+      <point x="1180" y="643" type="line"/>
+      <point x="220" y="643" type="line"/>
+    </contour>
+    <contour>
+      <point x="259" y="802" type="line"/>
+      <point x="1219" y="802" type="line"/>
+      <point x="1271" y="1010" type="line"/>
+      <point x="311" y="1010" type="line"/>
+    </contour>
+  </outline>
+</glyph>

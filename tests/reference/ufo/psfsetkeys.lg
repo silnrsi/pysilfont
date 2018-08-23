@@ -1,8 +1,17 @@
-2018-08-16 17:36:53 Progress: Reading UFO: tests/input/ufo/test.ufo
-2018-08-16 17:36:53 Progress: Checking fontinfo.plist metadata
-2018-08-16 17:36:53 Progress: Checking lib.plist metadata
-2018-08-16 17:36:53 Warning:  public.glyphOrder is missing from lib.plist
-2018-08-16 17:36:53 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 1
-2018-08-16 17:36:53 Progress: Processing font for output
-2018-08-16 17:36:53 Progress: Output UFO already exists - reading for comparison
-2018-08-16 17:36:53 Progress: Writing font to local/testresults/ufo/psfsetkeys.ufo
+2018-08-23 17:34:18 Progress: Reading UFO: tests/input/ufo/font-psf-test/source/PsfTest-BoldItalic.ufo
+2018-08-23 17:34:18 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2018-08-23 17:34:18 Progress: Checking fontinfo.plist metadata
+2018-08-23 17:34:18 Warning:  macintoshFONDName removed from fontinfo.  Old value: My Test
+2018-08-23 17:34:18 Info:     Types: Old - <type 'str'>, New - <type 'NoneType'>
+2018-08-23 17:34:18 Warning:  postscriptFamilyBlues removed from fontinfo.  Old value: []
+2018-08-23 17:34:18 Info:     Types: Old - <type 'list'>, New - <type 'NoneType'>
+2018-08-23 17:34:18 Warning:  openTypeHheaAscender updated  Old value: 2200, new value: 2100
+2018-08-23 17:34:18 Info:     Types: Old - <type 'int'>, New - <type 'int'>
+2018-08-23 17:34:18 Progress: Checking lib.plist metadata
+2018-08-23 17:34:18 Warning:  com.schriftgestaltung.useNiceNames should normally be False; currently missing
+2018-08-23 17:34:18 Progress: Check & fix results:- Errors: 0, Changes made: 3, Other warnings: 1
+2018-08-23 17:34:18 Progress: See log file for details
+2018-08-23 17:34:18 Progress: Processing font for output
+2018-08-23 17:34:18 Progress: Output UFO already exists - reading for comparison
+2018-08-23 17:34:18 Progress: Writing font to local/testresults/ufo/psfsetkeys.ufo
+2018-08-23 17:34:18 Info:     Processing glyphs directory

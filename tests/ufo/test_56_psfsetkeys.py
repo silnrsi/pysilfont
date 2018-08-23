@@ -11,11 +11,11 @@ import silfont.util
 # Next 7 lines of code may be test-specific
 import silfont.scripts.psfsetkeys as testcommand
 testname = "psfsetkeys"
-cl = "psfsetkeys tests/input/ufo/test.ufo -k org.sil.newkey -v newvalue -l local/testresults/ufo/psfsetkeys.log -p scrlevel=v"
+cl = "psfsetkeys tests/input/ufo/font-psf-test/source/PsfTest-BoldItalic.ufo -k org.sil.newkey -v newvalue -l local/testresults/ufo/psfsetkeys.log -p loglevel=i -p checkfix=fix"
 outfont = "local/testresults/ufo/psfsetkeys.ufo" # Set to None for commands which don't output a font
 diffexts = [".ufo", ".log"] # List of extensions of all output files
-exp_errors = 0   # These may need updating if test.ufo is updated
-exp_warnings = 1 # test.ufo should have some errors/warnings to test the code!
+exp_errors = 0   # These may need updating if the test ufo is updated
+exp_warnings = 4 # The test ufo should have some errors/warnings to test the code!
 
 # Code after this can be the same for most/all tests; if needed to be different for a test remove this comment!
 

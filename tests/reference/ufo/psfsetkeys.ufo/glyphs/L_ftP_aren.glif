@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LftParen" format="2">
+  <advance width="840"/>
+  <unicode hex="0028"/>
+  <outline>
+    <contour>
+      <point x="899" y="1624" type="line"/>
+      <point x="586" y="1430"/>
+      <point x="317" y="1081"/>
+      <point x="209" y="649" type="curve" smooth="yes"/>
+      <point x="177" y="521"/>
+      <point x="161" y="397"/>
+      <point x="161" y="277" type="curve" smooth="yes"/>
+      <point x="161" y="20"/>
+      <point x="234" y="-214"/>
+      <point x="373" y="-406" type="curve"/>
+      <point x="565" y="-198" type="line"/>
+      <point x="479" y="-42"/>
+      <point x="436" y="130"/>
+      <point x="436" y="315" type="curve" smooth="yes"/>
+      <point x="436" y="422"/>
+      <point x="450" y="534"/>
+      <point x="479" y="649" type="curve" smooth="yes"/>
+      <point x="559" y="972"/>
+      <point x="715" y="1216"/>
+      <point x="966" y="1411" type="curve"/>
+    </contour>
+  </outline>
+</glyph>

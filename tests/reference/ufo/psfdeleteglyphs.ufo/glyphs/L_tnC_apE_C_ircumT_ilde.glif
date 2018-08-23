@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnCapECircumTilde" format="2">
+  <advance width="1160"/>
+  <unicode hex="1EC4"/>
+  <anchor x="600" y="0" name="H"/>
+  <anchor x="1160" y="1200" name="R"/>
+  <anchor x="600" y="2440" name="U"/>
+  <anchor x="600" y="-100" name="L"/>
+  <anchor x="917" y="0" name="O"/>
+  <outline>
+    <component base="LtnCapE"/>
+    <component base="CombCircum" xOffset="1170" yOffset="430"/>
+    <component base="CombTilde" xOffset="1175" yOffset="965"/>
+  </outline>
+</glyph>

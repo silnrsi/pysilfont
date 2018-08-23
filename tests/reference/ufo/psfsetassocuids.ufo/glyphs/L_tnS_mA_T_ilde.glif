@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnSmATilde" format="2">
+  <advance width="1205"/>
+  <unicode hex="00E3"/>
+  <anchor x="985" y="0" name="H"/>
+  <anchor x="610" y="-100" name="L"/>
+  <anchor x="1185" y="0" name="O"/>
+  <anchor x="1145" y="1000" name="R"/>
+  <anchor x="610" y="1490" name="U"/>
+  <outline>
+    <component base="LtnSmA"/>
+    <component base="CombTilde" xOffset="1190"/>
+  </outline>
+</glyph>

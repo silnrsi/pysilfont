@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnSmOCircumAcute.sc" format="2">
+  <advance width="0"/>
+  <anchor x="0" y="1070" name="U"/>
+  <outline>
+    <component base="CombCircum" xOffset="570" yOffset="-1100"/>
+    <component base="CombAcute" xOffset="570" yOffset="-565"/>
+  </outline>
+</glyph>

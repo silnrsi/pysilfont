@@ -11,8 +11,8 @@ LtnCapIJ = LtnCapI & LtnCapJ |0132
 LtnSmIJ = LtnSmI & LtnSmJ |0133
 #
 # Test base + diacritic@AP
-LtnCapCAcute = LtnCapC + CombAcute@U |0106
-LtnSmCAcute = LtnSmC + CombAcute@U |0107
+LtnCapCAcute = LtnSmC + CombAcute@U |0106
+LtnSmCAcute = LtnCapC + CombAcute@U |0107
 LtnCapCCircum = LtnCapC + CombCircum@U |0108
 LtnSmCCircum = LtnSmC + CombCircum@U |0109
 #

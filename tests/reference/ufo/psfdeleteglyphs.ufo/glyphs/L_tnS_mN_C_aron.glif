@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnSmNCaron" format="2">
+  <advance width="1185"/>
+  <unicode hex="0148"/>
+  <anchor x="970" y="0" name="H"/>
+  <anchor x="600" y="1100" name="U"/>
+  <anchor x="600" y="-100" name="L"/>
+  <outline>
+    <component base="LtnSmN"/>
+  </outline>
+</glyph>

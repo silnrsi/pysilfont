@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="Solidus" format="2">
+  <advance width="1060"/>
+  <unicode hex="002F"/>
+  <outline>
+    <contour>
+      <point x="1164" y="1584" type="line"/>
+      <point x="-120" y="-243" type="line"/>
+      <point x="129" y="-243" type="line"/>
+      <point x="1414" y="1584" type="line"/>
+    </contour>
+  </outline>
+</glyph>

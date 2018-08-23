@@ -1,8 +1,13 @@
-2018-08-16 17:36:53 Progress: Opening file for input: tests/input/ufo/psfmakewoffmetadata.txt
-2018-08-16 17:36:53 Progress: Reading UFO: tests/input/ufo/test.ufo
-2018-08-16 17:36:53 Progress: Checking fontinfo.plist metadata
-2018-08-16 17:36:53 Progress: Checking lib.plist metadata
-2018-08-16 17:36:53 Warning:  public.glyphOrder is missing from lib.plist
-2018-08-16 17:36:53 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 1
-2018-08-16 17:36:53 Progress: See log file for details
-2018-08-16 17:36:53 Progress: Writing to : local/testresults/ufo/psfmakewoffmetadata.xml
+2018-08-23 17:34:17 Progress: Opening file for input: tests/input/ufo/psfmakewoffmetadata.txt
+2018-08-23 17:34:17 Progress: Reading UFO: tests/input/ufo/font-psf-test/source/PsfTest-Regular.ufo
+2018-08-23 17:34:18 Progress: Checking fontinfo.plist metadata
+2018-08-23 17:34:18 Warning:  year would be removed from fontinfo  Old value: 2018
+2018-08-23 17:34:18 Warning:  capHeight would be updated  Old value: 1485.3, new value: 1485
+2018-08-23 17:34:18 Warning:  styleMapFamilyName would be uppdated  Old value: Psf test, new value: Psf Test
+2018-08-23 17:34:18 Warning:  openTypeOS2TypoLineGap would be updated  Old value: 1, new value: 0
+2018-08-23 17:34:18 Warning:  openTypeNamePreferredFamilyName would be updated  Old value: Psf Testing, new value: Psf Test
+2018-08-23 17:34:18 Progress: Checking lib.plist metadata
+2018-08-23 17:34:18 Warning:  com.schriftgestaltung.useNiceNames should normally be False; currently missing
+2018-08-23 17:34:18 Progress: Check & fix results:- Errors: 0, Changes to make: 5, Other warnings: 1
+2018-08-23 17:34:18 Progress: See log file for details
+2018-08-23 17:34:18 Progress: Writing to : local/testresults/ufo/psfmakewoffmetadata.xml

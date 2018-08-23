@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnCapO" format="2">
+  <advance width="1447"/>
+  <unicode hex="004F"/>
+  <anchor x="657" y="0" name="H"/>
+  <anchor x="632" y="-100" name="L"/>
+  <anchor x="896" y="0" name="O"/>
+  <anchor x="1700" y="1200" name="R"/>
+  <anchor x="1039" y="1530" name="U"/>
+  <outline>
+    <contour>
+      <point x="719" y="147" type="curve" smooth="yes"/>
+      <point x="514" y="147"/>
+      <point x="386" y="300"/>
+      <point x="386" y="541" type="curve" smooth="yes"/>
+      <point x="386" y="871"/>
+      <point x="606" y="1284"/>
+      <point x="963" y="1284" type="curve" smooth="yes"/>
+      <point x="1164" y="1284"/>
+      <point x="1291" y="1133"/>
+      <point x="1291" y="892" type="curve" smooth="yes"/>
+      <point x="1291" y="563"/>
+      <point x="1077" y="147"/>
+    </contour>
+    <contour>
+      <point x="1492" y="931" type="curve" smooth="yes"/>
+      <point x="1492" y="1263"/>
+      <point x="1278" y="1455"/>
+      <point x="1015" y="1455" type="curve" smooth="yes"/>
+      <point x="599" y="1455"/>
+      <point x="185" y="1036"/>
+      <point x="185" y="500" type="curve" smooth="yes"/>
+      <point x="185" y="167"/>
+      <point x="400" y="-25"/>
+      <point x="666" y="-25" type="curve" smooth="yes"/>
+      <point x="1078" y="-25"/>
+      <point x="1492" y="395"/>
+    </contour>
+  </outline>
+</glyph>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="LtnCapECircumBlw" format="2">
+  <advance width="1160"/>
+  <unicode hex="1E18"/>
+  <anchor x="600" y="0" name="H"/>
+  <anchor x="1160" y="1200" name="R"/>
+  <anchor x="600" y="1530" name="U"/>
+  <anchor x="600" y="-100" name="L"/>
+  <anchor x="917" y="0" name="O"/>
+  <outline>
+    <component base="LtnCapE"/>
+  </outline>
+</glyph>

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<glyph name="LtnCapUAcute" format="2">
-  <advance width="1440"/>
-  <unicode hex="00FA"/>
-  <outline>
-    <component base="LtnCapU"/>
-    <component base="CombAcute" xOffset="1277" yOffset="430"/>
-  </outline>
-</glyph>
