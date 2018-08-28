@@ -147,6 +147,8 @@ class ast_MultipleSubstStatement(ast.Statement):
                 if len(r.glyphSet()) > 1 :
                     self.multindex = i #first RHS slot with a glyph class
                     break
+            else:
+                self.multindex = 0;
         else :
             self.multindex = 0
 
