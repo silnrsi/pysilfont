@@ -8,7 +8,7 @@ __author__ = 'David Raymond'
 from silfont.core import execute
 import silfont.ufo as UFO
 import silfont.etutil as ETU
-import os
+import os, datetime
 import designSpaceDocument as DSD
 from xml.etree import cElementTree as ET
 
@@ -101,7 +101,10 @@ def doit(args) :
             logchange(logger, "Primary font: " + field + " updated:", oval, pval)
         fipval[field] = pval
     if reqmissing: logger.log("Required fontinfo fields missing from " + psource.source.filename, "S")
-    if changes: psource.write("fontinfo")
+    if changes:
+        psource.fontinfo.setval("openTypeHeadCreated", "string",
+                             datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
+        psource.write("fontinfo")
 
     for field in libcopy:
         pval = psource.lib.getval(field) if field in psource.lib else None
@@ -114,7 +117,7 @@ def doit(args) :
 
     for dsource in dsources:
         logger.log("Processing " + dsource.ufodir, "I")
-        changes = False
+        fchanges = False
         for field in fiall:
             sval = dsource.fontinfo.getval(field) if field in dsource.fontinfo else None
             oval = sval
@@ -140,7 +143,7 @@ def doit(args) :
 
             if oval != sval:
                 if field == "unitsPerEm": logger.log("unitsPerEm inconsistent across fonts", "S")
-                changes = True
+                fchanges = True
                 if sval is None:
                     dsource.fontinfo.remove(field)
                     logmess = " removed: "
@@ -151,14 +154,13 @@ def doit(args) :
                         dsource.fontinfo[field][1].text = str(sval) # Not a simple copy of pval
 
                 logchange(logger, dsource.source.filename + " " + field + logmess, oval, sval)
-        if changes: dsource.write("fontinfo")
 
-        changes = False
+        lchanges = False
         for field in libcopy:
             oval = dsource.lib.getval(field) if field in dsource.lib else None
             pval = libpval[field]
             if oval != pval:
-                changes = True
+                lchanges = True
                 if pval is None:
                     dsource.lib.remove(field)
                     logmess = " removed: "
@@ -166,7 +168,15 @@ def doit(args) :
                     dsource.lib.setelem(field, ET.fromstring(ET.tostring(psource.lib[field][1])))
                     logmess = " updated: "
                 logchange(logger, dsource.source.filename + " " + field + logmess, oval, pval)
-        if changes: dsource.write("lib")
+
+        if lchanges:
+            dsource.write("lib")
+            fchanges = True # Force fontinfo to update so openTypeHeadCreated is set
+        if fchanges:
+            dsource.fontinfo.setval("openTypeHeadCreated", "string",
+                                    datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
+            dsource.write("fontinfo")
+
     logger.log("psfsyncmasters completed", "P")
 
 class Dsource(object):

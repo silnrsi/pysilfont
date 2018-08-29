@@ -5,7 +5,7 @@
   <key>ascender</key>
   <integer>2100</integer>
   <key>capHeight</key>
-  <integer>1485</integer>
+  <real>1485.3</real>
   <key>copyright</key>
   <string>Copyright (c) 2004-2018 SIL International</string>
   <key>descender</key>
@@ -15,7 +15,7 @@
   <key>italicAngle</key>
   <integer>-14</integer>
   <key>openTypeHeadCreated</key>
-  <string>2018/08/23 15:44:18</string>
+  <string>2018/08/28 18:08:47</string>
   <key>openTypeHheaAscender</key>
   <integer>2100</integer>
   <key>openTypeHheaDescender</key>
@@ -79,7 +79,7 @@ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
   <key>openTypeNameManufacturerURL</key>
   <string>http://scripts.sil.org</string>
   <key>openTypeNamePreferredFamilyName</key>
-  <string>Psf Test</string>
+  <string>Psf Testing</string>
   <key>openTypeNamePreferredSubfamilyName</key>
   <string>Italic</string>
   <key>openTypeNameUniqueID</key>
@@ -140,7 +140,7 @@ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
   <key>openTypeOS2TypoDescender</key>
   <integer>-550</integer>
   <key>openTypeOS2TypoLineGap</key>
-  <integer>0</integer>
+  <integer>1</integer>
   <key>openTypeOS2UnicodeRanges</key>
   <array>
     <integer>0</integer>
@@ -222,7 +222,7 @@ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
   <key>postscriptUnderlineThickness</key>
   <integer>80</integer>
   <key>styleMapFamilyName</key>
-  <string>Psf Test</string>
+  <string>Psf test</string>
   <key>styleMapStyleName</key>
   <string>italic</string>
   <key>styleName</key>
@@ -237,5 +237,7 @@ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
   <integer>550</integer>
   <key>xHeight</key>
   <integer>1040</integer>
+  <key>year</key>
+  <string>2018</string>
 </dict>
 </plist>

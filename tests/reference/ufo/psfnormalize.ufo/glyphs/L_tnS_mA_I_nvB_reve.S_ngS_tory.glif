@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<glyph name="LtnSmAInvBreve.SngStory" format="2">
-  <advance width="0"/>
-  <unicode hex="0203"/>
-  <outline>
-    <component base="LtnSmA.SngStory"/>
-  </outline>
-</glyph>

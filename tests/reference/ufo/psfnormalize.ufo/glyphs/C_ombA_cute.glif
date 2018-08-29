@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <glyph name="CombAcute" format="2">
   <unicode hex="0301"/>
-  <anchor x="-570" y="1635" name="U"/>
-  <anchor x="-570" y="1100" name="_U"/>
+  <anchor x="-221" y="1635" name="U"/>
+  <anchor x="-355" y="1100" name="_U"/>
   <outline>
     <contour>
-      <point x="-400" y="1600" type="line"/>
-      <point x="-750" y="1170" type="line"/>
-      <point x="-590" y="1170" type="line"/>
-      <point x="-170" y="1600" type="line"/>
+      <point x="-99" y="1568" type="line"/>
+      <point x="-524" y="1147" type="line"/>
+      <point x="-354" y="1147" type="line"/>
+      <point x="150" y="1568" type="line"/>
     </contour>
   </outline>
 </glyph>

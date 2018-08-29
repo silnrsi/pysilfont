@@ -1,25 +1,15 @@
-2018-08-23 17:34:17 Progress: Opening file for input: tests/input/ufo/psfdeleteglyphs.txt
-2018-08-23 17:34:17 Progress: Reading UFO: tests/input/ufo/font-psf-test/source/PsfTest-Regular.ufo
-2018-08-23 17:34:17 Info:     Processing Glyph Layer 0: public.defaultglyphs
-2018-08-23 17:34:17 Progress: Checking fontinfo.plist metadata
-2018-08-23 17:34:17 Warning:  year would be removed from fontinfo  Old value: 2018
-2018-08-23 17:34:17 Info:     Types: Old - <type 'str'>, New - <type 'NoneType'>
-2018-08-23 17:34:17 Warning:  capHeight would be updated  Old value: 1485.3, new value: 1485
-2018-08-23 17:34:17 Info:     Types: Old - <type 'float'>, New - <type 'int'>
-2018-08-23 17:34:17 Warning:  styleMapFamilyName would be uppdated  Old value: Psf test, new value: Psf Test
-2018-08-23 17:34:17 Info:     Types: Old - <type 'str'>, New - <type 'str'>
-2018-08-23 17:34:17 Warning:  openTypeOS2TypoLineGap would be updated  Old value: 1, new value: 0
-2018-08-23 17:34:17 Info:     Types: Old - <type 'int'>, New - <type 'int'>
-2018-08-23 17:34:17 Warning:  openTypeNamePreferredFamilyName would be updated  Old value: Psf Testing, new value: Psf Test
-2018-08-23 17:34:17 Info:     Types: Old - <type 'str'>, New - <type 'str'>
-2018-08-23 17:34:17 Progress: Checking lib.plist metadata
-2018-08-23 17:34:17 Warning:  com.schriftgestaltung.useNiceNames should normally be False; currently missing
-2018-08-23 17:34:17 Progress: Check & fix results:- Errors: 0, Changes to make: 5, Other warnings: 1
-2018-08-23 17:34:17 Warning:  Deleted glyphs:
-2018-08-23 17:34:17 Warning:  Apos
-2018-08-23 17:34:17 Warning:  Comma
-2018-08-23 17:34:17 Warning:  Total deleted glyphs: 2
-2018-08-23 17:34:17 Progress: Processing font for output
-2018-08-23 17:34:17 Progress: Output UFO already exists - reading for comparison
-2018-08-23 17:34:17 Progress: Writing font to local/testresults/ufo/psfdeleteglyphs.ufo
-2018-08-23 17:34:17 Info:     Processing glyphs directory
+2018-08-29 11:28:10 Progress: Opening file for input: tests/input/ufo/psfdeleteglyphs.txt
+2018-08-29 11:28:10 Progress: Reading UFO: tests/input/ufo/font-psf-test/source/PsfTest-Regular.ufo
+2018-08-29 11:28:10 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2018-08-29 11:28:10 Progress: Checking fontinfo.plist metadata
+2018-08-29 11:28:10 Progress: Checking lib.plist metadata
+2018-08-29 11:28:10 Warning:  com.schriftgestaltung.useNiceNames should normally be False; currently missing
+2018-08-29 11:28:10 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 1
+2018-08-29 11:28:10 Warning:  Deleted glyphs:
+2018-08-29 11:28:10 Warning:  Apos
+2018-08-29 11:28:10 Warning:  Comma
+2018-08-29 11:28:10 Warning:  Total deleted glyphs: 2
+2018-08-29 11:28:10 Progress: Processing font for output
+2018-08-29 11:28:10 Progress: Output UFO already exists - reading for comparison
+2018-08-29 11:28:10 Progress: Writing font to local/testresults/ufo/psfdeleteglyphs.ufo
+2018-08-29 11:28:10 Info:     Processing glyphs directory

@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <glyph name="LftParen" format="2">
-  <advance width="795"/>
+  <advance width="775"/>
   <unicode hex="0028"/>
   <outline>
     <contour>
-      <point x="115" y="625" type="curve" smooth="yes"/>
-      <point x="115" y="218"/>
-      <point x="260" y="-125"/>
-      <point x="535" y="-410" type="curve"/>
-      <point x="630" y="-265" type="line"/>
-      <point x="395" y="-8"/>
-      <point x="305" y="278"/>
-      <point x="305" y="625" type="curve" smooth="yes"/>
-      <point x="305" y="982"/>
-      <point x="395" y="1280"/>
-      <point x="630" y="1485" type="curve"/>
-      <point x="555" y="1640" type="line"/>
-      <point x="290" y="1444"/>
-      <point x="115" y="1062"/>
+      <point x="895" y="1607" type="line"/>
+      <point x="582" y="1415"/>
+      <point x="314" y="1061"/>
+      <point x="207" y="633" type="curve" smooth="yes"/>
+      <point x="176" y="508"/>
+      <point x="161" y="386"/>
+      <point x="161" y="270" type="curve" smooth="yes"/>
+      <point x="161" y="17"/>
+      <point x="233" y="-211"/>
+      <point x="374" y="-402" type="curve"/>
+      <point x="505" y="-260" type="line"/>
+      <point x="397" y="-102"/>
+      <point x="348" y="75"/>
+      <point x="348" y="270" type="curve" smooth="yes"/>
+      <point x="348" y="385"/>
+      <point x="365" y="506"/>
+      <point x="397" y="633" type="curve" smooth="yes"/>
+      <point x="484" y="982"/>
+      <point x="647" y="1254"/>
+      <point x="932" y="1455" type="curve"/>
     </contour>
   </outline>
 </glyph>

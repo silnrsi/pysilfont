@@ -5,7 +5,7 @@
   <key>ascender</key>
   <integer>2100</integer>
   <key>capHeight</key>
-  <real>1485.3</real>
+  <integer>1485</integer>
   <key>copyright</key>
   <string>Copyright (c) 2004-2018 SIL International</string>
   <key>descender</key>
@@ -34,7 +34,7 @@ Second line
 Third line
 </string>
   <key>openTypeHeadCreated</key>
-  <string>2018/08/23 15:03:52</string>
+  <string>2018/08/28 17:58:36</string>
   <key>openTypeHheaAscender</key>
   <integer>2100</integer>
   <key>openTypeHheaDescender</key>
@@ -98,7 +98,7 @@ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
   <key>openTypeNameManufacturerURL</key>
   <string>http://scripts.sil.org</string>
   <key>openTypeNamePreferredFamilyName</key>
-  <string>Psf Testing</string>
+  <string>Psf Test</string>
   <key>openTypeNamePreferredSubfamilyName</key>
   <string>Regular</string>
   <key>openTypeNameUniqueID</key>
@@ -159,7 +159,7 @@ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
   <key>openTypeOS2TypoDescender</key>
   <integer>-550</integer>
   <key>openTypeOS2TypoLineGap</key>
-  <integer>1</integer>
+  <integer>0</integer>
   <key>openTypeOS2UnicodeRanges</key>
   <array>
     <integer>0</integer>
@@ -241,7 +241,7 @@ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
   <key>postscriptUnderlineThickness</key>
   <integer>80</integer>
   <key>styleMapFamilyName</key>
-  <string>Psf test</string>
+  <string>Psf Test</string>
   <key>styleMapStyleName</key>
   <string>regular</string>
   <key>styleName</key>
@@ -256,7 +256,5 @@ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
   <integer>550</integer>
   <key>xHeight</key>
   <integer>1040</integer>
-  <key>year</key>
-  <string>2018</string>
 </dict>
 </plist>

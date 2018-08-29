@@ -12,29 +12,10 @@
   <integer>-550</integer>
   <key>familyName</key>
   <string>Psf Test</string>
-  <key>guidelines</key>
-  <array>
-    <dict>
-      <key>angle</key>
-      <integer>0</integer>
-      <key>x</key>
-      <integer>1084</integer>
-      <key>y</key>
-      <integer>1040</integer>
-    </dict>
-    <dict>
-      <key>y</key>
-      <integer>1250</integer>
-    </dict>
-  </array>
-  <key>note</key>
-  <string>Test note
-Second line
-
-Third line
-</string>
+  <key>italicAngle</key>
+  <integer>-14</integer>
   <key>openTypeHeadCreated</key>
-  <string>2018/08/23 14:37:26</string>
+  <string>2018/08/28 18:02:05</string>
   <key>openTypeHheaAscender</key>
   <integer>2100</integer>
   <key>openTypeHheaDescender</key>
@@ -100,9 +81,9 @@ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
   <key>openTypeNamePreferredFamilyName</key>
   <string>Psf Test</string>
   <key>openTypeNamePreferredSubfamilyName</key>
-  <string>Regular</string>
+  <string>Italic</string>
   <key>openTypeNameUniqueID</key>
-  <string>SIL International: Psf Test Regular: 2018</string>
+  <string>SIL International: Psf Test Italic: 2018</string>
   <key>openTypeNameVersion</key>
   <string>Version 5.550</string>
   <key>openTypeOS2CodePageRanges</key>
@@ -209,9 +190,9 @@ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
     <integer>1620</integer>
   </array>
   <key>postscriptFontName</key>
-  <string>PsfTest-Regular</string>
+  <string>PsfTest-Italic</string>
   <key>postscriptFullName</key>
-  <string>Psf Test Regular</string>
+  <string>Psf Test Italic</string>
   <key>postscriptStemSnapH</key>
   <array>
     <integer>140</integer>
@@ -243,9 +224,9 @@ THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
   <key>styleMapFamilyName</key>
   <string>Psf Test</string>
   <key>styleMapStyleName</key>
-  <string>regular</string>
+  <string>italic</string>
   <key>styleName</key>
-  <string>Regular</string>
+  <string>Italic</string>
   <key>trademark</key>
   <string>Andika is a trademark of SIL International.</string>
   <key>unitsPerEm</key>
