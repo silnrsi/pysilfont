@@ -143,6 +143,39 @@ class Font(object) :
             else :
                 self.classes.setdefault('GDEF_bases', []).append(name)
 
+    def make_multisuffix_classes(self):
+        # Build glyph classes where variant glyphs are indicated by more than one suffix
+        #  and/or where the variant suffix is not the last suffix in the glyph name
+        #  c_dotless contains LtnSmI.Dotless.sc
+        #  c_lit contains .SngStory and .SnglBowl variants
+        #TODO: do these additional classes work with Font::order_classes()?
+
+        import re #TODO: move this to start of file ?
+
+        #TODO: add command line support, read from file
+        # class nm must differ from suffixes
+        #  since suffix is already used as a class nm in make_classes
+        class_spec_lst = [('lit','SngStory','SngBowl'),
+                      ('sital','SItal','2StorySItal'),
+                      ('viet','VN'),
+                      ('dotlss','Dotless'),
+                      ]
+
+        for class_spec in class_spec_lst:
+            nm = class_spec[0]
+            c_nm, cno_nm = "c_" + nm, "cno_" + nm
+            c_lst, cno_lst = [], []
+            for suffix in class_spec[1:]:
+                for g in self.glyphs:
+                    if re.search("\." + suffix, g):
+                        gno = re.sub("\." + suffix, "", g)
+                        if gno in self.glyphs:
+                            c_lst.append(g)
+                            cno_lst.append(gno)
+            if c_lst:
+                self.classes.setdefault(c_nm, []).extend(c_lst)
+                self.classes.setdefault(cno_nm, []).extend(cno_lst)
+
     def make_marks(self) :
         for name, g in self.glyphs.items() :
             g.decide_if_mark()
@@ -269,6 +302,7 @@ def doit(args) :
 
     font.make_marks()
     font.make_classes()
+    font.make_multisuffix_classes()
     if args.classfile:
         font.read_classes(args.classfile, classproperties = args.classprops)
 
