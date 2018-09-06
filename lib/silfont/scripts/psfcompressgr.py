@@ -78,7 +78,7 @@ def compressGr(dat, version) :
         start = curr.end
         curr = parseTuple(datc, start, end)
     if curr.end > end :
-        print "Sync error: %s" % (curr)
+        print("Sync error: {!s}".format(curr))
     newend = write_literal(curr.literal_len + 4, 4) + datc[curr.literal:curr.literal+curr.literal_len+1] + dat[-4:]
     lz4hdr = struct.pack(">L", (1 << 27) + (len(dat) & 0x7FFFFFF))
     return dat[0:4] + lz4hdr + datc[0:curr.start] + newend

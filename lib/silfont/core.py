@@ -9,7 +9,11 @@ __version__ = '1.3.1.dev0'
 
 from glob import glob
 #import re, sys, os, codecs, argparse, datetime, shutil, csv, copy, ConfigParser
-import sys, os, argparse, datetime, shutil, csv, ConfigParser, codecs
+import sys, os, argparse, datetime, shutil, csv, codecs
+try:
+    import configparser
+except ImportError:
+    import ConfigParser as configparser
 
 class loggerobj(object):
     # For handling log messages.
@@ -124,7 +128,7 @@ class parameters(object):
         # sourcedesc should be added for user-supplied data (eg config file) for reporting purposes
         dict = {}
         if configfile:
-            config = ConfigParser.ConfigParser()
+            config = configparser.ConfigParser()
             config.readfp(open(configfile))
             if sourcedesc is None: sourcedesc = configfile
             for classn in config.sections():

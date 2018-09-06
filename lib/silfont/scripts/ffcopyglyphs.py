@@ -89,10 +89,10 @@ def doit(args) :
         for n in tglist:
             if n in font and not args.force :
                 if reportErrors :
-                    print "Glyph %s already present. Skipping" % n
+                    print("Glyph {} already present. Skipping".format(n))
                 continue
             if n not in infont :
-                print "Can't find glyph %s" % n
+                print("Can't find glyph {}".format(n))
                 continue
             g = infont[n]
             glist.extend(copyglyph(font, infont, g, -1, args))
@@ -136,11 +136,11 @@ def doit(args) :
     for u in ulist:
         o = font.findEncodingSlot(u)
         if o != -1 and not args.force :
-            print "Glyph for %x already present. Skipping" % u
+            print("Glyph for {:x} already present. Skipping".format(u))
             continue
         e = infont.findEncodingSlot(u)
         if e == -1 :
-            print "Can't find glyph for %04X" % u
+            print("Can't find glyph for {:04x}".format(u))
             continue
         g = infont[e]
         copyglyph(font, infont, g, u, args)

@@ -38,7 +38,7 @@ for ufo,type in cfg:
     (path,ufoname) = os.path.split(ufo)
     logname = ufoname[:-4] + ".log"
     if not os.path.isdir(ufo):
-        print (ufo + "is not a directory")
+        print (ufo + " is not a directory")
         continue
     if type == "copy":
         sourcedir = "local/ufotests/source/" + ufoname
