@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="ftml.xsl" type="text/xsl"?>
+<ftml version="1.0">
+  <head>
+    <title>ftml_builder test</title>
+  </head>
+  <testgroup label="Rendering Check">
+    <test label="check">
+      <string>RenderingUnknown</string>
+    </test>
+  </testgroup>
+  <testgroup label="Encoded characters">
+    <test label="U+0020">
+      <comment>Space</comment>
+      <string>\u00F130 \u00F131 ! " # $ % &amp; ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y</string>
+    </test>
+    <test label="U+005B">
+      <comment>LftSqrBrac</comment>
+      <string>[ \ ] ^ _ ` a b c d e f g h i j k l m n o p q r s t u v w x y</string>
+    </test>
+    <test label="U+007B">
+      <comment>LftCurlyBrac</comment>
+      <string>{ | } ~</string>
+    </test>
+    <test label="U+00AD">
+      <comment>Hyphen_Soft</comment>
+      <string>\u0000AD</string>
+    </test>
+    <test label="U+00C4">
+      <comment>LtnCapADiaer</comment>
+      <string>\u0000C4</string>
+    </test>
+    <test label="U+00E0">
+      <comment>LtnSmAGrave</comment>
+      <string>\u0000E0 \u0000E1 \u0000E2 \u0000E3 \u0000E4 \u0000E5</string>
+    </test>
+    <test label="U+0300">
+      <comment>CombGrave</comment>
+      <string>\u0025CC\u000300 \u0025CC\u000301 \u0025CC\u000302 \u0025CC\u000303</string>
+    </test>
+    <test label="U+0308">
+      <comment>CombDiaer</comment>
+      <string>\u0025CC\u000308</string>
+    </test>
+    <test label="U+030A">
+      <comment>CombRingAbv</comment>
+      <string>\u0025CC\u00030A</string>
+    </test>
+    <test label="U+2010">
+      <comment>Hyphen</comment>
+      <string>\u002010 \u002011</string>
+    </test>
+    <test label="U+25CC">
+      <comment>DottedCirc</comment>
+      <string>\u0025CC</string>
+    </test>
+  </testgroup>
+</ftml>
