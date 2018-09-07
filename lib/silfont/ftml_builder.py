@@ -331,9 +331,6 @@ class FTMLBuilder(object):
         try:
             nameCol = fl.index('glyph_name');
             usvCol = fl.index('USV')
-            bcp47Col = fl.index('bcp47tags')
-            # langCol = fl.index('OTLang')
-            featCol = fl.index('Feat')
         except ValueError as e:
             self.logger.log('Missing csv input field: ' + e.message, 'S')
         except Exception as e:
@@ -345,6 +342,9 @@ class FTMLBuilder(object):
             fontsCol = fl.index('Fonts')
         # Allow for projects that use only production glyph names (ps_name same as glyph_name)
         psCol = fl.index('ps_name') if 'ps_name' in fl else nameCol
+        # Allow for projects that have no feature and/or lang-specific behaviors
+        featCol = fl.index('Feat') if 'Feat' in fl else None
+        bcp47Col = fl.index('bcp47tags') if 'bcp47tags' in fl else None
 
         next(incsv.reader, None)  # Skip first line with headers in
 
@@ -425,36 +425,38 @@ class FTMLBuilder(object):
                     self._csvWarning('unencoded variant %s found before encoded glyph' % gname)
                     c = None
 
-            feats = line[featCol].strip()
-            if len(feats) > 0 and not(feats.startswith('#')):
-                for feat in feats.split(';'):
-                    m = featRE.match(feat)
-                    if m is None:
-                        self._csvWarning('incorrectly formed feature specification "%s"; ignored' % feat)
-                    else:
-                        # create/find structure for this feature:
-                        tag = m.group(1)
-                        feature = self.features.setdefault(tag,Feature(tag))
-                        # if values supplied, collect default and maximum values for this feature:
-                        if m.group(2) is not None:
-                            vals = [int(i) for i in m.group(2).split(',')]
-                            if len(vals) > 0:
-                                if uid is not None: feature.default = vals[0]
-                                vals.append(feature.maxval)
-                                feature.maxval = max(vals)
-                        if c is not None:
-                            # Record that this feature affects this character:
-                            c.feats.add(tag)
+            if featCol is not None:
+                feats = line[featCol].strip()
+                if len(feats) > 0 and not(feats.startswith('#')):
+                    for feat in feats.split(';'):
+                        m = featRE.match(feat)
+                        if m is None:
+                            self._csvWarning('incorrectly formed feature specification "%s"; ignored' % feat)
                         else:
-                            self._csvWarning('untestable feature "%s" : no known USV' % tag)
+                            # create/find structure for this feature:
+                            tag = m.group(1)
+                            feature = self.features.setdefault(tag,Feature(tag))
+                            # if values supplied, collect default and maximum values for this feature:
+                            if m.group(2) is not None:
+                                vals = [int(i) for i in m.group(2).split(',')]
+                                if len(vals) > 0:
+                                    if uid is not None: feature.default = vals[0]
+                                    vals.append(feature.maxval)
+                                    feature.maxval = max(vals)
+                            if c is not None:
+                                # Record that this feature affects this character:
+                                c.feats.add(tag)
+                            else:
+                                self._csvWarning('untestable feature "%s" : no known USV' % tag)
 
-            bcp47 = line[bcp47Col].strip()
-            if len(bcp47) > 0 and not(bcp47.startswith('#')):
-                if c is not None:
-                    for tag in bcp47.split(','):
-                        c.langs.add(tag.strip())
-                else:
-                    self._csvWarning('untestable langs: no known USV')
+            if bcp47Col is not None:
+                bcp47 = line[bcp47Col].strip()
+                if len(bcp47) > 0 and not(bcp47.startswith('#')):
+                    if c is not None:
+                        for tag in bcp47.split(','):
+                            c.langs.add(tag.strip())
+                    else:
+                        self._csvWarning('untestable langs: no known USV')
 
     def permuteFeatures(self, uids = None, feats = None):
         """ returns an iterator that provides all combinations of feature/value pairs, either for a list of uids or a specific list of featIDs"""
