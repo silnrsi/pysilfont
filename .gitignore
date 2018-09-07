@@ -3,6 +3,7 @@
 *~
 *.sw?
 
+
 installed-files.txt
 pysilfont.cfg
 
@@ -14,7 +15,9 @@ pysilfont.cfg
 /lib/pysilfont.egg-info
 /pysilfont.egg-info
 /setuptools-*
-/.idea
 /.pytest_cache
 /tests/localufos.csv
 
+.idea
+
+.DS_Store
