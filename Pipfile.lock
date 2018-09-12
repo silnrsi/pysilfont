@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "5f71d206621f0dd8e2d7c498d3821a9f9db6603ae30ec9207160e128823b171a"
+            "sha256": "698a0291a1940eeb517d49626558e9fcf9a99b3843e55c6c84e1ba0cf9f3ad49"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -62,15 +62,12 @@
             "version": "==1.5.0"
         },
         "defcon": {
-            "hashes": [
-                "sha256:bcd6539247d034918c4df687fdaa6e64fbca939cf9b34aee506527e95190f2dc",
-                "sha256:c55b4cfb169c69bd50fbe3470ba68ec2aa0237cc55304ac69580911848199f4d"
-            ],
-            "version": "==0.5.2"
+            "git": "https://github.com/typesupply/defcon.git",
+            "ref": "93d3374a03166e543f638cb5ced4c4935f42bfc7"
         },
         "designspacedocument": {
             "git": "https://github.com/LettError/designSpaceDocument.git",
-            "ref": "master"
+            "ref": "d0c89bb7de8e0b0ea97c937959820753f946dfc1"
         },
         "fontmath": {
             "hashes": [
@@ -97,17 +94,11 @@
         },
         "fonttools": {
             "hashes": [
-                "sha256:aab38c8c131670684321437d4857dcb4de1c775efd152a9ca9c4d81f1cb97fe7",
-                "sha256:ba48e21d9a56e3bb68fbdbb64250cffcbf4d97cfb3044806a3571d17068726c6"
+                "sha256:9419fb9c59cc49313b570b006089540cb5b1431e793f33a887f997862e2cc415",
+                "sha256:a687ca070daddb7ee25e3472b631acd0e53dbf11ecdf8e76248ee556472ede9d"
             ],
             "index": "pypi",
-            "version": "==3.29.0"
-        },
-        "future": {
-            "hashes": [
-                "sha256:e39ced1ab767b5936646cedba8bcce582398233d6a627067d4c6a454c90cfedb"
-            ],
-            "version": "==0.16.0"
+            "version": "==3.29.1"
         },
         "glyphslib": {
             "hashes": [
@@ -144,8 +135,7 @@
         },
         "odfpy": {
             "hashes": [
-                "sha256:6bcaf3b23aa9e49ed8c8c177266539b211add4e02402748a994451482a10cb1b",
-                "sha256:ab1d67311b3c42dfad1063692c419c137fd6d5a6f0c6380d13758c2593a2b8c9"
+                "sha256:6bcaf3b23aa9e49ed8c8c177266539b211add4e02402748a994451482a10cb1b"
             ],
             "index": "pypi",
             "version": "==1.3.6"
@@ -185,11 +175,11 @@
         },
         "ufo2ft": {
             "hashes": [
-                "sha256:3a416e4ba8f0a1d883656cad1056d4fda2cd1409007cebc91cfd88926dca0573",
-                "sha256:47992455bbe48d51a81379e600daaba03094b3ff3ca13c517c5bea2950d951ad"
+                "sha256:bbf7d5d6d90106ae45f55b706d6e3384b2fbc0c2610879179fd410afc7babb44",
+                "sha256:f6676331ff2f941f16027b5032a980e8a9aa35867e8a108c773dde795cf5e410"
             ],
             "index": "pypi",
-            "version": "==2.2.0"
+            "version": "==2.2.2"
         },
         "ufolib": {
             "hashes": [
@@ -206,6 +196,7 @@
                 "sha256:0312ad34fcad8fac3704d441f7b317e50af620823353ec657a53e981f92920c0",
                 "sha256:ec9ae8adaae229e4f8446952d204a3e4b5fdd2d099f9be3aaf556120135fb3ee"
             ],
+            "markers": "python_version >= '2.7' and python_version != '3.1.*' and python_version != '3.3.*' and python_version != '3.0.*' and python_version != '3.2.*'",
             "version": "==1.2.1"
         },
         "attrs": {
@@ -222,6 +213,14 @@
             ],
             "index": "pypi",
             "version": "==0.8.0"
+        },
+        "colorama": {
+            "hashes": [
+                "sha256:463f8483208e921368c9f306094eb6f725c6ca42b0f97e313cb5d5512459feda",
+                "sha256:48eb22f4f8461b1df5734a074b57042430fb06e1d61bd1e11b078c0fe6d7a1f1"
+            ],
+            "markers": "sys_platform == 'win32'",
+            "version": "==0.3.9"
         },
         "compreffor": {
             "hashes": [
@@ -261,15 +260,12 @@
             "version": "==1.5.0"
         },
         "defcon": {
-            "hashes": [
-                "sha256:bcd6539247d034918c4df687fdaa6e64fbca939cf9b34aee506527e95190f2dc",
-                "sha256:c55b4cfb169c69bd50fbe3470ba68ec2aa0237cc55304ac69580911848199f4d"
-            ],
-            "version": "==0.5.2"
+            "git": "https://github.com/typesupply/defcon.git",
+            "ref": "93d3374a03166e543f638cb5ced4c4935f42bfc7"
         },
         "designspacedocument": {
             "git": "https://github.com/LettError/designSpaceDocument.git",
-            "ref": "master"
+            "ref": "d0c89bb7de8e0b0ea97c937959820753f946dfc1"
         },
         "fontmath": {
             "hashes": [
@@ -296,17 +292,11 @@
         },
         "fonttools": {
             "hashes": [
-                "sha256:aab38c8c131670684321437d4857dcb4de1c775efd152a9ca9c4d81f1cb97fe7",
-                "sha256:ba48e21d9a56e3bb68fbdbb64250cffcbf4d97cfb3044806a3571d17068726c6"
+                "sha256:9419fb9c59cc49313b570b006089540cb5b1431e793f33a887f997862e2cc415",
+                "sha256:a687ca070daddb7ee25e3472b631acd0e53dbf11ecdf8e76248ee556472ede9d"
             ],
             "index": "pypi",
-            "version": "==3.29.0"
-        },
-        "future": {
-            "hashes": [
-                "sha256:e39ced1ab767b5936646cedba8bcce582398233d6a627067d4c6a454c90cfedb"
-            ],
-            "version": "==0.16.0"
+            "version": "==3.29.1"
         },
         "glyphslib": {
             "hashes": [
@@ -351,25 +341,17 @@
         },
         "odfpy": {
             "hashes": [
-                "sha256:6bcaf3b23aa9e49ed8c8c177266539b211add4e02402748a994451482a10cb1b",
-                "sha256:ab1d67311b3c42dfad1063692c419c137fd6d5a6f0c6380d13758c2593a2b8c9"
+                "sha256:6bcaf3b23aa9e49ed8c8c177266539b211add4e02402748a994451482a10cb1b"
             ],
             "index": "pypi",
             "version": "==1.3.6"
-        },
-        "pathlib2": {
-            "hashes": [
-                "sha256:8eb170f8d0d61825e09a95b38be068299ddeda82f35e96c3301a8a5e7604cb83",
-                "sha256:d1aa2a11ba7b8f7b21ab852b1fb5afb277e1bb99d5dfc663380b5015c0d80c5a"
-            ],
-            "markers": "python_version < '3.6'",
-            "version": "==2.3.2"
         },
         "pluggy": {
             "hashes": [
                 "sha256:6e3836e39f4d36ae72840833db137f7b7d35105079aee6ec4a62d9f80d594dd1",
                 "sha256:95eb8364a4708392bae89035f45341871286a333f749c3141c20573d2b3876e1"
             ],
+            "markers": "python_version >= '2.7' and python_version != '3.1.*' and python_version != '3.3.*' and python_version != '3.0.*' and python_version != '3.2.*'",
             "version": "==0.7.1"
         },
         "py": {
@@ -377,6 +359,7 @@
                 "sha256:06a30435d058473046be836d3fc4f27167fd84c45b99704f2fb5509ef61f9af1",
                 "sha256:50402e9d1c9005d759426988a492e0edaadb7f4e68bcddfea586bc7432d009c6"
             ],
+            "markers": "python_version >= '2.7' and python_version != '3.1.*' and python_version != '3.3.*' and python_version != '3.0.*' and python_version != '3.2.*'",
             "version": "==1.6.0"
         },
         "pyclipper": {
@@ -429,11 +412,11 @@
         },
         "ufo2ft": {
             "hashes": [
-                "sha256:3a416e4ba8f0a1d883656cad1056d4fda2cd1409007cebc91cfd88926dca0573",
-                "sha256:47992455bbe48d51a81379e600daaba03094b3ff3ca13c517c5bea2950d951ad"
+                "sha256:bbf7d5d6d90106ae45f55b706d6e3384b2fbc0c2610879179fd410afc7babb44",
+                "sha256:f6676331ff2f941f16027b5032a980e8a9aa35867e8a108c773dde795cf5e410"
             ],
             "index": "pypi",
-            "version": "==2.2.0"
+            "version": "==2.2.2"
         },
         "ufolib": {
             "hashes": [

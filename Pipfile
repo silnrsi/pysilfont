@@ -20,7 +20,7 @@ fontParts = "*"
 ufo2ft = "*"
 
 [dev-packages]
-glyphsLib = "2.4.0"
+glyphsLib = "==2.4.0"
 fontTools = "*"
 defcon = "*"
 ufoLib = "*"
