@@ -159,6 +159,7 @@ class Font(object) :
                       ('sital','SItal','2StorySItal'),
                       ('viet','VN'),
                       ('dotlss','Dotless'),
+                      ('rtrhk', 'RetroHook'),
                       ]
 
         for class_spec in class_spec_lst:
