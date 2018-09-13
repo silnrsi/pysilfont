@@ -1,15 +1,20 @@
 #!/usr/bin/env python
+from __future__ import unicode_literals
 'Classes and functions for handling XML files in pysilfont scripts'
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
+try:
+    str = unicode
+    chr = unichr
+except NameError: # Will  occur with Python 3
+    pass
 from xml.etree import cElementTree as ET
-from glob import glob
 import silfont.core
 
-import re, sys, os, codecs, argparse, datetime, shutil, csv, collections
+import re, os, codecs, io, collections
 
 _elementprotect = {
     '&' : '&amp;',
@@ -38,7 +43,7 @@ class ETWriter(object) :
         self.numAttribs = numAttribs            # List of numeric attributes used with precision
 
     def _protect(self, txt, base=_attribprotect) :
-        return re.sub(ur'['+ur"".join(base.keys())+ur"]", lambda m: base[m.group(0)], txt)
+        return re.sub(r'['+r"".join(base.keys())+r"]", lambda m: base[m.group(0)], txt)
 
     def serialize_xml(self, base = None, indent = '') :
         # Create the xml and return as a string
@@ -48,18 +53,18 @@ class ETWriter(object) :
             base = self.root
             outstr += '<?xml version="1.0" encoding="UTF-8"?>\n'
             if '.pi' in base.attrib : # Processing instructions
-                for pi in base.attrib['.pi'].split(",") : outstr += u'<?{}?>\n'.format(pi)
+                for pi in base.attrib['.pi'].split(",") : outstr += '<?{}?>\n'.format(pi)
 
-            if '.doctype' in base.attrib : outstr += u'<!DOCTYPE {}>\n'.format(base.attrib['.doctype'])
+            if '.doctype' in base.attrib : outstr += '<!DOCTYPE {}>\n'.format(base.attrib['.doctype'])
 
         tag = base.tag
         attribs = base.attrib
 
         if '.comments' in attribs :
-            for c in attribs['.comments'].split(",") : outstr += u'{}<!--{}-->\n'.format(indent, c)
+            for c in attribs['.comments'].split(",") : outstr += '{}<!--{}-->\n'.format(indent, c)
 
         i = indent if tag not in self.inlineelem else ""
-        outstr += u'{}<{}'.format(i, tag)
+        outstr += '{}<{}'.format(i, tag)
 
         for k in sorted(attribs.keys(), cmp=lambda x,y: cmp(self.attributeOrder.get(x, 999), self.attributeOrder.get(y, 999)) or cmp(x, y)) :
             if k[0] != '.' :
@@ -70,7 +75,7 @@ class ETWriter(object) :
                         att = int(num) if num == int(num) else num
                 else:
                     att = self._protect(att)
-                outstr += u' {}="{}"'.format(k, att)
+                outstr += ' {}="{}"'.format(k, att)
 
         if len(base) or (base.text and base.text.strip()) :
             outstr += '>'
@@ -99,7 +104,7 @@ class ETWriter(object) :
         if tag not in self.inlineelem : outstr += "\n"
 
         if '.commentsafter' in base.attrib :
-            for c in base.attrib['.commentsafter'].split(",") : outstr += u'{}<!--{}-->\n'.format(indent, c)
+            for c in base.attrib['.commentsafter'].split(",") : outstr += '{}<!--{}-->\n'.format(indent, c)
 
         outstrings.append(outstr)
         return "".join(outstrings)
@@ -133,20 +138,22 @@ class xmlitem(_container):
         self.type = None
         if filen and dirn :
             fulln = os.path.join( dirn, filen)
-            with open(fulln, "r") as inxml:
+            with io.open(fulln, "r", encoding="utf-8") as inxml:
                 for line in inxml.readlines() :
                     self.inxmlstr = self.inxmlstr + line
             if parse :
                 try:
                     self.etree = ET.fromstring(self.inxmlstr)
-                except Exception as e:
-                    self.logger.log("Failed to parse xml for " + fulln, "E")
-                    self.logger.log(str(e), "S")
+                except:
+                    try:
+                        self.etree = ET.fromstring(self.inxmlstr.encode("utf-8"))
+                    except Exception as e:
+                        self.logger.log("Failed to parse xml for " + fulln, "E")
+                        self.logger.log(str(e), "S")
 
     def write_to_file(self,dirn,filen) :
-        outfile=codecs.open(os.path.join(dirn,filen),'w','utf-8')
+        outfile = io.open(os.path.join(dirn,filen),'w', encoding="utf-8")
         outfile.write(self.outxmlstr)
-        outfile.close
 
 class ETelement(_container):
     # Class for an etree element. Mainly used as a parent class

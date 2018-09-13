@@ -1,11 +1,16 @@
 #!/usr/bin/env python
+from __future__ import unicode_literals
 'classes and functions for building ftml tests from glyph_data.csv and UFO'
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2018 SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Bob Hallissy'
 
-import re
+try:
+    str = unicode
+    chr = unichr
+except NameError: # Will  occur with Python 3
+    pass
 from silfont.ftml import Fxml, Ftestgroup, Ftest, Ffontsrc
 from icu import Char, Script, UCharCategory,  UCharDirection, UProperty, UJoiningGroup, UScriptCode, UNICODE_VERSION
 from itertools import product
@@ -120,7 +125,8 @@ class FTML(object):
             self._curTest = test
         if len(self._curTest.string): self._curTest.string += ' '
         # Special hack until we get to python3 with full unicode support
-        self._curTest.string += ''.join([ c if ord(c) < 128 else '\u{0:06X}'.format(ord(c)) for c in s ])
+        self._curTest.string += ''.join([ c if ord(c) < 128 else '\\u{0:06X}'.format(ord(c)) for c in s ])
+        # self._curTest.string += s
 
     def setFeatures(self, features):
         # features can be None or a list; list elements can be:
@@ -514,7 +520,7 @@ class FTMLBuilder(object):
         if Char.isUWhiteSpace(lastNonMark):
             # Last non-mark is whitespace -- append baseline brackets:
             uids.append(0xF131)
-        s = ''.join([unichr(uid) for uid in uids])
+        s = ''.join([chr(uid) for uid in uids])
         if zwjBefore or zwjAfter:
             # Show contextual forms:
             t = u'{0} '.format(s)

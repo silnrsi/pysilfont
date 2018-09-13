@@ -1,14 +1,19 @@
 #!/usr/bin/env python
+from __future__ import unicode_literals
 'Classes and functions for use handling FTML objects in pysilfont scripts'
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2016 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
+try:
+    str = unicode
+    chr = unichr
+except NameError: # Will  occur with Python 3
+    pass
 from xml.etree import cElementTree as ET ## Apparently cElementTree is now deprecated
 from fontTools import ttLib
-import os, re
-#import sys, os, copy, shutil, filecmp
+import re
 from xml.sax.saxutils import quoteattr
 import silfont.core
 import silfont.etutil as ETU

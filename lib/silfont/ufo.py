@@ -1,12 +1,18 @@
 #!/usr/bin/env python
+from __future__ import unicode_literals
 'Classes and functions for use handling Ufont UFO font objects in pysilfont scripts'
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
+try:
+    str = unicode
+    chr = unichr
+except NameError: # Will  occur with Python 3
+    pass
 from xml.etree import cElementTree as ET
-import sys, os, shutil, filecmp
+import sys, os, shutil, filecmp, io
 import warnings
 import collections
 import datetime
@@ -1041,7 +1047,7 @@ def writeXMLobject(dtreeitem, params, dirn, filen, exists, fobject=False):
         else:  # Read existing XML from disk
             oxmlstr = ""
             try:
-                oxml = open(os.path.join(dirn, filen), "r")
+                oxml = io.open(os.path.join(dirn, filen), "r", encoding="utf-8")
             except Exception as e:
                 print(e)
                 sys.exit(1)

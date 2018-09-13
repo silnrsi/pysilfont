@@ -1,11 +1,17 @@
 #!/usr/bin/env python
+from __future__ import unicode_literals
 'General classes and functions for use in pysilfont scripts'
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2014 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
-import os, subprocess, difflib, sys
+try:
+    str = unicode
+    chr = unichr
+except NameError: # Will  occur with Python 3
+    pass
+import os, subprocess, difflib, sys, io
 from silfont.core import execute
 
 class dirTree(dict) :
@@ -26,7 +32,7 @@ class dirTree(dict) :
 
     def subTree(self,path) : # Returns dirTree object for a subtree based on subfolder name(s)
         # 'path' can be supplied as either a relative path (eg "subf/subsubf") or array (eg ['subf','subsubf']
-        if type(path) is str : path = self._split(path)
+        if type(path) in (bytes, unicode): path = self._split(path)
         subf=path[0]
         if subf in self:
             dtree =  self[subf].dirtree
@@ -121,11 +127,11 @@ class text_diff(object): # For diffing 2 text files with option to ignore common
         # ignore_firstlinechars - as above, but just for first line, eg for initial comment in csv files, typically 22
         errors = []
         try:
-            f1 = [x[ignore_chars:-1].replace('\\','/') for x in open(file1, "r").readlines()]
+            f1 = [x[ignore_chars:-1].replace('\\','/') for x in io.open(file1, "r", encoding="utf-8").readlines()]
         except IOError:
             errors.append("Can't open " + file1)
         try:
-            f2 = [x[ignore_chars:-1].replace('\\','/') for x in open(file2, "r").readlines()]
+            f2 = [x[ignore_chars:-1].replace('\\','/') for x in io.open(file2, "r", encoding="utf-8").readlines()]
         except IOError:
             errors.append("Can't open " + file2)
         if errors == []: # Indicates both files were opened OK

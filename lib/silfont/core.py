@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 'General classes and functions for use in pysilfont scripts'
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2014-2018 SIL International (http://www.sil.org)'
@@ -7,9 +7,13 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'David Raymond'
 __version__ = '1.3.1.dev0'
 
+try:
+    str = unicode
+    chr = unichr
+except NameError: # Will  occur with Python 3
+    pass
 from glob import glob
-#import re, sys, os, codecs, argparse, datetime, shutil, csv, copy, ConfigParser
-import sys, os, argparse, datetime, shutil, csv, codecs
+import sys, os, argparse, datetime, shutil, csv, codecs, io
 try:
     import configparser
 except ImportError:
@@ -49,7 +53,7 @@ class loggerobj(object):
         levelval = self.loglevels[msglevel]
         message = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S ") + self.leveltext[levelval] + logmessage
         #message = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f ") + self.leveltext[levelval] + logmessage  ## added milliseconds for timing tests
-        if levelval <= self.loglevels[self.scrlevel]: print(message)
+        if levelval <= self.loglevels[self.scrlevel]: print(message.encode(sys.stdout.encoding, errors='backslashreplace'))
         if self.logfile and levelval <= self.loglevels[self.loglevel]: self.logfile.write(message + "\n")
         if msglevel == "S":
             print("\n **** Fatal error - exiting ****")
@@ -129,7 +133,7 @@ class parameters(object):
         dict = {}
         if configfile:
             config = configparser.ConfigParser()
-            config.readfp(open(configfile))
+            config.readfp(io.open(configfile, encoding="utf-8"))
             if sourcedesc is None: sourcedesc = configfile
             for classn in config.sections():
                 for item in config.items(classn):
@@ -219,7 +223,7 @@ class csvreader(object):    # Iterator for csv files, skipping comments and chec
         self.logger = logger if logger else loggerobj()   # If no logger supplied, will just log to screen
         # Open the file and create reader
         try:
-            file = open(filename, "rb")
+            file = io.open(filename, "r", encoding="utf-8")
         except Exception as e:
             print(e)
             sys.exit(1)
@@ -432,7 +436,7 @@ def execute(tool, fn, argspec, chain = None):
                     logger.log("Log file directory " + logpath + " does not exist", "S")
                 logger.log('Opening log file for output: ' + logname, "P")
                 try:
-                    logfile = open(logname, "w")
+                    logfile = io.open(logname, "w", encoding="utf-8")
                 except Exception as e:
                     print(e)
                     sys.exit(1)
@@ -500,7 +504,7 @@ def execute(tool, fn, argspec, chain = None):
         elif atype == 'infile':
             logger.log('Opening file for input: '+aval, "P")
             try:
-                aval = open(aval, "r")
+                aval = io.open(aval, "r", encoding="utf-8")
             except Exception as e:
                 print(e)
                 sys.exit(1)
@@ -513,7 +517,7 @@ def execute(tool, fn, argspec, chain = None):
                 logger.log("Output file directory " + path + " does not exist", "S")
             logger.log('Opening file for output: ' + aval, "P")
             try:
-                aval = codecs.open(aval, 'w', 'utf-8')
+                aval = io.open(aval, 'w', encoding="utf-8")
             except Exception as e:
                 print(e)
                 sys.exit(1)
