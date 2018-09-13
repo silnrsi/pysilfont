@@ -1,8 +1,8 @@
-2018-08-29 11:28:11 Progress: Opening file for input: tests/input/ufo/psfmakewoffmetadata.txt
-2018-08-29 11:28:11 Progress: Reading UFO: tests/input/ufo/font-psf-test/source/PsfTest-Regular.ufo
-2018-08-29 11:28:11 Progress: Checking fontinfo.plist metadata
-2018-08-29 11:28:11 Progress: Checking lib.plist metadata
-2018-08-29 11:28:11 Warning:  com.schriftgestaltung.useNiceNames should normally be False; currently missing
-2018-08-29 11:28:11 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 1
-2018-08-29 11:28:11 Progress: See log file for details
-2018-08-29 11:28:11 Progress: Writing to : local/testresults/ufo/psfmakewoffmetadata.xml
+2018-09-13 17:54:42 Progress: Opening file for input: tests/input/ufo/psfmakewoffmetadata.txt
+2018-09-13 17:54:42 Progress: Reading UFO: tests/input/ufo/font-psf-test/source/PsfTest-Regular.ufo
+2018-09-13 17:54:42 Progress: Checking fontinfo.plist metadata
+2018-09-13 17:54:42 Progress: Checking lib.plist metadata
+2018-09-13 17:54:42 Warning:  com.schriftgestaltung.useNiceNames should normally be False; currently missing
+2018-09-13 17:54:42 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 1
+2018-09-13 17:54:42 Progress: See log file for details
+2018-09-13 17:54:42 Progress: Writing to : local/testresults/ufo/psfmakewoffmetadata.xml

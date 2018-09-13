@@ -1,32 +1,32 @@
-2018-08-29 11:28:09 Progress: Opening file for input: tests/input/ufo/psfbuildcomp.txt
-2018-08-29 11:28:09 Progress: Reading UFO: tests/input/ufo/font-psf-test/source/PsfTest-Regular.ufo
-2018-08-29 11:28:09 Info:     Processing Glyph Layer 0: public.defaultglyphs
-2018-08-29 11:28:10 Progress: Checking fontinfo.plist metadata
-2018-08-29 11:28:10 Progress: Checking lib.plist metadata
-2018-08-29 11:28:10 Warning:  com.schriftgestaltung.useNiceNames should normally be False; currently missing
-2018-08-29 11:28:10 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 1
-2018-08-29 11:28:10 Progress: See log file for details
-2018-08-29 11:28:10 Info:     Processing line 10: LtnCapIJ = LtnCapI & LtnCapJ |0132
-2018-08-29 11:28:10 Info:     Processing line 11: LtnSmIJ = LtnSmI & LtnSmJ |0133
-2018-08-29 11:28:10 Info:     Processing line 14: LtnCapCAcute = LtnSmC + CombAcute@U |0106
-2018-08-29 11:28:10 Info:     Processing line 15: LtnSmCAcute = LtnCapC + CombAcute@U |0107
-2018-08-29 11:28:10 Info:     Processing line 16: LtnCapCCircum = LtnCapC + CombCircum@U |0108
-2018-08-29 11:28:10 Info:     Processing line 17: LtnSmCCircum = LtnSmC + CombCircum@U |0109
-2018-08-29 11:28:10 Info:     Processing line 20: LtnSmITildeGrave = LtnSmDotlessI + CombTilde@U + CombGrave@U | E000
-2018-08-29 11:28:10 Error:    LtnSmDotlessI not found in font
-2018-08-29 11:28:10 Error:    The AP 'U' does not exist on base glyph when building LtnSmITildeGrave
-2018-08-29 11:28:10 Info:     Processing line 23: LtnCapCAcuteCedilla = LtnCapC + CombCedilla@H + CombAcute@LtnCapC:U | 1E08
-2018-08-29 11:28:10 Error:    CombCedilla not found in font
-2018-08-29 11:28:10 Info:     Processing line 24: LtnSmCAcuteCedilla = LtnSmC + CombCedilla@H + CombAcute@LtnSmC:U | 1E09
-2018-08-29 11:28:10 Error:    CombCedilla not found in font
-2018-08-29 11:28:10 Info:     Processing line 27: LtnSmITilde = LtnSmDotlessI + CombTilde@U ^200,200 | 0129
-2018-08-29 11:28:10 Error:    LtnSmDotlessI not found in font
-2018-08-29 11:28:10 Error:    The AP 'U' does not exist on base glyph when building LtnSmITilde
-2018-08-29 11:28:10 Info:     Processing line 30: LtnSmITildeGraveCedilla = LtnSmDotlessI + CombCedilla@H + CombTilde@LtnSmDotlessI:U + CombGrave@U ^200,200 | E010 # i cedilla tilde grave
-2018-08-29 11:28:10 Error:    LtnSmDotlessI not found in font
-2018-08-29 11:28:10 Error:    CombCedilla not found in font
-2018-08-29 11:28:10 Error:    The AP 'U' does not exist on base glyph when building LtnSmITildeGraveCedilla
-2018-08-29 11:28:10 Progress: Processing font for output
-2018-08-29 11:28:10 Progress: Output UFO already exists - reading for comparison
-2018-08-29 11:28:10 Progress: Writing font to local/testresults/ufo/psfbuildcomp.ufo
-2018-08-29 11:28:10 Info:     Processing glyphs directory
+2018-09-13 17:54:40 Progress: Opening file for input: tests/input/ufo/psfbuildcomp.txt
+2018-09-13 17:54:40 Progress: Reading UFO: tests/input/ufo/font-psf-test/source/PsfTest-Regular.ufo
+2018-09-13 17:54:40 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2018-09-13 17:54:40 Progress: Checking fontinfo.plist metadata
+2018-09-13 17:54:40 Progress: Checking lib.plist metadata
+2018-09-13 17:54:40 Warning:  com.schriftgestaltung.useNiceNames should normally be False; currently missing
+2018-09-13 17:54:40 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 1
+2018-09-13 17:54:40 Progress: See log file for details
+2018-09-13 17:54:40 Info:     Processing line 10: LtnCapIJ = LtnCapI & LtnCapJ |0132
+2018-09-13 17:54:40 Info:     Processing line 11: LtnSmIJ = LtnSmI & LtnSmJ |0133
+2018-09-13 17:54:40 Info:     Processing line 14: LtnCapCAcute = LtnSmC + CombAcute@U |0106
+2018-09-13 17:54:40 Info:     Processing line 15: LtnSmCAcute = LtnCapC + CombAcute@U |0107
+2018-09-13 17:54:40 Info:     Processing line 16: LtnCapCCircum = LtnCapC + CombCircum@U |0108
+2018-09-13 17:54:40 Info:     Processing line 17: LtnSmCCircum = LtnSmC + CombCircum@U |0109
+2018-09-13 17:54:40 Info:     Processing line 20: LtnSmITildeGrave = LtnSmDotlessI + CombTilde@U + CombGrave@U | E000
+2018-09-13 17:54:40 Error:    LtnSmDotlessI not found in font
+2018-09-13 17:54:40 Error:    The AP 'U' does not exist on base glyph when building LtnSmITildeGrave
+2018-09-13 17:54:40 Info:     Processing line 23: LtnCapCAcuteCedilla = LtnCapC + CombCedilla@H + CombAcute@LtnCapC:U | 1E08
+2018-09-13 17:54:40 Error:    CombCedilla not found in font
+2018-09-13 17:54:40 Info:     Processing line 24: LtnSmCAcuteCedilla = LtnSmC + CombCedilla@H + CombAcute@LtnSmC:U | 1E09
+2018-09-13 17:54:40 Error:    CombCedilla not found in font
+2018-09-13 17:54:40 Info:     Processing line 27: LtnSmITilde = LtnSmDotlessI + CombTilde@U ^200,200 | 0129
+2018-09-13 17:54:40 Error:    LtnSmDotlessI not found in font
+2018-09-13 17:54:40 Error:    The AP 'U' does not exist on base glyph when building LtnSmITilde
+2018-09-13 17:54:40 Info:     Processing line 30: LtnSmITildeGraveCedilla = LtnSmDotlessI + CombCedilla@H + CombTilde@LtnSmDotlessI:U + CombGrave@U ^200,200 | E010 # i cedilla tilde grave
+2018-09-13 17:54:40 Error:    LtnSmDotlessI not found in font
+2018-09-13 17:54:40 Error:    CombCedilla not found in font
+2018-09-13 17:54:40 Error:    The AP 'U' does not exist on base glyph when building LtnSmITildeGraveCedilla
+2018-09-13 17:54:40 Progress: Processing font for output
+2018-09-13 17:54:40 Progress: Output UFO already exists - reading for comparison
+2018-09-13 17:54:40 Progress: Writing font to local/testresults/ufo/psfbuildcomp.ufo
+2018-09-13 17:54:40 Info:     Processing glyphs directory

@@ -223,7 +223,7 @@ class csvreader(object):    # Iterator for csv files, skipping comments and chec
         self.logger = logger if logger else loggerobj()   # If no logger supplied, will just log to screen
         # Open the file and create reader
         try:
-            file = io.open(filename, "r", encoding="utf-8")
+            file = io.open(filename, "rt", encoding="utf-8")
         except Exception as e:
             print(e)
             sys.exit(1)

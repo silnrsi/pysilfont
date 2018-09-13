@@ -23,7 +23,7 @@ def doit(args):
     logger = args.logger
     incsv = args.input
     gname = args.gname
-    glyphlist = font.deflayer.keys()  # List to check every glyph has a psname supplied
+    glyphlist = list(font.deflayer.keys())  # List to check every glyph has a psname supplied
 
     # Identify file format from first line
     fl = incsv.firstline

@@ -32,7 +32,7 @@ class dirTree(dict) :
 
     def subTree(self,path) : # Returns dirTree object for a subtree based on subfolder name(s)
         # 'path' can be supplied as either a relative path (eg "subf/subsubf") or array (eg ['subf','subsubf']
-        if type(path) in (bytes, unicode): path = self._split(path)
+        if type(path) in (bytes, str): path = self._split(path)
         subf=path[0]
         if subf in self:
             dtree =  self[subf].dirtree
@@ -98,7 +98,7 @@ class ufo_diff(object): # For diffing 2 ufos as part of testing
             fitest = subprocess.Popen(["diff", fi1, fi2, "-c1"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             text = fitest.communicate()
             if fitest.returncode == 1:
-                difftext = text[0].split("\n")
+                difftext = text[0].decode("utf-8").split("\n")
                 if difftext[4].strip() == "<key>openTypeHeadCreated</key>" and len(difftext) == 12:
                     diffcommand.append("--exclude=fontinfo.plist")
 
@@ -106,7 +106,7 @@ class ufo_diff(object): # For diffing 2 ufos as part of testing
         test = subprocess.Popen(diffcommand, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         text = test.communicate()
         self.returncode = test.returncode
-        self.diff = text[0]
+        self.diff = text[0].decode("utf-8")
         self.errors = text[1]
 
     def print_text(self): # Print diff info or errors from the diffcommand

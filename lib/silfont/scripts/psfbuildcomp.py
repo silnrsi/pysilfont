@@ -5,6 +5,10 @@ __copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Rowe'
 
+try:
+    xrange
+except NameError:
+    xrange = range
 from xml.etree import cElementTree as ET
 from silfont.core import execute
 import silfont.ufo as ufo

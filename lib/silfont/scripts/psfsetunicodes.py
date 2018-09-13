@@ -41,7 +41,7 @@ def doit(args) :
         logger.log("Invalid csv file", "S")
 
     # List of glyphnames actually in the font:
-    glyphlist = font.deflayer.keys()
+    glyphlist = list(font.deflayer.keys())
 
     # Create mapping to find glyph name from decimal usv:
     dusv2gname = {int(unicode.hex, 16): gname for gname in glyphlist for unicode in font.deflayer[gname]['unicode']}

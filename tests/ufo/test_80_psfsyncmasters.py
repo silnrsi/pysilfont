@@ -54,7 +54,7 @@ def test_diffs(): # Do a diff on all output files
         diff = subprocess.Popen(["diff", resdir +filen, refdir + filen, "-c1"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         text = diff.communicate()
         if diff.returncode == 1:
-            difftext = text[0].split("\n")
+            difftext = text[0].decode("utf-8").split("\n")
             # Need to rule out only change being openTypeHeadCreated (which should be the case for fontinfo)
             if not(difftext[4].strip() == "<key>openTypeHeadCreated</key>" and len(difftext) == 12):
                 print(filen + " different from reference")

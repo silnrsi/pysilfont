@@ -6,6 +6,11 @@ __copyright__ = 'Copyright (c) 2015, SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Rowe'
 
+try:
+    str = unicode
+    chr = unichr
+except NameError:  # Will  occur with Python 3
+    pass
 from silfont.core import execute
 from fontTools import ttLib
 from xml.etree import ElementTree as ET ### used to parse input FTML (may not be needed if FTML parser used)
@@ -67,7 +72,7 @@ langcode = re.compile(r"""^
 # or newstring = re.sub(backu, lambda m: unichr(int(m.group(1),16)), string)
 backu = re.compile(r"\\u([0-9a-fA-F]{4,6})")
 def hextounichr(match):
-    return unichr(int(match.group(1),16))
+    return chr(int(match.group(1),16))
 
 def BoldItalic(bold, italic):
     rs = ""
@@ -445,7 +450,7 @@ def doit(args) :
     except:
         logfile.log("Error embedding fonts in document", "E")
     logfile.log("Writing output file: " + args.output, "P")
-    LOdoc.save(unicode(args.output))
+    LOdoc.save(args.output)
     return
 
 def cmd() : execute("",doit, argspec)

@@ -21,7 +21,7 @@ def doit(args) :
     incsv = args.input
     incsv.minfields = 2
     incsv.logger = font.logger
-    glyphlist = font.deflayer.keys() # Identify which glifs have not got AssocUIDs set
+    glyphlist = list(font.deflayer.keys()) # Identify which glifs have not got AssocUIDs set
 
     for line in incsv :
         glyphn = line.pop(0)

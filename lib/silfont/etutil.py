@@ -66,7 +66,7 @@ class ETWriter(object) :
         i = indent if tag not in self.inlineelem else ""
         outstr += '{}<{}'.format(i, tag)
 
-        for k in sorted(attribs.keys(), cmp=lambda x,y: cmp(self.attributeOrder.get(x, 999), self.attributeOrder.get(y, 999)) or cmp(x, y)) :
+        for k in sorted(list(attribs.keys()), key=lambda x: self.attributeOrder.get(x, x)):
             if k[0] != '.' :
                 att = attribs[k]
                 if self.precision is not None and k in self.numAttribs :

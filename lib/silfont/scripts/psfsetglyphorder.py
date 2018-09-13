@@ -64,7 +64,7 @@ def doit(args):
 
     # Now process the data
     if "lib" not in font.__dict__: font.addfile("lib")
-    glyphlist = font.deflayer.keys()  # List to check every glyph has a record in the list
+    glyphlist = list(font.deflayer.keys())  # List to check every glyph has a record in the list
 
     for i in range(1,fieldcount+1):
         glyphdata = sorted(glyphdata, key=lambda row: row[i])

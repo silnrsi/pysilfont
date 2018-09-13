@@ -21,7 +21,7 @@ def doit(args) :
     incsv.minfields = 2
     incsv.maxfields = 3
     incsv.logger = font.logger
-    glyphlist = font.deflayer.keys() # Identify which glifs have not got an AssocFeat set
+    glyphlist = list(font.deflayer.keys()) # Identify which glifs have not got an AssocFeat set
 
     for line in incsv :
         glyphn = line[0]

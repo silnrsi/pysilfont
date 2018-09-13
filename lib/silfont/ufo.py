@@ -615,7 +615,7 @@ class Ufont(object):
             self.logger.log("Full old value: " + str(old), "I")
         if len(str(new)) > 21:
             self.logger.log("Full new value: " + str(new), "I")
-        self.logger.log("Types: Old - " + str(type(old)) + ", New - " + str(type(new)), "I")
+        self.logger.log("Types: Old - " + type(old).__name__ + ", New - " + type(new).__name__, "I")
 
 
 class Ulayer(_Ucontainer):
