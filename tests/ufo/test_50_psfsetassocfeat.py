@@ -11,7 +11,7 @@ import silfont.util
 # Next 7 lines of code may be test-specific
 import silfont.scripts.psfsetassocfeat as testcommand
 testname = "psfsetassocfeat"
-cl = "psfsetassocfeat tests/input/ufo/font-psf-test/source/PsfTest-Italic.ufo -i tests/input/ufo/psfsetassocfeat.csv -l local/testresults/ufo/psfsetassocfeat.log -p loglevel=i"
+cl = "psfsetassocfeat tests/input/font-psf-test/source/PsfTest-Italic.ufo -i tests/input/psfsetassocfeat.csv -l local/testresults/ufo/psfsetassocfeat.log -p loglevel=i"
 outfont = "local/testresults/ufo/psfsetassocfeat.ufo" # Set to None for commands which don't output a font
 diffexts = [".ufo", ".log"] # List of extensions of all output files
 exp_errors = 0   # These may need updating if the test ufo is updated

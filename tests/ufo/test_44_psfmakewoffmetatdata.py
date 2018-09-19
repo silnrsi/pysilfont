@@ -10,7 +10,7 @@ import silfont.util
 # Next 5 lines of code are test-specific
 import silfont.scripts.psfmakewoffmetadata as testcommand
 testname = "psfmakewoffmetadata"
-cl = "psfmakewoffmetadata tests/input/ufo/font-psf-test/source/PsfTest-Regular.ufo -n Test -i SIL -f tests/input/ufo/psfmakewoffmetadata.txt" \
+cl = "psfmakewoffmetadata tests/input/font-psf-test/source/PsfTest-Regular.ufo -n Test -i SIL -f tests/input/psfmakewoffmetadata.txt" \
       + " -o local/testresults/ufo/psfmakewoffmetadata.xml -l local/testresults/ufo/psfmakewoffmetadata.log"
 outfont = None
 diffexts = [".xml", ".log"]

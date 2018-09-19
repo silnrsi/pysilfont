@@ -1,22 +1,22 @@
-2018-09-19 11:06:24 Progress: Opening file for input: tests/input/ufo/psfsetassocfeat.csv
-2018-09-19 11:06:24 Progress: Reading UFO: tests/input/ufo/font-psf-test/source/PsfTest-Italic.ufo
-2018-09-19 11:06:24 Info:     Processing Glyph Layer 0: public.defaultglyphs
-2018-09-19 11:06:24 Progress: Checking fontinfo.plist metadata
-2018-09-19 11:06:24 Warning:  year would be removed from fontinfo  Old value: 2018
-2018-09-19 11:06:24 Info:     Types: Old - string, New - NoneType
-2018-09-19 11:06:24 Warning:  capHeight would be updated  Old value: 1485.3, new value: 1485
-2018-09-19 11:06:24 Info:     Types: Old - float, New - int
-2018-09-19 11:06:24 Warning:  styleMapFamilyName would be uppdated  Old value: Psf test, new value: Psf Test
-2018-09-19 11:06:24 Info:     Types: Old - string, New - string
-2018-09-19 11:06:24 Warning:  openTypeOS2TypoLineGap would be updated  Old value: 1, new value: 0
-2018-09-19 11:06:24 Info:     Types: Old - int, New - int
-2018-09-19 11:06:24 Warning:  openTypeNamePreferredFamilyName would be updated  Old value: Psf Testing, new value: Psf Test
-2018-09-19 11:06:24 Info:     Types: Old - string, New - string
-2018-09-19 11:06:24 Progress: Checking lib.plist metadata
-2018-09-19 11:06:24 Warning:  com.schriftgestaltung.useNiceNames should normally be False; currently missing
-2018-09-19 11:06:24 Progress: Check & fix results:- Errors: 0, Changes to make: 5, Other warnings: 1
-2018-09-19 11:06:24 Progress: See log file for details
-2018-09-19 11:06:24 Progress: Processing font for output
-2018-09-19 11:06:24 Progress: Output UFO already exists - reading for comparison
-2018-09-19 11:06:24 Progress: Writing font to local/testresults/ufo/psfsetassocfeat.ufo
-2018-09-19 11:06:24 Info:     Processing glyphs directory
+2018-09-19 20:10:14 Progress: Opening file for input: tests/input/psfsetassocfeat.csv
+2018-09-19 20:10:14 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
+2018-09-19 20:10:14 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2018-09-19 20:10:14 Progress: Checking fontinfo.plist metadata
+2018-09-19 20:10:14 Warning:  year would be removed from fontinfo  Old value: 2018
+2018-09-19 20:10:14 Info:     Types: Old - string, New - NoneType
+2018-09-19 20:10:14 Warning:  capHeight would be updated  Old value: 1485.3, new value: 1485
+2018-09-19 20:10:14 Info:     Types: Old - float, New - int
+2018-09-19 20:10:14 Warning:  styleMapFamilyName would be uppdated  Old value: Psf test, new value: Psf Test
+2018-09-19 20:10:14 Info:     Types: Old - string, New - string
+2018-09-19 20:10:14 Warning:  openTypeOS2TypoLineGap would be updated  Old value: 1, new value: 0
+2018-09-19 20:10:14 Info:     Types: Old - int, New - int
+2018-09-19 20:10:14 Warning:  openTypeNamePreferredFamilyName would be updated  Old value: Psf Testing, new value: Psf Test
+2018-09-19 20:10:14 Info:     Types: Old - string, New - string
+2018-09-19 20:10:14 Progress: Checking lib.plist metadata
+2018-09-19 20:10:14 Warning:  com.schriftgestaltung.useNiceNames should normally be False; currently missing
+2018-09-19 20:10:14 Progress: Check & fix results:- Errors: 0, Changes to make: 5, Other warnings: 1
+2018-09-19 20:10:14 Progress: See log file for details
+2018-09-19 20:10:14 Progress: Processing font for output
+2018-09-19 20:10:14 Progress: Output UFO already exists - reading for comparison
+2018-09-19 20:10:14 Progress: Writing font to local/testresults/ufo/psfsetassocfeat.ufo
+2018-09-19 20:10:14 Info:     Processing glyphs directory

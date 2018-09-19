@@ -12,8 +12,8 @@ from silfont.core import execute
 import silfont.scripts.psfsyncmasters as psfsyncmasters
 
 def test_run():
-    cl = "psfsyncmasters -n tests/input/ufo/font-psf-test/source/PsfTestRoman.designspace " \
-         "tests/input/ufo/font-psf-test/source/PsfTestItalic.designspace -l local/testresults/ufo/psfsyncmasters.log"
+    cl = "psfsyncmasters -n tests/input/font-psf-test/source/PsfTestRoman.designspace " \
+         "tests/input/font-psf-test/source/PsfTestItalic.designspace -l local/testresults/ufo/psfsyncmasters.log"
     sys.argv = cl.split(" ")
     (args, font) = execute("UFO", psfsyncmasters.doit, psfsyncmasters.argspec, chain="first")
     args.logger.logfile.close()
@@ -27,7 +27,7 @@ def test_run():
 
 def test_diffs(): # Do a diff on all output files
     result = True
-    sourcedir = "tests/input/ufo/font-psf-test/source/"
+    sourcedir = "tests/input/font-psf-test/source/"
     refdir = "tests/reference/ufo/"
     resdir = "local/testresults/ufo/"
     # -n in commands will have created _new versions of changed files in the source directory,

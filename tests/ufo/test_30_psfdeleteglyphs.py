@@ -11,7 +11,7 @@ import silfont.util
 # Next 7 lines of code may be test-specific
 import silfont.scripts.psfdeleteglyphs as testcommand
 testname = "psfdeleteglyphs"
-cl = "psfdeleteglyphs tests/input/ufo/font-psf-test/source/PsfTest-Regular.ufo -i tests/input/ufo/psfdeleteglyphs.txt -l local/testresults/ufo/psfdeleteglyphs.log -p loglevel=i -p scrlevel=w"
+cl = "psfdeleteglyphs tests/input/font-psf-test/source/PsfTest-Regular.ufo -i tests/input/psfdeleteglyphs.txt -l local/testresults/ufo/psfdeleteglyphs.log -p loglevel=i -p scrlevel=w"
 outfont = "local/testresults/ufo/psfdeleteglyphs.ufo" # Set to None for commands which don't output a font
 diffexts = [".ufo", ".log"] # List of extensions of all output files
 exp_errors = 0   # These may need updating if the test ufo is updated

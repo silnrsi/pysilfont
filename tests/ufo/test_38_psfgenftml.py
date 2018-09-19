@@ -50,8 +50,8 @@ class testcommand(object):
         ftml.writeFile(args.output)
 
 testname = "psfgenftml"
-cl = testname + " -i tests/input/ufo/psfgenftml.csv -l local/testresults/ufo/psfgenftml.log " \
-     "tests/input/ufo/font-psf-test/source/PsfTest-Italic.ufo local/testresults/ufo/psfgenftml.ftml"
+cl = testname + " -i tests/input/psfgenftml.csv -l local/testresults/ufo/psfgenftml.log " \
+     "tests/input/font-psf-test/source/PsfTest-Italic.ufo local/testresults/ufo/psfgenftml.ftml"
 outfont = None
 diffexts = [".ftml", ".log"]
 exp_errors = 0   # These may need updating if the test ufo is updated

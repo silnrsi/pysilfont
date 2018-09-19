@@ -10,7 +10,7 @@ import silfont.util
 # Next 5 lines of code are test-specific
 import silfont.scripts.psfexportunicodes as testcommand
 testname = "psfexportunicodes"
-cl = "psfexportunicodes tests/input/ufo/font-psf-test/source/PsfTest-BoldItalic.ufo -o local/testresults/ufo/psfexportunicodes.csv -l local/testresults/ufo/psfexportunicodes.log"
+cl = "psfexportunicodes tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo -o local/testresults/ufo/psfexportunicodes.csv -l local/testresults/ufo/psfexportunicodes.log"
 outfont = None
 diffexts = [".csv", ".log"]
 exp_errors = 0   # These may need updating if the test ufo is updated

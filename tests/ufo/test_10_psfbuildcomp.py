@@ -11,7 +11,7 @@ import silfont.util
 # Next 7 lines of code may be test-specific
 import silfont.scripts.psfbuildcomp as testcommand
 testname = "psfbuildcomp"
-cl = "psfbuildcomp tests/input/ufo/font-psf-test/source/PsfTest-Regular.ufo -i tests/input/ufo/psfbuildcomp.txt -l local/testresults/ufo/psfbuildcomp.log -p loglevel=i"
+cl = "psfbuildcomp tests/input/font-psf-test/source/PsfTest-Regular.ufo -i tests/input/psfbuildcomp.txt -l local/testresults/ufo/psfbuildcomp.log -p loglevel=i"
 outfont = "local/testresults/ufo/psfbuildcomp.ufo" # Set to None for commands which don't output a font
 diffexts = [".ufo", ".log"] # List of extensions of all output files
 exp_errors = 9   # These may need updating if the test ufo is updated

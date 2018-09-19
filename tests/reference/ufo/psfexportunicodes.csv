@@ -1,5 +1,5 @@
-# 2018-09-19 13:52:00 psfexportunicodes
-# tests/input/ufo/font-psf-test/source/PsfTest-BoldItalic.ufo -o local/testresults/ufo/psfexportunicodes.csv -l local/testresults/ufo/psfexportunicodes.log
+# 2018-09-19 20:11:23 psfexportunicodes
+# tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo -o local/testresults/ufo/psfexportunicodes.csv -l local/testresults/ufo/psfexportunicodes.log
 
 Ampersand,0026
 Apos,0027
