@@ -231,7 +231,7 @@ def doit(args) :
             comp = ufo.Ucomponent(targetglyph['outline'],ET.Element('component',compdic))
             targetglyph['outline'].appendobject(comp,'component')
         # copy anchors to new glyph from targetglyphanchors which has format {'U': (500,1000), 'L': (500,0)}
-        for a in targetglyphanchors:
+        for a in sorted(targetglyphanchors):
             targetglyph.add('anchor', {'name': a, 'x': str(targetglyphanchors[a][0]), 'y': str(targetglyphanchors[a][1])} )
 
     # If analysis only, return without writing output font

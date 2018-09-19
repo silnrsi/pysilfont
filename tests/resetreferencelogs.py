@@ -10,6 +10,7 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'David Raymond'
 
 import os, sys, shutil, glob, io
+from silfont.util import text_diff
 
 # Check being run in pysilfont root directory
 cwd = os.getcwd()
@@ -42,10 +43,22 @@ logs = glob.iglob(logsdir + "*.log")
 for log in logs:
     inlog = io.open(log, mode="r", encoding="utf-8")
     testn = os.path.splitext(os.path.split(log)[1])[0]
-    outn = refdir + testn + ".lg"
-    outlog = io.open(outn, mode="w", encoding="utf-8")
+    outtmp = refdir + testn + ".tmp"
+    outlg = refdir + testn + ".lg"
+    outlog = io.open(outtmp, mode="w", encoding="utf-8")
     for line in inlog:
         line = line.replace(cwd, "@cwd@") # Replace machine-specific cwd with placeholder
         line = line.replace("\\","/") # Replace Windows \ with /
         outlog.write(line)
-    print(outn +" recreated")
+    outlog.close()
+    # Only update the .lg if it has changed
+    diff = text_diff(outtmp, outlg, ignore_chars=20)
+    if diff.returncode: # Either the are different or .lg file is missing
+        try:
+            os.remove(outlg)
+        except:
+            pass
+        os.rename(outtmp, outlg)
+        print(outlg + " recreated")
+    else:
+        os.remove(outtmp)

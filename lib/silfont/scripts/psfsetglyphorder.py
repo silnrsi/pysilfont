@@ -80,7 +80,7 @@ def doit(args):
                     font.logger.log("No glyph in font for " + glyphn, "I")
         font.lib.setelem(fields[i-1],array)
 
-    for glyphn in glyphlist:  # Remaining glyphs were not in the input file
+    for glyphn in sorted(glyphlist):  # Remaining glyphs were not in the input file
         font.logger.log("No entry in input file for font glyph " + glyphn, "I")
 
     return font

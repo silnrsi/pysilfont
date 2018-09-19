@@ -356,7 +356,8 @@ class Ufont(object):
                 if key in self.fontinfo and self.fontinfo.getval(key) is not None:
                     storedvals[key] = self.fontinfo.getval(key)
                     if key == "styleName": # Capitalise words of stored value
-                        storedvals[key] = ' '.join(s[:1].upper() + s[1:] for s in storedvals[key].split(' '))
+                        sep = b' ' if type(storedvals[key]) is bytes else ' '
+                        storedvals[key] = sep.join(s[:1].upper() + s[1:] for s in storedvals[key].split(sep))
                     if key in ("ascender", "descender"):
                         storedvals[key] = int(storedvals[key])
                 else:
@@ -437,7 +438,8 @@ class Ufont(object):
             for key in ficapitalize:
                 if key in self.fontinfo:
                     old = self.fontinfo.getval(key)
-                    new = ' '.join(s[:1].upper() + s[1:] for s in old.split(' '))  # Capitalise words
+                    sep = b' ' if type(old) is bytes else ' '
+                    new = sep.join(s[:1].upper() + s[1:] for s in old.split(sep))  # Capitalise words
                     if new != old:
                         if self.metafix:
                             self.fontinfo.setval(key, "string", new)
@@ -615,8 +617,9 @@ class Ufont(object):
             self.logger.log("Full old value: " + str(old), "I")
         if len(str(new)) > 21:
             self.logger.log("Full new value: " + str(new), "I")
-        self.logger.log("Types: Old - " + type(old).__name__ + ", New - " + type(new).__name__, "I")
-
+        otype = "string" if isinstance(old, (bytes, unicode)) else type(old).__name__ # To produce consistent reporting
+        ntype = "string" if isinstance(new, (bytes, unicode)) else type(new).__name__ # with Python 2 & 3
+        self.logger.log("Types: Old - " + otype + ", New - " + ntype, "I")
 
 class Ulayer(_Ucontainer):
     def __init__(self, layername, layerdir, font):

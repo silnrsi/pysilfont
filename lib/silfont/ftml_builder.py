@@ -134,7 +134,7 @@ class FTML(object):
         #   a feature setting in the form [tag,value]
         if features is None:
             return self.clearFeatures()
-        features = filter(lambda x: x is not None, features)
+        features = [x for x in features if x is not None]
         if len(features) == 0:
             return self.clearFeatures()
         features = dict(features)   # Convert to a dictionary -- this is what we'll keep.
@@ -490,9 +490,9 @@ class FTMLBuilder(object):
         # Construct comment from glyph names:
         comment = ' '.join([self._charFromUID[u].basename for u in uids])
         # see if uid list includes a mirrored char
-        hasMirrored = bool(len(filter(lambda x: Char.isMirrored(x), uids)))
+        hasMirrored = bool(len([x for x in uids if Char.isMirrored(x)]))
         # Analyze first and last joining char
-        joiningChars = filter(lambda x: Char.getIntPropertyValue(x, UProperty.JOINING_TYPE) != TRANSPARENT, uids)
+        joiningChars = [x for x in uids if Char.getIntPropertyValue(x, UProperty.JOINING_TYPE) != TRANSPARENT]
         if len(joiningChars):
             # If first or last non-TRANSPARENT char is a joining char, then we need to emit examples with zwj
             uid = joiningChars[0]
@@ -516,7 +516,7 @@ class FTMLBuilder(object):
         elif Char.isUWhiteSpace(startUID):
             # First char is whitespace -- prefix with baseline brackets:
             uids.insert(0, 0xF130)
-        lastNonMark = filter(lambda x: Char.charType(x) != UCharCategory.NON_SPACING_MARK, uids)[-1]
+        lastNonMark = [x for x in uids if Char.charType(x) != UCharCategory.NON_SPACING_MARK][-1]
         if Char.isUWhiteSpace(lastNonMark):
             # Last non-mark is whitespace -- append baseline brackets:
             uids.append(0xF131)

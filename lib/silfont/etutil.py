@@ -138,9 +138,7 @@ class xmlitem(_container):
         self.type = None
         if filen and dirn :
             fulln = os.path.join( dirn, filen)
-            with io.open(fulln, "r", encoding="utf-8") as inxml:
-                for line in inxml.readlines() :
-                    self.inxmlstr = self.inxmlstr + line
+            self.inxmlstr = io.open(fulln, "rt", encoding="utf-8").read()
             if parse :
                 try:
                     self.etree = ET.fromstring(self.inxmlstr)

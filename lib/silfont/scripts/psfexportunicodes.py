@@ -26,7 +26,7 @@ def doit(args) :
         outfile.write("# " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S ") + args.cmdlineargs[0] + "\n")
         outfile.write("# "+" ".join(args.cmdlineargs[1:])+"\n\n")
 
-    glyphlist = font.deflayer.keys()
+    glyphlist = sorted(font.deflayer.keys())
 
     for glyphn in glyphlist :
         glyph = font.deflayer[glyphn]

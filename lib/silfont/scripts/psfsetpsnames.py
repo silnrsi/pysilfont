@@ -71,7 +71,7 @@ def doit(args):
         if "lib" in font.__dict__ and "public.postscriptNames" in font.lib:
             font.lib.remove("public.postscriptNames")
 
-    for glyphn in glyphlist: logger.log("No PS name in input file for font glyph " + glyphn, "I")
+    for glyphn in sorted(glyphlist): logger.log("No PS name in input file for font glyph " + glyphn, "I")
 
     return font
 
