@@ -617,8 +617,8 @@ class Ufont(object):
             self.logger.log("Full old value: " + str(old), "I")
         if len(str(new)) > 21:
             self.logger.log("Full new value: " + str(new), "I")
-        otype = "string" if isinstance(old, (bytes, unicode)) else type(old).__name__ # To produce consistent reporting
-        ntype = "string" if isinstance(new, (bytes, unicode)) else type(new).__name__ # with Python 2 & 3
+        otype = "string" if isinstance(old, (bytes, str)) else type(old).__name__ # To produce consistent reporting
+        ntype = "string" if isinstance(new, (bytes, str)) else type(new).__name__ # with Python 2 & 3
         self.logger.log("Types: Old - " + otype + ", New - " + ntype, "I")
 
 class Ulayer(_Ucontainer):
