@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import unicode_literals
 '''Load glyph order data into public.glyphOrder in lib.plist based on based on a text file in one of two formats:
     - simple text file with one glyph name per line
     - csv file with headers, using headers "glyph_name" and "sort_final" where the latter contains

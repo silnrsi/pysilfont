@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import unicode_literals
 '''Expands an unclosed UFO stroke font into monoline forms with a fixed width'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2017 SIL International (http://www.sil.org), based on outlinerRoboFontExtension Copyright (c) 2016 Frederik Berlaen'

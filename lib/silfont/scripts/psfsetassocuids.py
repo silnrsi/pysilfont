@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import unicode_literals
 '''Add associate UID info to glif lib based on a csv file
 - Could be one value for variant UIDs and multiple for ligatures'''
 __url__ = 'http://github.com/silnrsi/pysilfont'

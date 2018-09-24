@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import unicode_literals
 '''Update glyph names in a font based on csv file
    - Using FontForge rather than UFOlib so it can work with ttf (or sfd) files'''
 __url__ = 'http://github.com/silnrsi/pysilfont'

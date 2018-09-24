@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import unicode_literals
 '''Subset an existing UFO based on a csv or text list of glyph names or USVs to keep.
 '''
 __url__ = 'http://github.com/silnrsi/pysilfont'

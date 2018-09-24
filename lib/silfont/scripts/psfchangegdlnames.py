@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import unicode_literals
 '''Change graphite names within GDL based on a csv list in format
         old name, newname
     Logs any names not in list

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import unicode_literals
 """Copy glyphs from one UFO to another"""
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2018 SIL International (http://www.sil.org)'
@@ -96,7 +97,7 @@ def copyglyph(sfont, tfont, g, args):
     # Adjust encoding of new glyph
     if args.unicode:
         # First remove any encodings the copied glyph had in the source font:
-        for i in xrange(len(glyph['unicode']) - 1, -1, -1):
+        for i in range(len(glyph['unicode']) - 1, -1, -1):
             glyph.remove('unicode', index=i)
         if g.dusv:
             # we want this glyph to be encoded.

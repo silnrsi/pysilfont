@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from fontTools.feaLib import ast
 from fontTools.feaLib.parser import Parser
 from fontTools.feaLib.lexer import IncludingLexer, Lexer

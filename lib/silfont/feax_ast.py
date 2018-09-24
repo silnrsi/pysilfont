@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from fontTools.feaLib import ast
 from fontTools.feaLib.ast import asFea
 

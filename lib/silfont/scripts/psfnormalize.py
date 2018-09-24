@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import unicode_literals
 '''Normalize a UFO and optionally convert between UFO2 and UFO3.
 - If no options are chosen, the output font will simply be a normalized version of the font.'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
