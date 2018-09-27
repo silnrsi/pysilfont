@@ -28,7 +28,15 @@ def doit(args) :
                     val = str( glyph["lib"].getval(key))
                     glyph["lib"].remove(key)
                     keycounts[key] += 1
-                    logger.log(key + " removed from " + "glyphn. Value was " + val, "I" )
+                    logger.log(key + " removed from " + glyphn + ". Value was " + val, "I" )
+                    if key == "com.schriftgestaltung.Glyphs.originalWidth": # Special fix re glyphLib bug
+                        if glyph["advance"] is None: glyph.add("advance")
+                        adv = (glyph["advance"])
+                        if adv.width is None:
+                            adv.width = int(val)
+                            logger.log("Advance width for " + glyphn + " set to " + val, "I")
+                        else:
+                            logger.log("Advance width already set to " + str(adv.width) + " so originalWidth not copied", "E")
 
     for key in keys :
         count = keycounts[key]
