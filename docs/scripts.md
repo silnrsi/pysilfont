@@ -34,6 +34,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfmakefea](#psfmakefea) | Make a features file base on input UFO or AP database |
 | [psfmakewoffmetadata](#psfmakewoffmetadata) | Make the WOFF metadata xml file based on input UFO and FONTLOG.txt |
 | [psfnormalize](#psfnormalize) | Normalize a UFO and optionally converts it between UFO2 and UFO3 versions |
+| [psfremovegliflibkeys](#psfremovegliflibkeys) | Remove keys from glif lib entries |
 | [psfrenameglyphs](#psfrenameglyphs) | Within a UFO, assign new working names to glyphs based on csv input file |
 | [psfsetassocfeat](#psfsetassocfeat) | Add associate feature info to glif lib based on a csv file |
 | [psfsetassocuids](#psfsetassocuids) | Add associate UID info to glif lib based on a csv file |
@@ -531,6 +532,18 @@ The normalization follows the [default behaviours](docs.md#normalization), but t
 VERSION can be 2, 3 or 3ff. 3ff produces a hybrid UFO for use with FontForge input which is UFO3 but with format 1 glyphs
 
 If you are a macOS user, see _pysilfont/actionsosx/README.txt_ to install an action that will enable you to run psfnormalize without using the command line.
+
+---
+####  psfremovegliflibkeys
+Usage: **`psfremovegliflibkeys [-o OFONT] ifont key [key ...]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+This removes the specified key(s) from the lib section of .glif files if they exist.
+
+```
+psfremovegliflibkeys GentiumPlus-Regular.ufo key1 key2
+```
 
 ---
 ####  psfrenameglyphs
