@@ -11,9 +11,6 @@ import silfont.ufo as ufo
 from collections import OrderedDict
 from silfont.feax_parser import feaplus_parser
 from xml.etree import ElementTree as et
-import fontTools.feaLib.ast as ast
-import StringIO
-import os
 
 from silfont.core import execute
 

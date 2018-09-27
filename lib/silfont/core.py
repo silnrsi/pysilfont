@@ -53,7 +53,7 @@ class loggerobj(object):
         levelval = self.loglevels[msglevel]
         message = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S ") + self.leveltext[levelval] + logmessage
         #message = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S:%f ") + self.leveltext[levelval] + logmessage  ## added milliseconds for timing tests
-        if levelval <= self.loglevels[self.scrlevel]: print(message.encode(sys.stdout.encoding, errors='backslashreplace'))
+        if levelval <= self.loglevels[self.scrlevel]: print(message)
         if self.logfile and levelval <= self.loglevels[self.loglevel]: self.logfile.write(message + "\n")
         if msglevel == "S":
             print("\n **** Fatal error - exiting ****")

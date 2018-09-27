@@ -5,7 +5,7 @@ from fontTools.feaLib.lexer import IncludingLexer, Lexer
 import silfont.feax_lexer as feax_lexer
 from fontTools.feaLib.error import FeatureLibError
 import silfont.feax_ast as astx
-import StringIO, re
+import io, re
 
 class feaplus_ast(object) :
     MarkBasePosStatement = astx.ast_MarkBasePosStatement
@@ -35,7 +35,7 @@ class feaplus_parser(Parser) :
 
     def __init__(self, filename, glyphmap) :
         if filename is None :
-            empty_file = StringIO.StringIO("")
+            empty_file = io.StringIO("")
             super(feaplus_parser, self).__init__(empty_file, glyphmap)
         else :
             super(feaplus_parser, self).__init__(filename, glyphmap)
