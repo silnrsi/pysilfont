@@ -1,5 +1,7 @@
+import ast as pyast
 from fontTools.feaLib import ast
 from fontTools.feaLib.ast import asFea
+import re, math
 
 def asFea(g):
     if hasattr(g, 'asClassFea'):
@@ -268,12 +270,24 @@ class ast_DoForSubStatement(ast_DoSubStatement):
         for g in self.glyphs:
             yield(self.name, g)
 
+def safeeval(exp):
+    # no dunders in attribute names
+    for n in pyast.walk(pyast.parse(exp)):
+        if "__" in getattr(n, 'id', ""):
+            return False
+    return True
+
 class ast_DoLetSubStatement(ast_DoSubStatement):
     def __init__(self, varname, expression, parser, location=None):
         ast_DoSubStatement.__init__(self, varname, location=location)
-        glyphs = getattr(parser, 'glyphs', None) 
+        glyphs = getattr(parser, 'glyphs', None)
+        if not safeeval(expression):
+            expression='"Unsafe Expression"'
         self.expr = expression
         self.fns = {
+            '__builtins__': None,
+            're' : re,
+            'math' : math,
             'APx': lambda g, a: int(glyphs[g].anchors[a][0]),
             'APy': lambda g, a: int(glyphs[g].anchors[a][1]),
             'ADVx': lambda g: int(glyphs[g].advance),
@@ -284,6 +298,11 @@ class ast_DoLetSubStatement(ast_DoSubStatement):
             'feaclass': lambda c: parser.glyphclasses_.resolve(c).glyphSet(),
             'info': lambda s: parser.fontinfo.get(s, "")
         }
+        # Document which builtins we really need. Of course still insecure.
+        for x in ('True', 'False', 'None', 'int', 'float', 'str', 'abs', 'bool',
+                    'dict', 'enumerate', 'filter', 'hex', 'len', 'list', 'map',
+                    'max', 'min', 'ord', 'range', 'set', 'sorted', 'sum', 'tuple', 'zip'):
+            self.fns[x] = __builtins__[x]
 
     def items(self, variables):
         lcls = variables.copy()
