@@ -60,14 +60,14 @@ def doit(args) :
     infont = args.input
     font.encoding = "Original"
     infont.encoding = "Original"    # compact the font so findEncodingSlot will work
-    infont.layers["Fore"].is_quadratic = font.layers["Fore"].is_quadratic
+    infont.layers[b"Fore"].is_quadratic = font.layers[b"Fore"].is_quadratic
 
     # list of glyphs to copy
     glist = list()
 
     # glyphs specified on the command line
     for n in args.name or [] :
-        glist.append(n)
+        glist.append(bytes(n))
 
     # glyphs specified in a file
     for filename in args.namefile or [] :
@@ -81,7 +81,7 @@ def doit(args) :
             if (line == ''):
                 continue
 
-            glist.append(line)
+            glist.append(bytes(line))
 
     # copy glyphs by name
     reportErrors = True
@@ -91,10 +91,10 @@ def doit(args) :
         for n in tglist:
             if n in font and not args.force :
                 if reportErrors :
-                    print("Glyph {} already present. Skipping".format(n))
+                    args.logger.log("Glyph {} already present. Skipping".format(n), "W")
                 continue
             if n not in infont :
-                print("Can't find glyph {}".format(n))
+                args.logger.log("Can't find glyph {}".format(n), "W")
                 continue
             g = infont[n]
             glist.extend(copyglyph(font, infont, g, -1, args))
