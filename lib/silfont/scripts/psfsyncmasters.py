@@ -10,7 +10,7 @@ from silfont.core import execute
 import silfont.ufo as UFO
 import silfont.etutil as ETU
 import os, datetime
-import designSpaceDocument as DSD
+import fontTools.designspaceLib as DSD
 from xml.etree import cElementTree as ET
 
 argspec = [
