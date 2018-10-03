@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from __future__ import unicode_literals
 '''FontForge: Copy glyphs from one font to another, without using ffbuilder'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
@@ -8,7 +7,6 @@ __author__ = 'Martin Hosken'
 
 from silfont.core import execute
 import psMat
-import io
 
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
@@ -60,18 +58,18 @@ def doit(args) :
     infont = args.input
     font.encoding = "Original"
     infont.encoding = "Original"    # compact the font so findEncodingSlot will work
-    infont.layers[b"Fore"].is_quadratic = font.layers[b"Fore"].is_quadratic
+    infont.layers["Fore"].is_quadratic = font.layers["Fore"].is_quadratic
 
     # list of glyphs to copy
     glist = list()
 
     # glyphs specified on the command line
     for n in args.name or [] :
-        glist.append(bytes(n))
+        glist.append(n)
 
     # glyphs specified in a file
     for filename in args.namefile or [] :
-        namefile = io.open(filename, 'r')
+        namefile = file(filename, 'r')
         for line in namefile :
             # ignore comments
             line = line.partition('#')[0]
@@ -81,7 +79,7 @@ def doit(args) :
             if (line == ''):
                 continue
 
-            glist.append(bytes(line))
+            glist.append(line)
 
     # copy glyphs by name
     reportErrors = True
@@ -91,10 +89,10 @@ def doit(args) :
         for n in tglist:
             if n in font and not args.force :
                 if reportErrors :
-                    args.logger.log("Glyph {} already present. Skipping".format(n), "W")
+                    print("Glyph {} already present. Skipping".format(n))
                 continue
             if n not in infont :
-                args.logger.log("Can't find glyph {}".format(n), "W")
+                print("Can't find glyph {}".format(n))
                 continue
             g = infont[n]
             glist.extend(copyglyph(font, infont, g, -1, args))
@@ -105,13 +103,13 @@ def doit(args) :
 
     # characters specified on the command line
     for r in args.range or [] :
-        (rstart, rend) = [int(x, 16) for x in r.split('..')]
+        (rstart, rend) = map(lambda x: int(x,16), r.split('..'))
         for u in range(rstart, rend + 1) :
             ulist.append(u)
 
     # characters specified in a file
     for filename in args.rangefile or [] :
-        rangefile = io.open(filename, 'r')
+        rangefile = file(filename, 'r')
         for line in rangefile :
             # ignore comments
             line = line.partition('#')[0]
