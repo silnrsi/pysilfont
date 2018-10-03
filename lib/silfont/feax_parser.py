@@ -6,6 +6,7 @@ import silfont.feax_lexer as feax_lexer
 from fontTools.feaLib.error import FeatureLibError
 import silfont.feax_ast as astx
 import io, re
+import logging
 
 class feaplus_ast(object) :
     MarkBasePosStatement = astx.ast_MarkBasePosStatement
@@ -340,7 +341,7 @@ class feaplus_parser(Parser) :
             else:
                 raise FeatureLibError(
                     "Expected glyph name, glyph range, "
-                    "or glyph class reference",
+                    "or glyph class reference. Found %s" % self.next_token_,
                     self.next_token_location_)
         self.expect_symbol_("]")
         return glyphs
@@ -526,17 +527,20 @@ class feaplus_parser(Parser) :
                 break
         res = self.ast.Block()
         lex = self.lexer_.lexers_[-1]
-        keep = lex.tokens
         for s in self.DoIterateValues_(substatements):
             for i in ifs:
                 (_, v) = next(i.items(s))
                 if v:
                     lex.scope = s
-                    lex.tokens = i.block[:]
+                    #import pdb; pdb.set_trace()
+                    lex.pushstack(('tokens', i.block[:]))
                     self.advance_lexer_()
                     self.advance_lexer_()
-                    self.parse_subblock_(res, False)
-        lex.tokens = keep
+                    try:
+                        self.parse_subblock_(res, False)
+                    except Exception as e:
+                        logging.warning("In do context: " + str(s) + " lexer: " + repr(lex) + " at: " + str((self.cur_token_, self.next_token_)))
+                        raise
         return res
 
     def DoIterateValues_(self, substatements):
@@ -575,6 +579,7 @@ class feaplus_parser(Parser) :
         lex = self.lexer_.lexers_[-1]
         lex.scan_over_(Lexer.CHAR_WHITESPACE_)
         start = lex.pos_
+        # import pdb; pdb.set_trace()
         lex.scan_until_(";")
         expr = lex.text_[start:lex.pos_]
         self.advance_lexer_()
