@@ -1,14 +1,31 @@
 # Changelog
 
-## [Unreleased]
+## [1.4.0] - 2018-10-03 - Python 2+3 support
 
 ### Added
 
 ### Changed
 
-Updated libraries and most installed scripts to work with Python 2 and python 3
+Libraries and most installed scripts updated to work with Python 2 and python 3
 
-All scripts should work as before under Python 2, but a few scripts need further work to run under Python 3
+All scripts should work as before under Python 2, but a few scripts need further work to run under Python 3:
+- All ff* scripts
+- psfaddanchors
+- psfcsv2comp
+- psfexpandstroke
+- psfsubset
+
+The following scripts have not been fully tested with the new libraries
+- psfchangegdlnames
+- psfcompdef2xml
+- psfcopymeta
+- psfexportpsnames
+- psfftml2odt
+- psfremovegliflibkeys
+- psfsetversion
+- psfsyncmeta
+- psftoneletters
+- psfxml2compdef
 
 ### Removed
 
