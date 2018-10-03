@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<glyph name="LtnSmARingAbvAcute.sc" format="2">
-  <advance width="0"/>
-  <anchor x="2" y="1070" name="U"/>
-  <outline>
-    <component base="CombRingAbv" xOffset="572" yOffset="-1100"/>
-    <component base="CombAcute" xOffset="572" yOffset="-565"/>
-  </outline>
-</glyph>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<glyph name="LtnSmGCircum.SngBowl.sc" format="2">
-  <advance width="0"/>
-  <anchor x="0" y="535" name="U"/>
-  <outline>
-    <component base="CombCircum" xOffset="570" yOffset="-1100"/>
-  </outline>
-</glyph>

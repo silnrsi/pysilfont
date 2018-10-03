@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<glyph name="LtnSmOTildeAcute.sc" format="2">
-  <advance width="0"/>
-  <anchor x="0" y="910" name="U"/>
-  <outline>
-    <component base="CombTilde" xOffset="575" yOffset="-1100"/>
-    <component base="CombAcute" xOffset="570" yOffset="-725"/>
-  </outline>
-</glyph>

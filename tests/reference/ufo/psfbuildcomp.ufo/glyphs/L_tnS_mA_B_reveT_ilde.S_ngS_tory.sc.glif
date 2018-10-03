@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<glyph name="LtnSmABreveTilde.SngStory.sc" format="2">
-  <advance width="0"/>
-  <anchor x="0" y="375" name="U"/>
-  <outline>
-    <component base="CombTilde" xOffset="575" yOffset="-1100"/>
-  </outline>
-</glyph>
