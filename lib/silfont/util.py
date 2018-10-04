@@ -13,6 +13,7 @@ except NameError: # Will  occur with Python 3
     pass
 import os, subprocess, difflib, sys, io
 from silfont.core import execute
+from fontTools.ttLib import TTFont
 
 class dirTree(dict) :
     """ An object to hold list of all files and directories in a directory
@@ -156,6 +157,53 @@ class text_diff(object): # For diffing 2 text files with option to ignore common
             print("Failed to compare Files")
             print(self.errors)
 
+class ttf_diff(object): # For diffing 2 ttf files.  Differences are not listed
+    # See ufo_diff for class attribute details
+
+    def __init__(self, file1, file2):
+        errors=[]
+        # Open the ttf files
+        try:
+            font1 = TTFont(file1)
+        except Exception as e:
+            errors.append("Can't open " + file1)
+            errors.append(e.__str__())
+        try:
+            font2 = TTFont(file2)
+        except Exception as e:
+            errors.append("Can't open " + file2)
+            errors.append(e.__str__())
+        if errors:
+            self.diff = ""
+            self.errors = "\n".join(errors)
+            self.returncode = 2
+            return
+
+        # Create ttx xml strings from each font
+        ttx1 = _ttx()
+        ttx2 = _ttx()
+        font1.saveXML(ttx1)
+        font2.saveXML(ttx2)
+
+        if ttx1.txt() == ttx2.txt():
+            self.diff = ""
+            self.errors = ""
+            self.returncode = 0
+        else:
+            self.diff = file1 + " and " + file2 + " are different - compare with external tools"
+            self.errors = ""
+            self.returncode = 1
+
+    def print_text(self): # Print diff info or errors the unified_diff command
+        if self.returncode == 0:
+            print("Files are the same")
+        elif self.returncode == 1:
+            print("Files are different")
+            print(self.diff)
+        elif self.returncode == 2:
+            print("Failed to compare Files")
+            print(self.errors)
+
 def test_run(tool, commandline, testcommand, outfont, exp_errors, exp_warnings): # Used by tests to run commands
     sys.argv = commandline.split(" ")
     (args, font) = execute(tool, testcommand.doit, testcommand.argspec, chain="first")
@@ -178,6 +226,8 @@ def test_diffs(dirname, testname, extensions): # Used by test to run diffs on re
             diff = text_diff(resultfile, referencefile, ignore_firstlinechars=22)
         elif ext in (".log", ".lg"):
             diff = text_diff(resultfile, referencefile, ignore_chars=20)
+        elif ext == ".ttf":
+            diff = ttf_diff(resultfile, referencefile)
         else:
             diff = text_diff(resultfile, referencefile)
 
@@ -185,3 +235,16 @@ def test_diffs(dirname, testname, extensions): # Used by test to run diffs on re
                     diff.print_text()
                     result = False
     return result
+
+class _ttx(object): # Used by ttf_diff()
+
+    def __init__(self):
+        self.lines = []
+
+    def write(self, line):
+        if not("<checkSumAdjustment value=" in line or "<modified value=" in line) :
+            self.lines.append(line)
+
+    def txt(self):
+        return "".join(self.lines)
+
