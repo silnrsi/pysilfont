@@ -1,0 +1,8 @@
+table GDEF {
+  # automatic
+  GlyphClassDef
+    [HyphenMinus DigitZero DigitOne DigitTwo DigitThree DigitFour DigitFive DigitSix DigitSeven DigitEight DigitNine LtnCapA LtnCapA.alt LtnCapB LtnCapC LtnCapD LtnCapE LtnCapF LtnCapG LtnCapH LtnCapI LtnCapJ LtnCapK LtnCapL LtnCapM LtnCapN LtnCapO LtnCapP LtnCapQ LtnCapR LtnCapS LtnCapT LtnCapU LtnCapV LtnCapW LtnCapX LtnCapY CircumAccent GraveAccent LtnSmA LtnSmB LtnSmC LtnSmD LtnSmE LtnSmF LtnSmG LtnSmH LtnSmI LtnSmJ LtnSmK LtnSmL LtnSmM LtnSmN LtnSmO LtnSmP LtnSmQ LtnSmR LtnSmS LtnSmT LtnSmU LtnSmV LtnSmW LtnSmX LtnSmY LtnCapADiaer LtnSmAAcute LtnSmAGrave LtnSmACircum LtnSmADiaer LtnSmATilde LtnSmARingAbv DottedCirc Hyphen NonBreakingHyphen CombAcute CombGrave CombCircum CombTilde CombDiaer CombRingAbv], # Base
+    [Hyphen_Soft], # Liga
+    , # Mark
+    ;
+} GDEF;

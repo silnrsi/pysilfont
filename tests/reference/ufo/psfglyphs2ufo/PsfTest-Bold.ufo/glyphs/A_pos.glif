@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="Apos" format="2">
+  <advance width="625.0"/>
+  <unicode hex="0027"/>
+  <outline>
+    <contour>
+      <point x="400.0" y="1045.0" type="line"/>
+      <point x="405.0" y="1186.0"/>
+      <point x="406.0" y="1339.0"/>
+      <point x="435.0" y="1585.0" type="curve"/>
+      <point x="190.0" y="1585.0" type="line"/>
+      <point x="221.0" y="1339.0"/>
+      <point x="221.0" y="1186.0"/>
+      <point x="225.0" y="1045.0" type="curve"/>
+    </contour>
+  </outline>
+</glyph>

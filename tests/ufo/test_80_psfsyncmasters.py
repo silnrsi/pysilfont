@@ -31,7 +31,7 @@ def test_diffs(): # Do a diff on all output files
     refdir = "tests/reference/ufo/"
     resdir = "local/testresults/ufo/"
     # -n in commands will have created _new versions of changed files in the source directory,
-    # so move them to results prior to dunning diff commands
+    # so move them to results prior to running diff commands
     for f in glob.glob(resdir + "psfsyncmasters*.plist"): os.remove(f) # Delete any old results
     filelist = []
     for style in ("Regular", "Italic", "Bold", "BoldItalic"):
@@ -51,7 +51,7 @@ def test_diffs(): # Do a diff on all output files
     for f in filelist:
         # Need to diff the plists with subprocess("diff") to be able handle openTypeHeadCreated issue
         filen = "psfsyncmasters-" + f
-        diff = subprocess.Popen(["diff", resdir +filen, refdir + filen, "-c1"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        diff = subprocess.Popen(["diff", resdir + filen, refdir + filen, "-c1"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         text = diff.communicate()
         if diff.returncode == 1:
             difftext = text[0].decode("utf-8").split("\n")
