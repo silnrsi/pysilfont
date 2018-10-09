@@ -1,7 +1,7 @@
 # Defining composite glyphs
 
 A composite glyph is one that is defined in terms of one or more other glyphs.
-The composite definition syntax described in this document is a subset of that used by Robofont, but with extensions for additional functionality.
+The composite definition syntax described in this document is a subset of the [GlyphConstruction](https://github.com/typemytype/GlyphConstruction) syntax used by Robofont, but with extensions for additional functionality.
 Composites defined in this syntax can be applied to a UFO using the [psfbuildcomp](scripts.md#psfbuildcomp) tool.
 
 # Overview
