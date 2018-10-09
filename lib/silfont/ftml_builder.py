@@ -40,7 +40,7 @@ TRANSPARENT = 5
 #       ...
 #       writeFile(...)
 #
-#     The module is clever enough, for example, to automatically close a test when changing features or languages.
+#     The module is clever enough, for example, to automatically close a test when changing features, languages or direction.
 #
 #  2. The FTMLBuilder object which reads and processes glyph_data.csv and provides assistance in iterating over
 #     the characters, features, and languages that should be supported by the font, e.g.:
@@ -65,7 +65,7 @@ class FTML(object):
 
     # Assumes no nesting of test groups
 
-    def __init__(self, title, logger, comment = None, fontsrc = None, fontscale = None, widths = None, rendercheck = True, xslfn = None):
+    def __init__(self, title, logger, comment = None, fontsrc = None, fontscale = None, widths = None, rendercheck = True, xslfn = None, rtl = False):
         self.logger = logger
         # Initialize an Fxml object
         fxml = Fxml(testgrouplabel = "dummy")
@@ -86,10 +86,11 @@ class FTML(object):
         # Initialize state
         self._curTest = None
         self.closeTestGroup()
+        self._defaultRTL = rtl
         # Add first testgroup if requested
         if rendercheck:
             self.startTestGroup("Rendering Check")
-            self.addToTest(None, "RenderingUnknown", "check")
+            self.addToTest(None, "RenderingUnknown", "check", rtl = False)
             self.closeTest()
             self.closeTestGroup()
 
@@ -98,11 +99,15 @@ class FTML(object):
             self._curTest.comment = comment
         self._curTest = None
         self._lastUID = None
+        self._lastRTL = None
 
-    def addToTest(self, uid, s = "", label = None, comment = None):
-        if self._lastUID and uid and uid not in range(self._lastUID, self._lastUID + 2):
+    def addToTest(self, uid, s = "", label = None, comment = None, rtl = None):
+        if rtl is None: rtl = self._defaultRTL
+        if (self._lastUID and uid and uid not in range(self._lastUID, self._lastUID + 2))\
+                or (self._lastRTL is not None and rtl != self._lastRTL):
             self.closeTest()
         self._lastUID = uid
+        self._lastRTL = rtl
         if self._curTestGroup is None:
             # Create a new Ftestgroup
             self.startTestGroup("Group")
@@ -113,6 +118,7 @@ class FTML(object):
             test = Ftest(self._curTestGroup, label = label, string = '')
             if comment:
                 test.comment = comment
+            if rtl: test.rtl = "True"
             # Construct stylename and add style if needed:
             x = ['{}_{}'.format(t,v) for t,v in self._curFeatures.items()] if self._curFeatures else []
             if self._curLang:
@@ -474,7 +480,7 @@ class FTMLBuilder(object):
         l = [self.features[tag].tvlist for tag in sorted(feats)]
         return product(*l)
 
-    def render(self, uids, ftml, keyUID = 0, addBreaks = True):
+    def render(self, uids, ftml, keyUID = 0, addBreaks = True, rtl = None):
         """ general purpose (but not required) function to generate ftml for a character sequence """
         if len(uids) == 0:
             return
@@ -533,17 +539,17 @@ class FTMLBuilder(object):
             if zwjBefore and zwjAfter:
                 t += u'{0}{0}{0}'.format(s)
             if addBreaks: ftml.closeTest()
-            ftml.addToTest(keyUID, t, label = label, comment = comment)
+            ftml.addToTest(keyUID, t, label = label, comment = comment, rtl = rtl)
             if addBreaks: ftml.closeTest()
         elif hasMirrored and self.rtl:
             # Contains mirrored and rtl enabled:
             if addBreaks: ftml.closeTest()
-            ftml.addToTest(keyUID, u'{0} LTR: \u202A{0}\u202C RTL: \u202B{0}\u202C'.format(s), label = label, comment = comment)
+            ftml.addToTest(keyUID, u'{0} LTR: \u202A{0}\u202C RTL: \u202B{0}\u202C'.format(s), label = label, comment = comment, rtl = rtl)
             if addBreaks: ftml.closeTest()
         # elif is LRE, RLE, PDF
         # elif is LRI, RLI, FSI, PDI
         elif uidLen > 1:
-            ftml.addToTest(keyUID, s , label = label, comment = comment)
+            ftml.addToTest(keyUID, s , label = label, comment = comment, rtl = rtl)
         else:
-            ftml.addToTest(keyUID, s , comment = comment)
+            ftml.addToTest(keyUID, s , comment = comment, rtl = rtl)
 

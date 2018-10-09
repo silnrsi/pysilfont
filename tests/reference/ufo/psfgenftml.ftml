@@ -12,7 +12,15 @@
   <testgroup label="Encoded characters">
     <test label="U+0020">
       <comment>Space</comment>
-      <string>\u00F130 \u00F131 ! " # $ % &amp; ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y</string>
+      <string>\u00F130 \u00F131 ! " # $ % &amp; ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ? @ A B C</string>
+    </test>
+    <test label="U+0043" rtl="True">
+      <comment>LtnCapC</comment>
+      <string>C</string>
+    </test>
+    <test label="U+0044">
+      <comment>LtnCapD</comment>
+      <string>D E F G H I J K L M N O P Q R S T U V W X Y</string>
     </test>
     <test label="U+005B">
       <comment>LftSqrBrac</comment>
