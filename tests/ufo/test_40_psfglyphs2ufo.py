@@ -10,6 +10,7 @@ import silfont.util
 import sys, os, glob, subprocess
 from silfont.core import execute
 import silfont.scripts.psfglyphs2ufo as psfglyphs2ufo
+import silfont.scripts.psfnormalize as psfnormalize
 
 def test_run():
     cl = "psfglyphs2ufo tests/input/font-psf-test/source/PsfTestRoman.glyphs " \
@@ -19,6 +20,14 @@ def test_run():
     args.logger.logfile.close()
     exp_counts = (0, 0)
     actual_counts = (args.logger.errorcount, args.logger.warningcount)
+    # Now normalize the output ufos
+    for weight in ("Regular", "Bold"):
+        fontname = "local/testresults/ufo/psfglyphs2ufo/PsfTest-" + weight + ".ufo"
+        cl = "psfnormalize " + fontname
+        sys.argv = cl.split(" ")
+        (args, font) = execute("UFO", psfnormalize.doit, psfnormalize.argspec, chain="first")
+        font.write(fontname)
+
     if exp_counts == actual_counts:
         assert True
     else:

@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <glyph name="DigitOne" format="2">
-  <advance width="1200.0"/>
+  <advance width="1200"/>
   <unicode hex="0031"/>
-  <anchor x="600.0" y="-100.0" name="L"/>
-  <anchor x="600.0" y="1530.0" name="U"/>
+  <anchor x="600" y="-100" name="L"/>
+  <anchor x="600" y="1530" name="U"/>
   <outline>
     <contour>
-      <point x="535.0" y="170.0" type="line"/>
-      <point x="220.0" y="170.0" type="line"/>
-      <point x="220.0" y="0.0" type="line"/>
-      <point x="1040.0" y="0.0" type="line"/>
-      <point x="1040.0" y="170.0" type="line"/>
-      <point x="725.0" y="170.0" type="line"/>
-      <point x="725.0" y="1480.0" type="line"/>
-      <point x="555.0" y="1480.0" type="line"/>
-      <point x="210.0" y="1268.0" type="line"/>
-      <point x="235.0" y="1088.0" type="line"/>
-      <point x="535.0" y="1260.0" type="line"/>
+      <point x="535" y="170" type="line"/>
+      <point x="220" y="170" type="line"/>
+      <point x="220" y="0" type="line"/>
+      <point x="1040" y="0" type="line"/>
+      <point x="1040" y="170" type="line"/>
+      <point x="725" y="170" type="line"/>
+      <point x="725" y="1480" type="line"/>
+      <point x="555" y="1480" type="line"/>
+      <point x="210" y="1268" type="line"/>
+      <point x="235" y="1088" type="line"/>
+      <point x="535" y="1260" type="line"/>
     </contour>
   </outline>
 </glyph>
