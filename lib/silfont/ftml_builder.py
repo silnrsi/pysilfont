@@ -12,7 +12,7 @@ try:
 except NameError: # Will  occur with Python 3
     pass
 from silfont.ftml import Fxml, Ftestgroup, Ftest, Ffontsrc
-from icu import Char, Script, UCharCategory,  UCharDirection, UProperty, UJoiningGroup, UScriptCode, UNICODE_VERSION
+from icu import Char, UCharCategory,  UCharDirection, UProperty
 from itertools import product
 import re
 
