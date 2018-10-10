@@ -5,7 +5,6 @@ __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2014-2018 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
-__version__ = '1.4.1.dev0'
 
 try:
     str = unicode
@@ -18,6 +17,8 @@ try:
     import configparser
 except ImportError:
     import ConfigParser as configparser
+
+import silfont
 
 class loggerobj(object):
     # For handling log messages.
@@ -84,7 +85,7 @@ class parameters(object):
     def __init__(self):
         # Default parameters for all modules
         defparams = {}
-        defparams['system'] = {'version': __version__, 'copyright': __copyright__}  # Code treats these as read-only
+        defparams['system'] = {'version': silfont.__version__, 'copyright': silfont.__copyright__}  # Code treats these as read-only
         defparams['logging'] = {'scrlevel': 'P', 'loglevel': 'W'}
         defparams['backups'] = {'backup': True, 'backupdir': 'backups', 'backupkeep': 5}
         # Default parameters for UFO module
