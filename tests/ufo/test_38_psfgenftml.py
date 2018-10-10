@@ -39,6 +39,9 @@ class testcommand(object):
             for featlist in builder.permuteFeatures(uids = (uid,)):
                 ftml.setFeatures(featlist)
                 builder.render((uid,), ftml)
+                # Test one character with RTL enabled:
+                if uid == 67:
+                    builder.render((uid,), ftml, rtl = True)
                 # Don't close test -- collect consecutive encoded chars in a single row
             ftml.clearFeatures()
             for langID in sorted(c.langs):
