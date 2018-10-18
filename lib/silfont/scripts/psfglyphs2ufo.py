@@ -27,7 +27,10 @@ def doit(args):
     logger.log("Creating UFO objects from GlyphsApp file", "I")
     with open(args.glyphsfont, 'r', encoding='utf-8') as gfile:
         gfont = glyphsLib.parser.load(gfile)
-    ufos = glyphsLib.to_ufos(gfont, include_instances=False, family_name=None, propagate_anchors=False)
+    if glyphsLib.__version__[0:1] == "3":
+        ufos = glyphsLib.to_ufos(gfont, include_instances=False, family_name=None, propagate_anchors=False, generate_GDEF=False)
+    else:
+        ufos = glyphsLib.to_ufos(gfont, include_instances=False, family_name=None, propagate_anchors=False)
 
     # Extract directory name for use with backups
     (glyphsdir, filen) = os.path.split(args.glyphsfont)

@@ -33,7 +33,7 @@ def cmd() :
     # Pysilfont info
     print("Pysilfont " + silfont.__copyright__ + "\n")
     print("   Version:           " + silfont.__version__)
-    print("   Running from:      " + silfont.__file__[:-7])
+    print("   Running from:      " + silfont.__file__[:-12])
     print("   using:             Python " + sys.version.split(" \n")[0] + "\n")
 
     for dep in deps:
