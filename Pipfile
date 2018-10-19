@@ -10,7 +10,6 @@ defcon = {git = "https://github.com/typesupply/defcon.git", ref = "0.3.4"}
 ufoLib = "*"
 lz4 = "*"
 mutatorMath = "*"
-designSpaceDocument = {git = "https://github.com/LettError/designSpaceDocument.git", ref = "master"}
 fontMath = "*"
 cu2qu = "*"
 compreffor = "*"
@@ -26,7 +25,6 @@ defcon = "*"
 ufoLib = "*"
 lz4 = "*"
 mutatorMath = "*"
-designSpaceDocument = {git = "https://github.com/LettError/designSpaceDocument.git", ref = "master"}
 fontMath = "*"
 cu2qu = "*"
 compreffor = "*"
