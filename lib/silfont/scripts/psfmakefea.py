@@ -16,6 +16,8 @@ from silfont.core import execute
 
 def getbbox(g):
     res = (65536, 65536, -65536, -65536)
+    if g['outline'] is None:
+        return (0, 0, 0, 0)
     for c in g['outline'].contours:
         for p in c['point']:
             if 'type' in p.attrib:      # any actual point counts
