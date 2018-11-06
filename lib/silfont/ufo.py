@@ -1119,11 +1119,13 @@ def writeToDisk(dtree, outdir, font, odtree=None, logindent="", changes = False)
                 font.logger.log(logindent + filen, "V")
                 if dtreeitem.fileType == "xml":
                     if dtreeitem.fileObject:  # Only write if object has items
-                        if dtreeitem.fileObject.type == "glif":  # Delete lib if no items in it
+                        if dtreeitem.fileObject.type == "glif":
                             glif = dtreeitem.fileObject
-                            if glif["lib"] is not None:
+                            if glif["lib"] is not None: # Delete lib if no items in it
                                 if glif["lib"].__len__() == 0:
                                     glif.remove("lib")
+                            # Sort UFO3 anchors by name (UFO2 anchors will have been sorted on conversion)
+                            glif["anchor"].sort(key=lambda anchor: anchor.element.get("name"))
                             glif.rebuildET()
                         result = writeXMLobject(dtreeitem, font.outparams, outdir, filen, exists)
                         if result: changes = True

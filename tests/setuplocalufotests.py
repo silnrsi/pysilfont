@@ -58,6 +58,7 @@ for ufo,type in cfg:
     os.rename("local/ufotests/results/" + logname, "local/ufotests/reference/" + logname)
     #errorcount = args.logger.errorcount -1 if args.logger.errorcount else 0 # If there is an error, reduce count for extra error reporting that there were errors!
     ufolist.append((sourcedir, ufoname[:-4], str(args.logger.errorcount), str(args.logger.warningcount)))
+args.logger.logfile.close() # Make sure final log file is closed
 
 # Create ufolist.csv
 ufofile = open("local/ufotests/ufolist.csv", "w")

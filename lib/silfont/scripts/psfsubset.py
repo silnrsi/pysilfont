@@ -25,7 +25,7 @@ def doit(args) :
     deflayer = font.deflayer
 
     # Create mappings to find glyph name from decimal usv:
-    dusv2gname = {int(unicode.hex, 16): gname for gname in deflayer for unicode in deflayer[gname]['unicode']}
+    dusv2gname = {int(ucode.hex, 16): gname for gname in deflayer for ucode in deflayer[gname]['unicode']}
 
     # check for headers in the csv
     fl = incsv.firstline

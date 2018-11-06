@@ -30,7 +30,7 @@ def doit(args) :
     for line in args.input.readlines():
         filelinecount += 1
         testline = line.strip()
-        if len(testline) > 0 and testline[0] != '#':  # not whitespace or comment
+        if len(testline) > 0 and testline[0:1] != '#':  # not whitespace or comment
             linecount += 1
             cgobj.CDline=line
             cgobj.CDelement=None

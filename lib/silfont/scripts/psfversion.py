@@ -23,6 +23,7 @@ def cmd() :
         ('fontTools', '?', ''),
         ('glyphsLib', '?', '2.4.0'),
         ('icu', '?', ''),
+        ('lz4', '?', ''),
         ('mutatorMath', '?', ''),
         ('odf', '?', ''),
         ('robofab', '?', ''),

@@ -44,7 +44,7 @@ def doit(args) :
             if (otmaj, int(otmin)) != (vmaj,int(vmin)) :
                 logger.log("openTypeNameVersion values don't match versionMajor (" + vmaj + ") and versionMinor (" + vmin + ")", "E")
     else:
-        if newversion[0] == "+" :
+        if newversion[0:1] == "+" :
             if otnvre.match(otnv) is None:
                 logger.log("Current openTypeNameVersion is non-standard so can't be incremented: " + otnv , "S")
             else :
@@ -56,7 +56,7 @@ def doit(args) :
             if increment not in ("1", "0.001", ".001", "0.1", ".1") :
                 logger.log("Invalid increment value - must be one of 1, 0.001, .001, 0.1 or .1", "S")
             increment = 100 if increment in ("0.1", ".1") else 1
-            if (increment == 100 and vmin[0] == "9") or (increment == 1 and vmin[1:2] == "99") :
+            if (increment == 100 and vmin[0:1] == "9") or (increment == 1 and vmin[1:2] == "99") :
                 logger.log("Version already at maximum so can't be incremented", "S")
             otmin = str(int(otmin) + increment).zfill(3)
         else :
