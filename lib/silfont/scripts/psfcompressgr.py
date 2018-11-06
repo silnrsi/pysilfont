@@ -30,11 +30,11 @@ class lz4tuple(object) :
 
 def read_literal(t, dat, start, datlen) :
     if t == 15 and start < datlen :
-        v = ord(dat[start])
+        v = ord(dat[start:start+1])
         t += v
         while v == 0xFF and start < datlen :
             start += 1
-            v = ord(dat[start])
+            v = ord(dat[start:start+1])
             t += v
         start += 1
     return (t, start)
@@ -54,23 +54,24 @@ def write_literal(num, shift) :
 
 def parseTuple(dat, start, datlen) :
     res = lz4tuple(start)
-    token = ord(dat[start])
+    token = ord(dat[start:start+1])
     (res.literal_len, start) = read_literal(token >> 4, dat, start+1, datlen)
     res.literal = start
     start += res.literal_len
     res.end = start
     if start > datlen - 2 : 
         return res
-    res.match_dist = ord(dat[start]) + (ord(dat[start+1]) << 8)
+    res.match_dist = ord(dat[start:start+1]) + (ord(dat[start+1:start+2]) << 8)
     start += 2
     (res.match_len, start) = read_literal(token & 0xF, dat, start, datlen)
     res.end = start
     return res
 
 def compressGr(dat, version) :
-    if ord(dat[1]) < version :
-        dat = dat[0] + chr(version) + dat[2:]
-    datc = lz4.compressHC(dat[:-4])[4:]  # strip initial length and last 4 bytes
+    if ord(dat[1:2]) < version :
+        vstr = bytes([version]) if sys.version_info.major > 2 else chr(version)
+        dat = dat[0:1] + vstr + dat[2:]
+    datc = lz4.block.compress(dat[:-4], mode='high_compression', compression=16, store_size=False)
     # now find the final tuple
     end = len(datc)
     start = 0
@@ -88,7 +89,7 @@ def doit(args) :
     infont = args.ifont
     for tag, version in (('Silf', 5), ('Glat', 3)) :
         dat = infont.getTableData(tag)
-        newdat = compressGr(dat, version)
+        newdat = bytes(compressGr(dat, version))
         table = DefaultTable(tag)
         table.decompile(newdat, infont)
         infont[tag] = table
