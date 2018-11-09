@@ -65,7 +65,7 @@ class FTML(object):
 
     # Assumes no nesting of test groups
 
-    def __init__(self, title, logger, comment = None, fontsrc = None, fontscale = None, widths = None, rendercheck = True, xslfn = None, rtl = False):
+    def __init__(self, title, logger, comment = None, fontsrc = None, fontscale = None, widths = None, rendercheck = True, xslfn = None, defaultrtl = False):
         self.logger = logger
         # Initialize an Fxml object
         fxml = Fxml(testgrouplabel = "dummy")
@@ -86,7 +86,7 @@ class FTML(object):
         # Initialize state
         self._curTest = None
         self.closeTestGroup()
-        self._defaultRTL = rtl
+        self._defaultRTL = defaultrtl
         # Add first testgroup if requested
         if rendercheck:
             self.startTestGroup("Rendering Check")
@@ -256,9 +256,9 @@ class FSpecial(object):
 class FTMLBuilder(object):
     """glyph_data and UFO processing for building FTML"""
 
-    def __init__(self, logger, incsv = None, fontcode = None, font = None, rtl = False, ap = None ):
+    def __init__(self, logger, incsv = None, fontcode = None, font = None, rtlenable = False, ap = None ):
         self.logger = logger
-        self.rtl = rtl
+        self.rtlEnable = rtlenable
 
         # Default diacritic base:
         self.diacBase = 0x25CC
@@ -541,7 +541,7 @@ class FTMLBuilder(object):
             if addBreaks: ftml.closeTest()
             ftml.addToTest(keyUID, t, label = label, comment = comment, rtl = rtl)
             if addBreaks: ftml.closeTest()
-        elif hasMirrored and self.rtl:
+        elif hasMirrored and self.rtlEnable:
             # Contains mirrored and rtl enabled:
             if addBreaks: ftml.closeTest()
             ftml.addToTest(keyUID, u'{0} LTR: \u202A{0}\u202C RTL: \u202B{0}\u202C'.format(s), label = label, comment = comment, rtl = rtl)
