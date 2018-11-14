@@ -7,13 +7,13 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'David Raymond'
 
 import silfont.util
-import sys, os, glob, subprocess
+import sys
 from silfont.core import execute
 import silfont.scripts.psfglyphs2ufo as psfglyphs2ufo
 import silfont.scripts.psfnormalize as psfnormalize
 
 def test_run():
-    cl = "psfglyphs2ufo tests/input/font-psf-test/source/PsfTestRoman.glyphs " \
+    cl = "psfglyphs2ufo --nofea tests/input/font-psf-test/source/PsfTestRoman.glyphs " \
          "local/testresults/ufo/psfglyphs2ufo -l local/testresults/ufo/psfglyphs2ufo.log"
     sys.argv = cl.split(" ")
     (args, font) = execute("UFO", psfglyphs2ufo.doit, psfglyphs2ufo.argspec, chain="first")
@@ -39,8 +39,11 @@ def test_diffs(): # Do a diff on all output files
     refdir = "tests/reference/ufo/"
     resdir = "local/testresults/ufo/"
 
+    ufodiff = False
+
     diff = silfont.util.ufo_diff(resdir + "psfglyphs2ufo/PsfTest-Regular.ufo", refdir + "psfglyphs2ufo/PsfTest-Regular.ufo")
     if diff.returncode:
+        ufodiff = True
         diff.print_text()
         result = False
 
@@ -53,6 +56,13 @@ def test_diffs(): # Do a diff on all output files
     if diff.returncode:
         diff.print_text()
         result = False
+
+    if ufodiff:
+        ## Warn that test fails with glyphsLib prior to 3
+        import glyphsLib
+        if glyphsLib.__version__[0:1] != "3":
+            print ("**** Note this test always fails on UFO diffs with glyphsLib prior to 3 ****")
+
 
     assert result
 
