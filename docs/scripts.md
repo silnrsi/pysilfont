@@ -545,6 +545,11 @@ This removes the specified key(s) from the lib section of .glif files if they ex
 psfremovegliflibkeys GentiumPlus-Regular.ufo key1 key2
 ```
 
+ \* can be used as a wildcard at then end of key names, eg
+ ```
+ psfremovegliflibkeys GentiumPlus-Regular.ufo "key*"
+ ```
+ 
 ---
 ####  psfrenameglyphs
 Usage: **`psfrenameglyphs [--mergecomps] -i INPUT ifont [ofnt]`**

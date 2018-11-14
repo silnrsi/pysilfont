@@ -25,7 +25,20 @@ def doit(args) :
         glyph = font.deflayer[glyphn]
         if glyph["lib"] :
             for key in keys :
-                if key in glyph["lib"] :
+                if key[-1:] == "*": # Support for wildcard at end of key name
+                    testkey = key[:-1]
+                    gkeys = list(glyph["lib"])
+                    for gkey in gkeys:
+                        if gkey[:len(testkey)] == testkey:
+                            val = str(glyph["lib"].getval(gkey))
+                            glyph["lib"].remove(gkey)
+                            keycounts[key] = -1 # Flag to show wildcard key matched at least once
+                            if gkey in keycounts:
+                                keycounts[gkey] += 1
+                            else:
+                                keycounts[gkey] = 1
+                            logger.log(gkey + " removed from " + glyphn + ". Value was " + val, "I")
+                elif key in glyph["lib"] :
                     val = str( glyph["lib"].getval(key))
                     glyph["lib"].remove(key)
                     keycounts[key] += 1
@@ -39,12 +52,13 @@ def doit(args) :
                         else:
                             logger.log("Advance width already set to " + str(adv.width) + " so originalWidth not copied", "E")
 
-    for key in keys :
+    for key in keycounts :
         count = keycounts[key]
         if count > 0 :
             logger.log(key + " removed from " + str(count) +  " glyphs", "P")
-        else :
+        elif count == 0 :
             logger.log("No lib entries found for " + key, "E")
+        # No need to report -1 flags for wildcard keys, since they will be reported with actual key names and +ve counts above
 
     return font
 
