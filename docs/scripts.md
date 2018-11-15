@@ -535,20 +535,17 @@ If you are a macOS user, see _pysilfont/actionsosx/README.txt_ to install an act
 
 ---
 ####  psfremovegliflibkeys
-Usage: **`psfremovegliflibkeys [-o OFONT] ifont key [key ...]`**
+Usage: **`psfremovegliflibkeys [-o OFONT] ifont [key [key ...]] [-b [BEGINS [BEGINS ...]]]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
 This removes the specified key(s) from the lib section of .glif files if they exist.
 
 ```
-psfremovegliflibkeys GentiumPlus-Regular.ufo key1 key2
+psfremovegliflibkeys GentiumPlus-Regular.ufo key1 key2 -b start1 start2
 ```
 
- \* can be used as a wildcard at then end of key names, eg
- ```
- psfremovegliflibkeys GentiumPlus-Regular.ufo "key*"
- ```
+This will remove any keys that match key1 or key2 or begin with start1 or start2
  
 ---
 ####  psfrenameglyphs
