@@ -19,7 +19,7 @@ def doit(args) :
     font = args.ifont
     logger = args.logger
     keys = args.key
-    bkeys=args.begins
+    bkeys=args.begins if args.begins is not None else []
     keycounts = {}
     bkeycounts = {}
     for key in keys : keycounts[key] = 0
@@ -43,7 +43,7 @@ def doit(args) :
                             adv.width = int(float(val))
                             logger.log("Advance width for " + glyphn + " set to " + val, "I")
                         else:
-                            logger.log("Advance width already set to " + str(adv.width) + " so originalWidth not copied", "E")
+                            logger.log("Advance width for " + glyphn + " is already set to " + str(adv.width) + " so originalWidth not copied", "E")
             for key in bkeys:
                 gkeys = list(glyph["lib"])
                 for gkey in gkeys:
