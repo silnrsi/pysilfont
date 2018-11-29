@@ -1,0 +1,11 @@
+def func(x, y) {
+    return x + y
+} func;
+
+feature test {
+do  for a = [a1 a2 a3];
+    let b = "g"+str(func(int(a[1]), 4));
+    {
+        @c = [$b];
+    }
+} test;

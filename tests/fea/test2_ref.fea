@@ -1,0 +1,7 @@
+# def func
+feature test {
+            @c = [g5];
+        @c = [g6];
+        @c = [g7];
+
+} test;

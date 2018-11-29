@@ -11,7 +11,7 @@ import pytest
 # Next 5 lines of code are test-specific
 import silfont.scripts.psfmakefea as testcommand
 testname = "psfmakefea"
-cl = "psfmakefea -i {} -o {} tests/input/font-psf-test/source/PsfTest-Regular.ufo"
+cl = "psfmakefea -i {} -o {}"
 outfont = None
 diffexts = [".ttf", ".log"]
 exp_errors = 0   # These may need updating if the test ufo is updated

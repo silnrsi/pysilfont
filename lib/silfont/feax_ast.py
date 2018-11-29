@@ -317,38 +317,19 @@ def safeeval(exp):
 class ast_DoLetSubStatement(ast_DoSubStatement):
     def __init__(self, varname, expression, parser, location=None):
         ast_DoSubStatement.__init__(self, varname, location=location)
-        glyphs = getattr(parser, 'glyphs', None)
+        self.parser = parser
         if not safeeval(expression):
             expression='"Unsafe Expression"'
         self.expr = expression
-        self.fns = {
-            '__builtins__': None,
-            're' : re,
-            'math' : math,
-            'APx': lambda g, a: int(glyphs[g].anchors[a][0]),
-            'APy': lambda g, a: int(glyphs[g].anchors[a][1]),
-            'ADVx': lambda g: int(glyphs[g].advance),
-            'MINx': lambda g: int(glyphs[g].bbox[0]),
-            'MINy': lambda g: int(glyphs[g].bbox[1]),
-            'MAXx': lambda g: int(glyphs[g].bbox[2]),
-            'MAXy': lambda g: int(glyphs[g].bbox[3]),
-            'feaclass': lambda c: parser.glyphclasses_.resolve(c).glyphSet(),
-            'info': lambda s: parser.fontinfo.get(s, "")
-        }
-        # Document which builtins we really need. Of course still insecure.
-        for x in ('True', 'False', 'None', 'int', 'float', 'str', 'abs', 'bool',
-                    'dict', 'enumerate', 'filter', 'hex', 'len', 'list', 'map',
-                    'max', 'min', 'ord', 'range', 'set', 'sorted', 'sum', 'tuple', 'zip'):
-            self.fns[x] = __builtins__[x]
 
     def items(self, variables):
         lcls = variables.copy()
-        v = eval(self.expr, self.fns, lcls)
+        v = eval(self.expr, self.parser.fns, lcls)
         yield(self.name, v)
 
 class ast_DoIfSubStatement(ast_DoLetSubStatement):
-    def __init__(self, expression, glyphs, block, location=None):
-        ast_DoLetSubStatement.__init__(self, None, expression, glyphs, location=None)
+    def __init__(self, expression, parser, block, location=None):
+        ast_DoLetSubStatement.__init__(self, None, expression, parser, location=None)
         self.block = block
 
     def items(self, variables):

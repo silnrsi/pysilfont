@@ -48,6 +48,7 @@ class Font(object) :
         self.glyphs = OrderedDict()
         self.classes = {}
         self.all_aps = {}
+        self.fontinfo = {}
 
     def readaps(self, filename, omitaps='', params = None) :
         omittedaps = set(omitaps.replace(',',' ').split())  # allow comma- and/or space-separated list
@@ -249,8 +250,8 @@ class Font(object) :
 
 #TODO: provide more argument info
 argspec = [
-    ('infile', {'help': 'Input UFO or file'}, {}),
-    ('-i', '--input', {'help': 'Fea file to merge'}, {}),
+    ('infile', {'nargs': '?', 'help': 'Input UFO or file'}, {'def': None, 'type': 'filename'}),
+    ('-i', '--input', {'required': 'True', 'help': 'Fea file to merge'}, {}),
     ('-o', '--output', {'help': 'Output fea file'}, {}),
     ('-c', '--classfile', {'help': 'Classes file'}, {}),
     ('--debug', {'help': 'Drop into pdb', 'action': 'store_true'}, {}),
@@ -264,7 +265,7 @@ def doit(args) :
         import pdb; pdb.set_trace()
     if "checkfix" not in args.params:
         args.paramsobj.sets["main"]["checkfix"] = "None"
-    if args.infile :
+    if args.infile is not None:
         font.readaps(args.infile, args.omitaps, args.paramsobj)
 
     font.make_marks()
@@ -272,9 +273,7 @@ def doit(args) :
     if args.classfile:
         font.read_classes(args.classfile, classproperties = args.classprops)
 
-    p = feaplus_parser(None, font.glyphs)
-    p.fontinfo = font.fontinfo
-    p.glyphs = font.glyphs
+    p = feaplus_parser(None, font.glyphs, font.fontinfo)
     doc_ufo = p.parse() # returns an empty ast.FeatureFile
 
     # Add goodies from the font

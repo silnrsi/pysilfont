@@ -5,7 +5,7 @@ from fontTools.feaLib.lexer import IncludingLexer, Lexer
 import silfont.feax_lexer as feax_lexer
 from fontTools.feaLib.error import FeatureLibError
 import silfont.feax_ast as astx
-import io, re
+import io, re, math
 import logging
 
 class feaplus_ast(object) :
@@ -28,19 +28,41 @@ class feaplus_ast(object) :
 
 class feaplus_parser(Parser) :
     extensions = {
-        'baseClass' : lambda s: s.parseBaseClass(),
-        'ifclass' : lambda s: s.parseIfClass(),
-        'ifinfo' : lambda s: s.parseIfInfo(),
-        'do': lambda s: s.parseDoStatement_()
+        'baseClass': lambda s: s.parseBaseClass(),
+        'ifclass': lambda s: s.parseIfClass(),
+        'ifinfo': lambda s: s.parseIfInfo(),
+        'do': lambda s: s.parseDoStatement_(),
+        'def': lambda s: s.parseDefStatement_()
     }
     ast = feaplus_ast()
 
-    def __init__(self, filename, glyphmap) :
+    def __init__(self, filename, glyphmap, fontinfo) :
         if filename is None :
             empty_file = io.StringIO("")
             super(feaplus_parser, self).__init__(empty_file, glyphmap)
         else :
             super(feaplus_parser, self).__init__(filename, glyphmap)
+        self.fontinfo = fontinfo
+        self.glyphs = glyphmap
+        self.fns = {
+            '__builtins__': None,
+            're' : re,
+            'math' : math,
+            'APx': lambda g, a: int(self.glyphs[g].anchors[a][0]),
+            'APy': lambda g, a: int(self.glyphs[g].anchors[a][1]),
+            'ADVx': lambda g: int(self.glyphs[g].advance),
+            'MINx': lambda g: int(self.glyphs[g].bbox[0]),
+            'MINy': lambda g: int(self.glyphs[g].bbox[1]),
+            'MAXx': lambda g: int(self.glyphs[g].bbox[2]),
+            'MAXy': lambda g: int(self.glyphs[g].bbox[3]),
+            'feaclass': lambda c: self.glyphclasses_.resolve(c).glyphSet(),
+            'info': lambda s: self.fontinfo.get(s, "")
+        }
+        # Document which builtins we really need. Of course still insecure.
+        for x in ('True', 'False', 'None', 'int', 'float', 'str', 'abs', 'bool',
+                    'dict', 'enumerate', 'filter', 'hex', 'len', 'list', 'map',
+                    'max', 'min', 'ord', 'range', 'set', 'sorted', 'sum', 'tuple', 'zip'):
+            self.fns[x] = __builtins__[x]
 
     def parse(self, filename=None) :
         if filename is not None :
@@ -603,7 +625,7 @@ class feaplus_parser(Parser) :
         block = self.collect_block_()
         keep = (self.next_token_type_, self.next_token_)
         block = [keep] + block + [keep]
-        return self.ast.DoIfSubStatement(expr, getattr(self, 'glyphs', None), block, location=location)
+        return self.ast.DoIfSubStatement(expr, self, block, location=location)
 
     def parseEmptyIf_(self):
         location = self.cur_token_location_
@@ -613,5 +635,24 @@ class feaplus_parser(Parser) :
         block = self.collect_block_()
         keep = (self.next_token_type_, self.next_token_)
         block = [keep] + block + [keep]
-        return self.ast.DoIfSubStatement(expr, getattr(self, 'glyphs', None), block, location=location)
+        return self.ast.DoIfSubStatement(expr, self, block, location=location)
 
+    def parseDefStatement_(self):
+        lex = self.lexer_.lexers_[-1]
+        start = lex.pos_
+        lex.scan_until_("{")
+        fname = self.next_token_
+        fsig = fname + lex.text_[start:lex.pos_].strip()
+        tag = re.escape(fname)
+        _, content, location = lex.scan_anonymous_block(tag)
+        self.advance_lexer_()
+        start = lex.pos_
+        lex.scan_until_(";")
+        endtag = lex.text_[start:lex.pos_].strip()
+        assert(fname == endtag)
+        self.advance_lexer_()
+        self.advance_lexer_()
+        funcstr = "def " + fsig + ":\n" + content
+        if astx.safeeval(funcstr):
+            exec(funcstr, self.fns)
+        return self.ast.Comment("# def " + fname)
