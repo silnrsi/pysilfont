@@ -236,6 +236,42 @@ class ast_LigatureSubstStatement(ast.Statement):
             res += ";"
         return res
 
+class ast_AlternateSubstStatement(ast.Statement):
+    def __init__(self, prefix, glyphs, suffix, replacements, location=None):
+        ast.Statement.__init__(self, location)
+        self.prefix, self.glyphs, self.suffix = (prefix, glyphs, suffix)
+        self.replacements = replacements
+
+    def build(self, builder):
+        prefix = [p.glyphSet() for p in self.prefix]
+        suffix = [s.glyphSet() for s in self.suffix]
+        l = len(self.glyphs.glyphSet())
+        for i, glyph in enumerate(self.glyphs.glyphSet()):
+            replacement = self.replacements.glyphSet()[i::l]
+            builder.add_alternate_subst(self.location, prefix, glyph, suffix,
+                                    replacement)
+
+    def asFea(self, indent=""):
+        res = ""
+        l = len(self.glyphs.glyphSet())
+        for i, glyph in enumerate(self.glyphs.glyphSet()):
+            if i > 0:
+                res += "\n" + indent
+            res += "sub "
+            if len(self.prefix) or len(self.suffix):
+                if len(self.prefix):
+                    res += " ".join(map(asFea, self.prefix)) + " "
+                res += asFea(glyph) + "'"    # even though we really only use 1
+                if len(self.suffix):
+                    res += " " + " ".join(map(asFea, self.suffix))
+            else:
+                res += asFea(glyph)
+            res += " from "
+            replacements = ast.GlyphClass(glyphs=self.replacements.glyphSet()[i::l], location=self.location)
+            res += asFea(replacements)
+            res += ";"
+        return res
+
 class ast_IfBlock(ast.Block):
     def __init__(self, testfn, name, cond, location=None):
         ast.Block.__init__(self, location=location)

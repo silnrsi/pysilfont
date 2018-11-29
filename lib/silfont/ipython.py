@@ -130,5 +130,6 @@ def displayText(f, text, features = [], lang=None, dir="", script="", shapers=""
     return displayGlyphs(f, gnames, points, scale=scale)
 
 def displayRaw(text):
-    res = "<html><body>"+text.encode('utf-8')+"</body></html>"
-    return HTML(res)
+    # res = "<html><body>"+text.encode('utf-8')+"</body></html>"
+    res = u"<html><body><p>"+text+u"</p></body></html>"
+    return HTML(data=res)

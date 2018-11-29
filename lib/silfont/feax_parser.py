@@ -21,6 +21,7 @@ class feaplus_ast(object) :
     DoForSubStatement = astx.ast_DoForSubStatement
     DoLetSubStatement = astx.ast_DoLetSubStatement
     DoIfSubStatement = astx.ast_DoIfSubStatement
+    AlternateSubstStatement = astx.ast_AlternateSubstStatement
 
     def __getattr__(self, name):
         return getattr(ast, name) # retrieve undefined attrs from imported fontTools.feaLib ast module
@@ -194,13 +195,18 @@ class feaplus_parser(Parser) :
                 raise FeatureLibError(
                     'Reverse chaining substitutions do not support "from"',
                     location)
-            if len(old) != 1 or len(old[0].glyphSet()) != 1:
+            # allow classes on lhs
+            if len(old) != 1:
                 raise FeatureLibError(
-                    'Expected a single glyph before "from"',
+                    'Expected single glyph or glyph class before "from"',
                     location)
             if len(new) != 1:
                 raise FeatureLibError(
                     'Expected a single glyphclass after "from"',
+                    location)
+            if len(new[0].glyphSet()) % len(old[0].glyphSet()) != 0:
+                raise FeatureLibError(
+                    'The glyphclass after "from" must be a multiple of length of the glyphclass on before',
                     location)
             return self.ast.AlternateSubstStatement(
                 old_prefix, old[0], old_suffix, new[0], location=location)
