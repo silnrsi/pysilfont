@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 import ast as pyast
 from fontTools.feaLib import ast
 from fontTools.feaLib.ast import asFea
+from fontTools.feaLib.error import FeatureLibError
 import re, math
 
 def asFea(g):
@@ -291,21 +292,21 @@ class ast_IfBlock(ast.Block):
 
 
 class ast_DoSubStatement(ast.Statement):
-    def __init__(self, varname, location=None):
+    def __init__(self, varnames, location=None):
         ast.Statement.__init__(self, location=location)
-        self.name = varname
+        self.names = varnames
 
     def items(self, variables):
-        yield (None, None)
+        yield ((None, None),)
 
 class ast_DoForSubStatement(ast_DoSubStatement):
     def __init__(self, varname, glyphs, location=None):
-        ast_DoSubStatement.__init__(self, varname, location=location)
+        ast_DoSubStatement.__init__(self, [varname], location=location)
         self.glyphs = glyphs.glyphSet()
 
     def items(self, variables):
         for g in self.glyphs:
-            yield(self.name, g)
+            yield((self.names[0], g),)
 
 def safeeval(exp):
     # no dunders in attribute names
@@ -315,8 +316,8 @@ def safeeval(exp):
     return True
 
 class ast_DoLetSubStatement(ast_DoSubStatement):
-    def __init__(self, varname, expression, parser, location=None):
-        ast_DoSubStatement.__init__(self, varname, location=location)
+    def __init__(self, varnames, expression, parser, location=None):
+        ast_DoSubStatement.__init__(self, varnames, location=location)
         self.parser = parser
         if not safeeval(expression):
             expression='"Unsafe Expression"'
@@ -324,8 +325,16 @@ class ast_DoLetSubStatement(ast_DoSubStatement):
 
     def items(self, variables):
         lcls = variables.copy()
-        v = eval(self.expr, self.parser.fns, lcls)
-        yield(self.name, v)
+        try:
+            v = eval(self.expr, self.parser.fns, lcls)
+        except StandardError as e:
+            raise FeatureLibError(str(e) + " in " + self.expr, self.location)
+        if self.names is None:      # in an if
+            yield((None, v),)
+        elif len(self.names) == 1:
+            yield((self.names[0], v),)
+        else:
+            yield(zip(self.names, list(v) + [None] * (len(self.names) - len(v))))
 
 class ast_DoIfSubStatement(ast_DoLetSubStatement):
     def __init__(self, expression, parser, block, location=None):
@@ -333,6 +342,6 @@ class ast_DoIfSubStatement(ast_DoLetSubStatement):
         self.block = block
 
     def items(self, variables):
-        (_, v) = list(ast_DoLetSubStatement.items(self, variables))[0]
-        yield (None, (v if v else None))
+        (_, v) = list(ast_DoLetSubStatement.items(self, variables))[0][0]
+        yield (None, (v if v else None),)
 

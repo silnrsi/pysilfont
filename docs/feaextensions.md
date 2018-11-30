@@ -257,6 +257,26 @@ do  for b = @cBases;
     }
 ```
 
+### def
+
+The `def` statement allows for the creation of python functions for use in `let` substatements of the `do` statement. The syntax of the `def` statement is:
+
+```
+def <fn>(<param_list>) {
+    ... python code ...
+} <fn>;
+```
+
+The `fn` must conform to a FEA name (not starting with a digit, etc.) and is repeated at the end of the block to mark the end of the function. The paramter is a standard python parameter list and the python code is standard python code, indented as if under a `def` statement. 
+
+#### python support
+Here and in `let` substatements, the python that is allowed to executed is limited. Only a subset of functions from builtins is supported and the `__` may not occur in any attribute. This is to stop people escaping the sandbox in which python code is interpretted. The `math` and `re` modules are also included along with the functions available to a `let` substatement. The full list of builtins supported are:
+
+```
+True, False, None, int, float, str, abs, bool, dict, enumerate, filter, hex, len, list,
+map, max, min, ord, range, set, sorted, sum, tuple, zip
+```
+
 ## Capabilities
 
 ### Permit classes on both sides of GSUB type 2 (multiple) and type 4 (ligature) lookups
@@ -313,4 +333,8 @@ would be rewritten as:
     sub g1 gOther by g1a ;
     sub g2 gOther by g2a ;
 ```
+
+### Support classes in alternate lookups
+
+The default behaviour in FEA is for a `sub x from [a b];` to only allow a single glyph before the `from` keyword. But it is often useful to do things like: `sub @a from [@a.low @a.upper];`. Feax supports this by treating the right hand side list of glyphs as a single list and dividing it equally by the list on the left. Thus if `@a` is of length 3 then the first 3 glyphs in the right hand list will go one each as the first alternative for each glyph in `@a`, then the next 3 go as the second alternative, and so on until they are all consumed. If any are left over in that one of the glyphs ends up with a different number of alternatives to another, then an error is given.
 

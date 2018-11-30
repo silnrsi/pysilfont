@@ -576,9 +576,15 @@ class feaplus_parser(Parser) :
             d.update(*a, **kw)
             return d
         results = [{}]
+        #import pdb; pdb.set_trace()
         for s in substatements:
-            results = [updated(x.copy(), {yk:yv}) for x in results for yk, yv in s.items(x) \
-                        if yk is not None or yv is not None]
+            newresults = []
+            for x in results:
+                for r in s.items(x):
+                    c = x.copy()
+                    c.update(r)
+                    newresults.append(c)
+            results = newresults
         for r in results:
             yield r
 
@@ -596,23 +602,29 @@ class feaplus_parser(Parser) :
         return res
 
     def parseDoLet_(self):
+        # import pdb; pdb.set_trace()
         location = self.cur_token_location_
         self.advance_lexer_()
-        if self.cur_token_type_ is Lexer.NAME:
-            name = self.cur_token_
+        names = []
+        while self.cur_token_type_ == Lexer.NAME:
+            names.append(self.cur_token_)
+            if self.next_token_type_ is Lexer.SYMBOL:
+                if self.next_token_ == ",":
+                    self.advance_lexer_()
+                elif self.next_token_ == "=":
+                    break
+            self.advance_lexer_()
         else:
-            raise FeatureLibError("Bad name in do let statement", location)
-        if self.next_token_type_ != Lexer.SYMBOL or self.next_token_ != "=":
-            raise FeatureLibError("Missing = in do let statement", self.next_token_location_)
+            raise FeatureLibError("Expected '=', found '%s'" % self.cur_token_,
+                                  self.cur_token_location_)
         lex = self.lexer_.lexers_[-1]
         lex.scan_over_(Lexer.CHAR_WHITESPACE_)
         start = lex.pos_
-        # import pdb; pdb.set_trace()
         lex.scan_until_(";")
         expr = lex.text_[start:lex.pos_]
         self.advance_lexer_()
         self.expect_symbol_(";")
-        return self.ast.DoLetSubStatement(name, expr, self, location=location)
+        return self.ast.DoLetSubStatement(names, expr, self, location=location)
 
     def parseDoIf_(self):
         location = self.cur_token_location_
