@@ -245,6 +245,9 @@ class CompGlyph(object):
             if 'shift' in propdic:
                 xval, yval = propdic.pop('shift').split(',')
                 s = ET.SubElement(e, 'shift', x=xval, y=yval)
+            if 'scale' in propdic:
+                xval, yval = propdic.pop('scale').split(',')
+                s = ET.SubElement(e, 'scale', x=xval, y=yval)
             # whatever parameters are left in propdic become <property> subelements
             for key, val in propdic.items():
                 p = ET.SubElement(e, 'property', name=key, value=val)
@@ -282,6 +285,8 @@ class CompGlyph(object):
                 subattachlist.append(subelement)
             elif subelement.tag == 'shift':
                 propdic['shift'] = subelement.get('x') + "," + subelement.get('y') 
+            elif subelement.tag == 'scale':
+                propdic['scale'] = subelement.get('x') + "," + subelement.get('y') 
             # else flag error/warning?
         propstring = ""
         if propdic:
@@ -305,6 +310,8 @@ class CompGlyph(object):
                 returnstring += string
             elif child.tag == 'shift':
                 bpropdic['shift'] = child.get('x') + "," + child.get('y') 
+            elif child.tag == 'scale':
+                bpropdic['scale'] = child.get('x') + "," + child.get('y') 
         if bpropdic:
             returnstring += " [" + ";".join( [k + "=" + v for k,v in bpropdic.items()] ) + "]"
         return returnstring

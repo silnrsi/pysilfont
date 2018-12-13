@@ -31,7 +31,7 @@ glyphlist = []  # accessed as global by recursive function addtolist() and main 
 def addtolist(e, prevglyph):
     """Given an element ('base' or 'attach') and the name of previous glyph,
     add a tuple to the list of glyphs in this composite, including
-    "at" and "with" attachment point information, and x and y shift values
+    "at" and "with" attachment point information, and x and y shift and scale values
     """
     global glyphlist
     subelementlist = []
@@ -39,14 +39,18 @@ def addtolist(e, prevglyph):
     atvalue = e.get("at")
     withvalue = e.get("with")
     shiftx = shifty = None
+    scalex = scaley = None
     for se in e:
         if se.tag == 'property': pass
         elif se.tag == 'shift':
             shiftx = se.get('x')
             shifty = se.get('y')
+        elif se.tag == 'scale':
+            scalex = se.get('x')
+            scaley = se.get('y')
         elif se.tag == 'attach':
             subelementlist.append( se )
-    glyphlist.append( ( thisglyphname, prevglyph, atvalue, withvalue, shiftx, shifty ) )
+    glyphlist.append( ( thisglyphname, prevglyph, atvalue, withvalue, shiftx, shifty, scalex, scaley ) )
     for se in subelementlist:
         addtolist(se, thisglyphname)
 
@@ -101,7 +105,7 @@ def doit(args) :
         ybase = 0
         componentlist = []
         targetglyphanchors = {} # dictionary of {name: (xOffset,yOffset)}
-        for currglyph, prevglyph, baseAP, diacAP, shiftx, shifty in glyphlist:
+        for currglyph, prevglyph, baseAP, diacAP, shiftx, shifty, scalex, scaley in glyphlist:
             # get current glyph and its anchor names from font
             if currglyph not in infont.deflayer:
                 infont.logger.log(currglyph + " not found in font", "E")
@@ -139,9 +143,15 @@ def doit(args) :
             if shiftx is not None: xOffset += int(shiftx)
             if shifty is not None: yOffset += int(shifty)
 
+            xScale = yScale = 1
+            if scalex is not None: xScale = scalex
+            if scaley is not None: yScale = scaley
+
             componentdic = {'base': currglyph}
             if xOffset != 0: componentdic['xOffset'] = str(xOffset)
             if yOffset != 0: componentdic['yOffset'] = str(yOffset)
+            if xScale != 1: componentdic['xScale'] = str(xScale)
+            if yScale != 1: componentdic['yScale'] = str(yScale)
             componentlist.append( componentdic )
 
             # Find advance width of currglyph and add to xadvance
@@ -175,6 +185,8 @@ def doit(args) :
                 c = compdic['base']
                 x = compdic.get('xOffset')
                 y = compdic.get('yOffset')
+                sx = compdic.get('xScale')
+                sy = compdic.get('yScale')
                 # look up component glyph
                 g=infont.deflayer[c]
                 # check if it has only components (that is, no contours) in outline
@@ -189,6 +201,8 @@ def doit(args) :
                         componentdic = {'base': b}
                         if xOffset != 0: componentdic['xOffset'] = str(xOffset)
                         if yOffset != 0: componentdic['yOffset'] = str(yOffset)
+                        if xScale != 1: componentdic['xScale'] = str(sx)
+                        if yScale != 1: componentdic['yScale'] = str(sy)
                         newcomponentlist.append( componentdic )
                 else:
                     newcomponentlist.append( compdic )
