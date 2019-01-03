@@ -6,20 +6,24 @@ __copyright__ = 'Copyright (c) 2018 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
-from silfont.core import execute
+from silfont.core import execute, splitfn
 
 from glyphsLib import to_glyphs
 from fontTools.designspaceLib import DesignSpaceDocument
+import os
 
 argspec = [
     ('designspace', {'help': 'Input designSpace file'}, {'type': 'filename'}),
-    ('glyphsfile', {'help': 'Output glyphs file name', 'nargs': '?' }, {'type': 'filename', 'def': 'temp.glyphs'}),
+    ('glyphsfile', {'help': 'Output glyphs file name', 'nargs': '?' }, {'type': 'filename', 'def': None}),
     ('--nofixes', {'help': 'Bypass code fixing data', 'action': 'store_true', 'default': False}, {}),
     ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': '_ufo2glyphs.log'})]
 
 # This is just bare-bones code at present!
 
 def doit(args):
+    if args.glyphsfile is None:
+        (path,base,ext) = splitfn(args.designspace)
+        args.glyphsfile = os.path.join(path, base + ".glyphs" )
     logger = args.logger
     logger.log("Opening designSpace file", "I")
     ds = DesignSpaceDocument()
