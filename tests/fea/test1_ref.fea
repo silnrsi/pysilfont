@@ -1,7 +1,0 @@
-@base = [A a];
-@basex = [A.x a.x];
-@basey = [A.y a.y];
-feature alt {
-    sub A from [A.x A.y];
-    sub a from [a.x a.y];
-} alt;
