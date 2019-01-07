@@ -39,9 +39,10 @@ def doit(args):
                    "org.sil.lcg.transforms", "public.glyphOrder", "public.postscriptNames",
                    "com.schriftgestaltung.disablesLastChange", "com.schriftgestaltung.disablesAutomaticAlignment")
     libdeletekeys = ("UFOFormat", "com.schriftgestaltung.blueFuzz", "com.schriftgestaltung.blueScale",
-                     "com.schriftgestaltung.blueShift", "com.schriftgestaltung.customParameter.GSFont.note", "org.sil.glyphsappversion")
+                     "com.schriftgestaltung.blueShift", "com.schriftgestaltung.customParameter.GSFont.note",
+                     "com.schriftgestaltung.customParameter.GSFont.Axes",
+                     "com.schriftgestaltung.customParameter.GSFontMaster.Master Name", "org.sil.glyphsappversion")
     libdeleteempty = ("com.schriftgestaltung.DisplayStrings",)
-
     inforestorekeys = ("openTypeHeadCreated", "openTypeNamePreferredFamilyName", "openTypeNamePreferredSubfamilyName",
                        "openTypeNameUniqueID", "openTypeOS2WeightClass", "openTypeOS2WidthClass", "postscriptFontName",
                        "postscriptFullName", "styleMapFamilyName", "styleMapStyleName", "note")
@@ -149,6 +150,9 @@ def doit(args):
                         else:
                             setattr(ufo.info, key, new)
                             logchange(logger, " restored from backup ufo. ", key, current, new)
+            if getattr(ufo.info,"italicAngle") == 0 : # Remove italicAngle if 0
+                setattr(ufo.info, "italicAngle", None)
+                logchange(logger, " removed", "italicAngle", 0, None)
 
             # Delete unneeded keys
 
@@ -162,7 +166,7 @@ def doit(args):
                 if hasattr(ufo.info, key) and getattr(ufo.info, key) == "":
                     setattr(ufo.info, key, None)
                     logchange(logger, " empty field deleted. ", key, current, None)
-        if args.nofea:ufo.features.text = "" # Suppress output of features.fea
+        if args.nofea: ufo.features.text = "" # Suppress output of features.fea
 
         # Write ufo out
         ufopath = os.path.join(args.masterdir, fontname + ".ufo")
