@@ -45,20 +45,14 @@ def doit(args) :
             sourceglyph = font[source]            
             newglyph = sourceglyph.copy()
             
-            # Decompose glyph if necessary - not yet working!
-            # for component in newglyph.components:
-            #     component.decompose()
-            
             # Draw box around it
-            xmin, ymin, xmax, ymax = newglyph.bounds
+            xmin, ymin, xmax, ymax = sourceglyph.bounds
             pen = newglyph.getPen()
-            pen.moveTo((xmin - offset, ymin - offset))
-            pen.lineTo((xmin - offset, ymax + offset))
+            pen.moveTo((xmax + offset, ymin - offset))
             pen.lineTo((xmax + offset, ymax + offset))
-            pen.lineTo((xmax + offset, ymin - offset))
+            pen.lineTo((xmin - offset, ymax + offset))
+            pen.lineTo((xmin - offset, ymin - offset))
             pen.closePath()
-
-            # Correct path directions - not sure if needed
 
             # Set unicode
             newglyph.unicodes = []
@@ -66,6 +60,13 @@ def doit(args) :
 
             # Add the new glyph object to the font with name target
             font.__setitem__(targetname,newglyph)
+
+            # Decompose glyph in case there may be components
+            # It seems you can't decompose a glyph has hasn't yet been added to a font
+            font[targetname].decompose()
+            # Correct path direction            
+            font[targetname].correctDirection()            
+
             logger.log(source + " duplicated to " + targetname)
         else :
             logger.log("Warning: " + source + " not in font")
