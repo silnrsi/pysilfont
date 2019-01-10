@@ -445,7 +445,7 @@ If the font specified with the -f parameter contains a '.' it is assumed to be a
 
 ---
 ####  psfglyphs2ufo
-Usage: **`psfglyphs2ufo [--nofixes] [--nofea] fontfile.glyphs masterdir`**
+Usage: **`psfglyphs2ufo [--nofixes] [--nofea] [--restore] fontfile.glyphs masterdir`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
@@ -453,12 +453,15 @@ Exports one UFO file per master found in the fontfile.glyphs file, and places it
 
 In a round-trip ufo -> glyphs -> ufo there is currently there is some data loss in the standard glyphs -> ufo conversion, so (unless `--nofixes` is set) the script fixes some data and restores some fields from the original ufos if they are present in the masterdir.
 
+Additional fields to restore can be added using `-r, --restore`. This will restore the fields listed if found in either fontinfo.plist or lib.plist
+
 Currently features.fea does not round-trip sucessfully, so `--nofea` can be used to suppress the production of a features.fea file.
 
 Example usage:
 
 ```
 psfglyphs2ufo CharisSIL-RB.glyphs masterufos
+psfglyphs2ufo CharisSIL-RB.glyphs masterufos -r key1,key2
 ```
 
 If this Glyphs file contains two masters, Regular and Bold, then it will export a UFO for each into a 'masterufos' directory. To have the fonts exported to the current directory, give it a blank directory name:
@@ -546,7 +549,7 @@ psfremovegliflibkeys GentiumPlus-Regular.ufo key1 key2 -b start1 start2
 ```
 
 This will remove any keys that match key1 or key2 or begin with start1 or start2
- 
+
 ---
 ####  psfrenameglyphs
 Usage: **`psfrenameglyphs [--mergecomps] -i INPUT ifont [ofnt]`**

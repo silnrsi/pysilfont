@@ -19,7 +19,8 @@ argspec = [
     ('masterdir', {'help': 'Output directory for masters'}, {}),
     ('--nofixes', {'help': 'Bypass code fixing data', 'action': 'store_true', 'default': False}, {}),
     ('--nofea', {'help': "Don't output features.fea", 'action': 'store_true', 'default': False}, {}),
-    ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': '_glyphs2ufo.log'})]
+    ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': '_glyphs2ufo.log'}),
+    ('-r', '--restore', {'help': 'List of extra keys to restore to fontinfo.plist or lib.plist'}, {})]
 
 
 def doit(args):
@@ -35,19 +36,25 @@ def doit(args):
     # Extract directory name for use with backups
     (glyphsdir, filen) = os.path.split(args.glyphsfont)
 
-    librestorekeys = ("org.sil.pysilfontparams", "org.sil.altLineMetrics", "org.sil.lcg.toneLetters",
+    librestorekeys = ["org.sil.pysilfontparams", "org.sil.altLineMetrics", "org.sil.lcg.toneLetters",
                    "org.sil.lcg.transforms", "public.glyphOrder", "public.postscriptNames",
-                   "com.schriftgestaltung.disablesLastChange", "com.schriftgestaltung.disablesAutomaticAlignment")
+                   "com.schriftgestaltung.disablesLastChange", "com.schriftgestaltung.disablesAutomaticAlignment"]
     libdeletekeys = ("UFOFormat", "com.schriftgestaltung.blueFuzz", "com.schriftgestaltung.blueScale",
                      "com.schriftgestaltung.blueShift", "com.schriftgestaltung.customParameter.GSFont.note",
                      "com.schriftgestaltung.customParameter.GSFont.Axes",
                      "com.schriftgestaltung.customParameter.GSFontMaster.Master Name", "org.sil.glyphsappversion")
     libdeleteempty = ("com.schriftgestaltung.DisplayStrings",)
-    inforestorekeys = ("openTypeHeadCreated", "openTypeNamePreferredFamilyName", "openTypeNamePreferredSubfamilyName",
+    inforestorekeys = ["openTypeHeadCreated", "openTypeNamePreferredFamilyName", "openTypeNamePreferredSubfamilyName",
                        "openTypeNameUniqueID", "openTypeOS2WeightClass", "openTypeOS2WidthClass", "postscriptFontName",
-                       "postscriptFullName", "styleMapFamilyName", "styleMapStyleName", "note")
+                       "postscriptFullName", "styleMapFamilyName", "styleMapStyleName", "note"]
     integerkeys = ("openTypeOS2WeightClass", "openTypeOS2WidthClass")
     infodeleteempty = ("openTypeOS2Selection",)
+
+    if args.restore: # Extra kesys to restore.  Add to both lists, since should never be duplicated names
+        keylist = args.restore.split(",")
+        librestorekeys += keylist
+        inforestorekeys.append(keylist)
+
     # infodeletekeys = ("openTypeOS2Type",)
 
     for ufo in ufos:

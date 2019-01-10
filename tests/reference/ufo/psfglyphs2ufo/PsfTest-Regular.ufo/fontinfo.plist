@@ -27,8 +27,6 @@
       <integer>1250</integer>
     </dict>
   </array>
-  <key>italicAngle</key>
-  <integer>0</integer>
   <key>note</key>
   <string>Test note
 Second line
@@ -36,7 +34,7 @@ Second line
 Third line
 </string>
   <key>openTypeHeadCreated</key>
-  <string>2019/01/03 12:01:31</string>
+  <string>2019/01/09 11:45:19</string>
   <key>openTypeHheaAscender</key>
   <integer>2100</integer>
   <key>openTypeHheaDescender</key>
