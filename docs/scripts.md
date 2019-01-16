@@ -47,6 +47,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfsyncmasters](#psfsyncmasters) | Sync metadata in master UFO files based on a Designspace file |
 | [psfsyncmeta](#psfsyncmeta) | Copy basic metadata from one member of a font family to other family members |
 | [psftoneletters](#psftoneletters) | Add Latin script tone letters (pitch contours) to a UFO |
+| [psfufo2glyphs](#psfufo2glyphs) | Generate a glyphs files from a designspace file and UFO(s) |
 | [psfufo2ttf](#psfufo2ttf) | Generate a ttf file without OpenType tables from a UFO |
 | [psfxml2compdef](#psfxml2compdef) | Convert composite definition file from XML format |
 
@@ -779,6 +780,24 @@ Example usage:
 ```
 psftoneletters Andika-Regular.ufo Andika-Regular.ufo
 ```
+
+---
+####  psfufo2glyphs
+Usage: **`psfufo2glyphs designspace [glyphsfile]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+This generate a glyphs files from a designspace file and associated UFO(s).
+
+If no glyphsfile is specified, one will be created in the same directory as the designspace file and based on the name of the designspace file.
+
+Example usage:
+
+```
+psfglyphs2ufo AndikaItalic.designspace AndikaItalic.glyphs
+```
+
+Note: This is just bare-bones code at present so does the same as glyphsLib's ufo2glyphs command.  It was designed so that data could be massaged, if necessary, on the way but no such need has been found so far
 
 ---
 #### psfufo2ttf

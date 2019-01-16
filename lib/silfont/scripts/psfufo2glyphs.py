@@ -15,10 +15,11 @@ import os
 argspec = [
     ('designspace', {'help': 'Input designSpace file'}, {'type': 'filename'}),
     ('glyphsfile', {'help': 'Output glyphs file name', 'nargs': '?' }, {'type': 'filename', 'def': None}),
-    ('--nofixes', {'help': 'Bypass code fixing data', 'action': 'store_true', 'default': False}, {}),
+#    ('--nofixes', {'help': 'Bypass code fixing data', 'action': 'store_true', 'default': False}, {}),
     ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': '_ufo2glyphs.log'})]
 
-# This is just bare-bones code at present!
+# This is just bare-bones code at present so does the same as glyphsLib's ufo2glyphs!
+# It is designed so that data could be massaged, if necessary, on the way.  No such need has been found so far
 
 def doit(args):
     if args.glyphsfile is None:
