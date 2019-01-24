@@ -35,7 +35,7 @@ Nearly all scripts support these:
 - `-l LOG, --log LOG`
   - Log file name (if not using default name).  If there is no default for a log file name, a log file will only be created if LOG is specified
 - `-p PARAMS, --params PARAMS`
-  - Other paramters - see below
+  - Other parameters - see below
 
 The individual script documentation in scripts.md should indicate if some don't apply for a particular script
 

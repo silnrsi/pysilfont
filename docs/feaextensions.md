@@ -267,7 +267,7 @@ def <fn>(<param_list>) {
 } <fn>;
 ```
 
-The `fn` must conform to a FEA name (not starting with a digit, etc.) and is repeated at the end of the block to mark the end of the function. The paramter is a standard python parameter list and the python code is standard python code, indented as if under a `def` statement. 
+The `fn` must conform to a FEA name (not starting with a digit, etc.) and is repeated at the end of the block to mark the end of the function. The parameter is a standard python parameter list and the python code is standard python code, indented as if under a `def` statement. 
 
 #### python support
 Here and in `let` substatements, the python that is allowed to executed is limited. Only a subset of functions from builtins is supported and the `__` may not occur in any attribute. This is to stop people escaping the sandbox in which python code is interpretted. The `math` and `re` modules are also included along with the functions available to a `let` substatement. The full list of builtins supported are:
