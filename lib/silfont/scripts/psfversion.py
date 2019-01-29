@@ -49,8 +49,12 @@ def cmd() :
                     version = getattr(module, attr)
                     break
 
-        except ImportError:
-            version = "Module is not installed"
+        except ImportError as e:
+            etext = str(e)
+            if etext == "No module named '" + name + "'":
+                version = "Module is not installed"
+            else:
+                version = "Module import failed with " + etext
             path = ""
 
         print('{:20} {:15} {}'.format(name + ":", version, path))
