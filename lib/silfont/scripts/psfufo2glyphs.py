@@ -15,6 +15,7 @@ import os
 argspec = [
     ('designspace', {'help': 'Input designSpace file'}, {'type': 'filename'}),
     ('glyphsfile', {'help': 'Output glyphs file name', 'nargs': '?' }, {'type': 'filename', 'def': None}),
+    ('--no_preserve_glyphsapp_metadata', {'help': "Don't store some glyphs data in lib.plist" , 'action': 'store_true', 'default': False}, {}),
 #    ('--nofixes', {'help': 'Bypass code fixing data', 'action': 'store_true', 'default': False}, {}),
     ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': '_ufo2glyphs.log'})]
 
@@ -29,7 +30,8 @@ def doit(args):
     logger.log("Opening designSpace file", "I")
     ds = DesignSpaceDocument()
     ds.read(args.designspace)
-    glyphsfont = to_glyphs(ds)
+    logger.log("Now creating glyphs object", "I")
+    glyphsfont = to_glyphs(ds, minimize_ufo_diffs=not(args.no_preserve_glyphsapp_metadata))
     logger.log("Writing glyphs file", "I")
     glyphsfont.save(args.glyphsfile)
 
