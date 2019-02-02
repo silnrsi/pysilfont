@@ -215,6 +215,7 @@ class FChar(object):
             self.cc = Char.getCombiningClass(uid)
             self.icuGC = Char.charType(uid)
             self.icuJT = Char.getIntPropertyValue(uid, UProperty.JOINING_TYPE)
+            self.icuJG = Char.getIntPropertyValue(uid, UProperty.JOINING_GROUP)
         else:
             self.logger.log('USV %04X not in ICU; no properties known' % uid, 'W')
         self.feats = set()  # feat tags that affect this char
