@@ -1,12 +1,13 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 '''FontForge: Copy glyphs from one font to another, without using ffbuilder'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2015-2019 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Martin Hosken'
 
 from silfont.core import execute
 import psMat
+import io
 
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
@@ -69,7 +70,7 @@ def doit(args) :
 
     # glyphs specified in a file
     for filename in args.namefile or [] :
-        namefile = file(filename, 'r')
+        namefile = io.open(filename, 'r')
         for line in namefile :
             # ignore comments
             line = line.partition('#')[0]
@@ -103,13 +104,13 @@ def doit(args) :
 
     # characters specified on the command line
     for r in args.range or [] :
-        (rstart, rend) = map(lambda x: int(x,16), r.split('..'))
+        (rstart, rend) = [int(x, 16) for x in r.split('..')]
         for u in range(rstart, rend + 1) :
             ulist.append(u)
 
     # characters specified in a file
     for filename in args.rangefile or [] :
-        rangefile = file(filename, 'r')
+        rangefile = io.open(filename, 'r')
         for line in rangefile :
             # ignore comments
             line = line.partition('#')[0]
