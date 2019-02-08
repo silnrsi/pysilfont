@@ -15,6 +15,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [ffremovealloverlaps](#ffremovealloverlaps) | Remove overlap on all glyphs in a ttf font |
 | [psfaddanchors](#psfaddanchors) | Read anchor data from XML file and apply to UFO |
 | [psfbuildcomp](#psfbuildcomp) | Add composite glyphs to UFO based on a Composite Definitions file |
+| [psfbuildfea](#psfbuildfea) | Compile fea into TTF |
 | [psfchangegdlnames](#psfchangegdlnames) | Change graphite names within GDL based on mappings files |
 | [psfchangettfglyphnames](#psfchangettfglyphnames) | Change glyph names in a ttf from working names to production names |
 | [psfcheckbasicchars](#psfcheckbasicchars) | Check UFO for glyphs that represent recommended basic characters |
@@ -123,6 +124,36 @@ optional arguments:
 ```
 
 ---
+
+#### psfbuildfea
+Usage: **`psfbuildfea -o output.ttf [-m map.txt] [-v] input.fea input.ttf`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Uses fontTools to compile a feature (.fea) file against an existing input TTF, optionally creating a lookup map.
+
+required arguments:
+
+```
+  -o output.ttf, --output output.ttf   Output file to create
+  input.fea                            Source features file
+  input.ttf                            Source ttf
+```
+
+optional arguments:
+
+```
+  -m map.txt, --lookupmap map.txt      Mapping file to create 
+  -v, --verbose                        repeat to increase verbosity
+```
+
+If `-m` parameter is supplied, the designated file will be created listing, in alphabetical order by name, each OpenType lookup name, its table (GSUB or GPOS) and its feature index. For example:
+```
+AlefMark2BelowAfterLam,GPOS,13
+AyahAlternates,GSUB,46
+CommaAlternates,GSUB,48
+```
+
 
 ####  psfbuildcomp
 Usage: **`psfbuildcomp [-i CDFILE] [-a] [-f] [-r {X,S,E,P,W,I,V}] ifont [ofont]`**

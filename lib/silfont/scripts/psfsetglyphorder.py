@@ -35,7 +35,7 @@ def doit(args):
     # Identify file format from first line then create glyphdata[] with glyph name then one column per header
     glyphdata = []
     fl = incsv.firstline
-    if fl is None: logger.log("Empty imput file", "S")
+    if fl is None: logger.log("Empty input file", "S")
     numfields = len(fl)
     incsv.numfields = numfields
     fieldpos = []
