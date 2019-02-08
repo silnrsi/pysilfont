@@ -56,6 +56,7 @@ class feaplus_parser(Parser) :
             'MAXx': lambda g: int(self.glyphs[g].bbox[2]),
             'MAXy': lambda g: int(self.glyphs[g].bbox[3]),
             'feaclass': lambda c: self.glyphclasses_.resolve(c).glyphSet(),
+            'allglyphs': lambda : self.glyphs.keys(),
             'info': lambda s: self.fontinfo.get(s, "")
         }
         # Document which builtins we really need. Of course still insecure.

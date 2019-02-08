@@ -170,9 +170,10 @@ class ast_MultipleSubstStatement(ast.Statement):
         res = ""
         pres = (" ".join(map(asFea, self.prefix)) + " ") if len(self.prefix) else ""
         sufs = (" " + " ".join(map(asFea, self.suffix))) if len(self.suffix) else ""
+        mark = "'" if len(self.prefix) or len(self.suffix) else ""
         if self.mode == 'literal':
             res += "sub " + pres + self.glyph.asFea() + sufs + " by "
-            res += " ".join(map(asFea, self.replacement)) + ";"
+            res += " ".join(asFea(g)+mark for g in self.replacement) + ";"
             return res
         glyphs = self.glyph.glyphSet()
         replacements = self.replacement[self.multindex].glyphSet()
@@ -180,7 +181,7 @@ class ast_MultipleSubstStatement(ast.Statement):
             res += ("\n" + indent if i > 0 else "") + "sub " + pres
             res += asFea(glyphs[i]) + sufs
             res += " by "
-            res += " ".join(map(asFea, self.replacement[0:self.multindex] + [replacements[i]] + self.replacement[self.multindex+1:]))
+            res += " ".join(asFea(g)+mark for g in self.replacement[0:self.multindex] + [replacements[i]] + self.replacement[self.multindex+1:])
             res += ";" 
         return res
 
@@ -223,15 +224,16 @@ class ast_LigatureSubstStatement(ast.Statement):
         res = ""
         pres = (" ".join(map(asFea, self.prefix)) + " ") if len(self.prefix) else ""
         sufs = (" " + " ".join(map(asFea, self.suffix))) if len(self.suffix) else ""
+        mark = "'" if len(self.prefix) or len(self.suffix) else ""
         if self.mode == 'literal':
-            res += "sub " + pres + " ".join(map(asFea, self.glyphs)) + sufs + " by "
+            res += "sub " + pres + " ".join(asFea(g)+mark for g in self.glyphs) + sufs + " by "
             res += self.replacements.asFea() + ";"
             return res
         glyphs = self.glyphs[self.multindex].glyphSet()
         replacements = self.replacement.glyphSet()
         for i in range(min(len(glyphs), len(replacements))) :
             res += ("\n" + indent if i > 0 else "") + "sub " + pres
-            res += " ".join(map(asFea, self.glyphs[:self.multindex] + [glyphs[i]] + self.glyphs[self.multindex+1:]))
+            res += " ".join(asFea(g)+mark for g in self.glyphs[:self.multindex] + [glyphs[i]] + self.glyphs[self.multindex+1:])
             res += sufs + " by "
             res += asFea(replacements[i])
             res += ";"

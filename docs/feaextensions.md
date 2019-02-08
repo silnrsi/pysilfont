@@ -123,15 +123,16 @@ This creates a variable _var_ that will iterate over the _glyphlist_.
 
 ##### let
 
-The `let` substatement executes a short python expression (via `eval`), storing the result in the given variable. The structure of the substatement is:
+The `let` substatement executes a short python expression (via `eval`), storing the result in the given variable, or variable list. The structure of the substatement is:
 
-`let` _var_ `=` _expression_ `;`
+`let` _var_ [`,` _var_]* `=` _expression_ `;`
 
 There are various python functions that are especially supported, along with the builtins. These are:
 
 | Function | Parameters | Description |
 |-------------|----------------|----------------|
 | ADVx       | _glyphname_             | Returns the advanced width of the given glyph |
+| allglyphs  |                         | Returns a list of all the glyph names in the font |
 | APx        | _glyphname_, "_apname_" | Returns the x co-ordinate of the given attachment point on the given glyph |
 | APy        | _glyphname_, "_apname_" | Returns the y co-ordinate of the given attachment point on the given glyph |
 | feaclass   | _classname_             | Returns a list of the glyph names in a class as a python list |
@@ -141,7 +142,7 @@ There are various python functions that are especially supported, along with the
 | MAXx       | _glyphname_             | Returns the maximum x value of the bounding box of the glyph |
 | MAXy       | _glyphname_             | Returns the maximum y value of the bounding box of the glyph |
 
-Security wise, it is not possible to stop people doing nasty things with it. But psfmakefea is not expected to be used in untrusted environments.
+See the section on python in the `def` command section following.
 
 ##### if
 
@@ -336,5 +337,5 @@ would be rewritten as:
 
 ### Support classes in alternate lookups
 
-The default behaviour in FEA is for a `sub x from [a b];` to only allow a single glyph before the `from` keyword. But it is often useful to do things like: `sub @a from [@a.low @a.upper];`. Feax supports this by treating the right hand side list of glyphs as a single list and dividing it equally by the list on the left. Thus if `@a` is of length 3 then the first 3 glyphs in the right hand list will go one each as the first alternative for each glyph in `@a`, then the next 3 go as the second alternative, and so on until they are all consumed. If any are left over in that one of the glyphs ends up with a different number of alternatives to another, then an error is given.
+The default behaviour in FEA is for a `sub x from [x.a x.b];` to only allow a single glyph before the `from` keyword. But it is often useful to do things like: `sub @a from [@a.lower @a.upper];`. Feax supports this by treating the right hand side list of glyphs as a single list and dividing it equally by the list on the left. Thus if `@a` is of length 3 then the first 3 glyphs in the right hand list will go one each as the first alternate for each glyph in `@a`, then the next 3 go as the second alternate, and so on until they are all consumed. If any are left over in that one of the glyphs ends up with a different number of alternates to another, then an error is given.
 
