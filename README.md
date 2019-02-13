@@ -6,13 +6,13 @@ In addition, all scripts will output UFOs in a normalized form, designed to work
 
 Please read the main [documentation](docs/docs.md) is in the docs folder for more details.  Within there is a list of [scripts](docs/scripts.md).
 
-# NOTICE - scripts renamed
+# NOTICE - Python 2 support to be withdrawn 
 
-Changes committed on 19th Jun 2017 included renaming all installed scripts to a new standard.
+Pysilfont now works with Python 2 & 3.  Full support for Python 2 will be withdrawn shortly.
 
 ## Installation
 
-Pysilfont requires Python version 2.7.x and python-setuptools. Some scripts also need Fontforge, FontTools or odtpy.
+Pysilfont requires Python (version 2.7.x or 3.6+) and python-setuptools. Some scripts also need other libraries.
 
 _Note: We are experiencing issues with upgrades to existing installations and with uninstalling, so these notes are under review._
 
