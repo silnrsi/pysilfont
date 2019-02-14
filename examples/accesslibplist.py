@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-'Sample script for accessing fields in lib.plist'
+'Demo script for accessing fields in lib.plist'
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2017 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'

@@ -4,7 +4,7 @@ Below is a table listing all the commands installed by Pysilfont followed by des
 
 All these commands work in consistent ways in terms of certain standard options (eg -h for help) and default names for many files - see details in [Pysilfont Documentation](docs.md#standard-command-line-options).
 
-There are further example scripts supplied with Pysilfont, and some of these are also [documented further down](#example-scripts)
+There are further example scripts supplied with Pysilfont, and some of these are also documented in [examples.md](examples.md)
 
 ## Table of scripts
 
@@ -26,7 +26,6 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfcreateinstances](#psfcreateinstances) | Create one or more instance UFOs from one or more designspace files |
 | [psfcsv2comp](#psfcsv2comp) | Create composite definition file from csv |
 | [psfdeleteglyphs](#psfdeleteglyphs) | Deletes glyphs from a UFO based on a list |
-| [psfexpandstroke](#psfexpandstroke) | Expand an unclosed UFO stroke font into monoline forms |
 | [psfexportanchors](#psfexportanchors) | Export UFO anchor data to a separate XML file |
 | [psfexportpsnames](#psfexportpsnames) | Export a map of glyph name to PS name to a csv file |
 | [psfexportunicodes](#psfexportunicodes) | Export a map of glyph name to unicode value to a csv file |
@@ -47,7 +46,6 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfsubset](#psfsubset) | Create a subset of an existing UFO |
 | [psfsyncmasters](#psfsyncmasters) | Sync metadata in master UFO files based on a Designspace file |
 | [psfsyncmeta](#psfsyncmeta) | Copy basic metadata from one member of a font family to other family members |
-| [psftoneletters](#psftoneletters) | Add Latin script tone letters (pitch contours) to a UFO |
 | [psfufo2glyphs](#psfufo2glyphs) | Generate a glyphs files from a designspace file and UFO(s) |
 | [psfufo2ttf](#psfufo2ttf) | Generate a ttf file without OpenType tables from a UFO |
 | [psfxml2compdef](#psfxml2compdef) | Convert composite definition file from XML format |
@@ -143,7 +141,7 @@ required arguments:
 optional arguments:
 
 ```
-  -m map.txt, --lookupmap map.txt      Mapping file to create 
+  -m map.txt, --lookupmap map.txt      Mapping file to create
   -v, --verbose                        repeat to increase verbosity
 ```
 
@@ -400,24 +398,6 @@ The following example will delete all glyphs that are _not_ listed in `keepthese
 ```
 psfdeleteglyphs Andika-Regular.ufo -i keepthese.txt --reverse
 ```
-
----
-#### psfexpandstroke
-
-Usage: **`psfexpandstroke infont outfont expansion`**
-
-_([Standard options](docs.md#standard-command-line-options) also apply)_
-
-Expands the outlines (typically unclosed) in an UFO stroke font into monoline forms with a fixed width.
-
-Example that expands the stokes in a UFO font `SevdaStrokeMaster-Regular.ufo` by 13 units on both sides, giving them a total width of 26 units, and writes the result to `Sevda-Regular.ufo`.
-
-```
-psfexpandstroke SevdaStrokeMaster-Regular.ufo Sevda-Regular.ufo 13
-```
-
-Note that this only expands the outlines - it does not remove any resulting overlap.
-
 
 ---
 ####  psfexportanchors
@@ -797,20 +777,6 @@ Note that by default only fontinfo.plist and lib.plist are updated, so fonts are
 Also psfsyncmeta does not use Pysilfont's backup mechanism for fonts.
 
 -n (--new) appends \_new to ufo and file names for testing purposes
-
----
-####  psftoneletters
-Usage: **`psftoneletters infont outfont`**
-
-_([Standard options](docs.md#standard-command-line-options) also apply)_
-
-This uses the parameters from the UFO lib.plist org.sil.lcg.toneLetters key to create Latin script tone letters (pitch contours).
-
-Example usage:
-
-```
-psftoneletters Andika-Regular.ufo Andika-Regular.ufo
-```
 
 ---
 ####  psfufo2glyphs
