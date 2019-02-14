@@ -2,7 +2,7 @@
 
 In addition to the main pysilfont [scripts](scripts.md), there are many further scripts under pysilfont/examples and its sub-directories.
 
-They are not maitained in the same way as the main scripts, and come in many categories including:
+They are not maintained in the same way as the main scripts, and come in many categories including:
 
 - Scripts under development
 - Examples of how to do things
@@ -15,27 +15,27 @@ Some are documented below.
 
 | Command | Status | Description |
 | ------- | ------ | ----------- |
-| [accesslibplist.py](#accesslibplist.py) | ? | Demo script for accessing fields in lib.plist |
-| [chaindemo.py](#chaindemo.py) | ? | Demo of how to chain calls to multiple scripts together |
-| [FFmapGdlNames.py](#FFmapGdlNames.py) | ? | Write mapping of graphite names to new graphite names |
-| [FfmapGdlNames2.py](#FfmapGdlNames2.py) | ? | Write mapping of graphite names to new graphite names |
-| [FLWriteXml.py](#FLWriteXml.py) | ? | Outputs attachment point information and notes as XML file for TTFBuilder |
-| [FTaddEmptyOT.py](#FTaddEmptyOT.py) | ? | Add empty Opentype tables to ttf font |
-| [FTMLnorm.py](#FTMLnorm.py) | ? | Normalize an FTML file |
-| [psfaddGlyphDemo.py](#psfaddGlyphDemo.py) | ? | Demo script to add a glyph to a UFO font |
-| [psfbuildcompgc.py](#psfbuildcompgc.py) | ? | Uses the GlyphConstruction library to build composite glyphs |
-| [psfdupglyphsfp.py](#psfdupglyphsfp.py) | ? | Duplicates glyphs in a UFO based on a csv definition |
-| [psfexpandstroke.py](#psfexpandstroke.py) | ? | Expands an unclosed UFO stroke font into monoline forms with a fixed width |
-| [psfexportnamesunicodesfp.py](#psfexportnamesunicodesfp.py) | ? | Outputs an unsorted csv file containing the names of all the glyphs in the default layer |
-| [psfgenftml.py](#psfgenftml.py) | ? | generate ftml tests from glyph_data.csv and UFO |
-| [psfmakedeprecated.py](#psfmakedeprecated.py) | ? | Creates deprecated versions of glyphs |
-| [psftoneletters.py](#psftoneletters.py) | ? | Creates Latin script tone letters (pitch contours) |
-| [xmlDemo.py](#xmlDemo.py) | ? | Demo script for use of ETWriter |
+| [accesslibplist.py](#accesslibplist) | ? | Demo script for accessing fields in lib.plist |
+| [chaindemo.py](#chaindemo) | ? | Demo of how to chain calls to multiple scripts together |
+| [FFmapGdlNames.py](#ffmapgdlnames) | ? | Write mapping of graphite names to new graphite names |
+| [FfmapGdlNames2.py](#ffmapgdlnames2) | ? | Write mapping of graphite names to new graphite names |
+| [FLWriteXml.py](#flwritexml) | ? | Outputs attachment point information and notes as XML file for TTFBuilder |
+| [FTaddEmptyOT.py](#ftaddemptyot) | ? | Add empty Opentype tables to ttf font |
+| [FTMLnorm.py](#ftmlnorm) | ? | Normalize an FTML file |
+| [psfaddGlyphDemo.py](#psfaddglyphdemo) | ? | Demo script to add a glyph to a UFO font |
+| [psfbuildcompgc.py](#psfbuildcompgc) | ? | Uses the GlyphConstruction library to build composite glyphs |
+| [psfdupglyphsfp.py](#psfdupglyphsfp) | ? | Duplicates glyphs in a UFO based on a csv definition |
+| [psfexpandstroke.py](#psfexpandstroke) | ? | Expands an unclosed UFO stroke font into monoline forms with a fixed width |
+| [psfexportnamesunicodesfp.py](#psfexportnamesunicodesfp) | ? | Outputs an unsorted csv file containing the names of all the glyphs in the default layer |
+| [psfgenftml.py](#psfgenftml) | ? | generate ftml tests from glyph_data.csv and UFO |
+| [psfmakedeprecated.py](#psfmakedeprecated) | ? | Creates deprecated versions of glyphs |
+| [psftoneletters.py](#psftoneletters) | ? | Creates Latin script tone letters (pitch contours) |
+| [xmlDemo.py](#xmldemo) | ? | Demo script for use of ETWriter |
 
 
 
 ---
-#### accesslibplist.py
+#### accesslibplist
 Usage: **` python accesslibplist.py ...`**
 
 _([Standard options](docs.md#standard-command-line-options) may also apply)_
@@ -44,7 +44,7 @@ Demo script for accessing fields in lib.plist
 
 
 ---
-#### chaindemo.py
+#### chaindemo
 Usage: **` python chaindemo.py ...`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
@@ -61,7 +61,7 @@ and logger objects from one call to the next.  So:
 
 
 ---
-#### FFmapGdlNames.py
+#### FFmapGdlNames
 Usage: **` python FFmapGdlNames2.py ...`**
 
 _([Standard options](docs.md#standard-command-line-options) may also apply)_
@@ -74,7 +74,7 @@ Write mapping of graphite names to new graphite names based on:
 
 
 ---
-#### FFmapGdlNames2.py
+#### FFmapGdlNames2
 Usage: **` python FFmapGdlNames.py ...`**
 
 _([Standard options](docs.md#standard-command-line-options) may also apply)_
@@ -87,7 +87,7 @@ Write mapping of graphite names to new graphite names based on:
 
 
 ---
-#### FLWriteXml.py
+#### FLWriteXml
 Usage: **` python FLWriteXml.py ...`**
 
 _([Standard options](docs.md#standard-command-line-options) may also apply)_
@@ -96,7 +96,7 @@ Outputs attachment point information and notes as XML file for TTFBuilder
 
 
 ---
-#### FTaddEmptyOT.py
+#### FTaddEmptyOT
 Usage: **` python FTaddEmptyOT.py ...`**
 
 _([Standard options](docs.md#standard-command-line-options) may also apply)_
@@ -105,7 +105,7 @@ Add empty Opentype tables to ttf font
 
 
 ---
-#### FTMLnorm.py
+#### FTMLnorm
 Usage: **` python FTMLnorm.py ...`**
 
 _([Standard options](docs.md#standard-command-line-options) may also apply)_
@@ -114,7 +114,7 @@ Normalize an FTML file
 
 
 ---
-#### psfaddGlyphDemo.py
+#### psfaddGlyphDemo
 Usage: **` python psfaddGlyphDemo.py ...`**
 
 _([Standard options](docs.md#standard-command-line-options) may also apply)_
@@ -123,7 +123,7 @@ Demo script to add a glyph to a UFO font
 
 
 ---
-#### psfbuildcompgc.py
+#### psfbuildcompgc
 Usage: **` python psfbuildcompgc.py ...`**
 
 _([Standard options](docs.md#standard-command-line-options) may also apply)_
@@ -132,7 +132,7 @@ Uses the GlyphConstruction library to build composite glyphs
 
 
 ---
-#### psfdupglyphsfp.py
+#### psfdupglyphsfp
 Usage: **` python psfdupglyphsfp.py ...`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
@@ -162,7 +162,7 @@ Note that this only expands the outlines - it does not remove any resulting over
 
 
 ---
-#### psfexportnamesunicodesfp.py
+#### psfexportnamesunicodesfp
 Usage: **` python psfexportnamesunicodesfp.py ...`**
 
 _([Standard options](docs.md#standard-command-line-options) may also apply)_
@@ -173,7 +173,7 @@ Format name,usv
 
 
 ---
-#### psfgenftml.py
+#### psfgenftml
 Usage: **` python psfgenftml.py ...`**
 
 _([Standard options](docs.md#standard-command-line-options) may also apply)_
@@ -182,7 +182,7 @@ generate ftml tests from glyph_data.csv and UFO
 
 
 ---
-#### psfmakedeprecated.py
+#### psfmakedeprecated
 Usage: **` python psfmakedeprecated.py ...`**
 
 _([Standard options](docs.md#standard-command-line-options) may also apply)_
@@ -210,7 +210,7 @@ psftoneletters Andika-Regular.ufo Andika-Regular.ufo
 
 
 ---
-#### xmlDemo.py
+#### xmlDemo
 Usage: **` python xmlDemo.py ...`**
 
 _([Standard options](docs.md#standard-command-line-options) may also apply)_
