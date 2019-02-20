@@ -261,7 +261,8 @@ class feaplus_parser(Parser) :
         # Format: "substitute f_f_i by f f i;"
         if (not reverse and
                 len(old) == 1 and len(new) > 1 and num_lookups == 0):
-            return self.ast.MultipleSubstStatement(old_prefix, old[0], old_suffix, new, location=location)
+            return self.ast.MultipleSubstStatement(old_prefix, old[0], old_suffix, new,
+                                                    hasMarks, location=location)
 
         # GSUB lookup type 4: Ligature substitution.
         # Format: "substitute f f i by f_f_i;"

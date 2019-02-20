@@ -142,10 +142,11 @@ class ast_CursivePosStatement(ast.CursivePosStatement):
 #replacement could contain multiple slots
 #TODO: below only supports one RHS class?
 class ast_MultipleSubstStatement(ast.Statement):
-    def __init__(self, prefix, glyph, suffix, replacement, location=None):
+    def __init__(self, prefix, glyph, suffix, replacement, forceChain, location=None):
         ast.Statement.__init__(self, location)
         self.prefix, self.glyph, self.suffix = prefix, glyph, suffix
         self.replacement = replacement
+        self.forceChain = forceChain
         if len(self.glyph.glyphSet()) > 1 :
             for i, r in enumerate(self.replacement) :
                 if len(r.glyphSet()) > 1 :
@@ -164,13 +165,14 @@ class ast_MultipleSubstStatement(ast.Statement):
         for i in range(min(len(glyphs), len(replacements))) :
             builder.add_multiple_subst(
                 self.location, prefix, glyphs[i], suffix,
-                self.replacement[0:self.multindex] + [replacements[i]] + self.replacement[self.multindex+1:])
+                self.replacement[0:self.multindex] + [replacements[i]] + self.replacement[self.multindex+1:],
+                self.forceChain)
 
     def asFea(self, indent=""):
         res = ""
         pres = (" ".join(map(asFea, self.prefix)) + " ") if len(self.prefix) else ""
         sufs = (" " + " ".join(map(asFea, self.suffix))) if len(self.suffix) else ""
-        mark = "'" if len(self.prefix) or len(self.suffix) else ""
+        mark = "'" if len(self.prefix) or len(self.suffix) or self.forceChain else ""
         if self.mode == 'literal':
             res += "sub " + pres + self.glyph.asFea() + sufs + " by "
             res += " ".join(asFea(g)+mark for g in self.replacement) + ";"
@@ -224,7 +226,7 @@ class ast_LigatureSubstStatement(ast.Statement):
         res = ""
         pres = (" ".join(map(asFea, self.prefix)) + " ") if len(self.prefix) else ""
         sufs = (" " + " ".join(map(asFea, self.suffix))) if len(self.suffix) else ""
-        mark = "'" if len(self.prefix) or len(self.suffix) else ""
+        mark = "'" if len(self.prefix) or len(self.suffix) or self.forceChain else ""
         if self.mode == 'literal':
             res += "sub " + pres + " ".join(asFea(g)+mark for g in self.glyphs) + sufs + " by "
             res += self.replacements.asFea() + ";"
