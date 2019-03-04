@@ -2,7 +2,7 @@
 from __future__ import print_function, unicode_literals
 'General classes and functions for use in pysilfont scripts'
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2014-2018 SIL International (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2014-2019 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 

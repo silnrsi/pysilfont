@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.4.1] - 2019-03-04 - Maintenance release
+
+Nearly all scripts should work under Python 2 & 3
+
+**Future work will be tested just with Python 3** but most may still work with Python 2.
+
+Some changes are detailed below, but check commit logs for full details.
+
+### Added
+
+psfversion - Report version info for pysilfont, python and various dependencies
+psfufo2gylphs - Creates a .gypyhs file from UFOs using glyphsLib
+
+### Changed
+
+psfremovegliflibkeys now has -b option to remove keys beginning with specified string
+
+psfglyphs2ufo updated to match new psfufo2glyphs.  Now has -r to restore specific keys
+
+Many changes to .fea support
+
+The pytest-based test setup has been expanded and refined
+
+### Removed
+
+Some scripts moved from installed scripts to examples
+
 ## [1.4.0] - 2018-10-03 - Python 2+3 support
 
 ### Added
