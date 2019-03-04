@@ -1,17 +1,17 @@
-2018-09-19 20:10:14 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo
-2018-09-19 20:10:14 Info:     Processing Glyph Layer 0: public.defaultglyphs
-2018-09-19 20:10:14 Progress: Checking fontinfo.plist metadata
-2018-09-19 20:10:14 Warning:  macintoshFONDName removed from fontinfo.  Old value: My Test
-2018-09-19 20:10:14 Info:     Types: Old - string, New - NoneType
-2018-09-19 20:10:14 Warning:  postscriptFamilyBlues removed from fontinfo.  Old value: []
-2018-09-19 20:10:14 Info:     Types: Old - list, New - NoneType
-2018-09-19 20:10:14 Warning:  openTypeHheaAscender updated  Old value: 2200, new value: 2100
-2018-09-19 20:10:14 Info:     Types: Old - int, New - int
-2018-09-19 20:10:14 Progress: Checking lib.plist metadata
-2018-09-19 20:10:14 Warning:  com.schriftgestaltung.useNiceNames should normally be False; currently missing
-2018-09-19 20:10:14 Progress: Check & fix results:- Errors: 0, Changes made: 3, Other warnings: 1
-2018-09-19 20:10:14 Progress: See log file for details
-2018-09-19 20:10:14 Progress: Processing font for output
-2018-09-19 20:10:14 Progress: Output UFO already exists - reading for comparison
-2018-09-19 20:10:14 Progress: Writing font to local/testresults/ufo/psfsetkeys.ufo
-2018-09-19 20:10:14 Info:     Processing glyphs directory
+2019-03-04 16:24:01 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo
+2019-03-04 16:24:01 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2019-03-04 16:24:01 Progress: Checking fontinfo.plist metadata
+2019-03-04 16:24:01 Warning:  macintoshFONDName removed from fontinfo.  Old value: My Test
+2019-03-04 16:24:01 Info:     Types: Old - string, New - NoneType
+2019-03-04 16:24:01 Warning:  postscriptFamilyBlues removed from fontinfo.  Old value: []
+2019-03-04 16:24:01 Info:     Types: Old - list, New - NoneType
+2019-03-04 16:24:01 Warning:  openTypeHheaAscender updated  Old value: 2200, new value: 2100
+2019-03-04 16:24:01 Info:     Types: Old - int, New - int
+2019-03-04 16:24:01 Progress: Checking lib.plist metadata
+2019-03-04 16:24:01 Warning:  com.schriftgestaltung.GSFont.useNiceNames should normally be False; currently missing
+2019-03-04 16:24:01 Progress: Check & fix results:- Errors: 0, Changes made: 3, Other warnings: 1
+2019-03-04 16:24:01 Progress: See log file for details
+2019-03-04 16:24:01 Progress: Processing font for output
+2019-03-04 16:24:01 Progress: Output UFO already exists - reading for comparison
+2019-03-04 16:24:01 Progress: Writing font to local/testresults/ufo/psfsetkeys.ufo
+2019-03-04 16:24:01 Info:     Processing glyphs directory

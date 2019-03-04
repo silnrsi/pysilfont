@@ -283,15 +283,24 @@ class Ufont(object):
         if "fontinfo.plist" in self.dtree: self.fontinfo = self._readPlist("fontinfo.plist")
         if "groups.plist" in self.dtree: self.groups = self._readPlist("groups.plist")
         if "kerning.plist" in self.dtree: self.kerning = self._readPlist("kerning.plist")
+        createlayercontents = False
         if self.UFOversion == "2":  # Create a dummy layer contents so 2 & 3 can be handled the same
+            createlayercontents = True
+        else:
+            if "layercontents.plist" in self.dtree:
+                self.layercontents = self._readPlist("layercontents.plist")
+            else:
+                logger.log("layercontents.plist missing - one will be created", "W")
+                createlayercontents = True
+        if createlayercontents:
             if "glyphs" not in self.dtree: logger.log('No glyphs directory in font', "S")
             self.layercontents = Uplist(font=self)
-            self.dtree['layercontents.plist'] = UT.dirTreeItem(read=True, added=True, fileObject=self.layercontents, fileType="xml")
+            self.dtree['layercontents.plist'] = UT.dirTreeItem(read=True, added=True, fileObject=self.layercontents,
+                                                               fileType="xml")
             dummylc = "<plist>\n<array>\n<array>\n<string>public.default</string>\n<string>glyphs</string>\n</array>\n</array>\n</plist>"
             self.layercontents.etree = ET.fromstring(dummylc)
             self.layercontents.populate_dict()
-        else:
-            self.layercontents = self._readPlist("layercontents.plist")
+
         # Process features.fea
         if "features.fea" in self.dtree:
             self.features = UfeatureFile(self, ufodir, "features.fea")
@@ -493,7 +502,7 @@ class Ufont(object):
                 logger.log("Checking lib.plist metadata", "P")
                 libwarnifnot = {"com.schriftgestaltung.disablesAutomaticAlignment": True,
                                 "com.schriftgestaltung.disablesLastChange": True,
-                                "com.schriftgestaltung.useNiceNames": False}
+                                "com.schriftgestaltung.GSFont.useNiceNames": False}
                 libwarnifmissing = ("public.glyphOrder",)
                 libcheckinvalid = ("com.schriftgestaltung.Disable Last Change",
                                    "com.schriftgestaltung.font.Disable Last Change", "UFO.lib", "UFOFormat")
