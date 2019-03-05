@@ -7,7 +7,7 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'Bobby de Vos'
 
 from silfont.core import execute
-from xml.etree import cElementTree as ET
+from xml.etree import ElementTree as ET
 import codecs
 
 suffix = "_setkeys"

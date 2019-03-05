@@ -11,7 +11,7 @@ import silfont.ufo as UFO
 import silfont.etutil as ETU
 import os, datetime
 import fontTools.designspaceLib as DSD
-from xml.etree import cElementTree as ET
+from xml.etree import ElementTree as ET
 
 argspec = [
     ('primaryds',{'help': 'Primary design space file'}, {'type': 'filename'}),

@@ -6,7 +6,7 @@ __copyright__ = 'Copyright (c) 2018 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Bob Hallissy'
 
-from xml.etree import cElementTree as ET
+from xml.etree import ElementTree as ET
 from silfont.core import execute
 from silfont.ufo import makeFileName, Uglif
 import re

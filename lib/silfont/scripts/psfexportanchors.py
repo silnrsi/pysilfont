@@ -8,7 +8,7 @@ __author__ = 'David Rowe'
 
 from silfont.core import execute
 from silfont.etutil import ETWriter
-from xml.etree import ElementTree as ET  ### NB: using cElementTree gives bad results
+from xml.etree import ElementTree as ET
 
 argspec = [
     ('ifont',{'help': 'Input UFO'}, {'type': 'infont'}),

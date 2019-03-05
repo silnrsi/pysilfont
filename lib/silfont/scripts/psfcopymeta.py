@@ -9,7 +9,7 @@ __author__ = 'David Raymond'
 
 from silfont.core import execute
 import silfont.ufo as UFO
-from xml.etree import cElementTree as ET
+from xml.etree import ElementTree as ET
 
 argspec = [
     ('fromfont',{'help': 'From font file'}, {'type': 'infont'}),

@@ -10,7 +10,7 @@ try:
     xrange
 except NameError:
     xrange = range
-from xml.etree import cElementTree as ET
+from xml.etree import ElementTree as ET
 from silfont.core import execute
 import silfont.ufo as ufo
 from silfont.comp import CompGlyph

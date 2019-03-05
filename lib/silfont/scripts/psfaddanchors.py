@@ -7,7 +7,7 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'David Rowe'
 
 from silfont.core import execute
-from xml.etree import cElementTree as ET
+from xml.etree import ElementTree as ET
 
 argspec = [
     ('ifont',{'help': 'Input UFO'}, {'type': 'infont'}),

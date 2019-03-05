@@ -10,7 +10,7 @@ from silfont.core import execute
 from datetime import datetime
 import silfont.ufo as UFO
 import os
-from xml.etree import cElementTree as ET
+from xml.etree import ElementTree as ET
 
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),

@@ -8,7 +8,7 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'Bob Hallissy'
 
 from silfont.core import execute
-from xml.etree import cElementTree as ET
+from xml.etree import ElementTree as ET
 
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),

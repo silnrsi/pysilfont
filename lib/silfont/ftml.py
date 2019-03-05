@@ -11,7 +11,7 @@ try:
     chr = unichr
 except NameError: # Will  occur with Python 3
     pass
-from xml.etree import cElementTree as ET ## Apparently cElementTree is now deprecated
+from xml.etree import ElementTree as ET
 from fontTools import ttLib
 import re
 from xml.sax.saxutils import quoteattr

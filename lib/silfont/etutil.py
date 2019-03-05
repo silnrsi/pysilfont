@@ -11,7 +11,7 @@ try:
     chr = unichr
 except NameError: # Will  occur with Python 3
     pass
-from xml.etree import cElementTree as ET
+from xml.etree import ElementTree as ET
 import silfont.core
 
 import re, os, codecs, io, collections
