@@ -1,15 +1,16 @@
-2019-03-04 16:23:57 Progress: Opening file for input: tests/input/psfdeleteglyphs.txt
-2019-03-04 16:23:57 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Regular.ufo
-2019-03-04 16:23:57 Info:     Processing Glyph Layer 0: public.defaultglyphs
-2019-03-04 16:23:57 Progress: Checking fontinfo.plist metadata
-2019-03-04 16:23:57 Progress: Checking lib.plist metadata
-2019-03-04 16:23:57 Warning:  com.schriftgestaltung.GSFont.useNiceNames should normally be False; currently missing
-2019-03-04 16:23:57 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 1
-2019-03-04 16:23:57 Warning:  Deleted glyphs:
-2019-03-04 16:23:57 Warning:  Apos
-2019-03-04 16:23:57 Warning:  Comma
-2019-03-04 16:23:57 Warning:  Total deleted glyphs: 2
-2019-03-04 16:23:57 Progress: Processing font for output
-2019-03-04 16:23:57 Progress: Output UFO already exists - reading for comparison
-2019-03-04 16:23:57 Progress: Writing font to local/testresults/ufo/psfdeleteglyphs.ufo
-2019-03-04 16:23:57 Info:     Processing glyphs directory
+2019-03-13 16:53:38 Progress: Opening file for input: tests/input/psfdeleteglyphs.txt
+2019-03-13 16:53:38 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Regular.ufo
+2019-03-13 16:53:38 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2019-03-13 16:53:38 Progress: Checking fontinfo.plist metadata
+2019-03-13 16:53:38 Warning:  openTypeNameSampleText is missing from fontinfo.plist
+2019-03-13 16:53:38 Progress: Checking lib.plist metadata
+2019-03-13 16:53:38 Warning:  com.schriftgestaltung.GSFont.useNiceNames should normally be False; currently missing
+2019-03-13 16:53:38 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 2
+2019-03-13 16:53:38 Warning:  Deleted glyphs:
+2019-03-13 16:53:38 Warning:  Apos
+2019-03-13 16:53:38 Warning:  Comma
+2019-03-13 16:53:38 Warning:  Total deleted glyphs: 2
+2019-03-13 16:53:38 Progress: Processing font for output
+2019-03-13 16:53:38 Progress: Output UFO already exists - reading for comparison
+2019-03-13 16:53:38 Progress: Writing font to local/testresults/ufo/psfdeleteglyphs.ufo
+2019-03-13 16:53:38 Info:     Processing glyphs directory

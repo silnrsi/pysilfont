@@ -335,8 +335,9 @@ class Ufont(object):
                         "styleName", "unitsPerEm", "versionMajor", "versionMinor")
             fiwarnifmiss = ("capHeight", "copyright", "openTypeNameDescription", "openTypeNameDesigner",
                         "openTypeNameDesignerURL", "openTypeNameLicense", "openTypeNameLicenseURL",
-                        "openTypeNameManufacturerURL", "openTypeOS2CodePageRanges", "openTypeOS2UnicodeRanges",
-                        "openTypeOS2VendorID","styleMapFamilyName", "styleMapStyleName", "openTypeOS2WeightClass")
+                        "openTypeNameManufacturerURL", "openTypeNameSampleText", "openTypeOS2CodePageRanges",
+                        "openTypeOS2UnicodeRanges", "openTypeOS2VendorID","styleMapFamilyName", "styleMapStyleName",
+                        "openTypeOS2WeightClass")
             fiwarnifnot = {"unitsPerEm": (1000, 2048),
                            "styleMapStyleName": ("regular", "bold", "italic", "bold italic")}
             fidel = ("macintoshFONDFamilyID", "macintoshFONDName", "openTypeNameCompatibleFullName", "year")
@@ -522,7 +523,7 @@ class Ufont(object):
                     if key in self.lib:
                         logger.log(key + " is not a valid key", "W")
 
-            # If screen logging is less that "W", flag up if there have been warnings
+            # Show check&fix summary
             warnings = logger.warningcount - initwarnings - changes
             errors = logger.errorcount - initerrors
             if errors or warnings or changes:
@@ -530,6 +531,8 @@ class Ufont(object):
                 logger.log("Check & fix results:- Errors: " + str(errors) + changemess + str(changes) +
                            ", Other warnings: " + str(warnings), "P")
                 if logger.scrlevel not in "WIV": logger.log("See log file for details", "P")
+                if missing and not self.metafix:
+                    logger.log("**** Since some required fields were missing, checkfix=fix would fail", "P")
             else:
                 logger.log("Check & Fix ran cleanly", "P")
 

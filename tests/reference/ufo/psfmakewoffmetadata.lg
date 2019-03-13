@@ -1,8 +1,9 @@
-2019-03-04 16:24:00 Progress: Opening file for input: tests/input/psfmakewoffmetadata.txt
-2019-03-04 16:24:00 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Regular.ufo
-2019-03-04 16:24:00 Progress: Checking fontinfo.plist metadata
-2019-03-04 16:24:00 Progress: Checking lib.plist metadata
-2019-03-04 16:24:00 Warning:  com.schriftgestaltung.GSFont.useNiceNames should normally be False; currently missing
-2019-03-04 16:24:00 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 1
-2019-03-04 16:24:00 Progress: See log file for details
-2019-03-04 16:24:00 Progress: Writing to : local/testresults/ufo/psfmakewoffmetadata.xml
+2019-03-13 16:53:40 Progress: Opening file for input: tests/input/psfmakewoffmetadata.txt
+2019-03-13 16:53:40 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Regular.ufo
+2019-03-13 16:53:40 Progress: Checking fontinfo.plist metadata
+2019-03-13 16:53:40 Warning:  openTypeNameSampleText is missing from fontinfo.plist
+2019-03-13 16:53:40 Progress: Checking lib.plist metadata
+2019-03-13 16:53:40 Warning:  com.schriftgestaltung.GSFont.useNiceNames should normally be False; currently missing
+2019-03-13 16:53:40 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 2
+2019-03-13 16:53:40 Progress: See log file for details
+2019-03-13 16:53:40 Progress: Writing to : local/testresults/ufo/psfmakewoffmetadata.xml

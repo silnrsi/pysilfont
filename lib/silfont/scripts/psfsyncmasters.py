@@ -29,7 +29,7 @@ def doit(args) :
                   "openTypeOS2TypoDescender", "openTypeOS2TypoLineGap", "openTypeOS2UnicodeRanges",
                   "openTypeOS2VendorID", "openTypeOS2WinAscent", "openTypeOS2WinDescent", "versionMajor",
                   "versionMinor")
-    ficopyopt = ("postscriptFamilyBlues", "postscriptFamilyOtherBlues", "trademark")
+    ficopyopt = ("openTypeNameSampleText", "postscriptFamilyBlues", "postscriptFamilyOtherBlues", "trademark")
     fispecial = ("italicAngle", "openTypeOS2WeightClass", "styleMapFamilyName", "styleMapStyleName", "styleName",
                  "unitsPerEm")
     fiall = sorted(set(ficopyreq) | set(ficopyopt) | set(fispecial))
