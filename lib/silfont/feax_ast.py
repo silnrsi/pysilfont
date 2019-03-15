@@ -315,7 +315,10 @@ class ast_DoForSubStatement(ast_DoSubStatement):
 def safeeval(exp):
     # no dunders in attribute names
     for n in pyast.walk(pyast.parse(exp)):
-        if "__" in getattr(n, 'id', ""):
+        v = getattr(n, 'id', "")
+        # if v in ('_getiter_', '__next__'):
+        #     continue
+        if "__" in v:
             return False
     return True
 
