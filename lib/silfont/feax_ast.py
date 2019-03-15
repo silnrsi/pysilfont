@@ -331,7 +331,7 @@ class ast_DoLetSubStatement(ast_DoSubStatement):
         lcls = variables.copy()
         try:
             v = eval(self.expr, self.parser.fns, lcls)
-        except StandardError as e:
+        except Exception as e:
             raise FeatureLibError(str(e) + " in " + self.expr, self.location)
         if self.names is None:      # in an if
             yield((None, v),)

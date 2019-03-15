@@ -60,7 +60,7 @@ class feaplus_parser(Parser) :
             'info': lambda s: self.fontinfo.get(s, "")
         }
         # Document which builtins we really need. Of course still insecure.
-        for x in ('True', 'False', 'None', 'int', 'float', 'str', 'abs', 'bool',
+        for x in ('True', 'False', 'None', 'int', 'float', 'str', 'abs', 'bool', 'chr',
                     'dict', 'enumerate', 'filter', 'hex', 'len', 'list', 'map',
                     'max', 'min', 'ord', 'range', 'set', 'sorted', 'sum', 'tuple', 'zip'):
             self.fns[x] = __builtins__[x]
