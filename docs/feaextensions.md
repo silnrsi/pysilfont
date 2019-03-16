@@ -104,8 +104,7 @@ The `do` statement is a means of setting variables and repeating statement group
 Where _statements_ is a sequence of FEA statements. Within these statements, variables may be referenced by preceding them with a `$`.
 Anything, including statement words, can be the result of variable expantion. The only constraints are:
 
-- The item stands on its own as a single token, to the lexer. It cannot be joined to something preceding or following it to create a single name, token, whatever.
-- The expansion may result in only one token not more than one. So it can be a single name, but not multiple glyphs, etc.
+- The item expands to one or more complete tokens. It cannot be joined to something preceding or following it to create a single name, token, whatever.
 
 In effect a `{}` type block following a `for` or `let` substatement is the equivalent of inserting the substatement `if True;` before the block.
 

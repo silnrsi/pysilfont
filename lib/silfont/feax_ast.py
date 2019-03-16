@@ -331,9 +331,9 @@ class ast_DoLetSubStatement(ast_DoSubStatement):
         self.expr = expression
 
     def items(self, variables):
-        lcls = variables.copy()
+        gbls = dict(self.parser.fns, **variables)
         try:
-            v = eval(self.expr, self.parser.fns, lcls)
+            v = eval(self.expr, gbls)
         except Exception as e:
             raise FeatureLibError(str(e) + " in " + self.expr, self.location)
         if self.names is None:      # in an if
