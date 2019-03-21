@@ -98,10 +98,11 @@ class parameters(object):
             'precision':        6,      # Decimal precision to use in XML output - both for real values and for attributes if numeric
             "renameGlifs":      True,   # Rename glifs based on UFO3 suggested algorithm
             "UFOversion":       "",     # UFOversion - defaults to existing unless a value is supplied
-            "format1Glifs":      False,  # Force output format 1 glifs including UFO2-style anchors (for use with FontForge
+            "format1Glifs":     False,  # Force output format 1 glifs including UFO2-style anchors (for use with FontForge
             "glifElemOrder":    ['advance', 'unicode', 'note',   'image',  'guideline', 'anchor', 'outline', 'lib'],  # Order to output glif elements
-            "numAttribs":       ['pos', 'width', 'height', 'xScale', 'xyScale', 'yxScale', 'yScale', 'xOffset', 'yOffset', 'x', 'y', 'angle', 'format'],    # Used with precision above
-            "attribOrders.glif":['pos', 'width', 'height', 'fileName', 'base', 'xScale', 'xyScale', 'yxScale', 'yScale', 'xOffset', 'yOffset', 
+            "floatAttribs":     ['xScale', 'xyScale', 'yxScale', 'yScale', 'angle'],    # Used with precision above
+            "intAttribs":       ['pos', 'width', 'height', 'xOffset', 'yOffset', 'x', 'y', 'angle'],
+            "attribOrders.glif":['pos', 'width', 'height', 'fileName', 'base', 'xScale', 'xyScale', 'yxScale', 'yScale', 'xOffset', 'yOffset',
                                   'x', 'y', 'angle', 'type', 'smooth', 'name', 'format', 'color', 'identifier']
             }
         defparams['ufometadata'] = {

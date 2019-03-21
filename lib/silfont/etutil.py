@@ -31,7 +31,7 @@ class ETWriter(object) :
         commits from 10th May 2018 or earlier.  The code there would need reworking!"""
 
     def __init__(self, etree, attributeOrder = {}, takesCData = set(),
-            indentIncr = "  ", indentFirst = "  ", indentML = False, inlineelem=[], precision = None, numAttribs = []):
+            indentIncr = "  ", indentFirst = "  ", indentML = False, inlineelem=[], precision = None, floatAttribs = [], intAttribs = []):
         self.root = etree
         self.attributeOrder = attributeOrder    # Sort order for attributes - just one list for all elements
         self.takesCData = takesCData
@@ -40,7 +40,8 @@ class ETWriter(object) :
         self.indentML = indentML                # Add indent to multi-line strings
         self.inlineelem = inlineelem            # For supporting in-line elements.  Does not work with mix of inline and other subelements in same element
         self.precision = precision              # Precision to use outputting numeric attribute values
-        self.numAttribs = numAttribs            # List of numeric attributes used with precision
+        self.floatAttribs = floatAttribs        # List of float/real attributes used with precision
+        self.intAttribs = intAttribs
 
     def _protect(self, txt, base=_attribprotect) :
         return re.sub(r'['+r"".join(base.keys())+r"]", lambda m: base[m.group(0)], txt)
@@ -69,10 +70,12 @@ class ETWriter(object) :
         for k in sorted(list(attribs.keys()), key=lambda x: self.attributeOrder.get(x, x)):
             if k[0] != '.' :
                 att = attribs[k]
-                if self.precision is not None and k in self.numAttribs :
+                if self.precision is not None and k in self.floatAttribs :
                     if "." in att:
                         num = round(float(att), self.precision)
                         att = int(num) if num == int(num) else num
+                elif k in self.intAttribs :
+                        att = round(float(att))
                 else:
                     att = self._protect(att)
                 outstr += ' {}="{}"'.format(k, att)

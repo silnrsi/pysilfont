@@ -1051,7 +1051,7 @@ def writeXMLobject(dtreeitem, params, dirn, filen, exists, fobject=False):
 
     etw = ETU.ETWriter(object.etree, attributeOrder=attribOrder, indentIncr=params["indentIncr"],
                        indentFirst=indentFirst, indentML=params["indentML"], precision=params["precision"],
-                       numAttribs=params["numAttribs"])
+                       floatAttribs=params["floatAttribs"], intAttribs=params["intAttribs"])
     object.outxmlstr=etw.serialize_xml()
     # Now we have the output xml, need to compare with existing item's xml, if present
     changed = True
