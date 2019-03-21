@@ -75,7 +75,7 @@ class ETWriter(object) :
                         num = round(float(att), self.precision)
                         att = int(num) if num == int(num) else num
                 elif k in self.intAttribs :
-                        att = round(float(att))
+                        att = int(round(float(att)))
                 else:
                     att = self._protect(att)
                 outstr += ' {}="{}"'.format(k, att)

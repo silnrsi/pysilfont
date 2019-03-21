@@ -101,7 +101,7 @@ class parameters(object):
             "format1Glifs":     False,  # Force output format 1 glifs including UFO2-style anchors (for use with FontForge
             "glifElemOrder":    ['advance', 'unicode', 'note',   'image',  'guideline', 'anchor', 'outline', 'lib'],  # Order to output glif elements
             "floatAttribs":     ['xScale', 'xyScale', 'yxScale', 'yScale', 'angle'],    # Used with precision above
-            "intAttribs":       ['pos', 'width', 'height', 'xOffset', 'yOffset', 'x', 'y', 'angle'],
+            "intAttribs":       ['pos', 'width', 'height', 'xOffset', 'yOffset', 'x', 'y'],
             "attribOrders.glif":['pos', 'width', 'height', 'fileName', 'base', 'xScale', 'xyScale', 'yxScale', 'yScale', 'xOffset', 'yOffset',
                                   'x', 'y', 'angle', 'type', 'smooth', 'name', 'format', 'color', 'identifier']
             }
