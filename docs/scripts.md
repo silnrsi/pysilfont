@@ -35,7 +35,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfmakewoffmetadata](#psfmakewoffmetadata) | Make the WOFF metadata xml file based on input UFO and FONTLOG.txt |
 | [psfnormalize](#psfnormalize) | Normalize a UFO and optionally converts it between UFO2 and UFO3 versions |
 | [psfremovegliflibkeys](#psfremovegliflibkeys) | Remove keys from glif lib entries |
-| [psfrenameglyphs](#psfrenameglyphs) | Within a UFO, assign new working names to glyphs based on csv input file |
+| [psfrenameglyphs](#psfrenameglyphs) | Within a UFO and class definition, assign new working names to glyphs based on csv input file |
 | [psfsetassocfeat](#psfsetassocfeat) | Add associate feature info to glif lib based on a csv file |
 | [psfsetassocuids](#psfsetassocuids) | Add associate UID info to glif lib based on a csv file |
 | [psfsetglyphorder](#psfsetglyphorder) | Load glyph order data into public.glyphOrder based on a text file |
@@ -564,11 +564,11 @@ This will remove any keys that match key1 or key2 or begin with start1 or start2
 
 ---
 ####  psfrenameglyphs
-Usage: **`psfrenameglyphs [--mergecomps] -i INPUT ifont [ofnt]`**
+Usage: **`psfrenameglyphs [--mergecomps] [-c CLASSFILE] -i INPUT ifont [ofnt]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-Within a UFO, assign new working names to glyphs based on csv input file, format "oldname,newname". The algorithm will handle circular rename specifications such as:
+Within a UFO and, if -c specified, a classes definition file, assign new working names to glyphs based on csv input file, format "oldname,newname". The algorithm will handle circular rename specifications such as:
 ```
 glyph1,glyph2
 glyph2,glyph1
