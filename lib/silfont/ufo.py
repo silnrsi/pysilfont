@@ -503,7 +503,7 @@ class Ufont(object):
                 logger.log("Checking lib.plist metadata", "P")
                 libwarnifnot = {"com.schriftgestaltung.disablesAutomaticAlignment": True,
                                 "com.schriftgestaltung.disablesLastChange": True,
-                                "com.schriftgestaltung.GSFont.useNiceNames": False}
+                                "com.schriftgestaltung.customParameter.GSFont.useNiceNames": False}
                 libwarnifmissing = ("public.glyphOrder",)
                 libcheckinvalid = ("com.schriftgestaltung.Disable Last Change",
                                    "com.schriftgestaltung.font.Disable Last Change", "UFO.lib", "UFOFormat")

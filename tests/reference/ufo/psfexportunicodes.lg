@@ -1,11 +1,10 @@
-2019-03-13 16:53:38 Progress: Opening file for output: @cwd@/local/testresults/ufo/psfexportunicodes.csv
-2019-03-13 16:53:38 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo
-2019-03-13 16:53:38 Progress: Checking fontinfo.plist metadata
-2019-03-13 16:53:38 Warning:  openTypeNameSampleText is missing from fontinfo.plist
-2019-03-13 16:53:38 Warning:  macintoshFONDName would be removed from fontinfo  Old value: My Test
-2019-03-13 16:53:38 Warning:  postscriptFamilyBlues would be removed from fontinfo  Old value: []
-2019-03-13 16:53:38 Warning:  openTypeHheaAscender would be updated  Old value: 2200, new value: 2100
-2019-03-13 16:53:38 Progress: Checking lib.plist metadata
-2019-03-13 16:53:38 Warning:  com.schriftgestaltung.GSFont.useNiceNames should normally be False; currently missing
-2019-03-13 16:53:38 Progress: Check & fix results:- Errors: 0, Changes to make: 3, Other warnings: 2
-2019-03-13 16:53:38 Progress: See log file for details
+2019-03-26 11:32:45 Progress: Opening file for output: @cwd@/local/testresults/ufo/psfexportunicodes.csv
+2019-03-26 11:32:45 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo
+2019-03-26 11:32:45 Progress: Checking fontinfo.plist metadata
+2019-03-26 11:32:45 Warning:  openTypeNameSampleText is missing from fontinfo.plist
+2019-03-26 11:32:45 Warning:  macintoshFONDName would be removed from fontinfo  Old value: My Test
+2019-03-26 11:32:45 Warning:  postscriptFamilyBlues would be removed from fontinfo  Old value: []
+2019-03-26 11:32:45 Warning:  openTypeHheaAscender would be updated  Old value: 2200, new value: 2100
+2019-03-26 11:32:45 Progress: Checking lib.plist metadata
+2019-03-26 11:32:45 Progress: Check & fix results:- Errors: 0, Changes to make: 3, Other warnings: 1
+2019-03-26 11:32:45 Progress: See log file for details

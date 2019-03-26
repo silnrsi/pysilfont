@@ -1,15 +1,14 @@
-2019-03-13 16:53:43 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
-2019-03-13 16:53:43 Progress: Checking fontinfo.plist metadata
-2019-03-13 16:53:43 Warning:  openTypeNameSampleText is missing from fontinfo.plist
-2019-03-13 16:53:43 Warning:  year removed from fontinfo.  Old value: 2019
-2019-03-13 16:53:43 Warning:  capHeight updated  Old value: 1485.3, new value: 1485
-2019-03-13 16:53:43 Warning:  styleMapFamilyName uppdated  Old value: Psf test, new value: Psf Test
-2019-03-13 16:53:43 Warning:  openTypeOS2TypoLineGap updated  Old value: 1, new value: 0
-2019-03-13 16:53:43 Warning:  openTypeNamePreferredFamilyName updated  Old value: Psf Testing, new value: Psf Test
-2019-03-13 16:53:43 Progress: Checking lib.plist metadata
-2019-03-13 16:53:43 Warning:  com.schriftgestaltung.GSFont.useNiceNames should normally be False; currently missing
-2019-03-13 16:53:43 Progress: Check & fix results:- Errors: 0, Changes made: 5, Other warnings: 2
-2019-03-13 16:53:43 Progress: See log file for details
-2019-03-13 16:53:43 Progress: Processing font for output
-2019-03-13 16:53:43 Progress: Output UFO already exists - reading for comparison
-2019-03-13 16:53:43 Progress: Writing font to local/testresults/ufo/psfnormalize.ufo
+2019-03-26 11:32:48 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
+2019-03-26 11:32:48 Progress: Checking fontinfo.plist metadata
+2019-03-26 11:32:48 Warning:  openTypeNameSampleText is missing from fontinfo.plist
+2019-03-26 11:32:48 Warning:  year removed from fontinfo.  Old value: 2019
+2019-03-26 11:32:48 Warning:  capHeight updated  Old value: 1485.3, new value: 1485
+2019-03-26 11:32:48 Warning:  styleMapFamilyName uppdated  Old value: Psf test, new value: Psf Test
+2019-03-26 11:32:48 Warning:  openTypeOS2TypoLineGap updated  Old value: 1, new value: 0
+2019-03-26 11:32:48 Warning:  openTypeNamePreferredFamilyName updated  Old value: Psf Testing, new value: Psf Test
+2019-03-26 11:32:48 Progress: Checking lib.plist metadata
+2019-03-26 11:32:48 Progress: Check & fix results:- Errors: 0, Changes made: 5, Other warnings: 1
+2019-03-26 11:32:48 Progress: See log file for details
+2019-03-26 11:32:48 Progress: Processing font for output
+2019-03-26 11:32:48 Progress: Output UFO already exists - reading for comparison
+2019-03-26 11:32:48 Progress: Writing font to local/testresults/ufo/psfnormalize.ufo

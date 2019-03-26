@@ -1,26 +1,25 @@
-2019-03-13 16:53:40 Progress: Opening file for input: tests/input/psfrenameglyphs.csv
-2019-03-13 16:53:40 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Bold.ufo
-2019-03-13 16:53:40 Info:     Processing Glyph Layer 0: public.defaultglyphs
-2019-03-13 16:53:41 Progress: Checking fontinfo.plist metadata
-2019-03-13 16:53:41 Warning:  openTypeNameSampleText is missing from fontinfo.plist
-2019-03-13 16:53:41 Progress: Checking lib.plist metadata
-2019-03-13 16:53:41 Warning:  com.schriftgestaltung.GSFont.useNiceNames should normally be False; currently missing
-2019-03-13 16:53:41 Progress: Check & fix results:- Errors: 0, Changes made: 0, Other warnings: 2
-2019-03-13 16:53:41 Progress: See log file for details
-2019-03-13 16:53:41 Info:     Pass 1 (Font): Renamed Apos to Bpos
-2019-03-13 16:53:41 Info:     Pass 1 (PGO): Renamed Apos to Bpos
-2019-03-13 16:53:41 Info:     Pass 1 (csGO): Renamed Apos to Bpos
-2019-03-13 16:53:41 Info:     Pass 1 (psn): Renamed Apos to Bpos
-2019-03-13 16:53:41 Info:     Pass 1 (Font): Renamed Asterisk to Star
-2019-03-13 16:53:41 Info:     Pass 1 (PGO): Renamed Asterisk to Star
-2019-03-13 16:53:41 Info:     Pass 1 (csGO): Renamed Asterisk to Star
-2019-03-13 16:53:41 Info:     Pass 1 (psn): Renamed Asterisk to Star
-2019-03-13 16:53:41 Info:     glyph name not in font: Commer
-2019-03-13 16:53:41 Info:     glyph name not in publicGlyphorder: Commer
-2019-03-13 16:53:41 Info:     glyph name not in csGlyphorder: Commer
-2019-03-13 16:53:41 Info:     glyph name not in psnames: Commer
-2019-03-13 16:53:41 Progress: 2 glyphs renamed
-2019-03-13 16:53:41 Progress: Processing font for output
-2019-03-13 16:53:41 Progress: Output UFO already exists - reading for comparison
-2019-03-13 16:53:41 Progress: Writing font to local/testresults/ufo/psfrenameglyphs.ufo
-2019-03-13 16:53:41 Info:     Processing glyphs directory
+2019-03-26 11:42:12 Progress: Opening file for input: tests/input/psfrenameglyphs.csv
+2019-03-26 11:42:12 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Bold.ufo
+2019-03-26 11:42:12 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2019-03-26 11:42:12 Progress: Checking fontinfo.plist metadata
+2019-03-26 11:42:12 Warning:  openTypeNameSampleText is missing from fontinfo.plist
+2019-03-26 11:42:12 Progress: Checking lib.plist metadata
+2019-03-26 11:42:12 Progress: Check & fix results:- Errors: 0, Changes made: 0, Other warnings: 1
+2019-03-26 11:42:12 Progress: See log file for details
+2019-03-26 11:42:12 Info:     Pass 1 (Font): Renamed Apos to Bpos
+2019-03-26 11:42:12 Info:     Pass 1 (PGO): Renamed Apos to Bpos
+2019-03-26 11:42:12 Info:     Pass 1 (csGO): Renamed Apos to Bpos
+2019-03-26 11:42:12 Info:     Pass 1 (psn): Renamed Apos to Bpos
+2019-03-26 11:42:12 Info:     Pass 1 (Font): Renamed Asterisk to Star
+2019-03-26 11:42:12 Info:     Pass 1 (PGO): Renamed Asterisk to Star
+2019-03-26 11:42:12 Info:     Pass 1 (csGO): Renamed Asterisk to Star
+2019-03-26 11:42:12 Info:     Pass 1 (psn): Renamed Asterisk to Star
+2019-03-26 11:42:12 Info:     glyph name not in font: Commer
+2019-03-26 11:42:12 Info:     glyph name not in publicGlyphorder: Commer
+2019-03-26 11:42:12 Info:     glyph name not in csGlyphorder: Commer
+2019-03-26 11:42:12 Info:     glyph name not in psnames: Commer
+2019-03-26 11:42:12 Progress: 2 glyphs renamed in UFO
+2019-03-26 11:42:12 Progress: Processing font for output
+2019-03-26 11:42:12 Progress: Output UFO already exists - reading for comparison
+2019-03-26 11:42:12 Progress: Writing font to local/testresults/ufo/psfrenameglyphs.ufo
+2019-03-26 11:42:12 Info:     Processing glyphs directory
