@@ -46,6 +46,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfsubset](#psfsubset) | Create a subset of an existing UFO |
 | [psfsyncmasters](#psfsyncmasters) | Sync metadata in master UFO files based on a Designspace file |
 | [psfsyncmeta](#psfsyncmeta) | Copy basic metadata from one member of a font family to other family members |
+| [psftuneraliases](#psftuneraliases) | Merge alias information into TypeTuner feature xml file |
 | [psfufo2glyphs](#psfufo2glyphs) | Generate a glyphs files from a designspace file and UFO(s) |
 | [psfufo2ttf](#psfufo2ttf) | Generate a ttf file without OpenType tables from a UFO |
 | [psfxml2compdef](#psfxml2compdef) | Convert composite definition file from XML format |
@@ -777,6 +778,16 @@ Note that by default only fontinfo.plist and lib.plist are updated, so fonts are
 Also psfsyncmeta does not use Pysilfont's backup mechanism for fonts.
 
 -n (--new) appends \_new to ufo and file names for testing purposes
+
+---
+####  psftuneraliases
+Usage: **`psftuneraliases -m map.csv [-f font.ttf] feat_in.xml feat_out.xml`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Merges lookup identifiers gleaned from the map.csv file (emitted from [psfbuildfea](#psfbuildfea)) and, optionally, OpenType and Graphite feature identifiers (obtained from a compiled font) into the `<aliases>` section of a TypeTuner features.xml file.
+
+As per prior technology, the alias names do not distinguish between GSUB and GPOS lookups and features, therefore using the same lookup name or feature tag for both GSUB and GPOS will cause the program to exit with an error. 
 
 ---
 ####  psfufo2glyphs
