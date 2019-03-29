@@ -21,7 +21,7 @@ PUBLIC_PREFIX = 'public.'
 
 def getuvss(ufo):
     uvsdict = {}
-    uvs = ufo.lib.get('org.sil.uvs', None)
+    uvs = ufo.lib.get('org.sil.variationSequences', None)
     if uvs is not None:
         for usv, dat in uvs.items():
             usvc = int(usv, 16)
