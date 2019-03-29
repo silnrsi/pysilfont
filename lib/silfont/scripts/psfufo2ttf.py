@@ -21,6 +21,15 @@ PUBLIC_PREFIX = 'public.'
 
 def getuvss(ufo):
     uvsdict = {}
+    uvs = ufo.lib.get('org.sil.uvs', None)
+    if uvs is not None:
+        for usv, dat in uvs.items():
+            usvc = int(usv, 16)
+            pairs = []
+            uvsdict[usvc] = pairs
+            for k, v in dat.items():
+                pairs.append((int(k, 16), v))
+        return uvsdict
     for g in ufo:
         uvs = getattr(g, 'lib', {}).get("org.sil.uvs", None)
         if uvs is None:
