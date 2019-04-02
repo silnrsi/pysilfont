@@ -9,6 +9,8 @@ They are not maintained in the same way as the main scripts, and come in many ca
 - Deprecated scripts
 - Left-overs from previous development plans!
 
+Note - all FontForge-based scripts need updating, since FontForge (as "FF") is no longer a supported tool for execute()
+
 Some are documented below.
 
 ## Table of scripts
@@ -17,6 +19,9 @@ Some are documented below.
 | ------- | ------ | ----------- |
 | [accesslibplist.py](#accesslibplist) | ? | Demo script for accessing fields in lib.plist |
 | [chaindemo.py](#chaindemo) | ? | Demo of how to chain calls to multiple scripts together |
+| [ffchangeglyphnames](#ffchangeglyphnames) | ? | Update glyph names in a ttf font based on csv file |
+| [ffcopyglyphs](#ffcopyglyphs) | ? | Copy glyphs from one font to another, without using ffbuilder |
+| [ffremovealloverlaps](#ffremovealloverlaps) | ? | Remove overlap on all glyphs in a ttf font |
 | [FFmapGdlNames.py](#ffmapgdlnames) | ? | Write mapping of graphite names to new graphite names |
 | [FfmapGdlNames2.py](#ffmapgdlnames2) | ? | Write mapping of graphite names to new graphite names |
 | [FLWriteXml.py](#flwritexml) | ? | Outputs attachment point information and notes as XML file for TTFBuilder |
@@ -59,6 +64,57 @@ and logger objects from one call to the next.  So:
 - the font is only opened once and written once
 - there is a single log file produced
 
+
+---
+#### ffchangeglyphnames
+Usage: **`ffchangeglyphnames [-i INPUT] [--reverse] ifont [ofont]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Update the glyph names in a ttf font based on csv file.
+
+Example usage:
+
+```
+ffchangeglyphnames -i glyphmap.csv font.ttf
+```
+will update the glyph names in the font based on mapping file glyphmap.csv
+
+If \-\-reverse  is used, it change names in reverse.
+
+---
+####  ffcopyglyphs
+Usage: **`ffcopyglyphs -i INPUT [-r RANGE] [--rangefile RANGEFILE] [-n NAME] [--namefile NAMEFILE] [-a] [-f] [-s SCALE] ifont [ofont]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+_This section is Work In Progress!_
+
+optional arguments:
+
+```
+  -h, --help            show this help message and exit
+  -i INPUT, --input INPUT
+                        Font to get glyphs from
+  -r RANGE, --range RANGE
+                        StartUnicode..EndUnicode no spaces, e.g. 20..7E
+  --rangefile RANGEFILE
+                        File with USVs e.g. 20 or a range e.g. 20..7E or both
+  -n NAME, --name NAME  Include glyph named name
+  --namefile NAMEFILE   File with glyph names
+  -a, --anchors         Copy across anchor points
+  -f, --force           Overwrite existing glyphs in the font
+  -s SCALE, --scale SCALE
+                        Scale glyphs by this factor
+```
+
+---
+#### ffremovealloverlaps
+Usage: **`ffremovealloverlaps ifont [ofont]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Remove overlap on all glyphs in a ttf font
 
 ---
 #### FFmapGdlNames

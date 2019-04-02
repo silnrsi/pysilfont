@@ -13,23 +13,19 @@ import silfont
 def cmd() :
 
     deps = (  # (module, used by, min reccomended version)
-        ('booleanOperations', '?', ''),
-        ('compreffor', '?', ''),
-        ('cu2qu', '?', ''),
         ('defcon', '?', ''),
-        ('fontforge', 'ff... scripts', ''),
         ('fontMath', '?', ''),
         ('fontParts', '?', ''),
         ('fontTools', '?', ''),
-        ('glyphsLib', '?', '2.4.0'),
+        ('glyphConstruction', '?', ''),
+        ('glyphsLib', '?', ''),
+        ('harfbuzz', '?', ''),
         ('icu', '?', ''),
         ('lz4', '?', ''),
         ('mutatorMath', '?', ''),
         ('odf', '?', ''),
-        ('robofab', '?', ''),
         ('ufo2ft', '?', ''),
-        ('ufoLib', '?', ''),
-    )
+        )
 
     # Pysilfont info
     print("Pysilfont " + silfont.__copyright__ + "\n")

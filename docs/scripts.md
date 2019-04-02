@@ -10,9 +10,6 @@ There are further example scripts supplied with Pysilfont, and some of these are
 
 | Command | Description |
 | ------- | ----------- |
-| [ffchangeglyphnames](#ffchangeglyphnames) | Update glyph names in a ttf font based on csv file |
-| [ffcopyglyphs](#ffcopyglyphs) | Copy glyphs from one font to another, without using ffbuilder |
-| [ffremovealloverlaps](#ffremovealloverlaps) | Remove overlap on all glyphs in a ttf font |
 | [psfaddanchors](#psfaddanchors) | Read anchor data from XML file and apply to UFO |
 | [psfbuildcomp](#psfbuildcomp) | Add composite glyphs to UFO based on a Composite Definitions file |
 | [psfbuildfea](#psfbuildfea) | Compile fea into TTF |
@@ -52,57 +49,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfxml2compdef](#psfxml2compdef) | Convert composite definition file from XML format |
 
 ---
-#### ffchangeglyphnames
-Usage: **`ffchangeglyphnames [-i INPUT] [--reverse] ifont [ofont]`**
 
-_([Standard options](docs.md#standard-command-line-options) also apply)_
-
-Update the glyph names in a ttf font based on csv file.
-
-Example usage:
-
-```
-ffchangeglyphnames -i glyphmap.csv font.ttf
-```
-will update the glyph names in the font based on mapping file glyphmap.csv
-
-If \-\-reverse  is used, it change names in reverse.
-
----
-####  ffcopyglyphs
-Usage: **`ffcopyglyphs -i INPUT [-r RANGE] [--rangefile RANGEFILE] [-n NAME] [--namefile NAMEFILE] [-a] [-f] [-s SCALE] ifont [ofont]`**
-
-_([Standard options](docs.md#standard-command-line-options) also apply)_
-
-_This section is Work In Progress!_
-
-optional arguments:
-
-```
-  -h, --help            show this help message and exit
-  -i INPUT, --input INPUT
-                        Font to get glyphs from
-  -r RANGE, --range RANGE
-                        StartUnicode..EndUnicode no spaces, e.g. 20..7E
-  --rangefile RANGEFILE
-                        File with USVs e.g. 20 or a range e.g. 20..7E or both
-  -n NAME, --name NAME  Include glyph named name
-  --namefile NAMEFILE   File with glyph names
-  -a, --anchors         Copy across anchor points
-  -f, --force           Overwrite existing glyphs in the font
-  -s SCALE, --scale SCALE
-                        Scale glyphs by this factor
-```
-
----
-#### ffremovealloverlaps
-Usage: **`ffremovealloverlaps ifont [ofont]`**
-
-_([Standard options](docs.md#standard-command-line-options) also apply)_
-
-Remove overlap on all glyphs in a ttf font
-
----
 ####  psfaddanchors
 Usage: **`psfaddanchors [-i ANCHORINFO]  [-a] [-r {X,S,E,P,W,I,V}] ifont [ofont]`**
 
@@ -153,6 +100,7 @@ AyahAlternates,GSUB,46
 CommaAlternates,GSUB,48
 ```
 
+---
 
 ####  psfbuildcomp
 Usage: **`psfbuildcomp [-i CDFILE] [-a] [-f] [-r {X,S,E,P,W,I,V}] ifont [ofont]`**
@@ -787,7 +735,7 @@ _([Standard options](docs.md#standard-command-line-options) also apply)_
 
 Merges lookup identifiers gleaned from the map.csv file (emitted from [psfbuildfea](#psfbuildfea)) and, optionally, OpenType and Graphite feature identifiers (obtained from a compiled font) into the `<aliases>` section of a TypeTuner features.xml file.
 
-As per prior technology, the alias names do not distinguish between GSUB and GPOS lookups and features, therefore using the same lookup name or feature tag for both GSUB and GPOS will cause the program to exit with an error. 
+As per prior technology, the alias names do not distinguish between GSUB and GPOS lookups and features, therefore using the same lookup name or feature tag for both GSUB and GPOS will cause the program to exit with an error.
 
 ---
 ####  psfufo2glyphs

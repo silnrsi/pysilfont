@@ -253,7 +253,7 @@ class csvreader(object):    # Iterator for csv files, skipping comments and chec
 
 def execute(tool, fn, argspec, chain = None):
     # Function to handle parameter parsing, font and file opening etc in command-line scripts
-    # Supports opening (and saving) fonts using FontForge (FF), PysilFont UFO (UFO) or fontTools (FT)
+    # Supports opening (and saving) fonts using PysilFont UFO (UFO), fontParts (FP) or fontTools (FT)
     # Special handling for:
     #   -d  variation on -h to print extra info about defaults
     #   -q  quiet mode - only output a single line with count of errors (if there are any)
@@ -270,16 +270,12 @@ def execute(tool, fn, argspec, chain = None):
     logger = chain["logger"] if chain else params.logger  # paramset has already created a basic logger
     argv   = chain["argv"]   if chain else sys.argv
 
-    if tool == "FF":
-        import fontforge
-        if fontforge.hasUserInterface():
-            return  # Execute is for command-line use
-        fontforge.loadPrefs()
-        fontforge.setPrefs("PreserveTables", "DSIG,Feat,Glat,Gloc,LTSH,Silf,Sill,Silt,VDMX,hdmx")  ## Perhaps should be a parameter and check for existing values
-    elif tool == "UFO":
+    if tool == "UFO":
         from silfont.ufo import Ufont
     elif tool == "FT":
         from fontTools import ttLib
+    elif tool == "FP":
+        from fontParts.world import OpenFont
     elif tool == "" or tool is None:
         tool = None
     else:
@@ -550,9 +546,9 @@ def execute(tool, fn, argspec, chain = None):
         if chain and name == 'ifont':
             aval = chain["font"]
         else:
-            if tool == "FF" : aval = fontforge.open(aval)
             if tool == "UFO": aval = Ufont(aval, params=params)
             if tool == "FT" : aval = ttLib.TTFont(aval)
+            if tool == "FP" : aval = OpenFont(aval)
         setattr(args, name, aval)  # Assign the font object to args attribute
 
 # All arguments processed, now call the main function
@@ -595,12 +591,7 @@ def execute(tool, fn, argspec, chain = None):
                     else:
                         newfont.logger.log("No font backup done due to backup parameter setting", "W")
                 # Output the font
-                if tool == "FF":
-                    logger.log("Saving font to " + outfont, "P")
-                    if outfontext.lower() == ".ufo" or outfontext.lower() == '.ttf':
-                        newfont.generate(outfont)
-                    else: newfont.save(outfont)
-                elif tool == "FT":
+                if tool in ("FT", "FP"):
                     logger.log("Saving font to " + outfont, "P")
                     newfont.save(outfont)
                 else:  # Must be Pyslifont Ufont

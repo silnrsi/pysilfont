@@ -6,19 +6,16 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'Victor Gaultney'
 
 from silfont.core import execute
-from fontParts.world import *
 from glyphConstruction import ParseGlyphConstructionListFromString, GlyphConstructionBuilder
 
-# Setting input - Note that for fontParts you specify filenames for 
-# input and output rather than infont or outfont. This script writes
-# changes back to the original font.
 argspec = [
-    ('ifont', {'help': 'Input font filename'}, {'type': 'filename'}),
+    ('ifont', {'help': 'Input font filename'}, {'type': 'infont'}),
+    ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
     ('-i','--cdfile',{'help': 'Composite Definitions input file'}, {'type': 'infile', 'def': 'constructions.txt'}),
     ('-l','--log',{'help': 'Set log file name'}, {'type': 'outfile', 'def': '_gc.log'})]
 
 def doit(args) :
-    font = OpenFont(args.ifont)
+    font = args.ifont
     logger = args.logger
 
     constructions = ParseGlyphConstructionListFromString(args.cdfile)
@@ -37,12 +34,8 @@ def doit(args) :
         glyph.note = constructionGlyph.note
         #glyph.markColor = constructionGlyph.mark
         glyph.width = constructionGlyph.width
-    
-    # Write the changes to a font directly rather than returning an object
-    font.save()
 
-    return
+    return font
 
-# Note the use of None rather than "UFO" in this execute()
-def cmd() : execute(None,doit,argspec)
+def cmd() : execute("FP",doit,argspec)
 if __name__ == "__main__": cmd()

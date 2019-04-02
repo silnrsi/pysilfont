@@ -159,7 +159,7 @@ if __name__ == "__main__": cmd()
 ```
 The first line defines the function that actually calls execute() to do the work, where Tool is one of:
 - “UFO” to open fonts with pysilfont’s ufo.py module, returning a Ufont object
-- “FF” to open fonts with Fontforge, returning a font object
+- “FP” to open fonts with fontParts, returning a font object
 - “FT” to open fonts with FontTools, returning a TTfont object
 - None if no font to be opened by execute()
 - Other tools may be added in the future

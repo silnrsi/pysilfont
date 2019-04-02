@@ -8,6 +8,15 @@ __author__ = 'Victor Gaultney'
 
 from silfont.core import execute
 
+
+''' This  will need updating, since FontForge is no longer supported as a tool by execute() So:
+- ifont and ofont will need to be changed to have type 'filename'
+- ifont will then need to be opened using fontforge.open
+- The font will need to be saved with font.save
+- execute will need to be called with the tool set to None instead of "FF"
+'''
+
+
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
     ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont', 'def': 'new'})]
