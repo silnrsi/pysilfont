@@ -8,18 +8,15 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'Victor Gaultney'
 
 from silfont.core import execute
-from fontParts.world import *
 
-# Setting input - Note that for fontParts you specify filenames for 
-# input and output rather than infont or outfont. This script writes
-# changes back to the original font.
 argspec = [
-    ('ifont', {'help': 'Input font filename'}, {'type': 'filename'}),
+    ('ifont', {'help': 'Input font filename'}, {'type': 'infont'}),
+    ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
     ('-i','--input',{'help': 'Input csv file'}, {'type': 'incsv', 'def': 'duplicates.csv'}),
     ('-l','--log',{'help': 'Set log file name'}, {'type': 'outfile', 'def': '_duplicates.log'})]
 
 def doit(args) :
-    font = OpenFont(args.ifont)
+    font = args.ifont
     logger = args.logger
 
     # Process duplicates csv file into a dictionary structure
@@ -45,12 +42,8 @@ def doit(args) :
             logger.log(source + " duplicated to " + target)
         else :
             logger.log("Warning: " + source + " not in font")
-    
-    # Write the changes to a font directly rather than returning an object
-    font.save()
 
-    return
+    return font
 
-# Note the use of None rather than "UFO" in this execute()
-def cmd() : execute(None,doit,argspec)
+def cmd() : execute("FP",doit,argspec)
 if __name__ == "__main__": cmd()

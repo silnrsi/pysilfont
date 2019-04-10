@@ -1,0 +1,3 @@
+2019-04-10 15:46:32 Progress: Opening file for input: tests/input/psfbuildcomp.txt
+2019-04-10 15:46:32 Error:    Invalid CD line 'LtnSmITilde = LtnSmDotlessI + CombTilde@U ^200,200 | 0129' - No glyph named 'LtnSmDotlessI'.
+2019-04-10 15:46:32 Error:    Invalid CD line 'LtnSmITildeGraveCedilla = LtnSmDotlessI + CombCedilla@H + CombTilde@LtnSmDotlessI:U + CombGrave@U ^200,200 | E010 # i cedilla tilde grave' - No glyph named 'LtnSmDotlessI'.

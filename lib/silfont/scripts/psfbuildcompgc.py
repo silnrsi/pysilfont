@@ -22,18 +22,22 @@ def doit(args) :
 
     for construction in constructions :
         # Create a new constructed glyph object
-        constructionGlyph = GlyphConstructionBuilder(construction, font)
-        # Make a new glyph in target font with the new glyph name
-        glyph = font.newGlyph(constructionGlyph.name)
-        # Draw the constructed object onto the new glyph
-        # This is rather odd in how it works
-        constructionGlyph.draw(glyph.getPen())
-        # Copy glyph metadata from constructed object
-        glyph.name = constructionGlyph.name
-        glyph.unicode = constructionGlyph.unicode
-        glyph.note = constructionGlyph.note
-        #glyph.markColor = constructionGlyph.mark
-        glyph.width = constructionGlyph.width
+        try:
+            constructionGlyph = GlyphConstructionBuilder(construction, font)
+        except ValueError as e:
+            logger.log("Invalid CD line '" + construction + "' - " + str(e), "E")
+        else:
+            # Make a new glyph in target font with the new glyph name
+            glyph = font.newGlyph(constructionGlyph.name)
+            # Draw the constructed object onto the new glyph
+            # This is rather odd in how it works
+            constructionGlyph.draw(glyph.getPen())
+            # Copy glyph metadata from constructed object
+            glyph.name = constructionGlyph.name
+            glyph.unicode = constructionGlyph.unicode
+            glyph.note = constructionGlyph.note
+            #glyph.markColor = constructionGlyph.mark
+            glyph.width = constructionGlyph.width
 
     return font
 

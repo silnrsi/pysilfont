@@ -207,7 +207,11 @@ class ttf_diff(object): # For diffing 2 ttf files.  Differences are not listed
 def test_run(tool, commandline, testcommand, outfont, exp_errors, exp_warnings): # Used by tests to run commands
     sys.argv = commandline.split(" ")
     (args, font) = execute(tool, testcommand.doit, testcommand.argspec, chain="first")
-    if outfont: font.write(outfont)
+    if outfont:
+        if tool in ("FT", "FP"):
+            font.save(outfont)
+        else:  # Must be Pyslifont Ufont
+            font.write(outfont)
     args.logger.logfile.close() # Need to close the log so that the diff test can be run
     exp_counts = (exp_errors, exp_warnings)
     actual_counts = (args.logger.errorcount, args.logger.warningcount)

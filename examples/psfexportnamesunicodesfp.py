@@ -7,17 +7,15 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'Victor Gaultney'
 
 from silfont.core import execute
-from fontParts.world import *
 
 suffix = "_namesunicodes"
 
-# Setting input - For fontParts you specify filename for input
 argspec = [
-    ('ifont', {'help': 'Input font file'}, {'type': 'filename'}),
+    ('ifont', {'help': 'Input font file'}, {'type': 'infont'}),
     ('-o','--output',{'help': 'Output csv file'}, {'type': 'outfile', 'def': suffix+'.csv'})]
 
 def doit(args) :
-    font = OpenFont(args.ifont)
+    font = args.ifont
     outfile = args.output
 
     for glyph in font:
@@ -28,6 +26,5 @@ def doit(args) :
 
     print("Done")
 
-# Note the use of None rather than "UFO" in this execute()
-def cmd() : execute(None,doit,argspec)
+def cmd() : execute("FP",doit,argspec)
 if __name__ == "__main__": cmd()

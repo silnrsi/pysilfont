@@ -581,15 +581,15 @@ def execute(tool, fn, argspec, chain = None):
                         newnum = max(nums)+1 if nums else 1
                         backupname = backupbase+"."+str(newnum)+"~"
                         # Backup the font
-                        newfont.logger.log("Backing up input font to "+backupname, "P")
+                        logger.log("Backing up input font to "+backupname, "P")
                         shutil.copytree(outfont, backupname)
                         # Purge old backups
                         for i in range(0, len(nums) - backupmax + 1):
                             backupname = backupbase+"."+str(nums[i])+"~"
-                            newfont.logger.log("Purging old backup "+backupname, "I")
+                            logger.log("Purging old backup "+backupname, "I")
                             shutil.rmtree(backupname)
                     else:
-                        newfont.logger.log("No font backup done due to backup parameter setting", "W")
+                        logger.log("No font backup done due to backup parameter setting", "W")
                 # Output the font
                 if tool in ("FT", "FP"):
                     logger.log("Saving font to " + outfont, "P")
