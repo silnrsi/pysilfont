@@ -20,8 +20,9 @@ oldresultsdir = "local/oldtestresults/"
 if os.path.isdir(resultsdir):
     if os.path.isdir(oldresultsdir): shutil.rmtree(oldresultsdir)
     os.rename(resultsdir, oldresultsdir)
-os.makedirs(resultsdir)
-os.makedirs("local/testresults/ufo/psfglyphs2ufo")
+os.makedirs(resultsdir + "ufo/psfglyphs2ufo")
+os.makedirs(resultsdir + "fontparts")
+
 
 # Copy standard UFO results across so that the log files consistently say:
 #   "Progress: Output UFO already exists - reading for comparison"

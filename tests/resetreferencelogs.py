@@ -26,7 +26,7 @@ if len(sys.argv) != 2:
 
 testgroup = sys.argv[1]
 
-if testgroup not in ("ufo"):
+if testgroup not in ("ufo", "fontparts"):
     print("Invalid test group")
     sys.exit()
 
