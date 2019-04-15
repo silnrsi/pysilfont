@@ -12,7 +12,7 @@ try:
 except NameError: # Will  occur with Python 3
     pass
 from xml.etree import ElementTree as ET
-import sys, os, shutil, filecmp, io
+import sys, os, shutil, filecmp, io, re
 import warnings
 import collections
 import datetime
@@ -340,7 +340,8 @@ class Ufont(object):
                         "openTypeOS2WeightClass")
             fiwarnifnot = {"unitsPerEm": (1000, 2048),
                            "styleMapStyleName": ("regular", "bold", "italic", "bold italic")}
-            fidel = ("macintoshFONDFamilyID", "macintoshFONDName", "openTypeNameCompatibleFullName", "year")
+            fidel = ("macintoshFONDFamilyID", "macintoshFONDName", "postscriptWeightName",
+                     "openTypeNameCompatibleFullName", "openTypeOS2FamilyClass", "year")
             fidelifempty = ("guidelines", "postscriptBlueValues", "postscriptFamilyBlues", "postscriptFamilyOtherBlues",
                             "postscriptOtherBlues")
             fiint = ("ascender", "capHeight", "descender", "postscriptUnderlinePosition",
@@ -365,9 +366,20 @@ class Ufont(object):
             for key in ("ascender", "copyright", "descender", "familyName", "styleName", "openTypeNameManufacturer", "versionMajor", "versionMinor"):
                 if key in self.fontinfo and self.fontinfo.getval(key) is not None:
                     storedvals[key] = self.fontinfo.getval(key)
-                    if key == "styleName": # Capitalise words of stored value
-                        sep = b' ' if type(storedvals[key]) is bytes else ' '
-                        storedvals[key] = sep.join(s[:1].upper() + s[1:] for s in storedvals[key].split(sep))
+                    if key == "styleName":
+                        sn = storedvals[key]
+                        sn = re.sub(r"(\w)([A-Z])", r"\1 \2", sn)  # Add any missing spaces before capital letters
+                        # Capitalise first letter of words
+                        sep = b' ' if type(sn) is bytes else ' '
+                        sn = sep.join(s[:1].upper() + s[1:] for s in sn.split(sep))
+                        if sn != storedvals[key]:
+                            if self.metafix:
+                                self.fontinfo.setval(key, "string", sn)
+                                logmess = " updated "
+                            else:
+                                logmess = " would be updated "
+                            self.logchange(logmess, key, storedvals[key], sn)
+                            storedvals[key] = sn
                     if key in ("ascender", "descender"):
                         storedvals[key] = int(storedvals[key])
                 else:
@@ -587,7 +599,13 @@ class Ufont(object):
         if "groups" in self.__dict__: setFileForOutput(dtree, "groups.plist", self.groups, "xml")
         if "kerning" in self.__dict__: setFileForOutput(dtree, "kerning.plist", self.kerning, "xml")
         if "lib" in self.__dict__: setFileForOutput(dtree, "lib.plist", self.lib, "xml")
-        if UFOversion == "3": setFileForOutput(dtree, "layercontents.plist", self.layercontents, "xml")
+        if UFOversion == "3":
+            # Sort layer contents by layer name
+            lc = self.layercontents
+            lcindex = {lc[x][0].text: lc[x] for x in lc}  # index on layer name
+            for (x, name) in enumerate(sorted(lcindex)):
+                lc.etree[0][x] = lcindex[name]  # Replace array elements in new order
+            setFileForOutput(dtree, "layercontents.plist", self.layercontents, "xml")
         if "features" in self.__dict__: setFileForOutput(dtree, "features.fea", self.features, "text")
         # Set glyph layers for output
         for layer in self.layers: layer.setForOutput()
@@ -676,6 +694,8 @@ class Ulayer(_Ucontainer):
         for glyphn in self:
             glyph = self._contents[glyphn]
             if convertg2f1: glyph.convertToFormat1()
+            if glyph["advance"] is not None:
+                if glyph["advance"].width is None and glyph["advance"].height is None: glyph.remove("advance")
             setFileForOutput(dtree, glyph.filen, glyph, "xml")
 
     def renameGlifs(self):
@@ -808,6 +828,7 @@ class Uglif(ETU.xmlitem):
                     del contour.UFO2anchor["type"]  # remove type="move"
                     self.add('anchor', contour.UFO2anchor)
                     self._contents['outline'].removeobject(contour, "contour")
+        if self._contents['outline'] is None: self.add('outline')
 
         self.format = "2"
 
@@ -898,11 +919,14 @@ class Uadvance(Uelement):
             self.height = None
 
     def __setattr__(self, name, value):
-        if name in ('width', 'height') and value is not None:
-            value = str(value)
-            self.element.attrib[name] = value
+        if name in ('width', 'height'):
+            if value == "0" : value = None
+            if value is None:
+                if name in self.element.attrib: del self.element.attrib[name]
+            else:
+                value = str(value)
+                self.element.attrib[name] = value
         super(Uadvance, self).__setattr__(name, value)
-
 
 class Uunicode(Uelement):
     def __init__(self, glif, element):
