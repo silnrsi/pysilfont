@@ -30,7 +30,7 @@ def doit(args):
     logger = args.logger
 
     # Read input csv
-    builder = FB.FTMLBuilder(logger, incsv = args.input, fontcode = args.fontcode, font = args.ifont, ap = args.ap, rtl = True)
+    builder = FB.FTMLBuilder(logger, incsv = args.input, fontcode = args.fontcode, font = args.ifont, ap = args.ap, rtlenable = True)
 
     # Override default base (25CC) for displaying combining marks:
     builder.diacBase = 0x0628   # beh
