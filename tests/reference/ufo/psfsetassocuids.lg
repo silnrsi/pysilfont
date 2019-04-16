@@ -1,13 +1,15 @@
-2019-03-26 11:32:46 Progress: Opening file for input: tests/input/psfsetassocuids.csv
-2019-03-26 11:32:46 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Bold.ufo
-2019-03-26 11:32:46 Info:     Processing Glyph Layer 0: public.defaultglyphs
-2019-03-26 11:32:46 Progress: Checking fontinfo.plist metadata
-2019-03-26 11:32:46 Warning:  openTypeNameSampleText is missing from fontinfo.plist
-2019-03-26 11:32:46 Progress: Checking lib.plist metadata
-2019-03-26 11:32:46 Progress: Check & fix results:- Errors: 0, Changes to make: 0, Other warnings: 1
-2019-03-26 11:32:46 Progress: See log file for details
-2019-03-26 11:32:46 Error:    No glyph in font for SupThree on line 1
-2019-03-26 11:32:46 Progress: Processing font for output
-2019-03-26 11:32:46 Progress: Output UFO already exists - reading for comparison
-2019-03-26 11:32:46 Progress: Writing font to local/testresults/ufo/psfsetassocuids.ufo
-2019-03-26 11:32:46 Info:     Processing glyphs directory
+2019-04-16 14:14:34 Progress: Opening file for input: tests/input/psfsetassocuids.csv
+2019-04-16 14:14:34 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Bold.ufo
+2019-04-16 14:14:34 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2019-04-16 14:14:34 Progress: Checking fontinfo.plist metadata
+2019-04-16 14:14:34 Warning:  openTypeNameSampleText is missing from fontinfo.plist
+2019-04-16 14:14:34 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
+2019-04-16 14:14:34 Info:     Types: Old - list, New - NoneType
+2019-04-16 14:14:34 Progress: Checking lib.plist metadata
+2019-04-16 14:14:34 Progress: Check & fix results:- Errors: 0, Changes to make: 1, Other warnings: 1
+2019-04-16 14:14:34 Progress: See log file for details
+2019-04-16 14:14:34 Error:    No glyph in font for SupThree on line 1
+2019-04-16 14:14:34 Progress: Processing font for output
+2019-04-16 14:14:34 Progress: Output UFO already exists - reading for comparison
+2019-04-16 14:14:34 Progress: Writing font to local/testresults/ufo/psfsetassocuids.ufo
+2019-04-16 14:14:34 Info:     Processing glyphs directory

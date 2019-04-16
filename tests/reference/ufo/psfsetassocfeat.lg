@@ -1,22 +1,24 @@
-2019-03-26 11:32:46 Progress: Opening file for input: tests/input/psfsetassocfeat.csv
-2019-03-26 11:32:46 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
-2019-03-26 11:32:46 Info:     Processing Glyph Layer 0: public.defaultglyphs
-2019-03-26 11:32:46 Progress: Checking fontinfo.plist metadata
-2019-03-26 11:32:46 Warning:  openTypeNameSampleText is missing from fontinfo.plist
-2019-03-26 11:32:46 Warning:  year would be removed from fontinfo  Old value: 2019
-2019-03-26 11:32:46 Info:     Types: Old - int, New - NoneType
-2019-03-26 11:32:46 Warning:  capHeight would be updated  Old value: 1485.3, new value: 1485
-2019-03-26 11:32:46 Info:     Types: Old - float, New - int
-2019-03-26 11:32:46 Warning:  styleMapFamilyName would be uppdated  Old value: Psf test, new value: Psf Test
-2019-03-26 11:32:46 Info:     Types: Old - string, New - string
-2019-03-26 11:32:46 Warning:  openTypeOS2TypoLineGap would be updated  Old value: 1, new value: 0
-2019-03-26 11:32:46 Info:     Types: Old - int, New - int
-2019-03-26 11:32:46 Warning:  openTypeNamePreferredFamilyName would be updated  Old value: Psf Testing, new value: Psf Test
-2019-03-26 11:32:46 Info:     Types: Old - string, New - string
-2019-03-26 11:32:46 Progress: Checking lib.plist metadata
-2019-03-26 11:32:46 Progress: Check & fix results:- Errors: 0, Changes to make: 5, Other warnings: 1
-2019-03-26 11:32:46 Progress: See log file for details
-2019-03-26 11:32:46 Progress: Processing font for output
-2019-03-26 11:32:46 Progress: Output UFO already exists - reading for comparison
-2019-03-26 11:32:46 Progress: Writing font to local/testresults/ufo/psfsetassocfeat.ufo
-2019-03-26 11:32:46 Info:     Processing glyphs directory
+2019-04-16 14:14:34 Progress: Opening file for input: tests/input/psfsetassocfeat.csv
+2019-04-16 14:14:34 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
+2019-04-16 14:14:34 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2019-04-16 14:14:34 Progress: Checking fontinfo.plist metadata
+2019-04-16 14:14:34 Warning:  openTypeNameSampleText is missing from fontinfo.plist
+2019-04-16 14:14:34 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
+2019-04-16 14:14:34 Info:     Types: Old - list, New - NoneType
+2019-04-16 14:14:34 Warning:  year would be removed from fontinfo  Old value: 2019
+2019-04-16 14:14:34 Info:     Types: Old - int, New - NoneType
+2019-04-16 14:14:34 Warning:  capHeight would be updated  Old value: 1485.3, new value: 1485
+2019-04-16 14:14:34 Info:     Types: Old - float, New - int
+2019-04-16 14:14:34 Warning:  styleMapFamilyName would be uppdated  Old value: Psf test, new value: Psf Test
+2019-04-16 14:14:34 Info:     Types: Old - string, New - string
+2019-04-16 14:14:34 Warning:  openTypeOS2TypoLineGap would be updated  Old value: 1, new value: 0
+2019-04-16 14:14:34 Info:     Types: Old - int, New - int
+2019-04-16 14:14:34 Warning:  openTypeNamePreferredFamilyName would be updated  Old value: Psf Testing, new value: Psf Test
+2019-04-16 14:14:34 Info:     Types: Old - string, New - string
+2019-04-16 14:14:34 Progress: Checking lib.plist metadata
+2019-04-16 14:14:34 Progress: Check & fix results:- Errors: 0, Changes to make: 6, Other warnings: 1
+2019-04-16 14:14:34 Progress: See log file for details
+2019-04-16 14:14:34 Progress: Processing font for output
+2019-04-16 14:14:34 Progress: Output UFO already exists - reading for comparison
+2019-04-16 14:14:34 Progress: Writing font to local/testresults/ufo/psfsetassocfeat.ufo
+2019-04-16 14:14:34 Info:     Processing glyphs directory

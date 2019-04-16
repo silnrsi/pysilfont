@@ -1,141 +1,143 @@
-2019-03-26 11:32:47 Progress: Opening file for input: tests/input/psfsetunicodes.csv
-2019-03-26 11:32:47 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
-2019-03-26 11:32:47 Info:     Processing Glyph Layer 0: public.defaultglyphs
-2019-03-26 11:32:47 Progress: Checking fontinfo.plist metadata
-2019-03-26 11:32:47 Warning:  openTypeNameSampleText is missing from fontinfo.plist
-2019-03-26 11:32:47 Warning:  year removed from fontinfo.  Old value: 2019
-2019-03-26 11:32:47 Info:     Types: Old - int, New - NoneType
-2019-03-26 11:32:47 Warning:  capHeight updated  Old value: 1485.3, new value: 1485
-2019-03-26 11:32:47 Info:     Types: Old - float, New - int
-2019-03-26 11:32:47 Warning:  styleMapFamilyName uppdated  Old value: Psf test, new value: Psf Test
-2019-03-26 11:32:47 Info:     Types: Old - string, New - string
-2019-03-26 11:32:47 Warning:  openTypeOS2TypoLineGap updated  Old value: 1, new value: 0
-2019-03-26 11:32:47 Info:     Types: Old - int, New - int
-2019-03-26 11:32:47 Warning:  openTypeNamePreferredFamilyName updated  Old value: Psf Testing, new value: Psf Test
-2019-03-26 11:32:47 Info:     Types: Old - string, New - string
-2019-03-26 11:32:47 Progress: Checking lib.plist metadata
-2019-03-26 11:32:47 Progress: Check & fix results:- Errors: 0, Changes made: 5, Other warnings: 1
-2019-03-26 11:32:47 Progress: See log file for details
-2019-03-26 11:32:47 Info:     Glyph 'Notthere' not in font; line 3 ignored.
-2019-03-26 11:32:47 Progress: Processing font for output
-2019-03-26 11:32:47 Progress: Output UFO already exists - reading for comparison
-2019-03-26 11:32:47 Progress: Writing font to local/testresults/ufo/psfsetunicodes.ufo
-2019-03-26 11:32:47 Info:     Processing glyphs directory
-2019-03-26 11:32:47 Verbose:    A_mpersand.glif
-2019-03-26 11:32:47 Verbose:    A_pos.glif
-2019-03-26 11:32:47 Verbose:    A_sterisk.glif
-2019-03-26 11:32:47 Verbose:    A_tS_gn.glif
-2019-03-26 11:32:47 Verbose:    C_ircumA_ccent.glif
-2019-03-26 11:32:47 Verbose:    C_olon.glif
-2019-03-26 11:32:47 Verbose:    C_ombA_cute.glif
-2019-03-26 11:32:47 Verbose:    C_ombC_ircum.glif
-2019-03-26 11:32:47 Verbose:    C_ombD_iaer.glif
-2019-03-26 11:32:47 Verbose:    C_ombG_rave.glif
-2019-03-26 11:32:47 Verbose:    C_ombR_ingA_bv.glif
-2019-03-26 11:32:47 Verbose:    C_ombT_ilde.glif
-2019-03-26 11:32:47 Verbose:    C_omma.glif
-2019-03-26 11:32:47 Verbose:    D_igitE_ight.glif
-2019-03-26 11:32:47 Verbose:    D_igitF_ive.glif
-2019-03-26 11:32:47 Verbose:    D_igitF_our.glif
-2019-03-26 11:32:47 Verbose:    D_igitN_ine.glif
-2019-03-26 11:32:47 Verbose:    D_igitO_ne.glif
-2019-03-26 11:32:47 Verbose:    D_igitS_even.glif
-2019-03-26 11:32:47 Verbose:    D_igitS_ix.glif
-2019-03-26 11:32:47 Verbose:    D_igitT_hree.glif
-2019-03-26 11:32:47 Verbose:    D_igitT_wo.glif
-2019-03-26 11:32:47 Verbose:    D_igitZ_ero.glif
-2019-03-26 11:32:47 Verbose:    D_ollarS_gn.glif
-2019-03-26 11:32:47 Verbose:    D_ottedC_irc.glif
-2019-03-26 11:32:47 Verbose:    E_qS_gn.glif
-2019-03-26 11:32:47 Verbose:    E_xclamationM_rk.glif
-2019-03-26 11:32:47 Verbose:    F_ullS_top.glif
-2019-03-26 11:32:47 Verbose:    G_T_S_gn.glif
-2019-03-26 11:32:47 Verbose:    G_raveA_ccent.glif
-2019-03-26 11:32:47 Verbose:    H_yphen.glif
-2019-03-26 11:32:47 Verbose:    H_yphenM_inus.glif
-2019-03-26 11:32:47 Verbose:    H_yphen_S_oft.glif
-2019-03-26 11:32:47 Verbose:    L_T_S_gn.glif
-2019-03-26 11:32:47 Verbose:    L_ftC_urlyB_rac.glif
-2019-03-26 11:32:47 Verbose:    L_ftP_aren.glif
-2019-03-26 11:32:47 Verbose:    L_ftS_qrB_rac.glif
-2019-03-26 11:32:47 Verbose:    L_owL_ine.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apA_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apA_D_iaer.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apB_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apC_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apD_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apE_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apF_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apG_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apH_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apI_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apJ_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apK_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apL_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apM_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apN_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apO_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apP_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apQ_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apR_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apS_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apT_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apU_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apV_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apW_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apX_.glif
-2019-03-26 11:32:47 Verbose:    L_tnC_apY_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mA_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mA_A_cute.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mA_C_ircum.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mA_D_iaer.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mA_G_rave.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mA_R_ingA_bv.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mA_T_ilde.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mB_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mC_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mD_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mE_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mF_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mG_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mH_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mI_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mJ_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mK_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mL_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mM_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mN_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mO_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mP_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mQ_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mR_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mS_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mT_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mU_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mV_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mW_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mX_.glif
-2019-03-26 11:32:47 Verbose:    L_tnS_mY_.glif
-2019-03-26 11:32:47 Verbose:    N_onB_reakingH_yphen.glif
-2019-03-26 11:32:47 Verbose:    N_umS_gn.glif
-2019-03-26 11:32:47 Verbose:    P_ercentS_gn.glif
-2019-03-26 11:32:47 Verbose:    P_lusS_gn.glif
-2019-03-26 11:32:47 Verbose:    Q_stnM_rk.glif
-2019-03-26 11:32:47 Verbose:    Q_uotM_rk.glif
-2019-03-26 11:32:47 Verbose:    R_everseS_olidus.glif
-2019-03-26 11:32:47 Verbose:    R_tC_urlyB_rac.glif
-2019-03-26 11:32:47 Verbose:    R_tP_aren.glif
-2019-03-26 11:32:47 Verbose:    R_tS_qrB_rac.glif
-2019-03-26 11:32:47 Verbose:    S_emicolon.glif
-2019-03-26 11:32:47 Verbose:    S_olidus.glif
-2019-03-26 11:32:47 Verbose:    S_pace.glif
-2019-03-26 11:32:47 Verbose:    T_ilde.glif
-2019-03-26 11:32:47 Verbose:    V_ertL_ine.glif
-2019-03-26 11:32:47 Verbose:    _notdef.glif
-2019-03-26 11:32:47 Verbose:    _null.glif
-2019-03-26 11:32:47 Verbose:    contents.plist
-2019-03-26 11:32:47 Verbose:    nonmarkingreturn.glif
-2019-03-26 11:32:47 Verbose:  fontinfo.plist
-2019-03-26 11:32:47 Verbose:  layercontents.plist
-2019-03-26 11:32:47 Verbose:  lib.plist
-2019-03-26 11:32:47 Verbose:  metainfo.plist
+2019-04-16 14:14:35 Progress: Opening file for input: tests/input/psfsetunicodes.csv
+2019-04-16 14:14:35 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
+2019-04-16 14:14:35 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2019-04-16 14:14:35 Progress: Checking fontinfo.plist metadata
+2019-04-16 14:14:35 Warning:  openTypeNameSampleText is missing from fontinfo.plist
+2019-04-16 14:14:35 Warning:  openTypeOS2FamilyClass removed from fontinfo.  Old value: [0, 0]
+2019-04-16 14:14:35 Info:     Types: Old - list, New - NoneType
+2019-04-16 14:14:35 Warning:  year removed from fontinfo.  Old value: 2019
+2019-04-16 14:14:35 Info:     Types: Old - int, New - NoneType
+2019-04-16 14:14:35 Warning:  capHeight updated  Old value: 1485.3, new value: 1485
+2019-04-16 14:14:35 Info:     Types: Old - float, New - int
+2019-04-16 14:14:35 Warning:  styleMapFamilyName uppdated  Old value: Psf test, new value: Psf Test
+2019-04-16 14:14:35 Info:     Types: Old - string, New - string
+2019-04-16 14:14:35 Warning:  openTypeOS2TypoLineGap updated  Old value: 1, new value: 0
+2019-04-16 14:14:35 Info:     Types: Old - int, New - int
+2019-04-16 14:14:35 Warning:  openTypeNamePreferredFamilyName updated  Old value: Psf Testing, new value: Psf Test
+2019-04-16 14:14:35 Info:     Types: Old - string, New - string
+2019-04-16 14:14:35 Progress: Checking lib.plist metadata
+2019-04-16 14:14:35 Progress: Check & fix results:- Errors: 0, Changes made: 6, Other warnings: 1
+2019-04-16 14:14:35 Progress: See log file for details
+2019-04-16 14:14:35 Info:     Glyph 'Notthere' not in font; line 3 ignored.
+2019-04-16 14:14:35 Progress: Processing font for output
+2019-04-16 14:14:35 Progress: Output UFO already exists - reading for comparison
+2019-04-16 14:14:35 Progress: Writing font to local/testresults/ufo/psfsetunicodes.ufo
+2019-04-16 14:14:35 Info:     Processing glyphs directory
+2019-04-16 14:14:35 Verbose:    A_mpersand.glif
+2019-04-16 14:14:35 Verbose:    A_pos.glif
+2019-04-16 14:14:35 Verbose:    A_sterisk.glif
+2019-04-16 14:14:35 Verbose:    A_tS_gn.glif
+2019-04-16 14:14:35 Verbose:    C_ircumA_ccent.glif
+2019-04-16 14:14:35 Verbose:    C_olon.glif
+2019-04-16 14:14:35 Verbose:    C_ombA_cute.glif
+2019-04-16 14:14:35 Verbose:    C_ombC_ircum.glif
+2019-04-16 14:14:35 Verbose:    C_ombD_iaer.glif
+2019-04-16 14:14:35 Verbose:    C_ombG_rave.glif
+2019-04-16 14:14:35 Verbose:    C_ombR_ingA_bv.glif
+2019-04-16 14:14:35 Verbose:    C_ombT_ilde.glif
+2019-04-16 14:14:35 Verbose:    C_omma.glif
+2019-04-16 14:14:35 Verbose:    D_igitE_ight.glif
+2019-04-16 14:14:35 Verbose:    D_igitF_ive.glif
+2019-04-16 14:14:35 Verbose:    D_igitF_our.glif
+2019-04-16 14:14:35 Verbose:    D_igitN_ine.glif
+2019-04-16 14:14:35 Verbose:    D_igitO_ne.glif
+2019-04-16 14:14:35 Verbose:    D_igitS_even.glif
+2019-04-16 14:14:35 Verbose:    D_igitS_ix.glif
+2019-04-16 14:14:35 Verbose:    D_igitT_hree.glif
+2019-04-16 14:14:35 Verbose:    D_igitT_wo.glif
+2019-04-16 14:14:35 Verbose:    D_igitZ_ero.glif
+2019-04-16 14:14:35 Verbose:    D_ollarS_gn.glif
+2019-04-16 14:14:35 Verbose:    D_ottedC_irc.glif
+2019-04-16 14:14:35 Verbose:    E_qS_gn.glif
+2019-04-16 14:14:35 Verbose:    E_xclamationM_rk.glif
+2019-04-16 14:14:35 Verbose:    F_ullS_top.glif
+2019-04-16 14:14:35 Verbose:    G_T_S_gn.glif
+2019-04-16 14:14:35 Verbose:    G_raveA_ccent.glif
+2019-04-16 14:14:35 Verbose:    H_yphen.glif
+2019-04-16 14:14:35 Verbose:    H_yphenM_inus.glif
+2019-04-16 14:14:35 Verbose:    H_yphen_S_oft.glif
+2019-04-16 14:14:35 Verbose:    L_T_S_gn.glif
+2019-04-16 14:14:35 Verbose:    L_ftC_urlyB_rac.glif
+2019-04-16 14:14:35 Verbose:    L_ftP_aren.glif
+2019-04-16 14:14:35 Verbose:    L_ftS_qrB_rac.glif
+2019-04-16 14:14:35 Verbose:    L_owL_ine.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apA_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apA_D_iaer.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apB_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apC_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apD_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apE_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apF_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apG_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apH_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apI_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apJ_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apK_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apL_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apM_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apN_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apO_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apP_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apQ_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apR_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apS_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apT_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apU_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apV_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apW_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apX_.glif
+2019-04-16 14:14:35 Verbose:    L_tnC_apY_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mA_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mA_A_cute.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mA_C_ircum.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mA_D_iaer.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mA_G_rave.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mA_R_ingA_bv.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mA_T_ilde.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mB_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mC_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mD_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mE_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mF_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mG_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mH_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mI_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mJ_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mK_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mL_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mM_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mN_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mO_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mP_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mQ_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mR_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mS_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mT_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mU_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mV_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mW_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mX_.glif
+2019-04-16 14:14:35 Verbose:    L_tnS_mY_.glif
+2019-04-16 14:14:35 Verbose:    N_onB_reakingH_yphen.glif
+2019-04-16 14:14:35 Verbose:    N_umS_gn.glif
+2019-04-16 14:14:35 Verbose:    P_ercentS_gn.glif
+2019-04-16 14:14:35 Verbose:    P_lusS_gn.glif
+2019-04-16 14:14:35 Verbose:    Q_stnM_rk.glif
+2019-04-16 14:14:35 Verbose:    Q_uotM_rk.glif
+2019-04-16 14:14:35 Verbose:    R_everseS_olidus.glif
+2019-04-16 14:14:35 Verbose:    R_tC_urlyB_rac.glif
+2019-04-16 14:14:35 Verbose:    R_tP_aren.glif
+2019-04-16 14:14:35 Verbose:    R_tS_qrB_rac.glif
+2019-04-16 14:14:35 Verbose:    S_emicolon.glif
+2019-04-16 14:14:35 Verbose:    S_olidus.glif
+2019-04-16 14:14:35 Verbose:    S_pace.glif
+2019-04-16 14:14:35 Verbose:    T_ilde.glif
+2019-04-16 14:14:35 Verbose:    V_ertL_ine.glif
+2019-04-16 14:14:35 Verbose:    _notdef.glif
+2019-04-16 14:14:35 Verbose:    _null.glif
+2019-04-16 14:14:35 Verbose:    contents.plist
+2019-04-16 14:14:35 Verbose:    nonmarkingreturn.glif
+2019-04-16 14:14:35 Verbose:  fontinfo.plist
+2019-04-16 14:14:35 Verbose:  layercontents.plist
+2019-04-16 14:14:35 Verbose:  lib.plist
+2019-04-16 14:14:35 Verbose:  metainfo.plist

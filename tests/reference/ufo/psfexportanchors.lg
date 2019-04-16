@@ -1,13 +1,14 @@
-2019-03-26 11:32:45 Progress: Opening file for output: @cwd@/local/testresults/ufo/psfexportanchors.xml
-2019-03-26 11:32:45 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
-2019-03-26 11:32:45 Progress: Checking fontinfo.plist metadata
-2019-03-26 11:32:45 Warning:  openTypeNameSampleText is missing from fontinfo.plist
-2019-03-26 11:32:45 Warning:  year would be removed from fontinfo  Old value: 2019
-2019-03-26 11:32:45 Warning:  capHeight would be updated  Old value: 1485.3, new value: 1485
-2019-03-26 11:32:45 Warning:  styleMapFamilyName would be uppdated  Old value: Psf test, new value: Psf Test
-2019-03-26 11:32:45 Warning:  openTypeOS2TypoLineGap would be updated  Old value: 1, new value: 0
-2019-03-26 11:32:45 Warning:  openTypeNamePreferredFamilyName would be updated  Old value: Psf Testing, new value: Psf Test
-2019-03-26 11:32:45 Progress: Checking lib.plist metadata
-2019-03-26 11:32:45 Progress: Check & fix results:- Errors: 0, Changes to make: 5, Other warnings: 1
-2019-03-26 11:32:45 Progress: See log file for details
-2019-03-26 11:32:45 Warning:  LtnCapA.alt in public.glyphOrder list but absent from UFO
+2019-04-16 14:14:31 Progress: Opening file for output: @cwd@/local/testresults/ufo/psfexportanchors.xml
+2019-04-16 14:14:31 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
+2019-04-16 14:14:31 Progress: Checking fontinfo.plist metadata
+2019-04-16 14:14:31 Warning:  openTypeNameSampleText is missing from fontinfo.plist
+2019-04-16 14:14:31 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
+2019-04-16 14:14:31 Warning:  year would be removed from fontinfo  Old value: 2019
+2019-04-16 14:14:31 Warning:  capHeight would be updated  Old value: 1485.3, new value: 1485
+2019-04-16 14:14:31 Warning:  styleMapFamilyName would be uppdated  Old value: Psf test, new value: Psf Test
+2019-04-16 14:14:31 Warning:  openTypeOS2TypoLineGap would be updated  Old value: 1, new value: 0
+2019-04-16 14:14:31 Warning:  openTypeNamePreferredFamilyName would be updated  Old value: Psf Testing, new value: Psf Test
+2019-04-16 14:14:31 Progress: Checking lib.plist metadata
+2019-04-16 14:14:31 Progress: Check & fix results:- Errors: 0, Changes to make: 6, Other warnings: 1
+2019-04-16 14:14:31 Progress: See log file for details
+2019-04-16 14:14:31 Warning:  LtnCapA.alt in public.glyphOrder list but absent from UFO
