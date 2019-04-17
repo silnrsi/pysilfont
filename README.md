@@ -6,7 +6,7 @@ In addition, all scripts will output UFOs in a normalized form, designed to work
 
 Please read the main [documentation](docs/docs.md) is in the docs folder for more details.  Within there is a list of [scripts](docs/scripts.md).
 
-# NOTICE - Python 2 support to be withdrawn 
+# NOTICE - Python 2 support to be withdrawn
 
 Pysilfont now works with Python 2 & 3.  Full support for Python 2 will be withdrawn shortly.
 
@@ -67,5 +67,4 @@ cat installed-files.txt | xargs sudo rm -vr
 
 ## Contributing to the project
 
-Pysilfont is developed and maintained by SIL International’s [Non-Roman Script Initiative team](http://scripts.sil.org), though contributions from anyone are welcome. Pysilfont is copyright (c) 2014-2019 [SIL International](http://www.sil.org) and licensed under the [MIT license](http://en.wikipedia.org/wiki/MIT_License). The project is hosted at [https://github.com/silnrsi/pysilfont](https://github.com/silnrsi/pysilfont).
-
+Pysilfont is developed and maintained by SIL International’s [Writing Systems Technology team ](https://software.sil.org/wstech/), though contributions from anyone are welcome. Pysilfont is copyright (c) 2014-2019 [SIL International](http://www.sil.org) and licensed under the [MIT license](http://en.wikipedia.org/wiki/MIT_License). The project is hosted at [https://github.com/silnrsi/pysilfont](https://github.com/silnrsi/pysilfont).

@@ -22,7 +22,7 @@ if sys.argv[1] in ('develop', 'install') :
         except ImportError : warnings.append("- Some modules/scripts require the python %s package which is not currently installed" % m)
 
 long_description =  "A growing collection of font utilities mainly written in Python designed to help with various aspects of font design and production.\n"
-long_description += "Developed and maintained by SIL International's Non-Roman Script Initiative (NRSI).\n"
+long_description += "Developed and maintained by SIL International's by SIL International's WSTech department (formerly NRSI).\n"
 long_description += "Some of these utilites make use of the FontForge Python module."
 
 
@@ -37,7 +37,7 @@ setup(
     version = __version__,
     description = 'Python-based font utilities collection',
     long_description = long_description,
-    maintainer = 'NRSI - SIL International',
+    maintainer = 'SIL International',
     maintainer_email = 'fonts@sil.org',
     url = 'http://github.com/silnrsi/pysilfont',
     packages = ["silfont", "silfont.scripts"],
