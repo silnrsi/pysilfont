@@ -27,6 +27,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfexportpsnames](#psfexportpsnames) | Export a map of glyph name to PS name to a csv file |
 | [psfexportunicodes](#psfexportunicodes) | Export a map of glyph name to unicode value to a csv file |
 | [psfftml2odt](#psfftml2odt) | Create a LibreOffice Writer file from an FTML test description |
+| [psfgetglyphnames](#psfgetglyphnames) | Create a file of glyphs to import from a list of characters to import |
 | [psfglyphs2ufo](#psfglyphs2ufo) | Export all the masters in a .glyphs file to UFOs |
 | [psfmakefea](#psfmakefea) | Make a features file base on input UFO or AP database |
 | [psfmakewoffmetadata](#psfmakewoffmetadata) | Make the WOFF metadata xml file based on input UFO and FONTLOG.txt |
@@ -403,6 +404,21 @@ psfftml2odt -f "Andika New Basic" -f "AndikaNewBasic-Regular.ttf" test-ss.xml te
 ```
 
 If the font specified with the -f parameter contains a '.' it is assumed to be a file name, otherwise it is assumed to be the name of an installed font. In the former case, the font is embedded in the .odt document, in the latter case the font is expected to be installed on the machine that views the .odt document.
+
+---
+#### psfgetglyphnames
+Usage: **`psfgetglyphnames` [-i INPUT] [-a AGLFN] ifont glyphs
+
+Given a list of characters to import in INPUT
+(format is one character per line, using four or more hex digits)
+and a source UFO infont (probably the source of Latin glyphs for a non-roman font),
+create a list of glyphs to import for use with the
+[psfgetglyphnames](#psfgetglyphnames) tool.
+
+The AGLFN option will rename glyphs on import if found in the
+Adobe Glyph List For New Fonts (AGLFN).
+The format for this file is the same as the AGLFN from Adobe,
+except comments are not allowed, and the delimiter is a comma, not a semi-colon.
 
 ---
 ####  psfglyphs2ufo
