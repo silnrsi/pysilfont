@@ -124,8 +124,8 @@ class ast_CursivePosStatement(ast.CursivePosStatement):
                     if res != "":
                         res += "\n{}".format(indent)
                     res += "pos cursive {} {} {};".format(g,
-                                (entry.anchor.asFea() if entry else "<anchor 0 0>"),
-                                (exit.anchor.asFea() if exit else "<anchor 0 0>"))
+                                (entry.anchor.asFea() if entry else "<anchor NULL>"),
+                                (exit.anchor.asFea() if exit else "<anchor NULL>"))
         else:
             res = super(ast_CursivePosStatement, self).asFea(indent)
         return res
