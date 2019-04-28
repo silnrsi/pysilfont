@@ -745,11 +745,11 @@ Also psfsyncmeta does not use Pysilfont's backup mechanism for fonts.
 
 ---
 ####  psftuneraliases
-Usage: **`psftuneraliases -m map.csv [-f font.ttf] feat_in.xml feat_out.xml`**
+Usage: **`psftuneraliases [-m map.csv] [-f font.ttf] feat_in.xml feat_out.xml`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-Merges lookup identifiers gleaned from the map.csv file (emitted from [psfbuildfea](#psfbuildfea)) and, optionally, OpenType and Graphite feature identifiers (obtained from a compiled font) into the `<aliases>` section of a TypeTuner features.xml file.
+Merges lookup identifiers gleaned from the map.csv file (emitted from [psfbuildfea](#psfbuildfea)), along with OpenType and Graphite feature identifiers (obtained from a compiled font), into the `<aliases>` section of a TypeTuner features.xml file. At least one of `-m` and `-f` must be provided.
 
 As per prior technology, the alias names do not distinguish between GSUB and GPOS lookups and features, therefore using the same lookup name or feature tag for both GSUB and GPOS will cause the program to exit with an error.
 
