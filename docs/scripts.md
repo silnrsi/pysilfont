@@ -410,6 +410,34 @@ If the command line includes
 - -u, then the UID attribute will include a "U+" prefix
 
 ---
+#### psfexportmarkcolors
+Usage: **`psfexportmarkcolors [-c COLOR] [-n] [-o OUTPUT] [--nocomments] ifont`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+This exports a mapping of glyph name to cell mark color to a csv file, format "glyphname,colordef". Colordef is exported as a double-quoted string according to the [color definition standard](http://unifiedfontobject.org/versions/ufo3/conventions/#colors). It includes comments at the start saying when it was run etc unless --nocomments is specified. The csv produced will include all glyphs, whether or not they have a color definition.
+
+In some cases (see options below) colors can be reported or referred to by text names as in "g_purple". The script understands text color definitions for the 12 cell colors definable in the GlyphsApp UI: *g_red, g_orange, g_brown, g_yellow, g_light_green, g_dark_green, g_light_blue, g_dark_blue, g_purple, g_pink, g_light_grey, g_dark_grey*.
+
+
+If the command line includes
+
+- -c COLOR, then the script will instead produce a list of glyph names, one per line, of glyphs that match that single color. COLOR may be defined as either a numerical color definition, or using one of the color names listed above.
+- -n, then the csv file will report colors as named above rather than using numerical definitions. If there is no name that matches a particular color definition then it will be exported numerically.
+
+Example that exports a csv file (glyphname, colordef) listing every glyph and its color as in `LtnSmA,”0.5,0.09,0.79,1”`:
+
+```
+psfexportmarkcolors Andika-Regular.ufo -o markcolors.csv
+```
+
+Example that exports a list of glyphs that are colored purple:
+
+```
+psfexportmarkcolors Andika-Regular.ufo -o glyphlist.txt -c “g_purple”
+```
+
+---
 ####  psfexportpsnames
 Usage: **`psfexportpsnames [-o OUTPUT] [--nocomments] ifont`**
 
