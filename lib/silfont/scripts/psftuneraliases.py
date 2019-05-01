@@ -9,13 +9,13 @@ __author__ = 'Bob Hallissy'
 from silfont.core import execute
 from xml.etree import ElementTree as ET
 from fontTools import ttLib
+import csv
 import struct
-import sys
 
 argspec = [
     ('input', {'help': 'Input TypeTuner feature file'}, {'type': 'infile'}),
     ('output', {'help': 'Output TypeTuner feature file'}, {}),
-    ('-m','--mapping', {'help': 'Input csv mapping file'}, {'type': 'incsv'}),
+    ('-m','--mapping', {'help': 'Input csv mapping file'}, {}),
     ('-f','--ttf', {'help': 'Compiled TTF file'}, {}),
     ]
 
@@ -23,7 +23,7 @@ def doit(args) :
     logger = args.logger
 
     if args.mapping is None and args.ttf is None:
-        logger.log("One or both of -m and -f must be provided")
+        logger.log("One or both of -m and -f must be provided", "S")
     featdoc = ET.parse(args.input)
     root = featdoc.getroot()
     if root.tag != 'all_features':
@@ -59,9 +59,15 @@ def doit(args) :
         # Mapping file is assumed to come from psfbuildfea, and should look like:
         #      lookupname,table,index
         # e.g. DigitAlternates,GSUB,51
-        for r in args.mapping:
-            (name,table,value) = r
-            setalias(name, value)
+        try:
+            f = open(args.mapping, 'rb')
+            map = csv.reader(f)
+            for r in map:
+                (name,table,value) = r
+                setalias(name, value)
+            f.close()
+        except IOError as err:
+            logger.log("Failed to read mapping file '{}': {}".format(args.mapping, err.strerror), "S")
 
     # Process the ttf file if present
     if args.ttf:
@@ -91,7 +97,10 @@ def doit(args) :
                 setalias(name,value)
 
         # Open the TTF for processing
-        f = ttLib.TTFont(args.ttf)
+        try:
+            f = ttLib.TTFont(args.ttf)
+        except:
+            logger.log("Couldn't open font '{}' for reading".format(args.ttf),"S")
         # Grab features from GSUB and GPOS
         for tag in ('GSUB', 'GPOS'):
             try:
