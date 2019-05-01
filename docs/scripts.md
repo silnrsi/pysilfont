@@ -430,8 +430,8 @@ Export a mapping of glyph name to unicode to a csv file, format "glyphname,unico
 It includes comments at the start saying when it was run etc unless \-\-nocomments is specified
 
 ---
-####  psffixffglyphs
-Usage: **`psffixffglyphs ifont [ofont]`**
+####  psffixffglifs
+Usage: **`psffixffglifs ifont [ofont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
@@ -440,7 +440,7 @@ Make changes needed to a UFO following processing by FontForge. Currently FontFo
 Note that other changes are reversed by standard [normalization](docs.md#Normalization) and more by using pysilfont's standard check&fix system, so running psffixffglyphs with check&fix may be useful:
 
 ```
-psffixffglyphs font.ufo -p checkfix=y
+psffixffglifs font.ufo -p checkfix=y
 ```
 
 ---
