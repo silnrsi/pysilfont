@@ -23,20 +23,16 @@ Some are documented below.
 | [ffcopyglyphs](#ffcopyglyphs) | ? | Copy glyphs from one font to another, without using ffbuilder |
 | [ffremovealloverlaps](#ffremovealloverlaps) | ? | Remove overlap on all glyphs in a ttf font |
 | [FFmapGdlNames.py](#ffmapgdlnames) | ? | Write mapping of graphite names to new graphite names |
-| [FfmapGdlNames2.py](#ffmapgdlnames2) | ? | Write mapping of graphite names to new graphite names |
+| [FFmapGdlNames2.py](#ffmapgdlnames2) | ? | Write mapping of graphite names to new graphite names |
 | [FLWriteXml.py](#flwritexml) | ? | Outputs attachment point information and notes as XML file for TTFBuilder |
 | [FTaddEmptyOT.py](#ftaddemptyot) | ? | Add empty Opentype tables to ttf font |
 | [FTMLnorm.py](#ftmlnorm) | ? | Normalize an FTML file |
 | [psfaddGlyphDemo.py](#psfaddglyphdemo) | ? | Demo script to add a glyph to a UFO font |
-| [psfbuildcompgc.py](#psfbuildcompgc) | ? | Uses the GlyphConstruction library to build composite glyphs |
-| [psfdupglyphsfp.py](#psfdupglyphsfp) | ? | Duplicates glyphs in a UFO based on a csv definition |
 | [psfexpandstroke.py](#psfexpandstroke) | ? | Expands an unclosed UFO stroke font into monoline forms with a fixed width |
 | [psfexportnamesunicodesfp.py](#psfexportnamesunicodesfp) | ? | Outputs an unsorted csv file containing the names of all the glyphs in the default layer |
 | [psfgenftml.py](#psfgenftml) | ? | generate ftml tests from glyph_data.csv and UFO |
-| [psfmakedeprecated.py](#psfmakedeprecated) | ? | Creates deprecated versions of glyphs |
 | [psftoneletters.py](#psftoneletters) | ? | Creates Latin script tone letters (pitch contours) |
 | [xmlDemo.py](#xmldemo) | ? | Demo script for use of ETWriter |
-
 
 
 ---
@@ -179,27 +175,6 @@ Demo script to add a glyph to a UFO font
 
 
 ---
-#### psfbuildcompgc
-Usage: **` python psfbuildcompgc.py ...`**
-
-_([Standard options](docs.md#standard-command-line-options) may also apply)_
-
-Uses the GlyphConstruction library to build composite glyphs
-
-
----
-#### psfdupglyphsfp
-Usage: **` python psfdupglyphsfp.py ...`**
-
-_([Standard options](docs.md#standard-command-line-options) also apply)_
-
-Duplicates glyphs in a UFO based on a csv definition: source,target.
-
-Duplicates everything except unicodes.
-Mainly a demonstration of using the fontParts library.
-
-
----
 #### psfexpandstroke
 
 Usage: **`psfexpandstroke infont outfont expansion`**
@@ -235,19 +210,6 @@ Usage: **` python psfgenftml.py ...`**
 _([Standard options](docs.md#standard-command-line-options) may also apply)_
 
 generate ftml tests from glyph_data.csv and UFO
-
-
----
-#### psfmakedeprecated
-Usage: **` python psfmakedeprecated.py ...`**
-
-_([Standard options](docs.md#standard-command-line-options) may also apply)_
-
-Creates deprecated versions of glyphs: takes the specified glyph and creates a
-duplicate with an additional box surrounding it so that it becomes reversed,
-and assigns a new unicode encoding to it.
-
-Input is a csv with three fields: original,new,unicode
 
 
 ---

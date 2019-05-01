@@ -12,6 +12,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | ------- | ----------- |
 | [psfaddanchors](#psfaddanchors) | Read anchor data from XML file and apply to UFO |
 | [psfbuildcomp](#psfbuildcomp) | Add composite glyphs to UFO based on a Composite Definitions file |
+| [psfbuildcompgc](#psfbuildcompgc) | Add composite glyphs to UFO using GlyphConstructions based on a CD file |
 | [psfbuildfea](#psfbuildfea) | Compile fea into TTF |
 | [psfchangegdlnames](#psfchangegdlnames) | Change graphite names within GDL based on mappings files |
 | [psfchangettfglyphnames](#psfchangettfglyphnames) | Change glyph names in a ttf from working names to production names |
@@ -23,11 +24,15 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfcreateinstances](#psfcreateinstances) | Create one or more instance UFOs from one or more designspace files |
 | [psfcsv2comp](#psfcsv2comp) | Create composite definition file from csv |
 | [psfdeleteglyphs](#psfdeleteglyphs) | Deletes glyphs from a UFO based on a list |
+| [psfdupglyphs](#psfdupglyphs) | Duplicates glyphs in a UFO based on a csv definition |
 | [psfexportanchors](#psfexportanchors) | Export UFO anchor data to a separate XML file |
 | [psfexportpsnames](#psfexportpsnames) | Export a map of glyph name to PS name to a csv file |
 | [psfexportunicodes](#psfexportunicodes) | Export a map of glyph name to unicode value to a csv file |
+| [psffixffglifs](#psffixffglifs) | Make changes needed to a UFO following processing by FontForge |
 | [psfftml2odt](#psfftml2odt) | Create a LibreOffice Writer file from an FTML test description |
+| [psfgetglyphnames](#psfgetglyphnames) | Create a file of glyphs to import from a list of characters to import |
 | [psfglyphs2ufo](#psfglyphs2ufo) | Export all the masters in a .glyphs file to UFOs |
+| [psfmakedeprecated](#psfmakedeprecated) | Creates deprecated versions of glyphs |
 | [psfmakefea](#psfmakefea) | Make a features file base on input UFO or AP database |
 | [psfmakewoffmetadata](#psfmakewoffmetadata) | Make the WOFF metadata xml file based on input UFO and FONTLOG.txt |
 | [psfnormalize](#psfnormalize) | Normalize a UFO and optionally converts it between UFO2 and UFO3 versions |
@@ -46,6 +51,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psftuneraliases](#psftuneraliases) | Merge alias information into TypeTuner feature xml file |
 | [psfufo2glyphs](#psfufo2glyphs) | Generate a glyphs files from a designspace file and UFO(s) |
 | [psfufo2ttf](#psfufo2ttf) | Generate a ttf file without OpenType tables from a UFO |
+| [psfversion](#psfversion) | Display version info for pysilfont and dependencies |
 | [psfxml2compdef](#psfxml2compdef) | Convert composite definition file from XML format |
 
 ---
@@ -125,6 +131,27 @@ optional arguments:
   -f, --force           Force overwrite of glyphs having outlines
   -r {X,S,E,P,W,I,V}, --report {X,S,E,P,W,I,V}
                         Set reporting level for log
+```
+
+---
+####  psfbuildcompgc
+Usage: **`psfbuildcompgc [-i CDFILE] ifont [ofont]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Creates or updates composite glyphs in a UFO based on an external text file of definitions. The syntax for these definitions is described in [composite.md](composite.md).
+
+Example usage:
+
+```
+psfbuildcompgc -i composites.txt font.ufo
+```
+
+optional arguments:
+
+```
+  -i CDFILE, --cdfile CDFILE
+                        Composite Definitions input file
 ```
 
 ---
@@ -349,6 +376,20 @@ psfdeleteglyphs Andika-Regular.ufo -i keepthese.txt --reverse
 ```
 
 ---
+####  psfdupglyphs
+Usage: **`psfdupglyphs [-i INPUT] [--reverse] infont [outfont]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+This duplicates glyphs in a UFO based on a csv definition: source,target. It duplicates everything except unicodes.
+
+Example usage:
+
+```
+psfdupglyphs Andika-Regular.ufo -i dup.csv
+```
+
+---
 ####  psfexportanchors
 Usage: **`psfexportanchors [-r {X,S,E,P,W,I,V}]  [-g] [-s] ifont [output]`**
 
@@ -389,6 +430,20 @@ Export a mapping of glyph name to unicode to a csv file, format "glyphname,unico
 It includes comments at the start saying when it was run etc unless \-\-nocomments is specified
 
 ---
+####  psffixffglyphs
+Usage: **`psffixffglyphs ifont [ofont]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Make changes needed to a UFO following processing by FontForge. Currently FontForge copies advance and unicode fields from the default layer to the background layer; this script removes all advance and unicode fields from the background layer.
+
+Note that other changes are reversed by standard [normalization](docs.md#Normalization) and more by using pysilfont's standard check&fix system, so running psffixffglyphs with check&fix may be useful:
+
+```
+psffixffglyphs font.ufo -p checkfix=y
+```
+
+---
 #### psfftml2odt
 Usage: **`psfftml2odt [-f FONT] input [output]`**
 
@@ -403,6 +458,21 @@ psfftml2odt -f "Andika New Basic" -f "AndikaNewBasic-Regular.ttf" test-ss.xml te
 ```
 
 If the font specified with the -f parameter contains a '.' it is assumed to be a file name, otherwise it is assumed to be the name of an installed font. In the former case, the font is embedded in the .odt document, in the latter case the font is expected to be installed on the machine that views the .odt document.
+
+---
+#### psfgetglyphnames
+Usage: **`psfgetglyphnames [-i INPUT] [-a AGLFN] ifont glyphs`**
+
+Given a list of characters to import in INPUT
+(format is one character per line, using four or more hex digits)
+and a source UFO infont (probably the source of Latin glyphs for a non-roman font),
+create a list of glyphs to import for use with the
+[psfgetglyphnames](#psfgetglyphnames) tool.
+
+The AGLFN option will rename glyphs on import if found in the
+Adobe Glyph List For New Fonts (AGLFN).
+The format for this file is the same as the AGLFN from Adobe,
+except comments are not allowed, and the delimiter is a comma, not a semi-colon.
 
 ---
 ####  psfglyphs2ufo
@@ -430,6 +500,21 @@ If this Glyphs file contains two masters, Regular and Bold, then it will export 
 ```
 psfglyphs2ufo CharisSIL-RB.glyphs ""
 ```
+---
+####  psfmakedeprecated
+Usage: **`psfmakedeprecated [-i INPUT] [--reverse] infont [outfont]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Creates deprecated versions of glyphs: takes the specified glyph and creates a duplicate with an additional box surrounding it so that it becomes reversed, and assigns a new unicode encoding to it.
+Input is a csv with three fields: original,new,unicode
+
+Example usage:
+
+```
+psfmakedeprecated Andika-Regular.ufo -i deprecate.csv
+```
+
 ---
 #### psfmakefea
 Usage: **`usage: psfmakefea [-i INPUT] [-o OUTPUT] [-c CLASSFILE]
@@ -729,11 +814,11 @@ Also psfsyncmeta does not use Pysilfont's backup mechanism for fonts.
 
 ---
 ####  psftuneraliases
-Usage: **`psftuneraliases -m map.csv [-f font.ttf] feat_in.xml feat_out.xml`**
+Usage: **`psftuneraliases [-m map.csv] [-f font.ttf] feat_in.xml feat_out.xml`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-Merges lookup identifiers gleaned from the map.csv file (emitted from [psfbuildfea](#psfbuildfea)) and, optionally, OpenType and Graphite feature identifiers (obtained from a compiled font) into the `<aliases>` section of a TypeTuner features.xml file.
+Merges lookup identifiers gleaned from the map.csv file (emitted from [psfbuildfea](#psfbuildfea)), along with OpenType and Graphite feature identifiers (obtained from a compiled font), into the `<aliases>` section of a TypeTuner features.xml file. At least one of `-m` and `-f` must be provided.
 
 As per prior technology, the alias names do not distinguish between GSUB and GPOS lookups and features, therefore using the same lookup name or feature tag for both GSUB and GPOS will cause the program to exit with an error.
 
@@ -762,6 +847,12 @@ Usage: **`psfufo2ttffont ...`**
 To be documented
 
 ---
+#### psfversion
+Usage: **`psfversion`**
+
+This displays version info for pysilfont and some of its dependencies.  It is inteneded for troubleshooting purposes - eg send the output in if reporting a problem - and includes which version of Python is being used and where the code is being executed from.
+
+---
 #### psfxml2compdef
 Usage: **`psfxml2compdef input output`**
 
@@ -778,8 +869,6 @@ _This section is Work In Progress!_
 
 ## Example Scripts
 
-When Pysilfont is downloaded, there are example scripts in pysilfont/examples.  These are a mixture of scripts that are under development, scripts that work but would likely need amending for a specific project's need and others that are just examples of how things could be done.
+When Pysilfont is downloaded, there are example scripts in pysilfont/examples.  These are a mixture of scripts that are under development, scripts that work but would likely need amending for a specific project's need and others that are just examples of how things could be done.  Deprecated scripts are also placed in there.
 
-Some are documented below; for others just read the scripts!
-
-_This section is Work In Progress!_
+See [examples.md](examples.md) for further information
