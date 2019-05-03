@@ -252,3 +252,33 @@ class _ttx(object): # Used by ttf_diff()
     def txt(self):
         return "".join(self.lines)
 
+# Functions for mapping color def to names based on the colors provided by app UIs
+namestocolorslist = {
+    'g_red': '0.85,0.26,0.06,1',    # g_ names refers to colors definable using the Glyphs UI
+    'g_orange': '0.99,0.62,0.11,1',
+    'g_brown': '0.65,0.48,0.2,1',
+    'g_yellow': '0.97,1,0,1',
+    'g_light_green': '0.67,0.95,0.38,1',
+    'g_dark_green': '0.04,0.57,0.04,1',
+    'g_light_blue': '0,0.67,0.91,1',
+    'g_dark_blue': '0.18,0.16,0.78,1',
+    'g_purple': '0.5,0.09,0.79,1',
+    'g_pink': '0.98,0.36,0.67,1',
+    'g_light_grey': '0.75,0.75,0.75,1',
+    'g_dark_grey': '0.25,0.25,0.25,1'
+}
+colorstonameslist = {v: k for k, v in namestocolorslist.items()}
+
+def nametocolor(color, default=None):
+    global namestocolorslist
+    if default is not None:
+        return namestocolorslist.get(color,default)
+    else:
+        return namestocolorslist.get(color)
+
+def colortoname(color, default=None):
+    global colorstonameslist
+    if default:
+        return colorstonameslist.get(color,default)
+    else:
+        return colorstonameslist.get(color)
