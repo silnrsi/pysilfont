@@ -23,17 +23,21 @@ argspec = [
 # It is designed so that data could be massaged, if necessary, on the way.  No such need has been found so far
 
 def doit(args):
-    if args.glyphsfile is None:
+    glyphsfile = args.glyphsfile
+    if glyphsfile is None:
         (path,base,ext) = splitfn(args.designspace)
-        args.glyphsfile = os.path.join(path, base + ".glyphs" )
+        glyphsfile = os.path.join(path, base + ".glyphs" )
     logger = args.logger
     logger.log("Opening designSpace file", "I")
     ds = DesignSpaceDocument()
     ds.read(args.designspace)
     logger.log("Now creating glyphs object", "I")
     glyphsfont = to_glyphs(ds, minimize_ufo_diffs=not(args.no_preserve_glyphsapp_metadata))
-    logger.log("Writing glyphs file", "I")
-    glyphsfont.save(args.glyphsfile)
+    if os.path.exists(glyphsfile): # Delete file first so any xattr are not preserved - eg com.schriftgestalt.UIStore
+        logger.log("Deleting existing glyphs file: " + glyphsfile, "I")
+        os.remove(glyphsfile)
+    logger.log("Writing glyphs file: " + glyphsfile, "I")
+    glyphsfont.save(glyphsfile)
 
 def cmd(): execute(None, doit, argspec)
 if __name__ == "__main__": cmd()
