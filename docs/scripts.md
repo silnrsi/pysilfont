@@ -23,6 +23,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfcopymeta](#psfcopymeta) | Copy basic metadata from one UFO to another, for fonts in related families |
 | [psfcreateinstances](#psfcreateinstances) | Create one or more instance UFOs from one or more designspace files |
 | [psfcsv2comp](#psfcsv2comp) | Create composite definition file from csv |
+| [psfdeflang](#psfdeflang) | Changes default language behaviour in a font |
 | [psfdeleteglyphs](#psfdeleteglyphs) | Deletes glyphs from a UFO based on a list |
 | [psfdupglyphs](#psfdupglyphs) | Duplicates glyphs in a UFO based on a csv definition |
 | [psfexportanchors](#psfexportanchors) | Export UFO anchor data to a separate XML file |
@@ -360,6 +361,20 @@ Command-line options:
 - USV: the column header for the column that contains hexadecimal USV
 
 **Limitations:** At present, this tool supports only a small subset of the capabilities of composite definition syntax. Note, in particular, that it assumes all components are attached to the _base_ rather than the _previous glyph_.
+
+---
+####  psfdeflang
+Usage: **`psfdeflang -L lang infont [outfont]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+This changes the default language behaviour of a .ttf font from its current default to that of the language specified. It supports both OpenType and Graphite tables.
+
+For example this command creates a new font which by default has Khamti behaviour:
+
+```
+psfdeflang -L kht Padauk-Regular.ttf Padauk_kht-Regular.ttf
+```
 
 ---
 ####  psfdeleteglyphs

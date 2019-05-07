@@ -39,9 +39,7 @@ def doit(args):
         for srec in t.ScriptList.ScriptRecord:
             for lrec in srec.Script.LangSysRecord:
                 if lrec.LangSysTag.lower() == otltag:
-                    swap = srec.Script.DefaultLangSys
                     srec.Script.DefaultLangSys = lrec.LangSys
-                    lrec.LangSys = swap
     return infont
 
 def cmd() : execute('FT', doit, argspec)
