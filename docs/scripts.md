@@ -13,7 +13,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfaddanchors](#psfaddanchors) | Read anchor data from XML file and apply to UFO |
 | [psfbuildcomp](#psfbuildcomp) | Add composite glyphs to UFO based on a Composite Definitions file |
 | [psfbuildcompgc](#psfbuildcompgc) | Add composite glyphs to UFO using GlyphConstructions based on a CD file |
-| [psfbuildfea](#psfbuildfea) | Compile fea into TTF |
+| [psfbuildfea](#psfbuildfea) | Compile a feature (.fea) file against an existing input TTF |
 | [psfchangegdlnames](#psfchangegdlnames) | Change graphite names within GDL based on mappings files |
 | [psfchangettfglyphnames](#psfchangettfglyphnames) | Change glyph names in a ttf from working names to production names |
 | [psfcheckbasicchars](#psfcheckbasicchars) | Check UFO for glyphs that represent recommended basic characters |
@@ -27,6 +27,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfdeleteglyphs](#psfdeleteglyphs) | Deletes glyphs from a UFO based on a list |
 | [psfdupglyphs](#psfdupglyphs) | Duplicates glyphs in a UFO based on a csv definition |
 | [psfexportanchors](#psfexportanchors) | Export UFO anchor data to a separate XML file |
+| [psfexportmarkcolors](#psfexportmarkcolors) | Export csv of mark colors |
 | [psfexportpsnames](#psfexportpsnames) | Export a map of glyph name to PS name to a csv file |
 | [psfexportunicodes](#psfexportunicodes) | Export a map of glyph name to unicode value to a csv file |
 | [psffixffglifs](#psffixffglifs) | Make changes needed to a UFO following processing by FontForge |
@@ -43,6 +44,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfsetassocuids](#psfsetassocuids) | Add associate UID info to glif lib based on a csv file |
 | [psfsetglyphorder](#psfsetglyphorder) | Load glyph order data into public.glyphOrder based on a text file |
 | [psfsetkeys](#psfsetkeys) | Set key(s) with given value(s) in a UFO p-list file |
+| [psfsetmarkcolors](#psfsetmarkcolors) | Set mark colors based on csv file |
 | [psfsetpsnames](#psfsetpsnames) | Add public.postscriptname to glif lib based on a csv file |
 | [psfsetunicodes](#psfsetunicodes) | Set unicode values for a glif based on a csv file |
 | [psfsetversion](#psfsetversion) | Change all the version-related info in a UFO's fontinfo.plist |
@@ -210,7 +212,7 @@ Usage: **`psfcompdef2xml [-p PARAMS] input output log`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-Convert composite definition file from XML format
+Convert composite definition file to XML format
 
 _This section is Work In Progress!_
 
@@ -510,12 +512,12 @@ Given a list of characters to import in INPUT
 (format is one character per line, using four or more hex digits)
 and a source UFO infont (probably the source of Latin glyphs for a non-roman font),
 create a list of glyphs to import for use with the
-[psfgetglyphnames](#psfgetglyphnames) tool.
+[psfcopyglyphs](#psfcopyglyphs) tool.
 
 The AGLFN option will rename glyphs on import if found in the
 Adobe Glyph List For New Fonts (AGLFN).
 The format for this file is the same as the AGLFN from Adobe,
-except comments are not allowed, and the delimiter is a comma, not a semi-colon.
+except that the delimiter is a comma, not a semi-colon.
 
 ---
 ####  psfglyphs2ufo
@@ -621,7 +623,7 @@ psfnormalize Nokyung-Regular.ufo
 
 The normalization follows the [default behaviours](docs.md#normalization), but these can be overridden using [custom parameters](parameters.md)
 
-VERSION can be 2, 3 or 3ff. 3ff produces a hybrid UFO for use with FontForge input which is UFO3 but with format 1 glyphs
+\-v VERSION can be 2, 3
 
 If you are a macOS user, see _pysilfont/actionsosx/README.txt_ to install an action that will enable you to run psfnormalize without using the command line.
 
@@ -721,6 +723,33 @@ Example:
 Set a key in the file `lib.plist`.
 ```
 psfsetkeys --plist lib -k com.schriftgestaltung.width -v Regular font.ufo
+```
+
+---
+#### psfsetmarkcolors
+Usage: **`psfsetmarkcolors [-c COLOR] [-i INPUT] [-u] [-x]  ifont [ofont]`**
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+This sets the cell mark color of a glyph according to the [color definition standard](http://unifiedfontobject.org/versions/ufo3/conventions/#colors) based on a list of glyph names in INPUT, one glyph name per line.
+COLOR may be defined as either a numerical color definition or by text names as in "g_purple". The script understands text color definitions for the 12 cell colors definable in the GlyphsApp UI: *g_red, g_orange, g_brown, g_yellow, g_light_green, g_dark_green, g_light_blue, g_dark_blue, g_purple, g_pink, g_light_grey, g_dark_grey*.
+If the command line includes:
+- -u, then the INPUT file will be treated as a list of unicode values rather than glyph names, and the color set on any glyph that is encoded with those unicode values.
+- -x, then the color definition will be removed altogether. If no INPUT is given all color definitions will be removed from all glyphs.
+
+Example that sets the cell mark color of all glyphs listed in glyphlist.txt to purple (0.5,0.09,0.79,1):
+```
+psfsetmarkcolors Andika-Regular.ufo -i glyphlist.txt -c “0.5,0.09,0.79,1”
+```
+Example that sets the cell mark color of all glyphs that have the unicode values listed in unicode.txt to purple (0.5,0.09,0.79,1):
+```
+psfsetmarkcolorss Andika-Regular.ufo -u -i unicode.txt -c “g_purple”
+```
+Example that sets the cell mark color of all glyphs that have the unicode values listed in unicode.txt to purple (0.5,0.09,0.79,1):
+```
+psfsetmarkcolors Andika-Regular.ufo -u -i unicode.txt -c “g_purple”
+```
+Example that removes all color definitions from all glyphs: (this is effectively equivalent to `psfremovegliflibkeys Andika-Regular.ufo public.markColor`)
+```
+psfsetmarkcolors Andika-Regular.ufo -x
 ```
 
 ---
