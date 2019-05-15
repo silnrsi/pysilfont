@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from __future__ import unicode_literals
-'''Sync metadata accross a family of fonts based on designspace files'''
+__doc__ = '''Sync metadata accross a family of fonts based on designspace files'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2018 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'

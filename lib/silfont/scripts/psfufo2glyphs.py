@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from __future__ import unicode_literals
-'''Reads a designSpace file and create a Glyphs file from its linked ufos'''
+__doc__ = '''Reads a designSpace file and create a Glyphs file from its linked ufos'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2018 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'

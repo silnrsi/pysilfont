@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from __future__ import print_function
-'Display version info for pysilfont and dependencies'
+__doc__ = 'Display version info for pysilfont and dependencies'
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2018 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'

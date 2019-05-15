@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from __future__ import unicode_literals
-'''Make changes needed to a UFO following processing by FontForge.
+__doc__ = '''Make changes needed to a UFO following processing by FontForge.
 '''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2019 SIL International (http://www.sil.org)'

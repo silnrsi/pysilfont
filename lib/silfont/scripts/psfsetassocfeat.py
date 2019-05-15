@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from __future__ import unicode_literals
-'''Add associate feature info to glif lib based on a csv file
+__doc__ = '''Add associate feature info to glif lib based on a csv file
 csv format glyphname,featurename[,featurevalue]'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'

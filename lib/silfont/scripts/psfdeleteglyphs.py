@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from __future__ import unicode_literals
-'''Deletes glyphs from a UFO based on list. Can instead delete glyphs not in list.'''
+__doc__ = '''Deletes glyphs from a UFO based on list. Can instead delete glyphs not in list.'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2018 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'

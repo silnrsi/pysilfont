@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 from __future__ import unicode_literals
-'Make features.fea file'
+__doc__ = 'Make features.fea file'
 # TODO: add conditional compilation, compare to fea, compile to ttf
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2017 SIL International  (http://www.sil.org)'

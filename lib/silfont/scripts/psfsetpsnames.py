@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from __future__ import unicode_literals
-'''Add public.postscriptNames to lib.plist based on a csv file in one of two formats:
+__doc__ = '''Add public.postscriptNames to lib.plist based on a csv file in one of two formats:
     - simple glyphname, postscriptname with no headers
     - with headers, where the headers for glyph name and postscript name "glyph_name" and "ps_name"'''
 __url__ = 'http://github.com/silnrsi/pysilfont'

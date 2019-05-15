@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-''' Sets the cell mark color of glyphs in a UFO
+from __future__ import unicode_literals
+__doc__ = ''' Sets the cell mark color of glyphs in a UFO
 - Input file is a list of glpyh names (or unicode values if -u is specified
 - Color can be numeric or certain names, eg "0.85,0.26,0.06,1" or "g_red"
 '''
-from __future__ import unicode_literals
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2019 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'

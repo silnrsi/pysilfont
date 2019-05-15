@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from __future__ import unicode_literals
-'''Write mapping of glyph name to postscript name to a csv file
+__doc__ = '''Write mapping of glyph name to postscript name to a csv file
 - csv format glyphname,postscriptname'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2016 SIL International (http://www.sil.org)'
