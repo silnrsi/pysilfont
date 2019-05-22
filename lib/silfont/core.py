@@ -105,8 +105,41 @@ class parameters(object):
             "attribOrders.glif":['pos', 'width', 'height', 'fileName', 'base', 'xScale', 'xyScale', 'yxScale', 'yScale', 'xOffset', 'yOffset',
                                   'x', 'y', 'angle', 'type', 'smooth', 'name', 'format', 'color', 'identifier']
             }
-        defparams['ufometadata'] = {
-            "checkfix":         "check"   # Apply metadata fixes when reading UFOs
+        defparams['ufometadata'] = {"checkfix": "check"}   # Apply metadata fixes when reading UFOs
+
+        self.paramshelp = {} # Info used when outputting help about parame options
+        self.paramshelp["classdesc"] = {
+            "logging": "controls the level of log messages go to screen or log files.",
+            "backups": "controls backup settings for scripts that output fonts - by default backups are made if the output font is overwriting the input font",
+            "outparams": "controls xml formatting when outputting UFO fonts",
+            "ufometadata": "controls if UFO metatdata be checked, or checked and fixed"
+        }
+        self.paramshelp["paramsdesc"] = {
+            "scrlevel": "Logging level for screen messages - one of S,E,P.W,I or V",
+            "loglevel": "Logging level for log file messages - one of E,P.W,I or V",
+            "backup": "Should font backups be made",
+            "backupdir": "Directory to use for font backups",
+            "backupkeep": "How many backups to keep",
+            "indentIncr": "XML Indent increment",
+            "indentFirst": "First XML indent",
+            "indentML": "Should multi-line string values be indented?",
+            "plistIndentFirst": "First indent amount for plists",
+            "sortDicts": "Should dict elements be sorted alphabetically?",
+            "precision": "Decimal precision to use in XML output - both for real values and for attributes if numeric",
+            "renameGlifs": "Rename glifs based on UFO3 suggested algorithm",
+            "UFOversion": "UFOversion to output - defaults to version of the input UFO",
+            "format1Glifs": "Force output format 1 glifs including UFO2-style anchors (was used with FontForge; no longer needed)",
+            "glifElemOrder": "Order to output glif elements",
+            "floatAttribs": "List of float attributes - used when setting decimal precision",
+            "intAttribs": "List of attributes that should be integers",
+            "attribOrders.glif": "Order in which to output glif attributes",
+            "checkfix": "Should check & fix tests be done - one of None, Check or Fix"
+        }
+        self.paramshelp["defaultsdesc"] = { # For use where default needs clarifying with text
+            "indentIncr" : "<two spaces>",
+            "indentFirst": "<two spaces>",
+            "plistIndentFirst": "<No indent>",
+            "UFOversion": "<Existing version>"
         }
 
         self.classes = {}  # Dictionary containing a list of parameters in each class
@@ -153,6 +186,22 @@ class parameters(object):
         if sourcedesc is None: sourcedesc = "unspecified source"
         self.sets[name] = _paramset(self, name, sourcedesc, dict)
 
+    def printhelp(self):
+        phelp = self.paramshelp
+        print("\nMost pysilfont scripts have -p, --params options which can be used to change default behaviour of scripts.  For example '-p scrlevel=w' will log warning messages to screen \n")
+        print("Listed below are all such parameters, grouped by purpose.  Not all apply to all scripts - "
+              "in partucular outparams and ufometadata only apply to scripts using pysilfont's own UFO code\n")
+        for classn in ("logging", "backups", "outparams", "ufometadata"):
+            print(classn[0].upper() + classn[1:] + " - " + phelp["classdesc"][classn])
+            for param in sorted(self.classes[classn]):
+                if param == "format1Glifs": continue # Param due to be phased out
+                paramdesc = phelp["paramsdesc"][param]
+                paramtype = self.types[param].__name__
+                defaultdesc = phelp["defaultsdesc"][param] if param in phelp["defaultsdesc"] else self.sets["default"][param]
+                print('    {:<20}: {}'.format(param, paramdesc))
+                print('       (Type: {:<6} Default: {})'.format(paramtype + ",", defaultdesc))
+        print("\nNote parameter names are case-insensitive\n")
+        print("For more help see https://github.com/silnrsi/pysilfont/blob/master/docs/parameters.md\n")
 
 class _paramset(dict):
     # Set of parameter values
@@ -291,6 +340,7 @@ def execute(tool, fn, argspec, chain = None):
 
     parser = argparse.ArgumentParser(**poptions)
     parser._optionals.title = "other arguments"
+
 
     # Add standard arguments
     standardargs = [
@@ -508,7 +558,7 @@ def execute(tool, fn, argspec, chain = None):
                 sys.exit(1)
         elif atype == 'incsv':
             logger.log('Opening file for input: '+aval, "P")
-            aval = csvreader(aval)
+            aval = csvreader(aval, logger=logger)
         elif atype == 'outfile':
             (aval, path, exists) = fullpath(aval)
             if not exists:

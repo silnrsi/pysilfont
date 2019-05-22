@@ -15,7 +15,7 @@ import struct
 argspec = [
     ('input', {'help': 'Input TypeTuner feature file'}, {'type': 'infile'}),
     ('output', {'help': 'Output TypeTuner feature file'}, {}),
-    ('-m','--mapping', {'help': 'Input csv mapping file'}, {}),
+    ('-m','--mapping', {'help': 'Input csv mapping file'}, {'type': 'incsv'}),
     ('-f','--ttf', {'help': 'Compiled TTF file'}, {}),
     ]
 
@@ -59,15 +59,8 @@ def doit(args) :
         # Mapping file is assumed to come from psfbuildfea, and should look like:
         #      lookupname,table,index
         # e.g. DigitAlternates,GSUB,51
-        try:
-            f = open(args.mapping, 'rb')
-            map = csv.reader(f)
-            for r in map:
-                (name,table,value) = r
-                setalias(name, value)
-            f.close()
-        except IOError as err:
-            logger.log("Failed to read mapping file '{}': {}".format(args.mapping, err.strerror), "S")
+        for (name,table,value) in args.mapping:
+            setalias(name, value)
 
     # Process the ttf file if present
     if args.ttf:
@@ -99,24 +92,24 @@ def doit(args) :
         # Open the TTF for processing
         try:
             f = ttLib.TTFont(args.ttf)
-        except:
-            logger.log("Couldn't open font '{}' for reading".format(args.ttf),"S")
+        except Exception as e:
+            logger.log("Couldn't open font '{}' for reading : {}".format(args.ttf, str(e)),"S")
         # Grab features from GSUB and GPOS
         for tag in ('GSUB', 'GPOS'):
             try:
                 dotable(f[tag].table)
-            except:
-                logger.log("Failed to process {} table".format(tag), "W")
+            except Exception as e:
+                logger.log("Failed to process {} table: {}".format(tag, str(e)), "W")
         # Grab features from Graphite:
         try:
             for tag in sorted(f['Feat'].features.keys()):
                 if tag == '1':
                     continue
                 name = 'gr_' + tag
-                value = str(struct.unpack('>L', tag)[0])
+                value = str(struct.unpack('>L', tag.encode())[0])
                 setalias(name,value)
-        except:
-            logger.log("Failed to process Feat table", "W")
+        except Exception as e:
+            logger.log("Failed to process Feat table: {}".format(str(e)), "W")
 
     if len(duplicates):
         logger.log("The following aliases defined more than once in input: {}".format(", ".join(sorted(duplicates))), "S")

@@ -69,7 +69,7 @@ Currently only font output parameters can be changed via lib.plist
 | Parameter | Default | Description | Notes |
 | -------- | -------- | --------------------------------------------- | ------------------------------------- |
 | **Reporting** | | | To change within a script use <br>`logger.<parameter> = <value>`|
-| scrlevel | P | Reporting level to screen. See [Reporting](docs.md#reporting) for more details | -q, --quiet option sets this to E |
+| scrlevel | P | Reporting level to screen. See [Reporting](docs.md#reporting) for more details | -q, --quiet option sets this to S |
 | loglevel | W | Reporting level to log file |  |
 | **Backup** (font scripts only) |  |  |  |  
 | backup | True | Backup font to subdirectory | If the original font is being updated, make a backup first |

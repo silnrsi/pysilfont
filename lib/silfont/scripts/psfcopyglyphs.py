@@ -165,6 +165,7 @@ def doit(args) :
     fl = incsv.firstline
     if fl is None: logger.log("Empty imput file", "S")
     numfields = len(fl)
+    incsv.numfields = numfields
     # defaults for single column csv (no headers):
     nameCol = 0
     renameCol = None
