@@ -39,12 +39,15 @@ def doit(args) :
 
     # Obtain lib.plist glyph order(s) and psnames if they exist:
     publicGlyphOrder = csGlyphOrder = psnames = None
-    if 'public.glyphOrder' in font.lib:
-        publicGlyphOrder = font.lib.getval('public.glyphOrder')     # This is an array
-    if 'com.schriftgestaltung.glyphOrder' in font.lib:
-        csGlyphOrder = font.lib.getval('com.schriftgestaltung.glyphOrder') # This is an array
-    if 'public.postscriptNames' in font.lib:
-        psnames = font.lib.getval('public.postscriptNames')   # This is a dict keyed by glyphnames
+    if hasattr(font, 'lib'):
+        if 'public.glyphOrder' in font.lib:
+            publicGlyphOrder = font.lib.getval('public.glyphOrder')     # This is an array
+        if 'com.schriftgestaltung.glyphOrder' in font.lib:
+            csGlyphOrder = font.lib.getval('com.schriftgestaltung.glyphOrder') # This is an array
+        if 'public.postscriptNames' in font.lib:
+            psnames = font.lib.getval('public.postscriptNames')   # This is a dict keyed by glyphnames
+    else:
+        logger.log("no lib.plist found in font", "W")
 
     # Renaming within the UFO is done in two passes to make sure we can handle circular renames such as:
     #    someglyph.alt = someglyph
