@@ -193,7 +193,7 @@ It is often desirable to give a base character extra advance width to account fo
 ```
 do  for b = @bases;
     for d = @diacritics;
-    let v = (ADVx(d) - APx(d, "_U")) - (ADVx(g) - APx(b, "U"));
+    let v = (ADVx(d) - APx(d, "_U")) - (ADVx(b) - APx(b, "U"));
     if v > 0; {
         pos $b' <$v> $d;
     }
@@ -246,7 +246,7 @@ do  for y = @c103C_wide;
 
 ##### Advance for Ldot on U
 
-This example mirrors that used in the `setadvance` statement. Here we want to add sufficient advance on the base to correspond to attaching an u vowel which in turn has a lower dot attached to it.
+This example mirrors that used in the proposed [`setadvance`](feax_future.md#setadvance) statement. Here we want to add sufficient advance on the base to correspond to attaching an u vowel which in turn has a lower dot attached to it.
 
 ```
 do  for b = @cBases;
