@@ -31,13 +31,15 @@ Nearly all scripts support these:
 - `-d, --defaults`
   - Display -h info with added info about default values
 - `-q, --quiet`
-  - Quiet mode - only display errors.  See reporting below
+  - Quiet mode - only display severe errors.  See reporting below
 - `-l LOG, --log LOG`
   - Log file name (if not using default name).  If there is no default for a log file name, a log file will only be created if LOG is specified
 - `-p PARAMS, --params PARAMS`
   - Other parameters - see below
 
 The individual script documentation in scripts.md should indicate if some don't apply for a particular script
+
+(There is aslo a hidden option --nq which overrides -q for use with automated systems like [smith](https://github.com/silnrsi/smith) which run scripts using -q by default)
 
 # Parameters
 
@@ -123,7 +125,7 @@ Most scripts support standardised reporting (logging), both to screen and a log 
 
 For most scripts these default to W for loglevel and P for scrlevel and can be set using -p (eg to set screen reporting to verbose use -p scrlevel=v).
 
--q --quiet sets quiet mode where the scrlevel is set to E (and some additional messages suppressed) so only errors are reported on screen.
+-q --quiet sets quiet mode where the scrlevel is set to S (and some additional messages suppressed) so only errors are reported on screen.
 
 ## Backups for fonts
 

@@ -300,7 +300,7 @@ class csvreader(object):    # Iterator for csv files, skipping comments and chec
             yield row
 
 
-def execute(tool, fn, argspec, chain = None):
+def execute(tool, fn, scriptargspec, chain = None):
     # Function to handle parameter parsing, font and file opening etc in command-line scripts
     # Supports opening (and saving) fonts using PysilFont UFO (UFO), fontParts (FP) or fontTools (FT)
     # Special handling for:
@@ -309,6 +309,8 @@ def execute(tool, fn, argspec, chain = None):
     #   -l  opens log file and also creates a logger function to write to the log file
     #   -p  other parameters. Includes backup settings and loglevel/scrlevel settings for logger
     #       for UFOlib scripts, also includes all outparams keys and ufometadata settings
+
+    argspec = list(scriptargspec)
 
     chainfirst = False
     if chain == "first": # If first call to execute has this set, only do the final return part of chaining
@@ -345,10 +347,11 @@ def execute(tool, fn, argspec, chain = None):
     # Add standard arguments
     standardargs = [
             ('-d', '--defaults', {'help': 'Display help with info on default values', 'action': 'store_true'}, {}), 
-            ('-q', '--quiet', {'help': 'Quiet mode - only display errors', 'action': 'store_true'}, {}), 
+            ('-q', '--quiet', {'help': 'Quiet mode - only display severe errors', 'action': 'store_true'}, {}),
             ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile'}), 
-            ('-p', '--params', {'help': 'Other parameters - see parameters.md for details', 'action': 'append'}, {'type': 'optiondict'})]
-    standardargsindex = ['defaults', 'quiet', 'log', 'params']
+            ('-p', '--params', {'help': 'Other parameters - see parameters.md for details', 'action': 'append'}, {'type': 'optiondict'}),
+            ('--nq', {'help': argparse.SUPPRESS, 'action': 'store_true'}, {})]
+    standardargsindex = ['defaults', 'quiet', 'log', 'params', 'nq']
 
     suppliedargs = []
     for a in argspec:
@@ -367,7 +370,7 @@ def execute(tool, fn, argspec, chain = None):
         deffiles = []
         defother = []
 
-    quiet = True if "-q" in argv else False
+    quiet = True if "-q" in argv and '--nq' not in argv else False
     if quiet: logger.scrlevel = "S"
 
     # Process the supplied argument specs, add args to parser, store other info in arginfo

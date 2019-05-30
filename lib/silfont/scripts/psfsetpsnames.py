@@ -16,6 +16,7 @@ argspec = [
     ('ofont', {'help': 'Output font file', 'nargs': '?'}, {'type': 'outfont'}),
     ('--gname', {'help': 'Column header for glyph name', 'default': 'glyph_name'}, {}),
     ('-i', '--input', {'help': 'Input csv file'}, {'type': 'incsv', 'def': 'glyph_data.csv'}),
+    ('-x', '--removemissing', {'help': 'Remove from list if glyph not in font', 'action': 'store_true', 'default': False}, {}),
     ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': 'setpsnames.log'})]
 
 
@@ -24,6 +25,8 @@ def doit(args):
     logger = args.logger
     incsv = args.input
     gname = args.gname
+    removemissing = args.removemissing
+
     glyphlist = list(font.deflayer.keys())  # List to check every glyph has a psname supplied
 
     # Identify file format from first line
@@ -54,16 +57,19 @@ def doit(args):
         psname = line[psnamepos]
         if len(psname) == 0 or glyphn == psname:
             continue	# No need to include cases where production name is blank or same as working name
-        # Add to dict
-        sub = ET.SubElement(dict, "key")
-        sub.text = glyphn
-        sub = ET.SubElement(dict, "string")
-        sub.text = psname
         # Check if in font
+        infont = False
         if glyphn in glyphlist:
             glyphlist.remove(glyphn)
+            infont = True
         else:
-            logger.log("No glyph in font for " + glyphn + " on line " + str(incsv.line_num), "I")
+            if not removemissing: logger.log("No glyph in font for " + glyphn + " on line " + str(incsv.line_num), "I")
+        if not removemissing or infont:
+            # Add to dict
+            sub = ET.SubElement(dict, "key")
+            sub.text = glyphn
+            sub = ET.SubElement(dict, "string")
+            sub.text = psname
     # Add to lib.plist
     if len(dict) > 0:
         if "lib" not in font.__dict__: font.addfile("lib")
