@@ -1,7 +1,96 @@
 # FEA Extensions Current
 
-This document lists the extensions to fea that are currently supported by
-psfmakefea.
+This document describes the functionality of `psfmakefea` and lists the extensions to fea that are currently supported.
+
+## Generated Classes
+
+`psfmakefea` simplifies the hand creation of fea code by analysing the glyphs in the input font, particularly with regard to their names. Names are assumed to conform to the Adobe Glyph List conventions regarding `_` for ligatures and `.` for glyph variants.
+
+### Variant glyph classes
+
+If a font contains a glyph with a final variant (there may be more than one listed for a glyph, in sequence) and also a glyph without that final variant, then `psfmakefea` will create two classes based on the variant name: @c\__variant_ contains the glyph with the variant and @cno\__variant_ contains the glyph without the variant. The two lists are aligned such that a simple classes based replacement will change all the glyphs without the variant into ones with the variant.
+
+For example, U+025B is an open e that occurs in some African languages. Consider a font that contains the glyphs `uni025B` and `uni025B.smcp` for a small caps version of the glyph. `psfmakefea` will create two classes:
+
+```
+@c_smcp = [uni025B.scmp];
+@cno_smcp = [uni025B];
+```
+
+In addition, if this font contains two other glyphs `uni025B.alt`, an alternative shape to `uni025B` and `uni025B.alt.smcp`, the small caps version of the alternate. `psfmakefea` will create the following classes:
+
+```
+@c_smcp = [uni025B.scmp uni025B.alt.smcp];
+@cno_smcp = [uni025B uni025B.alt];
+@c_alt = [uni025B.alt];
+@cno_alt = [uni025B];
+```
+
+Notice that the classes with multiple glyphs, while keeping the alignment, do not guarantee any particular order of the glyphs in one of the classes. Only that the other class will align its glyph order correctly. Notice also that `uni025B.alt.smcp` does not appear in the `@c_alt` class. This latter behaviour may change.
+
+### Ligatures
+
+Unless instructed on the command line via the `-L` or `--ligmode` option, `psfmakefea` does nothing special with ligatures and treats them simply as glyphs that may take variants. There are four ligature modes. The most commonly used is `-L last`. This says to create classes based on the last components in all ligatures. Thus if the font from the previous section also included `uni025B_acutecomb` and the corresponding small caps `uni025B_acutecomb.smcp`. We also need an `acutecomb`. If the command line included `-L last`, the generated classes would be:
+
+```
+@c_smcp = [uni025B.scmp uni025B.alt.smcp uni025B_acutecomb.smcp];
+@cno_smcp = [uni025B uni025B.alt uni025B_acutecomb];
+@c_alt = [uni025B.alt];
+@cno_alt = [uni025B];
+@clig_acutecomb = [uni025B_acutecomb];
+@cligno_acutecomb = [uni025B];
+```
+
+And if the command line option were `-L first`, the last two lines of the above code fragment would become:
+
+```
+@clig_uni025B = [uni025B_acutecomb];
+@cligno_uni025B = [acutecomb];
+```
+
+while the variant classes would remain the same.
+
+There are two other ligaturemodes: `lastcomp` and `firstcomp`. These act like `last` and `first`, but in addition they say that any final variants must be handled differently. Instead of seeing the final variants (those on the last ligature component) as applying to the whole ligature, they are only to be treated as applying to the last component. To demonstrate this we need to add the nonsensical `acutecomb.smcp`. With either `-L last` or `-L first` we get the same ligature classes as above. (Although we would add `acutecomb.smcp` to the `@c_smcp` and `acutecomb` to `@cno_smcp`) With `-L firstcomp` we get:
+
+```
+@c_smcp = [uni025B.scmp uni025B.alt.smcp acutecomb.smcp];
+@cno_smcp = [uni025B uni025B.alt acutecomb];
+@c_alt = [uni025B.alt];
+@cno_alt = [uni025B];
+@clig_uni025B = [uni025B_acutecomb uni025B_acutecomb.smcp];
+@cligno_uni025B = [acutecomb acutecomb.smcp];
+```
+
+Notice the removal of `uni025B_acutecomb.smcp` from `@c_smcp`, since `uni025B_acutecomb.smcp` is considered by `-L firstcomp` to be a ligature of `uni025B` and `acutecomb.smcp` there is no overall ligature `uni025B_acutecomb` with a variant `.smcp` that would fit into `@c_smcp`. If we use `-L lastcomp` we change the last two classes to:
+
+```
+@clig_acutecomb = [uni025B_acutecomb];
+@cligno_acutecomb = [uni025B];
+@clig_acutecomb_smcp = [uni025B_acutecomb.smcp];
+@cligno_acutecomb_smcp = [un025B];
+```
+
+With any `.` in the variant being changed to `_` in the class name.
+
+In our example, if the author wanted to use `-L lastcomp` or `-L firstcomp`, they might find it more helpful to rename `uni025B_acutecomb.smcp` to `uni025B.smcp_acutecomb` and remove the nonsensical `acutecomb.smcp`. This would give, for `-L lastcomp`:
+
+```
+@c_smcp = [uni025B.scmp uni025B.alt.smcp];
+@cno_smcp = [uni025B uni025B.alt];
+@c_alt = [uni025B.alt];
+@cno_alt = [uni025B];
+@clig_acutecomb = [uni025B_acutecomb uni025B.smcp_acutecomb];
+@cligno_acutecomb = [uni025B uni025B.smcp];
+```
+
+and for `-L firstcomp`, the last two classes become:
+
+```
+@clig_uni025B = [uni025B_acutecomb];
+@cligno_uni025B = [acutecomb];
+@clig_uni025B_smcp = [uni025B.smcp_acutecomb];
+@cligno_uni025B_smcp = [acutecomb];
+```
 
 ## Statements
 
@@ -36,9 +125,9 @@ The baseClass statement is a high priority need in order to facilitate auto gene
 
 Given a set of base glyphs with attachment point A and marks with attachment point \_A, psfmakefea will generate the following:
 
-* baseClass A - containing all bases with attachment point A
-* markClass \_A - containing all marks with attachment point \_A
-* baseClass A\_MarkBase - containing all marks with attachment point A
+- baseClass A - containing all bases with attachment point A
+- markClass \_A - containing all marks with attachment point \_A
+- baseClass A\_MarkBase - containing all marks with attachment point A
 
 #### Cursive Attachment
 
@@ -101,8 +190,7 @@ The `do` statement is a means of setting variables and repeating statement group
 
 `do` _substatement_ _substatement_ _..._ [ `{` _statements_ `}` ]
 
-Where _statements_ is a sequence of FEA statements. Within these statements, variables may be referenced by preceding them with a `$`.
-Anything, including statement words, can be the result of variable expantion. The only constraints are:
+Where _statements_ is a sequence of FEA statements. Within these statements, variables may be referenced by preceding them with a `$`. Anything, including statement words, can be the result of variable expantion. The only constraints are:
 
 - The item expands to one or more complete tokens. It cannot be joined to something preceding or following it to create a single name, token, whatever.
 

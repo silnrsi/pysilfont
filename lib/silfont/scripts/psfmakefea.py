@@ -122,23 +122,35 @@ class Font(object) :
                         cname = c.get('name') + "_" + c.get('value')
                         self.classes.set_default(cname, []).append(g+e)
                     
-    def make_classes(self) :
+    def make_classes(self, ligmode) :
         for name, g in self.glyphs.items() :
             # pull off suffix and make classes
             # TODO: handle ligatures
             base = name
-            pos = base.rfind('.')
-            while pos > 0 :
-                old_base = base
-                ext = base[pos+1:]
-                base = base[:pos]
-                ext_class_nm = "c_" + ext
-                if base in self.glyphs and old_base in self.glyphs:
-                    glyph_lst = self.classes.setdefault(ext_class_nm, [])
-                    if not old_base in glyph_lst:
-                        glyph_lst.append(old_base)
-                        self.classes.setdefault("cno_" + ext, []).append(base)
+            if ligmode is None or 'comp' not in ligmode:
                 pos = base.rfind('.')
+                while pos > 0 :
+                    old_base = base
+                    ext = base[pos+1:]
+                    base = base[:pos]
+                    ext_class_nm = "c_" + ext
+                    if base in self.glyphs and old_base in self.glyphs:
+                        glyph_lst = self.classes.setdefault(ext_class_nm, [])
+                        if not old_base in glyph_lst:
+                            glyph_lst.append(old_base)
+                            self.classes.setdefault("cno_" + ext, []).append(base)
+                    pos = base.rfind('.')
+            if ligmode is not None and "_" in name:
+                comps = name.split("_")
+                if "comp" in ligmode or "." not in comps[-1]:
+                    base = comps.pop(-1 if "last" in ligmode else 0)
+                    cname = base.replace(".", "_")
+                    noname = "_".join(comps)
+                    if base in self.glyphs and noname in self.glyphs:
+                        glyph_lst = self.classes.setdefault("clig_"+cname, [])
+                        if name not in glyph_lst:
+                            glyph_lst.append(name)
+                            self.classes.setdefault("cligno_"+cname, []).append(noname)
             if g.is_mark :
                 self.classes.setdefault('GDEF_marks', []).append(name)
             else :
@@ -254,22 +266,23 @@ argspec = [
     ('-i', '--input', {'required': 'True', 'help': 'Fea file to merge'}, {}),
     ('-o', '--output', {'help': 'Output fea file'}, {}),
     ('-c', '--classfile', {'help': 'Classes file'}, {}),
-    ('--debug', {'help': 'Drop into pdb', 'action': 'store_true'}, {}),
+    ('-L', '--ligmode', {'help': 'Parse ligatures: last - use last element as class name, first - use first element as class name, lastcomp, firstcomp - final variants are part of the component not the whole ligature'}, {}),
+    # ('--debug', {'help': 'Drop into pdb', 'action': 'store_true'}, {}),
     ('--classprops', {'help': 'Include property elements from classes file', 'action': 'store_true'}, {}),
     ('--omitaps', {'help': 'names of attachment points to omit (comma- or space-separated)', 'default': '', 'action': 'store'}, {})
 ]
 
 def doit(args) :
     font = Font()
-    if args.debug:
-        import pdb; pdb.set_trace()
+    # if args.debug:
+    #     import pdb; pdb.set_trace()
     if "checkfix" not in args.params:
         args.paramsobj.sets["main"]["checkfix"] = "None"
     if args.infile is not None:
         font.readaps(args.infile, args.omitaps, args.paramsobj)
 
     font.make_marks()
-    font.make_classes()
+    font.make_classes(args.ligmode)
     if args.classfile:
         font.read_classes(args.classfile, classproperties = args.classprops)
 
