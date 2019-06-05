@@ -283,7 +283,7 @@ do  for b = @bases;
     for d = @diacritics;
     let v = (ADVx(d) - APx(d, "_U")) - (ADVx(b) - APx(b, "U"));
     if v > 0; {
-        pos $b' <$v> $d;
+        pos $b' $v $d;
     }
 ```
 
@@ -307,8 +307,8 @@ Consider the case where someone has used an attachment point as a kerning point.
 ```
 do  for r = @rights;
     let v = APx(r, "K"); {
-        pos @lefts' <$v> $r;
-        pos @lefts' <$v> @diacritics $r;
+        pos @lefts' $v $r;
+        pos @lefts' $v @diacritics $r;
     }
 ```
 
@@ -321,14 +321,14 @@ do  for y = @c103C_nar;
     for c = @cCons_nar;
     let v = APx(y, "A") - (ADVx(y) + ADVx(c));
     if v > 0; {
-        pos $y' <$v> $c;
+        pos $y' $v $c;
     }
 
 do  for y = @c103C_wide;
     for c = @cCons_wide;
     let v = APx(y, "A") - (ADVx(y) + ADVx(c));
     if v > 0; {
-        pos $y' <$v> $c;
+        pos $y' $v $c;
     }
 ```
 
@@ -341,7 +341,7 @@ do  for b = @cBases;
     for u in @cLVowels;
     let v = APx(b, "L") - APx(u, "_L") + APx(u, "LD") - APx("ldot", "_LD")  + ADVx("ldot") - ADVx(b);
     if v > 0; {
-        pos $b' <$v> $u ldot;
+        pos $b' $v $u ldot;
     }
 ```
 
