@@ -124,7 +124,6 @@ If ‘def’ is supplied, the parameter value is passed through the [file name d
 In addition to options supplied in argspec, the framework adds [standard options](docs.md#standard-command-line-options), ie:
 
 -   -h, --help
--   -d, --defaults
 -   -q, --quiet
 -   -p, --params
 -   -l, --log

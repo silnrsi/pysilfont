@@ -28,8 +28,10 @@ Nearly all scripts support these:
 
 - `-h, --help`
   - Basic usage help for the command
-- `-d, --defaults`
-  - Display -h info with added info about default values
+  - `-h d`
+    - Display -h info with added info about default values
+  - `-h p`
+      - Display information about parameters (-p --params below)
 - `-q, --quiet`
   - Quiet mode - only display severe errors.  See reporting below
 - `-l LOG, --log LOG`
@@ -97,10 +99,10 @@ Other parameters will just have standard default values.
 
 ### Displaying defaults for a command
 
-Use the `-d` option to see what defaults are for a given command. For example,
+Use `-h d` to see what defaults are for a given command. For example,
 
 ```
-psfsetpsnames -d
+psfsetpsnames -h d
 ```
 
 will output its help text with the following appended:

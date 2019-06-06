@@ -12,6 +12,7 @@ try:
 except NameError: # Will  occur with Python 3
     pass
 from glob import glob
+from collections import OrderedDict
 import sys, os, argparse, datetime, shutil, csv, codecs, io
 try:
     import configparser
@@ -89,29 +90,29 @@ class parameters(object):
         defparams['logging'] = {'scrlevel': 'P', 'loglevel': 'W'}
         defparams['backups'] = {'backup': True, 'backupdir': 'backups', 'backupkeep': 5}
         # Default parameters for UFO module
-        defparams['outparams'] = {
-            "indentIncr":       "  ",   # XML Indent increment
-            "indentFirst":      "  ",   # First XML indent
-            "indentML":         False,  # Should multi-line string values be indented?
-            "plistIndentFirst": "",     # First indent amount for plists
-            "sortDicts":        True,   # Should dict elements be sorted alphabetically?
-            'precision':        6,      # Decimal precision to use in XML output - both for real values and for attributes if numeric
-            "renameGlifs":      True,   # Rename glifs based on UFO3 suggested algorithm
-            "UFOversion":       "",     # UFOversion - defaults to existing unless a value is supplied
-            "format1Glifs":     False,  # Force output format 1 glifs including UFO2-style anchors (for use with FontForge
-            "glifElemOrder":    ['advance', 'unicode', 'note',   'image',  'guideline', 'anchor', 'outline', 'lib'],  # Order to output glif elements
-            "floatAttribs":     ['xScale', 'xyScale', 'yxScale', 'yScale', 'angle'],    # Used with precision above
-            "intAttribs":       ['pos', 'width', 'height', 'xOffset', 'yOffset', 'x', 'y'],
-            "attribOrders.glif":['pos', 'width', 'height', 'fileName', 'base', 'xScale', 'xyScale', 'yxScale', 'yScale', 'xOffset', 'yOffset',
-                                  'x', 'y', 'angle', 'type', 'smooth', 'name', 'format', 'color', 'identifier']
-            }
+        defparams['outparams'] = OrderedDict([ # Use ordered dict so parameters show in logical order with -h p
+            ("UFOversion", ""),  # UFOversion - defaults to existing unless a value is supplied
+            ("indentIncr",       "  "),   # XML Indent increment
+            ("indentFirst",      "  "),   # First XML indent
+            ("indentML",         False),  # Should multi-line string values be indented?
+            ("plistIndentFirst", ""),     # First indent amount for plists
+            ('precision', 6),             # Decimal precision to use in XML output - both for real values and for attributes if float
+            ("floatAttribs", ['xScale', 'xyScale', 'yxScale', 'yScale', 'angle']),  # Used with precision above
+            ("intAttribs", ['pos', 'width', 'height', 'xOffset', 'yOffset', 'x', 'y']),
+            ("sortDicts",        True),   # Should dict elements be sorted alphabetically?
+            ("renameGlifs",      True),   # Rename glifs based on UFO3 suggested algorithm
+            ("format1Glifs",     False),  # Force output format 1 glifs including UFO2-style anchors (for use with FontForge
+            ("glifElemOrder",    ['advance', 'unicode', 'note',   'image',  'guideline', 'anchor', 'outline', 'lib']),  # Order to output glif elements
+            ("attribOrders.glif",['pos', 'width', 'height', 'fileName', 'base', 'xScale', 'xyScale', 'yxScale', 'yScale', 'xOffset', 'yOffset',
+                                  'x', 'y', 'angle', 'type', 'smooth', 'name', 'format', 'color', 'identifier'])
+            ])
         defparams['ufometadata'] = {"checkfix": "check"}   # Apply metadata fixes when reading UFOs
 
         self.paramshelp = {} # Info used when outputting help about parame options
         self.paramshelp["classdesc"] = {
             "logging": "controls the level of log messages go to screen or log files.",
             "backups": "controls backup settings for scripts that output fonts - by default backups are made if the output font is overwriting the input font",
-            "outparams": "controls xml formatting when outputting UFO fonts",
+            "outparams": "Output options for UFOs - cover UFO version and normalization",
             "ufometadata": "controls if UFO metatdata be checked, or checked and fixed"
         }
         self.paramshelp["paramsdesc"] = {
@@ -190,10 +191,10 @@ class parameters(object):
         phelp = self.paramshelp
         print("\nMost pysilfont scripts have -p, --params options which can be used to change default behaviour of scripts.  For example '-p scrlevel=w' will log warning messages to screen \n")
         print("Listed below are all such parameters, grouped by purpose.  Not all apply to all scripts - "
-              "in partucular outparams and ufometadata only apply to scripts using pysilfont's own UFO code\n")
-        for classn in ("logging", "backups", "outparams", "ufometadata"):
-            print(classn[0].upper() + classn[1:] + " - " + phelp["classdesc"][classn])
-            for param in sorted(self.classes[classn]):
+              "in partucular outparams and ufometadata only apply to scripts using pysilfont's own UFO code")
+        for classn in ("logging", "backups", "ufometadata", "outparams"):
+            print("\n" + classn[0].upper() + classn[1:] + " - " + phelp["classdesc"][classn])
+            for param in self.classes[classn]:
                 if param == "format1Glifs": continue # Param due to be phased out
                 paramdesc = phelp["paramsdesc"][param]
                 paramtype = self.types[param].__name__
@@ -337,7 +338,7 @@ def execute(tool, fn, scriptargspec, chain = None):
     poptions['prog'] = splitfn(argv[0])[1]
     poptions['description'] = basemodule.__doc__
     poptions['formatter_class'] = argparse.RawDescriptionHelpFormatter
-    epilog = "For more help see https://github.com/silnrsi/pysilfont/blob/master/docs/scripts.md#" + poptions['prog'] + "\n\n"
+    epilog = "For more help options use -h ?.  For more documentation see https://github.com/silnrsi/pysilfont/blob/master/docs/scripts.md#" + poptions['prog'] + "\n\n"
     poptions['epilog'] = epilog + "Version: " + params.sets['default']['version'] + "\n" + params.sets['default']['copyright']
 
     parser = argparse.ArgumentParser(**poptions)
@@ -345,30 +346,39 @@ def execute(tool, fn, scriptargspec, chain = None):
 
 
     # Add standard arguments
-    standardargs = [
-            ('-d', '--defaults', {'help': 'Display help with info on default values', 'action': 'store_true'}, {}), 
-            ('-q', '--quiet', {'help': 'Quiet mode - only display severe errors', 'action': 'store_true'}, {}),
-            ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile'}), 
-            ('-p', '--params', {'help': 'Other parameters - see parameters.md for details', 'action': 'append'}, {'type': 'optiondict'}),
-            ('--nq', {'help': argparse.SUPPRESS, 'action': 'store_true'}, {})]
-    standardargsindex = ['defaults', 'quiet', 'log', 'params', 'nq']
+    standardargs = {
+            'quiet': ('-q', '--quiet', {'help': 'Quiet mode - only display severe errors', 'action': 'store_true'}, {}),
+            'log': ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile'}),
+            'params': ('-p', '--params', {'help': 'Other parameters - see parameters.md for details', 'action': 'append'}, {'type': 'optiondict'}),
+            'nq': ('--nq', {'help': argparse.SUPPRESS, 'action': 'store_true'}, {})}
 
     suppliedargs = []
     for a in argspec:
         argn = a[:-2][-1]  # [:-2] will give either 1 or 2, the last of which is the full argument name
         if argn[0:2] == "--": argn = argn[2:]  # Will start with -- for options
         suppliedargs.append(argn)
-    for i, arg in enumerate(standardargsindex):
-        if arg not in suppliedargs: argspec.append(standardargs[i])
+    for arg in sorted(standardargs):
+        if arg not in suppliedargs: argspec.append(standardargs[arg])
 
-    # Special handling for "-d" to print default value info with help text
     defhelp = False
-    if "-d" in argv:
-        defhelp = True
-        pos = argv.index("-d")
-        argv[pos] = "-h"  # Set back to -h for argparse to recognise
-        deffiles = []
-        defother = []
+    if "-h" in argv: # Look for help option supplied
+        pos = argv.index("-h")
+        if pos < len(argv)-1: # There is something following -h!
+            opt = argv[pos+1]
+            if opt in ("d", "defaults"):
+                defhelp = True # Normal help will be displayed with default info displayed by the epilog
+                deffiles = []
+                defother = []
+            elif opt in ("p", "params"):
+                params.printhelp()
+                sys.exit(0)
+            else:
+                if opt != "?":
+                    print("Invalid -h value")
+                    print("-h ? displays help options")
+                print("-h d (or -h defaults) lists details of default values for arguments and parameters")
+                print("-h p (or -h params) gives help on parameters that can be set with -p or --params")
+                sys.exit(0)
 
     quiet = True if "-q" in argv and '--nq' not in argv else False
     if quiet: logger.scrlevel = "S"
