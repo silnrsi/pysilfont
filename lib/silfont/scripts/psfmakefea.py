@@ -202,8 +202,14 @@ class Font(object) :
                 raise ValueError("Class reference loop(s) found: " + ", ".join(classes))
         return outclasses
 
+    def addComment(self, parser, text):
+        cmt = parser.ast.Comment("# " + text, location=None)
+        cmt.pretext = "\n"
+        parser.add_statement(cmt)
+
     def append_classes(self, parser) :
         # normal glyph classes
+        self.addComment(parser, "Main Classes")
         for name in self.order_classes():
             gc = parser.ast.GlyphClass(None, location=None)
             for g in self.classes[name] :
@@ -225,7 +231,9 @@ class Font(object) :
         # create base and mark classes, add to fea file dicts and parser symbol table
         bclassdef_lst = []
         mclassdef_lst = []
+        self.addComment(parser, "Positioning classes and statements")
         for ap_nm, glyphs_w_ap in self.all_aps.items() :
+            self.addComment(parser, "AP: " + ap_nm)
             # e.g. all glyphs with U AP
             if not ap_nm.startswith("_"):
                 if any(not x.is_mark for x in glyphs_w_ap):

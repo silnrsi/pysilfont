@@ -27,6 +27,15 @@ def asLiteralFea(self, indent=""):
 ast.Element.asLiteralFea = asLiteralFea
 ast.Element.mode = 'flat'
 
+class ast_Comment(ast.Comment):
+    def __init__(self, text, location=None):
+        super(ast_Comment, self).__init__(text, location=location)
+        self.pretext = ""
+        self.posttext = ""
+
+    def asFea(self, indent=""):
+        return self.pretext + self.text + self.posttext
+
 class ast_MarkClass(ast.MarkClass):
     # This is better fixed upstream in parser.parse_glyphclass_ to handle MarkClasses
     def asClassFea(self, indent=""):

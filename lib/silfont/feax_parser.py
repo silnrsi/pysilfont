@@ -22,6 +22,7 @@ class feaplus_ast(object) :
     DoLetSubStatement = astx.ast_DoLetSubStatement
     DoIfSubStatement = astx.ast_DoIfSubStatement
     AlternateSubstStatement = astx.ast_AlternateSubstStatement
+    Comment = astx.ast_Comment
 
     def __getattr__(self, name):
         return getattr(ast, name) # retrieve undefined attrs from imported fontTools.feaLib ast module
