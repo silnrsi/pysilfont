@@ -86,8 +86,9 @@ def doit(args) :
     logger.log("Retained %d glyphs, deleted %d glyphs." % (len(toKeep), len(toDelete)), "P")
 
     # Clean up and rebuild sort orders
+    libexists = True if "lib" in font.__dict__ else False
     for orderName in ('public.glyphOrder', 'com.schriftgestaltung.glyphOrder'):
-        if orderName in font.lib:
+        if libexists and orderName in font.lib:
             glyphOrder = font.lib.getval(orderName)  # This is an array
             array = ET.Element("array")
             for gname in glyphOrder:
@@ -96,7 +97,7 @@ def doit(args) :
             font.lib.setelem(orderName, array)
 
     # Clean up and rebuild psnames
-    if 'public.postscriptNames' in font.lib:
+    if libexists and 'public.postscriptNames' in font.lib:
         psnames = font.lib.getval('public.postscriptNames')  # This is a dict keyed by glyphnames
         dict = ET.Element("dict")
         for gname in psnames:

@@ -1,19 +1,21 @@
-2019-04-16 14:14:34 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo
-2019-04-16 14:14:34 Info:     Processing Glyph Layer 0: public.defaultglyphs
-2019-04-16 14:14:34 Progress: Checking fontinfo.plist metadata
-2019-04-16 14:14:34 Warning:  openTypeNameSampleText is missing from fontinfo.plist
-2019-04-16 14:14:34 Warning:  macintoshFONDName removed from fontinfo.  Old value: My Test
-2019-04-16 14:14:34 Info:     Types: Old - string, New - NoneType
-2019-04-16 14:14:34 Warning:  openTypeOS2FamilyClass removed from fontinfo.  Old value: [0, 0]
-2019-04-16 14:14:34 Info:     Types: Old - list, New - NoneType
-2019-04-16 14:14:34 Warning:  postscriptFamilyBlues removed from fontinfo.  Old value: []
-2019-04-16 14:14:34 Info:     Types: Old - list, New - NoneType
-2019-04-16 14:14:34 Warning:  openTypeHheaAscender updated  Old value: 2200, new value: 2100
-2019-04-16 14:14:34 Info:     Types: Old - int, New - int
-2019-04-16 14:14:34 Progress: Checking lib.plist metadata
-2019-04-16 14:14:34 Progress: Check & fix results:- Errors: 0, Changes made: 4, Other warnings: 1
-2019-04-16 14:14:34 Progress: See log file for details
-2019-04-16 14:14:34 Progress: Processing font for output
-2019-04-16 14:14:34 Progress: Output UFO already exists - reading for comparison
-2019-04-16 14:14:34 Progress: Writing font to local/testresults/ufo/psfsetkeys.ufo
-2019-04-16 14:14:34 Info:     Processing glyphs directory
+2019-06-19 17:07:52 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo
+2019-06-19 17:07:52 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2019-06-19 17:07:52 Progress: Checking fontinfo.plist metadata
+2019-06-19 17:07:52 Warning:  openTypeNameSampleText is missing from fontinfo.plist
+2019-06-19 17:07:52 Warning:  macintoshFONDName removed from fontinfo.  Old value: My Test
+2019-06-19 17:07:52 Info:     Types: Old - string, New - NoneType
+2019-06-19 17:07:52 Warning:  openTypeOS2FamilyClass removed from fontinfo.  Old value: [0, 0]
+2019-06-19 17:07:52 Info:     Types: Old - list, New - NoneType
+2019-06-19 17:07:52 Warning:  postscriptFamilyBlues removed from fontinfo.  Old value: []
+2019-06-19 17:07:52 Info:     Types: Old - list, New - NoneType
+2019-06-19 17:07:52 Warning:  openTypeHheaAscender updated  Old value: 2200, new value: 2100
+2019-06-19 17:07:52 Info:     Types: Old - int, New - int
+2019-06-19 17:07:52 Progress: Checking lib.plist metadata
+2019-06-19 17:07:52 Progress: Check & fix results:- Errors: 0, Changes made: 4, Other warnings: 1
+2019-06-19 17:07:52 Progress: See log file for details
+2019-06-19 17:07:52 Info:     Adding keys to fontinfo
+2019-06-19 17:07:52 Info:     org.sil.newkey added, value: newvalue
+2019-06-19 17:07:52 Progress: Processing font for output
+2019-06-19 17:07:52 Progress: Output UFO already exists - reading for comparison
+2019-06-19 17:07:52 Progress: Writing font to local/testresults/ufo/psfsetkeys.ufo
+2019-06-19 17:07:52 Info:     Processing glyphs directory

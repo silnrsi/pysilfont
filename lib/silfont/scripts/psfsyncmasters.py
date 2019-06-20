@@ -51,12 +51,12 @@ def doit(args) :
     for source in pds.sources:
         if source.copyInfo:
             if psource: logger.log('Multiple fonts with <info copy="1" />', "S")
-            psource = Dsource(pds, source, logger, frompds=True, args = args)
+            psource = Dsource(pds, source, logger, frompds=True, psource = True, args = args)
         else:
-            dsources.append(Dsource(pds, source, logger, frompds=True, args = args))
+            dsources.append(Dsource(pds, source, logger, frompds=True, psource = False, args = args))
     if sds is not None:
         for source in sds.sources:
-            dsources.append(Dsource(sds, source, logger, frompds=False, args=args))
+            dsources.append(Dsource(sds, source, logger, frompds=False,  psource = False, args=args))
 
     # Process values in psource
     complex = True if "master" in psource.source.filename.lower() else False
@@ -181,7 +181,7 @@ def doit(args) :
     logger.log("psfsyncmasters completed", "P")
 
 class Dsource(object):
-    def __init__(self, ds, source, logger, frompds, args):
+    def __init__(self, ds, source, logger, frompds, psource, args):
         self.ds = ds
         self.source = source
         self.logger = logger
@@ -196,7 +196,17 @@ class Dsource(object):
         try:
             self.lib = UFO.Uplist(font=None, dirn=self.ufodir, filen="lib.plist")
         except Exception as e:
-            logger.log("Unable to open lib.plist in " + self.ufodir, "S")
+            if psource:
+                logger.log("Unable to open lib.plist in " + self.ufodir, "E")
+                self.lib = {} # Just need empty dict, so all vals will be set to None
+            else:
+                logger.log("Unable to open lib.plist in " + self.ufodir + "; creating empty one", "E")
+                self.lib = UFO.Uplist()
+                self.lib.logger=logger
+                self.lib.etree = ET.fromstring("<plist>\n<dict/>\n</plist>")
+                self.lib.populate_dict()
+                self.lib.dirn = self.ufodir
+                self.lib.filen = "lib.plist"
 
         # Process parameters with similar logic to that in ufo.py. primarily to create outparams for writeXMLobject
         libparams = {}
@@ -268,6 +278,6 @@ if __name__ == "__main__": cmd()
 ''' *** Code notes ***
 
 Does not check precision for float, since no float values are currently processed
-   - see processnum in psfsyninfo if needed later
+   - see processnum in psfsyncmeta if needed later
 
 '''

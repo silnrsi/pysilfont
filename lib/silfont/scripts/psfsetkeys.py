@@ -25,18 +25,23 @@ argspec = [
 
 def doit(args) :
 
-    # Determine which plist to modify
-    if args.plist == 'lib':
-        font_plist = args.ifont.lib
+    font = args.ifont
+    logger = args.logger
+    plist = args.plist
+    if plist is None: plist = "fontinfo"
+    if plist not in ("lib", "fontinfo"):
+        logger.log("--plist must be either fontinfo or lib", "S")
     else:
-        font_plist = args.ifont.fontinfo
+        if plist not in font.__dict__: font.addfile(plist)
+    logger.log("Adding keys to " + plist, "I")
+    font_plist = getattr(font, plist)
 
     # Ensure enough options were specified
     value = args.value or args.file or args.filepart
     if args.key and not value:
-        args.logger.log('Value needs to be specified')
+        logger.log('Value needs to be specified', "S")
     if not args.key and value:
-        args.logger.log('Key needs to be specified')
+        logger.log('Key needs to be specified', "S")
 
     # Use a one line string to set the key
     if args.key and args.value:
@@ -65,15 +70,13 @@ def doit(args) :
     if args.input:
         incsv = args.input
         incsv.numfields = 2
-        incsv.logger = args.ifont.logger
 
         for line in incsv:
             key = line[0]
             value = line[1]
             set_key_value(font_plist, key, value)
 
-    return args.ifont
-
+    return font
 
 def set_key_value(font_plist, key, value):
     """Set key to value in font."""
@@ -92,7 +95,7 @@ def set_key_value(font_plist, key, value):
         except ValueError:
             # Handle string (including multi-line strings) values
             font_plist.setval(key, 'string', value)
-
+    font_plist.font.logger.log(key + " added, value: " + str(value), "I")
 
 def cmd() : execute("UFO",doit, argspec)
 if __name__ == "__main__": cmd()
