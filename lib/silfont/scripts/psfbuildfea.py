@@ -33,7 +33,8 @@ argspec = [
     ('input_font', {'help': 'Input font file'}, {}),
     ('-o', '--output', {'help': 'Output font file'}, {}),
     ('-v', '--verbose', {'help': 'Repeat to increase verbosity', 'action': 'count', 'default': 0}, {}),
-    ('-m', '--lookupmap', {'help': 'File into which place lookup map'}, {})
+    ('-m', '--lookupmap', {'help': 'File into which place lookup map'}, {}),
+    ('-l','--log',{'help': 'Optional log file'}, {'type': 'outfile', 'def': '_buildfea.log', 'optlog': True}),
 ]
 
 def doit(args) :

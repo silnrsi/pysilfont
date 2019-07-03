@@ -9,6 +9,7 @@ __author__ = 'Martin Hosken'
 argspec = [
     ('ifont',{'help': 'Input TTF'}, {'type': 'infont'}),
     ('ofont',{'help': 'Output TTF','nargs': '?' }, {'type': 'outfont'}),
+    ('-l','--log',{'help': 'Optional log file'}, {'type': 'outfile', 'def': '_compressgr', 'optlog': True})
 ]
 
 from silfont.core import execute

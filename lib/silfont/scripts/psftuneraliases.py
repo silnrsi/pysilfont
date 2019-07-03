@@ -17,6 +17,7 @@ argspec = [
     ('output', {'help': 'Output TypeTuner feature file'}, {}),
     ('-m','--mapping', {'help': 'Input csv mapping file'}, {'type': 'incsv'}),
     ('-f','--ttf', {'help': 'Compiled TTF file'}, {}),
+    ('-l','--log',{'help': 'Optional log file'}, {'type': 'outfile', 'def': '_tuneraliases.log', 'optlog': True}),
     ]
 
 def doit(args) :

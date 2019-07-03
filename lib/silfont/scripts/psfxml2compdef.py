@@ -13,7 +13,8 @@ from xml.etree import ElementTree as ET
 # specify two parameters: input file (XML format), output file (single line format).
 argspec = [
     ('input',{'help': 'Input file of CD in XML format'}, {'type': 'infile'}),
-    ('output',{'help': 'Output file of CD in single line format'}, {'type': 'outfile'})]
+    ('output',{'help': 'Output file of CD in single line format'}, {'type': 'outfile'}),
+    ('-l', '--log', {'help': 'Optional log file'}, {'type': 'outfile', 'def': '_xml2compdef.log', 'optlog': True})]
 
 def doit(args) :
     cgobj = CompGlyph()

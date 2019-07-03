@@ -11,7 +11,8 @@ from silfont.core import execute
 argspec = [
     ('ifont',{'help': 'Input TTF'}, {'type': 'infont'}),
     ('ofont',{'help': 'Output TTF','nargs': '?' }, {'type': 'outfont'}),
-    ('-L','--lang', {'help': 'Language to switch to'}, {})
+    ('-L','--lang', {'help': 'Language to switch to'}, {}),
+    ('-l','--log',{'help': 'Optional log file'}, {'type': 'outfile', 'def': '_deflang.log', 'optlog': True}),
 ]
 
 def long2tag(x):

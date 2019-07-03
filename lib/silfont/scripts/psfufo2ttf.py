@@ -15,7 +15,8 @@ import defcon, ufo2ft.outlineCompiler, ufo2ft.preProcessor
 argspec = [
     ('iufo', {'help': 'Input UFO folder'}, {}),
     ('ottf', {'help': 'Output ttf file name'}, {}),
-    ('--removeOverlap', {'help': 'Merge overlapping contours', 'action': 'store_true'}, {})]
+    ('--removeOverlap', {'help': 'Merge overlapping contours', 'action': 'store_true'}, {}),
+    ('-l', '--log', {'help': 'Optional log file'}, {'type': 'outfile', 'def': '_ufo2ttf.log', 'optlog': True})]
 
 PUBLIC_PREFIX = 'public.'
 
