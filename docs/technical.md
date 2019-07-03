@@ -106,6 +106,7 @@ argument name is either
 **framework dict** has optional values for:
 - ‘type’ - the type of parameter, eg ‘outfile’
 - ‘def’ - default for file names.  Only applies if ‘type’ is a font or file.
+- 'optlog' - For logs only. Flag to indicate the log file is optional - default False
 
 ‘Type’ can be one of:
 
@@ -130,9 +131,7 @@ In addition to options supplied in argspec, the framework adds [standard options
 
 so these do not need to be included in argspec.  
 
-With -l, --log, this is still often set in argspec to create default log file names:
-- If specified in argspec (with a default), a log file is always created and -l is only used to override the default name
-- If not specified in arspec, a log file is only created when -l is used
+With -l, --log, this is still usually set in argspec to create default log file names.  Set optlog to False if you want the log file to be optional.
 
 #### doit() function
 The main code of the script is in the doit() function.  

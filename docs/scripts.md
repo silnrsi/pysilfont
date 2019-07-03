@@ -682,7 +682,7 @@ Add associate UID info to org.sil.assocUIDs in glif lib based on a csv file - co
 
 ---
 ####  psfsetglyphorder
-Usage: **`psfsetglyphorder [--gname GNAME] [--header HEADER] [--field FIELD] [-i INPUT] ifont [ofont]`**
+Usage: **`psfsetglyphorder [--gname GNAME] [--header HEADER] [--field FIELD] [-i INPUT] [-x] ifont [ofont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
@@ -696,6 +696,16 @@ With the csv file:
 - The glyph names are sorted by the values in the sort_final column, which can be integer or real. HEADER can be used to specify alternate column header to sort_final.  Multiple comma-separated values can be used with `--header` and `--field` to update two or more orders in a single command call.
 - GNAME can be used to specify column header to use instead of glyph_name.
 
+By default all entries in the input file are added, even if the glyph is not in the font.  The UFO spec allows this so a common list can be used across groups of fonts. Use -x to only add entries for glyphs that exist in the font.
+
+Example that imports the data based on glyph_name and sort_final columns in the csv, only adding entries for glyphs in the font:
+```
+psfsetglyphorder Andika-Regular.ufo -i glyphdata.csv -x
+```
+Example that imports the data from the sort_final column to public.glyphorder and from the sort_designer into com.schriftgestaltung.glyphOrder:
+```
+psfsetglyphorder Andika-Regular.ufo -i glyphdata.csv --header sort_final,sort_designer --field public.glyphOrder,com.schriftgestaltung.glyphOrder
+```
 ---
 ####  psfsetkeys
 Usage: **`psfsetkeys [--plist PLIST] [-i INPUT] [-k KEY] [-v VALUE] [--file FILE] [--filepart FILEPART] ifont [ofont]`**
@@ -754,17 +764,24 @@ psfsetmarkcolors Andika-Regular.ufo -x
 
 ---
 ####  psfsetpsnames
-Usage: **`psfsetpsnames [--gname GNAME] [-i INPUT] ifont [ofont]`**
+Usage: **`psfsetpsnames [--gname GNAME] [-i INPUT] [-x] ifont [ofont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-From the INPUT file, load `public.postscriptName` in lib.plist to specify final production names for glyphs.
+From the INPUT file, populate `public.postscriptName` in lib.plist to specify final production names for glyphs.
 
 The input file can be in one of two formats:
 - simple csv in form glyphname,postscriptname
 - csv file with headers using glyph_name and ps_name columns
 
 With the csv file, GNAME can be used to specify column header to use instead of glyph_name.
+
+By default all entries in the input file are added, even if the glyph is not in the font.  The UFO spec allows this so a common list can be used across groups of fonts. Use -x to only add entries for glyphs that exist in the font.
+
+Example usage:
+```
+psfsetpsnames Andika-Regular.ufo -i psnames.txt
+```
 
 ---
 ####  psfsetunicodes

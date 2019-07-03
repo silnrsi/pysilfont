@@ -35,7 +35,7 @@ Nearly all scripts support these:
 - `-q, --quiet`
   - Quiet mode - only display severe errors.  See reporting below
 - `-l LOG, --log LOG`
-  - Log file name (if not using default name).  If there is no default for a log file name, a log file will only be created if LOG is specified
+  - Log file name (if not using the default name).  By default logs will go in a logs subdirectory.  If just a directory path is given, the log will go in there using the default name.
 - `-p PARAMS, --params PARAMS`
   - Other parameters - see below
 
@@ -87,7 +87,7 @@ will:
 - open (and update)	`path/font.ufo`
 - backup the font to `path/backups/font.ufo.nnn~`
 - read its input from `path/font_psnames.csv`
-- write its log to `path/font_psnames.log`
+- write its log to `path/logs/font_psnames.log`
 
 If only part of a file name is supplied, other parts will default. So if only "test" is supplied for the output font name, the font would be output to `path/test.ufo`.
 

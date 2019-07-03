@@ -391,22 +391,27 @@ def execute(tool, fn, scriptargspec, chain = None):
         nonkwds = a[:-2]
         kwds = a[-2]
         parser.add_argument(*nonkwds, **kwds)
-        # Create dict of framework keywords using argument name
+        # Create ainfo, a dict of framework keywords using argument name
         argn = nonkwds[-1]  # Find the argument name from first 1 or 2 tuple entries
         if argn[0:2] == "--": argn = argn[2:]  # Will start with -- for options
-        ainfo=a[-1]
+        ainfo=dict(a[-1]) #Make a copy so original argspec is not changed
+        for key in ainfo: # Check all keys are valid
+            if key not in ("def", "type", "optlog") : logger.log("Invalid argspec framework key: " + key, "X")
         ainfo['name']=argn
         if argn == 'log':
             logdef = ainfo['def'] if 'def' in ainfo else None
+            optlog = ainfo['optlog'] if 'optlog' in ainfo else False
         arginfo.append(ainfo)
         if defhelp:
             arg = nonkwds[0]
             if 'def' in ainfo:
-                deffiles.append([arg, ainfo['def']])
+                defval = ainfo['def']
+                if argn == 'log' and logdef: defval += " in logs subdirectory"
+                deffiles.append([arg, defval])
             elif 'default' in kwds:
                 defother.append([arg, kwds['default']])
 
-    # if -d specified, change the help epilog to info about argument defaults
+    # if -h d specified, change the help epilog to info about argument defaults
     if defhelp:
         if not (deffiles or defother):
             deftext = "No defaults for parameters/options"
@@ -472,7 +477,7 @@ def execute(tool, fn, scriptargspec, chain = None):
         logfile = None
         logname = args.log if 'log' in args.__dict__ and args.log is not None else ""
         if 'log' in args.__dict__:
-            if logdef is not None:
+            if logdef is not None and (logname is not "" or optlog == False):
                 (path, base, ext) = splitfn(logname)
                 (dpath, dbase, dext) = splitfn(logdef)
                 if not path:
@@ -480,6 +485,7 @@ def execute(tool, fn, scriptargspec, chain = None):
                         path = ""
                     else:
                         path = (fppath if dpath is "" else os.path.join(fppath, dpath))
+                        path = os.path.join(path, "logs")
                 if not base:
                     if dbase == "":
                         base = fpbase
@@ -494,7 +500,12 @@ def execute(tool, fn, scriptargspec, chain = None):
             else:
                 (logname, logpath, exists) = fullpath(logname)
                 if not exists:
-                    logger.log("Log file directory " + logpath + " does not exist", "S")
+                    (parent,subd) = os.path.split(logpath)
+                    if subd == "logs" and os.path.isdir(parent): # Create directory if just logs subdir missing
+                        logger.log("Creating logs subdirectory in " + parent, "P")
+                        os.mkdir(logpath)
+                    else: # Fails, since missing dir is probably a typo!
+                        logger.log("Log file directory " + logpath + " does not exist", "S")
                 logger.log('Opening log file for output: ' + logname, "P")
                 try:
                     logfile = io.open(logname, "w", encoding="utf-8")
