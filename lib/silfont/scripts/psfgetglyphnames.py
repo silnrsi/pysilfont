@@ -37,8 +37,8 @@ def doit(args) :
     # Gather data from the UFO
     cmap = dict()
     for glyph in font:
-        if glyph.unicode:
-            cmap[glyph.unicode] = glyph.name
+        for codepoint in glyph.unicodes:
+            cmap[codepoint] = glyph.name
 
     # Determine list of glyphs that need to be copied
     header = ('glyph_name', 'rename', 'usv')
