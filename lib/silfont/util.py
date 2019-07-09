@@ -13,7 +13,10 @@ except NameError: # Will  occur with Python 3
     pass
 import os, subprocess, difflib, sys, io
 from silfont.core import execute
-from fontTools.ttLib import TTFont
+try:
+    from fontTools.ttLib import TTFont
+except Exception as e:
+    TTFont = None
 
 class dirTree(dict) :
     """ An object to hold list of all files and directories in a directory
@@ -162,6 +165,12 @@ class ttf_diff(object): # For diffing 2 ttf files.  Differences are not listed
 
     def __init__(self, file1, file2):
         errors=[]
+        if TTFont is None:
+            self.diff=""
+            self.errors="Testing failed - class ttf_diff requires fontTools to be installed"
+            self.returncode = 2
+            return
+
         # Open the ttf files
         try:
             font1 = TTFont(file1)
