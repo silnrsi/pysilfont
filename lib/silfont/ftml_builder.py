@@ -260,7 +260,7 @@ class FSpecial(object):
 class FTMLBuilder(object):
     """glyph_data and UFO processing for building FTML"""
 
-    def __init__(self, logger, incsv = None, fontcode = None, font = None, rtlenable = False, ap = None ):
+    def __init__(self, logger, incsv = None, fontcode = None, font = None, langs = None, rtlenable = False, ap = None ):
         self.logger = logger
         self.rtlEnable = rtlenable
 
@@ -269,6 +269,17 @@ class FTMLBuilder(object):
 
         # Dict mapping tag to Feature
         self.features = {}
+
+        # Set of all languages seen
+        if langs is not None:
+            # Use a list so we keep the order (assuming caller wouldn't give us dups
+            self.allLangs = list(re.split(r'\s*[\s,]\s*', langs)) # Allow comma- or space-separated tags
+            self._langsComplete = True  # We have all the lang tags desired
+        else:
+            # use a set because the langtags are going to dribble in and be repeated.
+            self.allLangs = set()
+            self._langsComplete = False # Add lang_tags from glyph_data
+
         # Be able to find chars and specials:
         self._charFromUID = {}
         self._charFromBasename = {}
@@ -469,13 +480,19 @@ class FTMLBuilder(object):
                 bcp47 = line[bcp47Col].strip()
                 if len(bcp47) > 0 and not(bcp47.startswith('#')):
                     if c is not None:
-                        for tag in bcp47.split(','):
-                            c.langs.add(tag.strip())
+                        for tag in re.split(r'\s*[\s,]\s*', bcp47): # Allow comma- or space-separated tags
+                            c.langs.add(tag)        # lang-tags mentioned for this character
+                            if not self._langsComplete:
+                                self.allLangs.add(tag)  # keep track of all possible lang-tags
                     else:
                         self._csvWarning('untestable langs: no known USV')
 
+        # We're finally done, but if allLangs is a set, let's order it (for lack of anything better) and make a list:
+        if not self._langsComplete:
+            self.allLangs = list(sorted(self.allLangs))
+
     def permuteFeatures(self, uids = None, feats = None):
-        """ returns an iterator that provides all combinations of feature/value pairs, either for a list of uids or a specific list of featIDs"""
+        """ returns an iterator that provides all combinations of feature/value pairs, for a list of uids and/or a specific list of featIDs"""
         feats = set(feats) if feats is not None else set()
         if uids is not None:
             for uid in uids:
