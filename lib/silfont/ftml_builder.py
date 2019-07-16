@@ -191,16 +191,19 @@ class Feature(object):
         self.tag = tag
         self.default = 0
         self.maxval = 1
+        self._tvlist = None
 
     def __getattr__(self,name):
         if name == "tvlist":
             # tvlist is a list of all possible tag,value pairs (except the default but including None) for this feature
-            # We'll generate this the first time we need it and save it
-            self.tvlist = [ None ]
-            for v in range (0, self.maxval+1):
-                if v != self.default:
-                    self.tvlist.append( [self.tag, str(v)])
-            return self.tvlist
+            # This attribute shouldn't be needed until all the possible feature value are known,
+            # therefore we'll generate this the first time we need it and save it
+            if self._tvlist is None:
+                self._tvlist = [ None ]
+                for v in range (0, self.maxval+1):
+                    if v != self.default:
+                        self._tvlist.append( [self.tag, str(v)])
+            return self._tvlist
 
 
 class FChar(object):
