@@ -28,7 +28,7 @@ def doit(args):
     logger.log("Creating UFO objects from GlyphsApp file", "I")
     with open(args.glyphsfont, 'r', encoding='utf-8') as gfile:
         gfont = glyphsLib.parser.load(gfile)
-    if glyphsLib.__version__[0:1] == "3":
+    if glyphsLib.__version__[0:1] in ("3", "4"):
         ufos = glyphsLib.to_ufos(gfont, include_instances=False, family_name=None, propagate_anchors=False, generate_GDEF=False)
     else:
         ufos = glyphsLib.to_ufos(gfont, include_instances=False, family_name=None, propagate_anchors=False)
