@@ -12,7 +12,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | ------- | ----------- |
 | [psfaddanchors](#psfaddanchors) | Read anchor data from XML file and apply to UFO |
 | [psfbuildcomp](#psfbuildcomp) | Add composite glyphs to UFO based on a Composite Definitions file |
-| [psfbuildcompgc](#psfbuildcompgc) | Add composite glyphs to UFO using GlyphConstructions based on a CD file |
+| [psfbuildcompgc](#psfbuildcompgc) | Add composite glyphs to UFO using glyphConstruction based on a CD file |
 | [psfbuildfea](#psfbuildfea) | Compile a feature (.fea) file against an existing input TTF |
 | [psfchangegdlnames](#psfchangegdlnames) | Change graphite names within GDL based on mappings files |
 | [psfchangettfglyphnames](#psfchangettfglyphnames) | Change glyph names in a ttf from working names to production names |

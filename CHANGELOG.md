@@ -1,5 +1,43 @@
 # Changelog
 
+## [1.4.2] - 2019-07-30 - Maintenance release
+
+Updated the execute() framework used by scripts to add support for opening fonts with fontParts and remove support for opening fonts with FontForge.
+
+Updates to normalization and check&fix to work better with FontForge-based workflows
+
+Improvements to command-line help to display info on params and default values
+
+Improvements to log file creation, including logs, by default, going to a logs sub-directory
+
+Some changes are detailed below, but check commit logs for full details.
+
+### Added
+
+| Command | Description |
+| ------- | ----------- |
+| [psfbuildcompgc](#psfbuildcompgc) | Add composite glyphs to UFO using glyphConstruction based on a CD file |
+| [psfdeflang](#psfdeflang) | Changes default language behaviour in a font |
+| [psfdupglyphs](#psfdupglyphs) | Duplicates glyphs in a UFO based on a csv definition |
+| [psfexportmarkcolors](#psfexportmarkcolors) | Export csv of mark colors |
+| [psffixffglifs](#psffixffglifs) | Make changes needed to a UFO following processing by FontForge |
+| [psfgetglyphnames](#psfgetglyphnames) | Create a file of glyphs to import from a list of characters to import |
+| [psfmakedeprecated](#psfmakedeprecated) | Creates deprecated versions of glyphs |
+| [psfsetmarkcolors](#psfsetmarkcolors) | Set mark colors based on csv file |
+| [psftuneraliases](#psftuneraliases) | Merge alias information into TypeTuner feature xml file |
+
+### Changed
+
+Multiple minor changes and bug fixes
+
+### Removed
+
+The following scripts moved from installed scripts to examples
+
+- ffchangeglyphnames
+- ffcopyglyphs
+- ffremovealloverlaps
+
 ## [1.4.1] - 2019-03-04 - Maintenance release
 
 Nearly all scripts should work under Python 2 & 3
