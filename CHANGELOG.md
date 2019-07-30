@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.4.3] - Draft updates
+
+
+
+### Added
+
+
+
+### Changed
+
+
+
+### Removed
+
+
+
 ## [1.4.2] - 2019-07-30 - Maintenance release
 
 Updated the execute() framework used by scripts to add support for opening fonts with fontParts and remove support for opening fonts with FontForge.
