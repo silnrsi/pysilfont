@@ -43,6 +43,21 @@ class Glyph(object) :
                 self.is_mark = True
                 break
 
+def decode_element(e):
+    '''Convert plist element into python structures'''
+    res = None
+    if e.tag == 'string':
+        return e.text
+    elif e.tag == 'integer':
+        return int(e.text)
+    elif e.tag == 'array':
+        res = [decode_element(x) for x in e]
+    elif e.tag == 'dict':
+        res = {}
+        for p in zip(e[::2], e[1::2]):
+            res[p[0]] = decode_element(p[1])
+    return res
+
 class Font(object) :
     def __init__(self):
         self.glyphs = OrderedDict()
@@ -54,7 +69,9 @@ class Font(object) :
         omittedaps = set(omitaps.replace(',',' ').split())  # allow comma- and/or space-separated list
         if filename.endswith('.ufo') :
             f = ufo.Ufont(filename, params = params)
-            self.fontinfo = f.fontinfo
+            self.fontinfo = {}
+            for k, v in f.fontinfo._contents.items():
+                self.fontinfo[k] = decode_element(v[1])
             for g in f.deflayer :
                 ufo_g = f.deflayer[g]
                 advb = ufo_g['advance']
