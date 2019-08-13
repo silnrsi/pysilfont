@@ -61,8 +61,8 @@ def decode_element(e):
 class Font(object) :
     def __init__(self):
         self.glyphs = OrderedDict()
-        self.classes = {}
-        self.all_aps = {}
+        self.classes = OrderedDict()
+        self.all_aps = OrderedDict()
         self.fontinfo = {}
 
     def readaps(self, filename, omitaps='', params = None) :
