@@ -45,6 +45,15 @@ def getuvss(ufo):
 def doit(args):
     ufo = defcon.Font(args.iufo)
 
+    # if style is Regular and there are no openTypeNameRecords defining the full name (ID=4), then
+    # add one so that "Regular" is omitted from the fullname
+    if ufo.info.styleName == 'Regular':
+        if ufo.info.openTypeNameRecords is None:
+            ufo.info.openTypeNameRecords = []
+        fullNameRecords = [ nr for nr in ufo.info.openTypeNameRecords if nr['nameID'] == 4]
+        if not len(fullNameRecords):
+            ufo.info.openTypeNameRecords.append( { 'nameID': 4, 'platformID': 3, 'encodingID': 1, 'languageID': 1033, 'string': ufo.info.familyName } )
+
 #    args.logger.log('Converting UFO to ttf and compiling fea')
 #    font = ufo2ft.compileTTF(ufo,
 #        glyphOrder = ufo.lib.get(PUBLIC_PREFIX + 'glyphOrder'),
