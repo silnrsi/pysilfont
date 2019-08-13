@@ -653,7 +653,7 @@ class Ufont(object):
 
 class Ulayer(_Ucontainer):
     def __init__(self, layername, layerdir, font):
-        self._contents = {}
+        self._contents = collections.OrderedDict()
         self.dtree = font.dtree.subTree(layerdir)
         font.dtree[layerdir].read = True
         self.layername = layername

@@ -264,8 +264,8 @@ class Font(object) :
 
             # create lists of glyphs that use the same point (name and coordinates)
             # that can share a class definition
-            anchor_cache = {}
-            markanchor_cache = {}
+            anchor_cache = OrderedDict()
+            markanchor_cache = OrderedDict()
             for g in glyphs_w_ap :
                 p = g.anchors[ap_nm]
                 if g.is_mark and not ap_nm.startswith("_"):
