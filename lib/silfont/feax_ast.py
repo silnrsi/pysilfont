@@ -183,16 +183,16 @@ class ast_MultipleSubstStatement(ast.Statement):
         sufs = (" " + " ".join(map(asFea, self.suffix))) if len(self.suffix) else ""
         mark = "'" if len(self.prefix) or len(self.suffix) or self.forceChain else ""
         if self.mode == 'literal':
-            res += "sub " + pres + self.glyph.asFea() + sufs + " by "
-            res += " ".join(asFea(g)+mark for g in self.replacement) + ";"
+            res += "sub " + pres + self.glyph.asFea() + mark + sufs + " by "
+            res += " ".join(asFea(g) for g in self.replacement) + ";"
             return res
         glyphs = self.glyph.glyphSet()
         replacements = self.replacement[self.multindex].glyphSet()
         for i in range(min(len(glyphs), len(replacements))) :
             res += ("\n" + indent if i > 0 else "") + "sub " + pres
-            res += asFea(glyphs[i]) + sufs
+            res += asFea(glyphs[i]) + mark + sufs
             res += " by "
-            res += " ".join(asFea(g)+mark for g in self.replacement[0:self.multindex] + [replacements[i]] + self.replacement[self.multindex+1:])
+            res += " ".join(asFea(g) for g in self.replacement[0:self.multindex] + [replacements[i]] + self.replacement[self.multindex+1:])
             res += ";" 
         return res
 

@@ -1,0 +1,4 @@
+lookup ReorderInsert {
+      sub uni1C00' uni1C34 by uni1C34 uni1C00;
+} ReorderInsert;
+
