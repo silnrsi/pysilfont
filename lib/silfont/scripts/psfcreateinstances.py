@@ -52,7 +52,6 @@ argspec = [
 #  and would only allow for one instance of the class
 
 weightClasses = {
-    'regular': 400,
     'bold': 700
 }
 
@@ -93,15 +92,15 @@ def InstanceWriterCF(output_path_prefix, calc_glyphs, fix_weight):
         def _copyFontInfo(self, targetInfo, sourceInfo):
             super(LocalInstanceWriter, self)._copyFontInfo(targetInfo, sourceInfo)
             if getattr(self, 'fixWeight', False):
-                for k, v in weightClasses.items():
-                    if self.font.info.styleMapStyleName == k:
-                        setattr(targetInfo, 'openTypeOS2WeightClass', v)
-                        break
+                setattr(targetInfo, 'openTypeOS2WeightClass',
+                            (700 if self.font.info.styleMapStyleName.lower().startswith("bold")
+                                else 400))
             localinfo = {}
-            for k in ('openTypeNameManufacturer', 'styleMapFamilyName', 'styleName'):
+            for k in ('openTypeNameManufacturer', 'styleMapFamilyName', 'styleMapStyleName'):
                 localinfo[k] = getattr(targetInfo, k, "")
+            localinfo['styleMapStyleName'] = localinfo['styleMapStyleName'].title()
             localinfo['year'] = re.sub(r'^.*?([0-9]+)\s*$', r'\1', getattr(targetInfo, 'openTypeNameUniqueID')) 
-            uniqueID = "{openTypeNameManufacturer}: {styleMapFamilyName} {styleName} {year}".format(**localinfo)
+            uniqueID = "{openTypeNameManufacturer}: {styleMapFamilyName} {styleMapStyleName} {year}".format(**localinfo)
             setattr(targetInfo, 'openTypeNameUniqueID', uniqueID)
 
     return LocalInstanceWriter
