@@ -56,7 +56,7 @@ class feaplus_parser(Parser) :
             'MINy': lambda g: int(self.glyphs[g].bbox[1]),
             'MAXx': lambda g: int(self.glyphs[g].bbox[2]),
             'MAXy': lambda g: int(self.glyphs[g].bbox[3]),
-            'feaclass': lambda c: self.glyphclasses_.resolve(c).glyphSet(),
+            'feaclass': lambda c: self.resolve_glyphclass(c).glyphSet(),
             'allglyphs': lambda : self.glyphs.keys(),
             'lf': lambda : "\n",
             'info': lambda s: self.fontinfo.get(s, "")
@@ -84,7 +84,11 @@ class feaplus_parser(Parser) :
         self.glyphclasses_.define(ap_nm, gc)
 
     def resolve_glyphclass(self, ap_nm):
-        return self.glyphclasses_.resolve(ap_nm)
+        try:
+            return self.glyphclasses_.resolve(ap_nm)
+        except KeyError:
+            raise FeatureLibError("Glyphclass '{}' missing".format(ap_nm), self.lexer_.location_())
+        return None
 
     def add_statement(self, val) :
         self.doc_.statements.append(val)

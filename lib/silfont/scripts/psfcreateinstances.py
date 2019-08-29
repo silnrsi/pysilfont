@@ -96,8 +96,10 @@ def InstanceWriterCF(output_path_prefix, calc_glyphs, fix_weight):
                             (700 if self.font.info.styleMapStyleName.lower().startswith("bold")
                                 else 400))
             localinfo = {}
-            for k in ('openTypeNameManufacturer', 'styleMapFamilyName', 'styleMapStyleName'):
-                localinfo[k] = getattr(targetInfo, k, "")
+            for k in (('openTypeNameManufacturer', None),
+                      ('styleMapFamilyName', 'familyName'),
+                      ('styleMapStyleName', 'styleName')):
+                localinfo[k[0]] = getattr(targetInfo, k[0], (getattr(targetInfo, k[1]) if k[1] is not None else ""))
             localinfo['styleMapStyleName'] = localinfo['styleMapStyleName'].title()
             localinfo['year'] = re.sub(r'^.*?([0-9]+)\s*$', r'\1', getattr(targetInfo, 'openTypeNameUniqueID')) 
             uniqueID = "{openTypeNameManufacturer}: {styleMapFamilyName} {styleMapStyleName} {year}".format(**localinfo)
