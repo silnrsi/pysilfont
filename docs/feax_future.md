@@ -241,7 +241,7 @@ This function filters the glyph class that is passed to it, and returns only tho
 
 ## Capabilities
 
-### Permit classes on both sides of GSUB type 2 (multiple) and type 4 (ligature) lookups
+### Permit multiple classes on RHS of GSUB type 2 (multiple) and the LHS of type 4 (ligature) lookups
 
 Priority: 2
 

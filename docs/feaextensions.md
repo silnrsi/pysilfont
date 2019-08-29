@@ -381,7 +381,7 @@ or many-to-1 (ligature) rules, e.g.:
     sub @ShaddaKasraMarks absShadda by @ShaddaKasraLigatures ;
 ```
 
-Afaict, there isn't a reason we couldn't allow this and then expand the rule to Adobe-compliant verboseness when needed.
+This is implemented in FEAX as follows.
 
 #### Processing
 
