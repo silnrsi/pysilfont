@@ -127,7 +127,7 @@ Most scripts support standardised reporting (logging), both to screen and a log 
 
 For most scripts these default to W for loglevel and P for scrlevel and can be set using -p (eg to set screen reporting to verbose use -p scrlevel=v).
 
--q --quiet sets quiet mode where the scrlevel is set to S (and some additional messages suppressed) so only errors are reported on screen.
+-q --quiet sets quiet mode where all normal screen messages are suppressed.  However, if there are any errors during the script execution, a single message is output on completion listing the counts for errors and warnings.
 
 ## Backups for fonts
 

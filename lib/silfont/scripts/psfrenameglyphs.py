@@ -21,24 +21,30 @@ argspec = [
     ('--mergecomps',{'help': 'turn on component merge', 'action': 'store_true', 'default': False},{}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_renameglyphs.log'})]
 
+csvmap={}
 
 def doit(args) :
+    global csvmap
+
     font = args.ifont
     incsv = args.input
     logger = args.logger
     mergemode = args.mergecomps
 
+    # List of secondary layers (ie layers other than the default)
+    secondarylayers = [x for x in font.layers if x.layername != "public.default"]
+
     # remember all requested mappings:
     masterMap = {}
 
-    # remember all identify mappings
+    # remember all identity mappings
     identityMap = set()
 
     # remember all glyphs actually renamed:
     nameMap = {}
 
     # Obtain lib.plist glyph order(s) and psnames if they exist:
-    publicGlyphOrder = csGlyphOrder = psnames = None
+    publicGlyphOrder = csGlyphOrder = psnames = displayStrings = None
     if hasattr(font, 'lib'):
         if 'public.glyphOrder' in font.lib:
             publicGlyphOrder = font.lib.getval('public.glyphOrder')     # This is an array
@@ -46,6 +52,8 @@ def doit(args) :
             csGlyphOrder = font.lib.getval('com.schriftgestaltung.glyphOrder') # This is an array
         if 'public.postscriptNames' in font.lib:
             psnames = font.lib.getval('public.postscriptNames')   # This is a dict keyed by glyphnames
+        if 'com.schriftgestaltung.customParameter.GSFont.DisplayStrings' in font.lib:
+            displayStrings = font.lib.getval('com.schriftgestaltung.customParameter.GSFont.DisplayStrings')
     else:
         logger.log("no lib.plist found in font", "W")
 
@@ -62,15 +70,6 @@ def doit(args) :
     #   If the new glyph name already exists, rename the glyph to a temporary name
     #      and put relevant details in saveforlater[]
 
-    def gettempname(f):
-        ''' return a temporary glyph name that, when passed to function f(), returns true'''
-        # Initialize function attribute for use as counter
-        if not hasattr(gettempname, "counter"): gettempname.counter = 0
-        while True:
-            name = "tempglyph%d" % gettempname.counter
-            gettempname.counter += 1
-            if f(name): return name
-
     saveforlaterFont = []   # For the font itself
     saveforlaterPGO = []    # For public.GlyphOrder
     saveforlaterCSGO = []   # For GlyphsApp GlyphOrder (com.schriftgestaltung.glyphOrder)
@@ -80,6 +79,7 @@ def doit(args) :
     for r in incsv:
         oldname = r[0]
         newname = r[1]
+        csvmap[oldname]=newname
 
         # ignore header row and rows where the newname is blank or same as oldname
         if oldname == "Name" or newname == "":
@@ -96,26 +96,23 @@ def doit(args) :
         if oldname not in font.deflayer:
             logger.log("glyph name not in font: " + oldname , "I")
         elif newname not in font.deflayer:
-            # Ok, this case is easy: just rename the glyph
-            font.deflayer[oldname].name = newname
+            for layer in secondarylayers:
+                if newname in layer:
+                    logger.log("Glyph %s is already in non-default layers; can't rename %s" % (newname, oldname), "S")
+            # Ok, this case is easy: just rename the glyph in all layers
+            for layer in font.layers:
+                if oldname in layer: layer[oldname].name = newname
             nameMap[oldname] = newname
             logger.log("Pass 1 (Font): Renamed %s to %s" % (oldname, newname), "I")
         elif mergemode:
-            # Assumption: we are merging one or more component references to just one component; deleting the others
-            # first step is to copy any "moving" anchors (i.e., those starting with '_') to the glyph we're keeping:
-            existingGlyph = font.deflayer[newname]
-            for a in font.deflayer[oldname]['anchor']:
-                aname = a.element.get('name')
-                if aname.startswith('_'):
-                    # We want to copy this anchor to the glyph being kept:
-                    for i, a2 in enumerate(existingGlyph['anchor']):
-                        if a2.element.get('name') == aname:
-                            # Overwrite existing anchor of same name
-                            font.deflayer[newname]['anchor'][i] = a
-                            break
+            mergeglyphs(font.deflayer[oldname], font.deflayer[newname])
+            for layer in secondarylayers:
+                if oldname in layer:
+                    if newname in layer:
+                        mergeglyphs(layer[oldname], layer[newname])
                     else:
-                        # Append anchor to glyph
-                        existingGlyph['anchor'].append(a)
+                        layer[oldname].name = newname
+
             nameMap[oldname] = newname
             deletelater.append(oldname)
             logger.log("Pass 1 (Font): merged %s to %s" % (oldname, newname), "I")
@@ -123,7 +120,9 @@ def doit(args) :
             # newname already in font -- but it might get renamed later in which case this isn't actually a problem.
             # For now, then, rename glyph to a temporary name and remember it for second pass
             tempname = gettempname(lambda n : n not in font.deflayer)
-            font.deflayer[oldname].name = tempname
+            for layer in font.layers:
+                if oldname in layer:
+                    layer[oldname].name = tempname
             saveforlaterFont.append( (tempname, oldname, newname) )
 
         # Similar algorithm for public.glyphOrder, if present:
@@ -187,11 +186,13 @@ def doit(args) :
 
     for j in saveforlaterFont:
         tempname, oldname, newname = j
-        if newname in font.deflayer:
+        if newname in font.deflayer: # Only need to check deflayer, since (if present) it would have been renamed in all
             # Ok, this really is a problem
             logger.log("Glyph %s already in font; can't rename %s" % (newname, oldname), "S")
         else:
-            font.deflayer[tempname].name = newname
+            for layer in font.layers:
+                if tempname in layer:
+                    layer[tempname].name = newname
             nameMap[oldname] = newname
             logger.log("Pass 2 (Font): Renamed %s to %s" % (oldname, newname), "I")
 
@@ -248,18 +249,36 @@ def doit(args) :
         font.lib.setelem("public.postscriptNames", dict)
 
     # Iterate over all glyphs, and fix up any components that reference renamed glyphs
-    for name in font.deflayer:
-        for component in font.deflayer[name].etree.findall('./outline/component[@base]'):
-            oldname = component.get('base')
-            if oldname in nameMap:
-                component.set('base', nameMap[oldname])
+    for layer in font.layers:
+        for name in layer:
+            for component in layer[name].etree.findall('./outline/component[@base]'):
+                oldname = component.get('base')
+                if oldname in nameMap:
+                    component.set('base', nameMap[oldname])
 
     # Delete anything we no longer need:
     for name in deletelater:
-        font.deflayer.delGlyph(name)
+        for layer in font.layers:
+            if name in layer: layer.delGlyph(name)
         logger.log("glyph %s removed" % name, "I")
 
     logger.log("%d glyphs renamed in UFO" % (len(nameMap)), "P")
+
+    # Update Display Strings
+
+    if displayStrings:
+        changed = False
+        glyphRE = re.compile(r'/([a-zA-Z0-9_.-]+)') # regex to match / followed by a glyph name
+        for i, dispstr in enumerate(displayStrings):            # Passing the glyphSub function to .sub() causes it to
+            displayStrings[i] = glyphRE.sub(glyphsub, dispstr)  # every non-overlapping occurrence of pattern
+            if displayStrings[i] != dispstr:
+                changed = True
+        if changed:
+            array = ET.Element("array")
+            for dispstr in displayStrings:
+                ET.SubElement(array, "string").text = dispstr
+            font.lib.setelem('com.schriftgestaltung.customParameter.GSFont.DisplayStrings', array)
+            logger.log("com.schriftgestaltung.customParameter.GSFont.DisplayStrings updated", "I")
 
     # If a classfile was provided, change names within it also
     #
@@ -331,6 +350,39 @@ def doit(args) :
 
     return font
 
-def cmd() : execute("UFO",doit,argspec) 
+def mergeglyphs(mergefrom, mergeto): # Merge any "moving" anchors (i.e., those starting with '_') into the glyph we're keeping
+    # Assumption: we are merging one or more component references to just one component; deleting the others
+    for a in mergefrom['anchor']:
+        aname = a.element.get('name')
+        if aname.startswith('_'):
+            # We want to copy this anchor to the glyph being kept:
+            for i, a2 in enumerate(mergeto['anchor']):
+                if a2.element.get('name') == aname:
+                    # Overwrite existing anchor of same name
+                    mergeto['anchor'][i] = a
+                    break
+            else:
+                # Append anchor to glyph
+                mergeto['anchor'].append(a)
 
+def gettempname(f):
+    ''' return a temporary glyph name that, when passed to function f(), returns true'''
+    # Initialize function attribute for use as counter
+    if not hasattr(gettempname, "counter"): gettempname.counter = 0
+    while True:
+        name = "tempglyph%d" % gettempname.counter
+        gettempname.counter += 1
+        if f(name): return name
+
+
+def glyphsub(m): # Function pased to re.sub() when updating display strings
+    global csvmap
+    gname = m.group(1)
+    if gname in csvmap:
+        x = '/' + csvmap[gname]
+    else:
+        x = m.group(0)
+    return '/' + csvmap[gname] if gname in csvmap else m.group(0)
+
+def cmd() : execute("UFO",doit,argspec)
 if __name__ == "__main__": cmd()
