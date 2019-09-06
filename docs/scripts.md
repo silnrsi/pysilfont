@@ -143,7 +143,7 @@ Usage: **`psfbuildcompgc [-i CDFILE] ifont [ofont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-Creates or updates composite glyphs in a UFO based on an external text file of definitions. The syntax for these definitions is described in [composite.md](composite.md).
+Creates or updates composite glyphs in a UFO based on an external text file of definitions. The syntax for these definitions *not* the same as that described in [composite.md](composite.md). It uses the [GlyphConstruction syntax](https://github.com/typemytype/GlyphConstruction).
 
 Example usage:
 
