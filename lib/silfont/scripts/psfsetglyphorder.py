@@ -61,7 +61,7 @@ def doit(args):
             glyphdata[glyphn]=[]
             for pos in fieldpos: glyphdata[glyphn].append(float(line[pos]))
     elif numfields == 1:   # Simple text file.  Create glyphdata in same format as for csv files
-        for i, line in enumerate(incsv): glyphdata[line[0]]=i
+        for i, line in enumerate(incsv): glyphdata[line[0]]=(i,)
     else:
         logger.log("Invalid csv file", "S")
 
