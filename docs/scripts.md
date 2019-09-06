@@ -36,6 +36,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfglyphs2ufo](#psfglyphs2ufo) | Export all the masters in a .glyphs file to UFOs |
 | [psfmakedeprecated](#psfmakedeprecated) | Creates deprecated versions of glyphs |
 | [psfmakefea](#psfmakefea) | Make a features file base on input UFO or AP database |
+| [psfmakescaledshifted](#psfmakescaledshifted) | Creates scaled and shifted versions of glyphs |
 | [psfmakewoffmetadata](#psfmakewoffmetadata) | Make the WOFF metadata xml file based on input UFO and FONTLOG.txt |
 | [psfnormalize](#psfnormalize) | Normalize a UFO and optionally converts it between UFO2 and UFO3 versions |
 | [psfremovegliflibkeys](#psfremovegliflibkeys) | Remove keys from glif lib entries |
@@ -583,6 +584,25 @@ optional arguments:
   --classprops  if specified, class properties will be read from CLASSFILE
   OMITAPS       comma-separated list of attachment points to ignore when creating classes
 ```
+
+---
+####  psfmakescaledshifted
+Usage: **`psfmakescaledshifted -i INPUT -t TRANSFORM infont [outfont]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Creates scaled and shifted versions of glyphs: takes the specified glyph and creates a duplicate that is scaled and shifted according to the specified transform matrix, and assigns a new unicode encoding to it.
+Input is a csv with three fields: original,new,unicode.
+Transform is a string of the form "(xx, xy, yx, yy, x, y)" where xx = amount to scale horizontally, yy = amount to scale vertically, x = amount to shift horizontally, y = amount to shift vertically. xy and yx are generally not used and remain 0. 
+
+Example usage:
+
+```
+psfmakescaledshifted -i newglyphs.csv DoulosSIL-Regular.ufo -t "(0.72, 0, 0, 0.6, 10, 806)"
+```
+
+This will take the definitions in newglyphs.csv and create the new glyphs using a transformation that includes x-scale 72%, y-scale 60%, x-shift 10 units, y-shift 806 units.
+
 
 ---
 #### psfmakewoffmetadata
