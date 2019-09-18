@@ -12,9 +12,9 @@ from ast import literal_eval as make_tuple
 argspec = [
     ('ifont', {'help': 'Input font filename'}, {'type': 'infont'}),
     ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
-    ('-i','--input',{'help': 'Input csv file'}, {'type': 'incsv', 'def': 'todeprecate.csv'}),
+    ('-i','--input',{'help': 'Input csv file'}, {'type': 'incsv', 'def': 'scaledshifted.csv'}),
     ('-t','--transform',{'help': 'Transform matrix'}, {}),
-    ('-l','--log',{'help': 'Set log file name'}, {'type': 'outfile', 'def': '_deprecated.log'})]
+    ('-l','--log',{'help': 'Set log file name'}, {'type': 'outfile', 'def': '_scaledshifted.log'})]
 
 offset = 30
 
@@ -22,7 +22,9 @@ def doit(args) :
     font = args.ifont
     logger = args.logger
     trans = make_tuple(args.transform)
-    #trans = make_tuple("(0.72, 0, 0, 0.6, 10, 806)")
+    # Transform matrix example: "(0.72, 0, 0, 0.6, 10, 806)"
+    # (xx, xy, yx, yy, x, y)
+    # Should eventually directly read org.sil.lcg.transforms lib.plist key
 
     # Process csv list into a dictionary structure
     args.input.numfields = 3
