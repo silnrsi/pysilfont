@@ -12,19 +12,27 @@ from ast import literal_eval as make_tuple
 argspec = [
     ('ifont', {'help': 'Input font filename'}, {'type': 'infont'}),
     ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
-    ('-i','--input',{'help': 'Input csv file'}, {'type': 'incsv', 'def': 'scaledshifted.csv'}),
-    ('-t','--transform',{'help': 'Transform matrix'}, {}),
+    ('-i','--input',{'help': 'Input csv file', 'required': True}, {'type': 'incsv', 'def': 'scaledshifted.csv'}),
+    ('-t','--transform',{'help': 'Transform matrix or type', 'required': True}, {}),
     ('-l','--log',{'help': 'Set log file name'}, {'type': 'outfile', 'def': '_scaledshifted.log'})]
-
-offset = 30
 
 def doit(args) :
     font = args.ifont
     logger = args.logger
-    trans = make_tuple(args.transform)
-    # Transform matrix example: "(0.72, 0, 0, 0.6, 10, 806)"
-    # (xx, xy, yx, yy, x, y)
-    # Should eventually directly read org.sil.lcg.transforms lib.plist key
+    transform = args.transform
+
+    if transform[1] == "(":
+        # Set transform from matrix - example: "(0.72, 0, 0, 0.6, 10, 806)"
+        # (xx, xy, yx, yy, x, y)
+        trans = make_tuple(args.transform)
+    else:
+        # Set transformation specs from UFO lib.plist org.sil.lcg.transforms
+        # Will need to be enhanced to support adjustMetrics, boldX, boldY parameters for smallcaps
+        try:
+            trns = font.lib["org.sil.lcg.transforms"][transform]
+            trans = (trns["scaleX"],0,0,trns["scaleY"],trns["shiftX"],trns["shiftY"]) 
+        except KeyError:
+            logger.log("Error: transform type not found in lib.plist org.sil.lcg.transforms", "S")
 
     # Process csv list into a dictionary structure
     args.input.numfields = 3

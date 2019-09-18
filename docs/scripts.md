@@ -591,17 +591,45 @@ Usage: **`psfmakescaledshifted -i INPUT -t TRANSFORM infont [outfont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-Creates scaled and shifted versions of glyphs: takes the specified glyph and creates a duplicate that is scaled and shifted according to the specified transform matrix, and assigns a new unicode encoding to it.
-Input is a csv with three fields: original,new,unicode.
-Transform is a string of the form "(xx, xy, yx, yy, x, y)" where xx = amount to scale horizontally, yy = amount to scale vertically, x = amount to shift horizontally, y = amount to shift vertically. xy and yx are generally not used and remain 0. 
+Creates scaled and shifted versions of glyphs: takes the specified glyph and creates a duplicate that is scaled and shifted according to the specified transform, and assigns a new unicode encoding to it.
 
-Example usage:
+Input is a csv with three fields: *original,new,unicode*.
+
+Transform takes two types of input:
+
+- a string of the form "(xx, xy, yx, yy, x, y)" where xx = amount to scale horizontally, yy = amount to scale vertically, x = amount to shift horizontally, y = amount to shift vertically. xy and yx are generally not used and remain 0.
+- the name of a specific type of transform defined in the UFO lib.plist *org.sil.lcg.transforms* key, such as superscript. Example:
+
+```
+<key>org.sil.lcg.transforms</key>
+<dict>
+  <key>superscript</key>
+  <dict>
+    <key>scaleX</key>
+    <real>0.72</real>
+    <key>scaleY</key>
+    <real>0.6</real>
+    <key>shiftX</key>
+    <integer>10</integer>
+    <key>shiftY</key>
+    <integer>806</integer>
+  </dict>
+</dict>
+```
+
+Examples:
 
 ```
 psfmakescaledshifted -i newglyphs.csv DoulosSIL-Regular.ufo -t "(0.72, 0, 0, 0.6, 10, 806)"
 ```
 
 This will take the definitions in newglyphs.csv and create the new glyphs using a transformation that includes x-scale 72%, y-scale 60%, x-shift 10 units, y-shift 806 units.
+
+```
+psfmakescaledshifted -i newglyphs.csv DoulosSIL-Regular.ufo -t superscript
+```
+
+This will take the definitions in newglyphs.csv and create the new glyphs using the *superscript* transformation defined in the UFO lib.plist *org.sil.lcg.transforms* key.
 
 
 ---
