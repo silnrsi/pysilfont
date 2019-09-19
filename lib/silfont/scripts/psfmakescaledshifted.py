@@ -30,9 +30,19 @@ def doit(args) :
         # Will need to be enhanced to support adjustMetrics, boldX, boldY parameters for smallcaps
         try:
             trns = font.lib["org.sil.lcg.transforms"][transform]
-            trans = (trns["scaleX"],0,0,trns["scaleY"],trns["shiftX"],trns["shiftY"]) 
         except KeyError:
             logger.log("Error: transform type not found in lib.plist org.sil.lcg.transforms", "S")
+        else:
+            try:
+                adjM = trns["adjustMetrics"]
+            except KeyError:
+                adjM = 0
+            try:
+                skew = trns["skew"]
+            except KeyError:
+                skew = 0
+            trans = (trns["scaleX"],0,skew,trns["scaleY"],trns["shiftX"]+adjM,trns["shiftY"])
+
 
     # Process csv list into a dictionary structure
     args.input.numfields = 3
@@ -51,13 +61,12 @@ def doit(args) :
                 logger.log("Warning: " + targetname + " already in font and will be replaced")
 
             # Make a copy of source into a new glyph object
-            sourceglyph = font[source]            
+            sourceglyph = font[source]
             newglyph = sourceglyph.copy()
             
-            # obj.transformBy((0.5, 0, 0, 2.0, 10, 0))
             newglyph.transformBy(trans)
             # Set width because transformBy does not seems to properly adjust width
-            newglyph.width = (int(newglyph.width * trans[0])) + trans[4]
+            newglyph.width = (int(newglyph.width * trans[0])) + (adjM * 2)
 
             # Set unicode
             newglyph.unicodes = []

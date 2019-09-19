@@ -605,17 +605,27 @@ Transform takes two types of input:
 <dict>
   <key>superscript</key>
   <dict>
+    <key>adjustMetrics</key>
+    <integer>0</integer>
     <key>scaleX</key>
-    <real>0.72</real>
+    <real>0.66</real>
     <key>scaleY</key>
     <real>0.6</real>
     <key>shiftX</key>
-    <integer>10</integer>
+    <integer>-125</integer>
     <key>shiftY</key>
-    <integer>806</integer>
+    <integer>-460</integer>
+    <key>skew</key>
+    <real>-0.01</real>
   </dict>
 </dict>
 ```
+
+Note that this second type of input allows for two other parameters:
+
+- _adjustMetrics_ indicates how much additional space in units should be added to _both_ sides fo the glyph.
+
+- _skew_ indicates how much the glyph should be skewed, with a skew of 1 indicating a 45° skew. The origin for the skew is (0,0).
 
 Examples:
 
