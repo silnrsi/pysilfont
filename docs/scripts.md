@@ -1014,6 +1014,25 @@ _This section is Work In Progress!_
 - input                 Input file of CD in XML format
 - output                Output file of CD in single line format
 
+
+---
+#### psfsetdummydsig
+Usage: **`psfsetdummydsig -i inputfont -o outputfont`**
+
+Put a dummy DSIG table into a font in TTF format (using fontTools)
+
+```
+-i [--ifont] inputfont    (Input file in TTF format)
+-o [--ofont] outputfont   (Output file in TTF format)
+```
+
+optional arguments:
+
+```
+-l [--log]  logfile.log   (output log file)
+```
+
+
 ---
 
 ## Example Scripts
