@@ -48,6 +48,7 @@ setup(
     classifiers = [
         "Environment :: Console",
         "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.6",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Topic :: Text Processing :: Fonts"
