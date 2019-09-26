@@ -216,7 +216,6 @@ class FChar(object):
         if Char.isdefined(uid):
             self.general = Char.charType(uid)
             self.cc = Char.getCombiningClass(uid)
-            self.icuGC = Char.charType(uid)
             self.icuJT = Char.getIntPropertyValue(uid, UProperty.JOINING_TYPE)
             self.icuJG = Char.getIntPropertyValue(uid, UProperty.JOINING_GROUP)
         else:
