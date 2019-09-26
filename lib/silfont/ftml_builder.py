@@ -459,9 +459,13 @@ class FTMLBuilder(object):
                         if m is None:
                             self._csvWarning('incorrectly formed feature specification "%s"; ignored' % feat)
                         else:
-                            # create/find structure for this feature:
+                            # find/create structure for this feature:
                             tag = m.group(1)
-                            feature = self.features.setdefault(tag,Feature(tag))
+                            try:
+                                feature = self.features[tag]
+                            except KeyError:
+                                feature = Feature(tag)
+                                self.features[tag] = feature
                             # if values supplied, collect default and maximum values for this feature:
                             if m.group(2) is not None:
                                 vals = [int(i) for i in m.group(2).split(',')]
@@ -491,7 +495,7 @@ class FTMLBuilder(object):
             self.allLangs = list(sorted(self.allLangs))
 
     def permuteFeatures(self, uids = None, feats = None):
-        """ returns an iterator that provides all combinations of feature/value pairs, for a list of uids and/or a specific list of featIDs"""
+        """ returns an iterator that provides all combinations of feature/value pairs, for a list of uids and/or a specific list of feature tags"""
         feats = set(feats) if feats is not None else set()
         if uids is not None:
             for uid in uids:
