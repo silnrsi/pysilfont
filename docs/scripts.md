@@ -113,7 +113,7 @@ CommaAlternates,GSUB,48
 ---
 
 ####  psfbuildcomp
-Usage: **`psfbuildcomp [-i CDFILE] [-a] [-f] [-r {X,S,E,P,W,I,V}] ifont [ofont]`**
+Usage: **`psfbuildcomp [-i CDFILE] [-a] [-c] [-f] [-r {X,S,E,P,W,I,V}] ifont [ofont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
@@ -132,6 +132,7 @@ optional arguments:
   -i CDFILE, --cdfile CDFILE
                         Composite Definitions input file
   -a, --analysis        Analysis only; no output font generated
+  -c, --color           Mark cells of generated glyphs (dark green)
   -f, --force           Force overwrite of glyphs having outlines
   -r {X,S,E,P,W,I,V}, --report {X,S,E,P,W,I,V}
                         Set reporting level for log
