@@ -41,7 +41,15 @@ def doit(args) :
                 skew = trns["skew"]
             except KeyError:
                 skew = 0
-            trans = (trns["scaleX"],0,skew,trns["scaleY"],trns["shiftX"]+adjM,trns["shiftY"])
+            try:
+                shiftX = trns["shiftX"]
+            except KeyError:
+                shiftX = 0
+            try:
+                shiftY = trns["shiftY"]
+            except KeyError:
+                shiftY = 0
+            trans = (trns["scaleX"], 0, skew, trns["scaleY"], shiftX+adjM, shiftY)
 
 
     # Process csv list into a dictionary structure
@@ -56,7 +64,6 @@ def doit(args) :
         if source in font.keys() :
             # Give warning if target is already in font, but overwrite anyway
             targetname = target["newname"]
-            targetuni = int(target["newuni"], 16)
             if targetname in font.keys() :
                 logger.log("Warning: " + targetname + " already in font and will be replaced")
 
@@ -70,7 +77,8 @@ def doit(args) :
 
             # Set unicode
             newglyph.unicodes = []
-            newglyph.unicode = targetuni
+            if target["newuni"]:
+                newglyph.unicode = int(target["newuni"], 16)
 
             # Add the new glyph object to the font with name target
             font.__setitem__(targetname,newglyph)
