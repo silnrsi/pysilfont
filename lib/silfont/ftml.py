@@ -129,7 +129,7 @@ class Fhead(ETU.ETelement) :
         if self.styles is not None:
             for s in self.styles :
                 style = self.styles[s]
-                if cmp(style.feats,feats) == 0 and style.lang == lang :
+                if style.feats == feats and style.lang == lang :
                     if name is None or name == style.name : return style # if name is supplied it must match
         return None
 
