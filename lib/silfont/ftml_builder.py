@@ -140,7 +140,8 @@ class FTML(object):
         #   a feature setting in the form [tag,value]
         if features is None:
             return self.clearFeatures()
-        features = [x for x in features if x is not None]
+        features = filter(lambda x: x is not None, features)
+        # features = [x for x in features if x is not None]
         if len(features) == 0:
             return self.clearFeatures()
         features = dict(features)   # Convert to a dictionary -- this is what we'll keep.
@@ -222,6 +223,11 @@ class FChar(object):
             self.logger.log('USV %04X not in ICU; no properties known' % uid, 'W')
         self.feats = set()  # feat tags that affect this char
         self.langs = set()  # lang tags that affect this char
+        self.altnames = {}  # alternate glyph names.
+            # the above is a dict keyed by either:
+            #   lang tag e.g., 'ur', or
+            #   feat tag and value, e.g., 'cv24=3'
+            # and returns a the glyphname for that alternate.
         # Additional info from UFO:
         self.takesMarks = self.isMark = self.isBase = False
 
@@ -254,7 +260,7 @@ class FSpecial(object):
             self.logger.log('USV %04X not in ICU; no properties known' % uids[0], 'W')
         self.feats = set()  # feat tags that affect this char
         self.langs = set()  # lang tags that affect this char
-
+        self.altnames = {}  # alternate glyph names.
 
 class FTMLBuilder(object):
     """glyph_data and UFO processing for building FTML"""
@@ -454,7 +460,8 @@ class FTMLBuilder(object):
             if featCol is not None:
                 feats = line[featCol].strip()
                 if len(feats) > 0 and not(feats.startswith('#')):
-                    for feat in feats.split(';'):
+                    feats = feats.split(';')
+                    for feat in feats:
                         m = featRE.match(feat)
                         if m is None:
                             self._csvWarning('incorrectly formed feature specification "%s"; ignored' % feat)
@@ -470,7 +477,14 @@ class FTMLBuilder(object):
                             if m.group(2) is not None:
                                 vals = [int(i) for i in m.group(2).split(',')]
                                 if len(vals) > 0:
-                                    if uid is not None: feature.default = vals[0]
+                                    if uid is not None:
+                                        feature.default = vals[0]
+                                    elif len(feats) == 1:
+                                        for v in vals:
+                                            # remember the glyph name for this feature/value combination:
+                                            feat = '{}={}'.format(tag,v)
+                                            if feat not in c.altnames:
+                                                c.altnames[feat] = gname
                                     vals.append(feature.maxval)
                                     feature.maxval = max(vals)
                             if c is not None:
