@@ -140,8 +140,7 @@ class FTML(object):
         #   a feature setting in the form [tag,value]
         if features is None:
             return self.clearFeatures()
-        features = filter(lambda x: x is not None, features)
-        # features = [x for x in features if x is not None]
+        features = [x for x in features if x]
         if len(features) == 0:
             return self.clearFeatures()
         features = dict(features)   # Convert to a dictionary -- this is what we'll keep.
