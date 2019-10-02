@@ -338,7 +338,7 @@ This example mirrors that used in the proposed [`setadvance`](feax_future.md#set
 
 ```
 do  for b = @cBases;
-    for u in @cLVowels;
+    for u = @cLVowels;
     let v = APx(b, "L") - APx(u, "_L") + APx(u, "LD") - APx("ldot", "_LD")  + ADVx("ldot") - ADVx(b);
     if v > 0; {
         pos $b' $v $u ldot;
