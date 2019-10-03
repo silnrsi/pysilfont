@@ -12,18 +12,9 @@ try:
 except NameError: # Will  occur with Python 3
     pass
 from silfont.ftml import Fxml, Ftestgroup, Ftest, Ffontsrc
-from icu import Char, UCharCategory,  UCharDirection, UProperty
+from palaso.unicode.ucd import get_ucd
 from itertools import product
 import re
-
-# The following should be exposed by PyICU, but does not seem to be implemented.
-# UJoiningType
-NON_JOINING = 0
-JOIN_CAUSING = 1
-DUAL_JOINING = 2
-LEFT_JOINING = 3
-RIGHT_JOINING = 4
-TRANSPARENT = 5
 
 # This module comprises two related functionalities:
 #  1. The FTML object which acts as a staging object for ftml test data. The methods of this class
@@ -65,7 +56,8 @@ class FTML(object):
 
     # Assumes no nesting of test groups
 
-    def __init__(self, title, logger, comment = None, fontsrc = None, fontscale = None, widths = None, rendercheck = True, xslfn = None, defaultrtl = False):
+    def __init__(self, title, logger, comment = None, fontsrc = None, fontscale = None,
+                 widths = None, rendercheck = True, xslfn = None, defaultrtl = False):
         self.logger = logger
         # Initialize an Fxml object
         fxml = Fxml(testgrouplabel = "dummy")
@@ -213,13 +205,10 @@ class FChar(object):
         self.logger = logger
         self.uid = uid
         self.basename = basename
-        if Char.isdefined(uid):
-            self.general = Char.charType(uid)
-            self.cc = Char.getCombiningClass(uid)
-            self.icuJT = Char.getIntPropertyValue(uid, UProperty.JOINING_TYPE)
-            self.icuJG = Char.getIntPropertyValue(uid, UProperty.JOINING_GROUP)
-        else:
-            self.logger.log('USV %04X not in ICU; no properties known' % uid, 'W')
+        try:
+            self.general = get_ucd(uid,'gc')
+        except KeyError:
+            self.logger.log('USV %04X not defined; no properties known' % uid, 'W')
         self.feats = set()  # feat tags that affect this char
         self.langs = set()  # lang tags that affect this char
         self.altnames = {}  # alternate glyph names.
@@ -252,11 +241,11 @@ class FSpecial(object):
         self.logger = logger
         self.uids = uids
         self.basename = basename
-        if Char.isdefined(uids[0]):
-            self.general = Char.charType(uids[0])
-            self.cc = Char.getCombiningClass(uids[0])
-        else:
-            self.logger.log('USV %04X not in ICU; no properties known' % uids[0], 'W')
+        # a couple of properties based on the first uid:
+        try:
+            self.general = get_ucd(uids[0],'gc')
+        except KeyError:
+            self.logger.log('USV %04X not defined; no properties known' % uids[0], 'W')
         self.feats = set()  # feat tags that affect this char
         self.langs = set()  # lang tags that affect this char
         self.altnames = {}  # alternate glyph names.
@@ -533,34 +522,32 @@ class FTMLBuilder(object):
         # Construct comment from glyph names:
         comment = ' '.join([self._charFromUID[u].basename for u in uids])
         # see if uid list includes a mirrored char
-        hasMirrored = bool(len([x for x in uids if Char.isMirrored(x)]))
+        hasMirrored = bool(len([x for x in uids if get_ucd(x,'Bidi_M')]))
         # Analyze first and last joining char
-        joiningChars = [x for x in uids if Char.getIntPropertyValue(x, UProperty.JOINING_TYPE) != TRANSPARENT]
+        joiningChars = [x for x in uids if get_ucd(x, 'jt') != 'T']
+        # joiningChars = [x for x in uids if Char.getIntPropertyValue(x, UProperty.JOINING_TYPE) != TRANSPARENT]
         if len(joiningChars):
             # If first or last non-TRANSPARENT char is a joining char, then we need to emit examples with zwj
+            # Assumes any non-TRANSPARENT char that is bc != L must be a rtl character of some sort
             uid = joiningChars[0]
-            zwjBefore = Char.getIntPropertyValue(uid, UProperty.JOINING_TYPE) == DUAL_JOINING or (
-                            Char.charDirection(uid) == UCharDirection.LEFT_TO_RIGHT and
-                            Char.getIntPropertyValue(uid, UProperty.JOINING_TYPE) == LEFT_JOINING) or (
-                            Char.charDirection(uid) != UCharDirection.LEFT_TO_RIGHT and
-                            Char.getIntPropertyValue(uid, UProperty.JOINING_TYPE) == RIGHT_JOINING)
+            zwjBefore = (get_ucd(uid,'jt') == 'D'
+                         or (get_ucd(uid,'bc') == 'L' and get_ucd(uid,'jt') == 'L')
+                         or (get_ucd(uid,'bc') != 'L' and get_ucd(uid,'jt') == 'R'))
             uid = joiningChars[-1]
-            zwjAfter = Char.getIntPropertyValue(uid, UProperty.JOINING_TYPE) == DUAL_JOINING or (
-                            Char.charDirection(uid) == UCharDirection.LEFT_TO_RIGHT and
-                            Char.getIntPropertyValue(uid, UProperty.JOINING_TYPE) == RIGHT_JOINING) or (
-                            Char.charDirection(uid) != UCharDirection.LEFT_TO_RIGHT and
-                            Char.getIntPropertyValue(uid, UProperty.JOINING_TYPE) == LEFT_JOINING)
+            zwjAfter = (get_ucd(uid,'jt') == 'D'
+                         or (get_ucd(uid,'bc') == 'L' and get_ucd(uid,'jt') == 'R')
+                         or (get_ucd(uid,'bc') != 'L' and get_ucd(uid,'jt') == 'L'))
         else:
             zwjBefore = zwjAfter = False
-        if Char.charType(startUID) == UCharCategory.NON_SPACING_MARK:
+        if get_ucd(startUID,'gc') == 'Mn':
             # First char is a NSM... prefix a suitable base
             uids.insert(0, self.diacBase)
             zwjBefore = False   # No longer any need to put zwj before
-        elif Char.isUWhiteSpace(startUID):
+        elif get_ucd(startUID, 'WSpace'):
             # First char is whitespace -- prefix with baseline brackets:
             uids.insert(0, 0xF130)
-        lastNonMark = [x for x in uids if Char.charType(x) != UCharCategory.NON_SPACING_MARK][-1]
-        if Char.isUWhiteSpace(lastNonMark):
+        lastNonMark = [x for x in uids if get_ucd(x,'gc') != 'Mn'][-1]
+        if get_ucd(lastNonMark, 'WSpace'):
             # Last non-mark is whitespace -- append baseline brackets:
             uids.append(0xF131)
         s = ''.join([chr(uid) for uid in uids])
