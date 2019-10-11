@@ -16,7 +16,7 @@ except ImportError :
 
 warnings = []
 if sys.argv[1] in ('develop', 'install') :
-    for m in ('defcon', 'fontMath', 'fontParts', 'fontTools', 'glyphConstruction', 'glyphsLib', 'harfbuzz', 'icu', 'lz4', 'mutatorMath', 'odf', 'ufo2ft'):
+    for m in ('defcon', 'fontMath', 'fontParts', 'fontTools', 'glyphConstruction', 'glyphsLib', 'harfbuzz', 'palaso', 'lz4', 'mutatorMath', 'odf', 'ufo2ft'):
         try:
             imp.find_module(m)
         except ImportError : warnings.append("- Some modules/scripts require the python %s package which is not currently installed" % m)
