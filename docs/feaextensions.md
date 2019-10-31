@@ -224,6 +224,7 @@ There are various python functions that are especially supported, along with the
 | APy        | _glyphname_, "_apname_" | Returns the y co-ordinate of the given attachment point on the given glyph |
 | feaclass   | _classname_             | Returns a list of the glyph names in a class as a python list |
 | info       | _finfoelement_          | Looks up the entry in the fontinfo plist and returns its value |
+| kerninfo |                           | Returns a list of tuples (left, right, kern_value) |
 | MINx       | _glyphname_             | Returns the minimum x value of the bounding box of the glyph |
 | MINy       | _glyphname_             | Returns the minimum y value of the bounding box of the glyph |
 | MAXx       | _glyphname_             | Returns the maximum x value of the bounding box of the glyph |
@@ -364,6 +365,31 @@ Here and in `let` substatements, the python that is allowed to executed is limit
 True, False, None, int, float, str, abs, bool, dict, enumerate, filter, hex, len, list,
 map, max, min, ord, range, set, sorted, sum, tuple, zip
 ```
+
+### kernpairs
+
+The `kernpairs` statement expands all the kerning pairs in the font into `pos` statements. For example:
+
+```
+lookup kernpairs {
+    lookupflag IgnoreMarks;
+    kernpairs;
+} kernpairs;
+```
+
+Might produce:
+
+```
+lookup kernpairs {
+    lookupflag IgnoreMarks;
+    pos @MMK_L_afii57929 -164 @MMK_R_uniA4F8;
+    pos @MMK_L_uniA4D1 -164 @MMK_R_uniA4F8;
+    pos @MMK_L_uniA4D5 -164 @MMK_R_afii57929;
+    pos @MMK_L_uniA4FA -148 @MMK_R_space;
+} kernpairs;
+```
+
+Currently, kerning information is only available from .ufo files.
 
 ## Capabilities
 

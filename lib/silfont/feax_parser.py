@@ -23,6 +23,7 @@ class feaplus_ast(object) :
     DoIfSubStatement = astx.ast_DoIfSubStatement
     AlternateSubstStatement = astx.ast_AlternateSubstStatement
     Comment = astx.ast_Comment
+    KernPairsStatement = astx.ast_KernPairsStatement
 
     def __getattr__(self, name):
         return getattr(ast, name) # retrieve undefined attrs from imported fontTools.feaLib ast module
@@ -33,17 +34,19 @@ class feaplus_parser(Parser) :
         'ifclass': lambda s: s.parseIfClass(),
         'ifinfo': lambda s: s.parseIfInfo(),
         'do': lambda s: s.parseDoStatement_(),
-        'def': lambda s: s.parseDefStatement_()
+        'def': lambda s: s.parseDefStatement_(),
+        'kernpairs': lambda s: s.parseKernPairsStatement_()
     }
     ast = feaplus_ast()
 
-    def __init__(self, filename, glyphmap, fontinfo) :
+    def __init__(self, filename, glyphmap, fontinfo, kerninfo) :
         if filename is None :
             empty_file = io.StringIO("")
             super(feaplus_parser, self).__init__(empty_file, glyphmap)
         else :
             super(feaplus_parser, self).__init__(filename, glyphmap)
         self.fontinfo = fontinfo
+        self.kerninfo = kerninfo
         self.glyphs = glyphmap
         self.fns = {
             '__builtins__': None,
@@ -59,7 +62,8 @@ class feaplus_parser(Parser) :
             'feaclass': lambda c: self.resolve_glyphclass(c).glyphSet(),
             'allglyphs': lambda : self.glyphs.keys(),
             'lf': lambda : "\n",
-            'info': lambda s: self.fontinfo.get(s, "")
+            'info': lambda s: self.fontinfo.get(s, ""),
+            'kerninfo': lambda s:[(k1, k2, v) for k1, x in self.kerninfo.items() for k2, v in x.items()]
         }
         # Document which builtins we really need. Of course still insecure.
         for x in ('True', 'False', 'None', 'int', 'float', 'str', 'abs', 'all', 'any', 'bool',
@@ -420,7 +424,12 @@ class feaplus_parser(Parser) :
         else:
             self.parse_statements_block_(block)
         return block
-        
+
+    def parseKernPairsStatement_(self):
+        location = self.cur_token_location_
+        res = self.ast.KernPairsStatement(self.kerninfo, location)
+        return res
+
     def parse_statements_block_(self, block):
         self.expect_symbol_("{")
         statements = block.statements

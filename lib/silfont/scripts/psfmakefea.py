@@ -55,7 +55,7 @@ def decode_element(e):
     elif e.tag == 'dict':
         res = {}
         for p in zip(e[::2], e[1::2]):
-            res[p[0]] = decode_element(p[1])
+            res[p[0].text] = decode_element(p[1])
     return res
 
 class Font(object) :
@@ -64,6 +64,7 @@ class Font(object) :
         self.classes = OrderedDict()
         self.all_aps = OrderedDict()
         self.fontinfo = {}
+        self.kerns = {}
 
     def readaps(self, filename, omitaps='', params = None) :
         omittedaps = set(omitaps.replace(',',' ').split())  # allow comma- and/or space-separated list
@@ -84,6 +85,12 @@ class Font(object) :
                         if a.element.attrib['name'] not in omittedaps:
                             glyph.add_anchor(a.element.attrib)
                             self.all_aps.setdefault(a.element.attrib['name'], []).append(glyph)
+            if hasattr(f, 'groups'):
+                for k, v in f.groups._contents.items():
+                    self.classes[k[1:]] = decode_element(v[1])
+            if hasattr(f, 'kerning'):
+                for k, v in f.kerning._contents.items():
+                    self.kerns[k] = decode_element(v[1])
         elif filename.endswith('.xml') :
             currGlyph = None
             currPoint = None
@@ -311,7 +318,7 @@ def doit(args) :
     if args.classfile:
         font.read_classes(args.classfile, classproperties = args.classprops)
 
-    p = feaplus_parser(None, font.glyphs, font.fontinfo)
+    p = feaplus_parser(None, font.glyphs, font.fontinfo, font.kerns)
     doc_ufo = p.parse() # returns an empty ast.FeatureFile
 
     # Add goodies from the font
