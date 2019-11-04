@@ -12,6 +12,7 @@ from silfont.core import execute
 
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
+    ('-r', '--rtl', {'help': 'Also include characters just for RTL scripts', 'action': 'store_true'}, {}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_checkbasicchars.log'})]
 
 basicchars = {
@@ -261,11 +262,6 @@ basicchars = {
     '2027': 'uni2027',
     '2028': 'uni2028',
     '2029': 'uni2029',
-    '202A': 'uni202A',
-    '202B': 'uni202B',
-    '202C': 'uni202C',
-    '202D': 'uni202D',
-    '202E': 'uni202E',
     '202F': 'uni202F',
     '2030': 'perthousand',
     '2039': 'guilsinglleft',
@@ -312,9 +308,19 @@ basicchars = {
     'FFFD': 'uniFFFD'
 }
 
+basicRTLchars = {
+    '202A': 'uni202A',
+    '202B': 'uni202B',
+    '202C': 'uni202C',
+    '202D': 'uni202D',
+    '202E': 'uni202E',
+}
+
 def doit(args) :
     font = args.ifont
     logger = args.logger
+    if args.rtl:
+        basicchars.update(basicRTLchars)
 
     glyphlist = font.deflayer.keys()
 
