@@ -1,7 +1,40 @@
 # FEA Extensions Current
 
 This document describes the functionality of `psfmakefea` and lists the extensions to fea that are currently supported.
+<!-- TOC -->
 
+- [Generated Classes](#generated-classes)
+    - [Variant glyph classes](#variant-glyph-classes)
+    - [Ligatures](#ligatures)
+- [Statements](#statements)
+    - [baseclass](#baseclass)
+        - [Cursive Attachment](#cursive-attachment)
+        - [Mark Attachment](#mark-attachment)
+    - [ifinfo](#ifinfo)
+    - [ifclass](#ifclass)
+    - [do](#do)
+        - [SubStatements](#substatements)
+            - [for](#for)
+            - [let](#let)
+            - [if](#if)
+        - [Examples](#examples)
+            - [Simple calculation](#simple-calculation)
+            - [More complex calculation](#more-complex-calculation)
+            - [Right Guard](#right-guard)
+            - [Left Guard](#left-guard)
+            - [Left Kern](#left-kern)
+            - [Myanmar Great Ya](#myanmar-great-ya)
+            - [Advance for Ldot on U](#advance-for-ldot-on-u)
+    - [def](#def)
+        - [python support](#python-support)
+    - [kernpairs](#kernpairs)
+- [Capabilities](#capabilities)
+    - [Permit classes on both sides of GSUB type 2 (multiple) and type 4 (ligature) lookups](#permit-classes-on-both-sides-of-gsub-type-2-multiple-and-type-4-ligature-lookups)
+        - [Processing](#processing)
+        - [Example](#example)
+    - [Support classes in alternate lookups](#support-classes-in-alternate-lookups)
+
+<!-- /TOC -->
 ## Generated Classes
 
 `psfmakefea` simplifies the hand creation of fea code by analysing the glyphs in the input font, particularly with regard to their names. Names are assumed to conform to the Adobe Glyph List conventions regarding `_` for ligatures and `.` for glyph variants.
