@@ -87,10 +87,20 @@ class Font(object) :
                             self.all_aps.setdefault(a.element.attrib['name'], []).append(glyph)
             if hasattr(f, 'groups'):
                 for k, v in f.groups._contents.items():
-                    self.classes[k[1:]] = decode_element(v[1])
+                    self.classes[k.lstrip('@')] = decode_element(v[1])
             if hasattr(f, 'kerning'):
                 for k, v in f.kerning._contents.items():
-                    self.kerns[k] = decode_element(v[1])
+                    key = k.lstrip('@')
+                    if key in self.classes:
+                        key = "@" + key
+                    subelements = decode_element(v[1])
+                    kerndict = {}
+                    for s, n in subelements.items():
+                        skey = s.lstrip('@')
+                        if skey in self.classes:
+                            skey = "@" + skey
+                        kerndict[skey] = n
+                    self.kerns[key] = kerndict
         elif filename.endswith('.xml') :
             currGlyph = None
             currPoint = None

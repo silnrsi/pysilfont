@@ -485,3 +485,7 @@ would be rewritten as:
 
 The default behaviour in FEA is for a `sub x from [x.a x.b];` to only allow a single glyph before the `from` keyword. But it is often useful to do things like: `sub @a from [@a.lower @a.upper];`. Feax supports this by treating the right hand side list of glyphs as a single list and dividing it equally by the list on the left. Thus if `@a` is of length 3 then the first 3 glyphs in the right hand list will go one each as the first alternate for each glyph in `@a`, then the next 3 go as the second alternate, and so on until they are all consumed. If any are left over in that one of the glyphs ends up with a different number of alternates to another, then an error is given.
 
+### groups.plist
+
+If a .ufo file contains a `groups.plist` file, the groups declared there are propagated straight through to the output file and can be referenced within a source file.
+
