@@ -196,11 +196,14 @@ psfchangettfglyphnames source/Harmattan-Regular.ufo results/in.ttf results/out.t
 
 ---
 #### psfcheckbasicchars
-Usage: **`psfcheckbasicchars ufo`**
+Usage: **`psfcheckbasicchars [-r] ufo`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
 Used to check a UFO for the presence of glyphs that represent the characters in the list of [Recommended characters for Non-Roman fonts](http://scriptsource.org/entry/gg5wm9hhd3). Any missing characters are noted in the resulting log file along with the recommended AGL glyph name.
+
+By default only characters needed for all fonts (both LTR and RTL) will be checked.
+To check for characters needed only for RTL fonts, use the -r option.
 
 Example usage:
 
@@ -509,6 +512,8 @@ If the font specified with the -f parameter contains a '.' it is assumed to be a
 ---
 #### psfgetglyphnames
 Usage: **`psfgetglyphnames [-i INPUT] [-a AGLFN] ifont glyphs`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
 
 Given a list of characters to import in INPUT
 (format is one character per line, using four or more hex digits)
