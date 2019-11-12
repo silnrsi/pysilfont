@@ -241,8 +241,6 @@ basicchars = {
     '200B': 'uni200B',
     '200C': 'uni200C',
     '200D': 'uni200D',
-    '200E': 'uni200E',
-    '200F': 'uni200F',
     '2010': 'uni2010',
     '2011': 'uni2011',
     '2012': 'figuredash',
@@ -309,6 +307,8 @@ basicchars = {
 }
 
 basicRTLchars = {
+    '200E': 'uni200E',
+    '200F': 'uni200F',
     '202A': 'uni202A',
     '202B': 'uni202B',
     '202C': 'uni202C',
