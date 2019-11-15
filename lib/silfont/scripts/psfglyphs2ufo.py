@@ -193,7 +193,7 @@ def process_ufo(ufo, keylists, glyphsdir, args):
         changes = False
         for key in ("guidelines", "postscriptBlueValues", "postscriptFamilyBlues", "postscriptFamilyOtherBlues",
                     "postscriptOtherBlues"):
-            if fontinfo.getval(key) == []:
+            if key in fontinfo and fontinfo.getval(key) == []:
                 fontinfo.remove(key)
                 changes = True
                 logchange(loglist, " empty list deleted", key, None, [])
