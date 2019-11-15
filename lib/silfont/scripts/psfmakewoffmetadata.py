@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 from __future__ import unicode_literals
-__doc__ = 'Make the WOFF metadata xml file based on input UFO and FONTLOG.txt'
+__doc__ = 'Make the WOFF metadata xml file based on input UFO (and optionally FONTLOG.txt)'
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2017 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
 from silfont.core import execute
-import re, os
+import silfont.ufo as UFO
+
+import re, os, datetime
+from xml.etree import ElementTree as ET
 
 argspec = [
     ('font', {'help': 'Source font file'}, {'type': 'infont'}),
@@ -15,8 +18,9 @@ argspec = [
     ('-i', '--orgid', {'help': 'orgId', 'required': True}, {}),
     ('-f', '--fontlog', {'help': 'FONTLOG.txt file', 'default': 'FONTLOG.txt'}, {'type': 'infile'}),
     ('-o', '--output', {'help': 'Override output file'}, {'type': 'filename', 'def': None}),
+    ('--populateufowoff', {'help': 'Copy info from FONTLOG.txt to UFO', 'action': 'store_true', 'default': False},{}),
+    ('--force', {'help': 'Do --populateufowoff even if data exists in UFO', 'action': 'store_true', 'default': False},{}),
     ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': '_makewoff.log'})]
-
 
 def doit(args):
     font = args.font
@@ -26,38 +30,6 @@ def doit(args):
     logger = args.logger
     ofn = args.output
 
-    # Parse the fontlog file
-    (section, match) = readuntil(fontlog, ("Basic Font Information",))  # Skip until start of "Basic Font Information" section
-    if match is None: logger.log("No 'Basic Font Information' section in fontlog", "S")
-    (description, match) = readuntil(fontlog, ("Information for C", "Acknowledgements"))  # Desciption ends when first of these sections is found
-    if match == "Information for C": (section, match) = readuntil(fontlog, ("Acknowledgements",))  # If Info... section present then skip on to Acknowledgements
-    if match is None: logger.log("No 'Acknowledgements' section in fontlog", "S")
-    (acksection, match) = readuntil(fontlog, ("No match needed!!",))
-
-    credits = []
-    credit = {}
-    type = ""
-    for line in acksection:
-        if line == "":
-            if type != "":  # Must be at the end of a credit section
-                if "N" in credit:
-                    credits.append(credit)
-                else:
-                    logger.log("Credit section found with no N: entry", "E")
-            credit = {}
-            type = ""
-        else:
-            match = re.match("^([NEWD]): (.*)", line)
-            if match is None:
-                if type == "N": credit["N"] = credit["N"] + line  # Name entries can be multiple lines
-            else:
-                type = match.group(1)
-                if type in credit:
-                    logger.log("Multiple " + type + " entries found in a credit section", "E")
-                else:
-                    credit[type] = match.group(2)
-    if credits == []: logger.log("No credits found in fontlog", "S")
-
     # Find & process info required in the UFO
 
     fi = font.fontinfo
@@ -66,30 +38,95 @@ def doit(args):
     missing = None
     for field in ("versionMajor", "versionMinor", "openTypeNameManufacturer", "openTypeNameManufacturerURL",
                   "openTypeNameLicense", "copyright", "trademark"):
-        elem = fi[field][1] if field in fi else None
-        if elem is None:
-            missing = field if missing is None else missing + ", " + field
+        if field in fi:
+            ufofields[field] = fi[field][1].text
         else:
-            if field in ("openTypeNameLicense", "copyright", "trademark"):
-                text = textprotect(elem.text)
-            else:
-                text = attrprotect(elem.text)
-            ufofields[field] = text
+            missing = field if missing is None else missing + ", " + field
     if missing is not None: logger.log("Field(s) missing from fontinfo.plist: " + missing, "S")
 
     version = ufofields["versionMajor"] + "." + ufofields["versionMinor"].zfill(3)
 
-    ''''# Split the license into shorter lines, breaking on spaces.
-    license = []
-    for line in ufofields["openTypeNameLicense"].splitlines():
-        line = line.strip()
-        while len(line) > 74:  ## Value of 74 might need adjusting!
-            words = line[0:74].split(' ')
-            l = ' '.join(words[0:len(words)-1])
-            license.append(l)
-            line = line[len(l):].strip()
-        license.append(line)
-'''
+    # Find & process WOFF fields if present in the UFO
+
+    missing = None
+    ufowoff = {"woffMetadataCredits": "credits", "woffMetadataDescription": "text"} # Field, dict name
+    for field in ufowoff:
+        elem = fi[field][1] if field in fi else None
+        if elem is None:
+            missing = field if missing is None else missing + ", " + field
+            ufofields[field] = None
+        else:
+            logger.log(field + " found in fontinfo")
+            ufofields[field] = fi.getval(field)[ufowoff[field]]
+
+    # Process --populateufowoff setting, if present
+    if args.populateufowoff:
+        if missing != "woffMetadataCredits, woffMetadataDescription" and not args.force:
+            logger.log("Data exists in the UFO for woffMetadataCredits or woffMetadataDescription", "W")
+            logger.log("Use --force to force update of those fields, or rerun without --populateufowoff", "S")
+
+    if args.populateufowoff or missing is not None:
+        if missing: logger.log("WOFF field(s) missing from fontinfo.plist will be generated from FONTLOG.txt: " + missing, "W")
+        # Parse the fontlog file
+        (section, match) = readuntil(fontlog, ("Basic Font Information",))  # Skip until start of "Basic Font Information" section
+        if match is None: logger.log("No 'Basic Font Information' section in fontlog", "S")
+        (fldescription, match) = readuntil(fontlog, ("Information for C", "Acknowledgements"))  # Desciption ends when first of these sections is found
+        fldescription = [{"text": fldescription}]
+        if match == "Information for C": (section, match) = readuntil(fontlog, ("Acknowledgements",))  # If Info... section present then skip on to Acknowledgements
+        if match is None: logger.log("No 'Acknowledgements' section in fontlog", "S")
+        (acksection, match) = readuntil(fontlog, ("No match needed!!",))
+
+        flcredits = []
+        credit = {}
+        acktype = ""
+        flog2woff = {"N": "name", "E": "Not used", "W": "url", "D": "role"}
+        for line in acksection.splitlines():
+            if line == "":
+                if acktype != "":  # Must be at the end of a credit section
+                    if "name" in credit:
+                        flcredits.append(credit)
+                    else:
+                        logger.log("Credit section found with no N: entry", "E")
+                credit = {}
+                acktype = ""
+            else:
+                match = re.match("^([NEWD]): (.*)", line)
+                if match is None:
+                    if acktype == "N": credit["name"] = credit["name"] + line  # Name entries can be multiple lines
+                else:
+                    acktype = match.group(1)
+                    if acktype in credit:
+                        logger.log("Multiple " + acktype + " entries found in a credit section", "E")
+                    else:
+                        credit[flog2woff[acktype]] = match.group(2)
+        if flcredits == []: logger.log("No credits found in fontlog", "S")
+        if args.populateufowoff:
+            ufofields["woffMetadataDescription"] = fldescription # Force fontlog values to be used writing metatdata.xml later
+            ufofields["woffMetadataCredits"] = flcredits
+            # Create xml strings and update fontinfo
+            xmlstring = "<dict><key>text</key><array><dict><key>text</key><string>" + textprotect(fldescription[0]["text"]) \
+                  + "</string></dict></array></dict>"
+            fi.setelem("woffMetadataDescription", ET.fromstring(xmlstring))
+
+            xmlstring = "<dict><key>credits</key><array>"
+            for credit in flcredits:
+                xmlstring += '<dict><key>name</key><string>' + textprotect(credit["name"]) + '</string>'
+                if "url" in credit: xmlstring += '<key>url</key><string>' + textprotect(credit["url"]) + '</string>'
+                if "role" in credit: xmlstring += '<key>role</key><string>' + textprotect(credit["role"]) + '</string>'
+                xmlstring += '</dict>'
+            xmlstring += '</array></dict>'
+            fi.setelem("woffMetadataCredits", ET.fromstring(xmlstring))
+
+            fi.setval("openTypeHeadCreated", "string", datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
+            logger.log("Writing updated fontinfo.plist with values from FONTLOG.txt", "P")
+            exists = True if os.path.isfile(os.path.join(font.ufodir, "fontinfo.plist")) else False
+            UFO.writeXMLobject(fi, font.outparams, font.ufodir, "fontinfo.plist", exists, fobject=True)
+
+    description = ufofields["woffMetadataDescription"]
+    if description == None: description = fldescription
+    credits = ufofields["woffMetadataCredits"]
+    if credits == None : credits = flcredits
+
     # Construct output file name
     (folder, ufoname) = os.path.split(font.ufodir)
     filename = os.path.join(folder, pfn + "-WOFF-metadata.xml") if ofn is None else ofn
@@ -102,45 +139,45 @@ def doit(args):
     file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
     file.write('<metadata version="1.0">\n')
     file.write('  <uniqueid id="' + orgid + '.' + pfn + '.' + version + '" />\n')
-    file.write('  <vendor name="' + ufofields["openTypeNameManufacturer"] + '" url="' + ufofields[
-        "openTypeNameManufacturerURL"] + '" />\n')
-
+    file.write('  <vendor name="' + attrprotect(ufofields["openTypeNameManufacturer"]) + '" url="'
+               + attrprotect(ufofields["openTypeNameManufacturerURL"]) + '" />\n')
     file.write('  <credits>\n')
     for credit in credits:
         file.write('    <credit\n')
-        file.write('      name="' + credit["N"] + '"\n')
-        if "W" in credit: file.write('      url="' + credit["W"] + '"\n')
-        if "D" in credit: file.write('      role="' + credit["D"] + '"\n')
+        file.write('      name="' + attrprotect(credit["name"]) + '"\n')
+        if "url" in credit: file.write('      url="' + attrprotect(credit["url"]) + '"\n')
+        if "role" in credit: file.write('      role="' + attrprotect(credit["role"]) + '"\n')
         file.write('    />\n')
     file.write('  </credits>\n')
 
     file.write('  <description>\n')
     file.write('    <text lang="en">\n')
-    for line in description: file.write('      ' + line + '\n')
+    for entry in description:
+        for line in entry["text"].splitlines():
+            file.write('      ' + textprotect(line) + '\n')
     file.write('    </text>\n')
     file.write('  </description>\n')
 
     file.write('  <license url="http://scripts.sil.org/OFL" id="org.sil.ofl.1.1">\n')
     file.write('    <text lang="en">\n')
-    for line in ufofields["openTypeNameLicense"].splitlines(): file.write('      ' + line + '\n')
+    for line in ufofields["openTypeNameLicense"].splitlines(): file.write('      ' + textprotect(line) + '\n')
     file.write('    </text>\n')
     file.write('  </license>\n')
 
     file.write('  <copyright>\n')
     file.write('    <text lang="en">\n')
-    for line in ufofields["copyright"].splitlines(): file.write('      ' + line + '\n')
+    for line in ufofields["copyright"].splitlines(): file.write('      ' + textprotect(line) + '\n')
     file.write('    </text>\n')
     file.write('  </copyright>\n')
 
     file.write('  <trademark>\n')
-    file.write('    <text lang="en">' + ufofields["trademark"] + '</text>\n')
+    file.write('    <text lang="en">' + textprotect(ufofields["trademark"]) + '</text>\n')
     file.write('  </trademark>\n')
     file.write('</metadata>')
 
     file.close()
 
-
-def readuntil(file, texts):  # Read through file until line is in text.  Return section up to there and the text matched
+def readuntil(file, texts):  # Read through file until line is in texts.  Return section up to there and the text matched
     skip = True
     match = None
     for line in file:
@@ -149,16 +186,15 @@ def readuntil(file, texts):  # Read through file until line is in text.  Return 
             if line == "" or line[0:5] == "-----":
                 pass
             else:
-                section = [textprotect(line)]
+                section = line
                 skip = False
         else:
             for text in texts:
                 if line[0:len(text)] == text: match = text
             if match: break
-            section.append(textprotect(line))
-    while section[-1] == "": section.pop()  # Strip blank lines at end
+            section = section + "\n" + line
+    while section[-1] == "\n": section = section[:-1]  # Strip blank lines at end
     return (section, match)
-
 
 def textprotect(txt):  # Switch special characters in text to use &...; format
     txt = re.sub(r'&', '&amp;', txt)
@@ -166,14 +202,12 @@ def textprotect(txt):  # Switch special characters in text to use &...; format
     txt = re.sub(r'>', '&gt;', txt)
     return txt
 
-
 def attrprotect(txt):  # Switch special characters in text to use &...; format
     txt = re.sub(r'&', '&amp;', txt)
     txt = re.sub(r'<', '&lt;', txt)
     txt = re.sub(r'>', '&gt;', txt)
     txt = re.sub(r'"', '&quot;', txt)
     return txt
-
 
 def cmd(): execute("UFO", doit, argspec)
 if __name__ == "__main__": cmd()

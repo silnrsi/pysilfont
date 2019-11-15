@@ -37,7 +37,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfmakedeprecated](#psfmakedeprecated) | Creates deprecated versions of glyphs |
 | [psfmakefea](#psfmakefea) | Make a features file base on input UFO or AP database |
 | [psfmakescaledshifted](#psfmakescaledshifted) | Creates scaled and shifted versions of glyphs |
-| [psfmakewoffmetadata](#psfmakewoffmetadata) | Make the WOFF metadata xml file based on input UFO and FONTLOG.txt |
+| [psfmakewoffmetadata](#psfmakewoffmetadata) | Make the WOFF metadata xml file based on input UFO |
 | [psfnormalize](#psfnormalize) | Normalize a UFO and optionally converts it between UFO2 and UFO3 versions |
 | [psfremovegliflibkeys](#psfremovegliflibkeys) | Remove keys from glif lib entries |
 | [psfrenameglyphs](#psfrenameglyphs) | Within a UFO and class definition, assign new working names to glyphs based on csv input file |
@@ -382,7 +382,7 @@ For example this command creates a new font which by default has Khamti behaviou
 ```
 psfdeflang -L kht Padauk-Regular.ttf Padauk_kht-Regular.ttf
 ```
-
+and FONTLOG.txt
 ---
 ####  psfdeleteglyphs
 Usage: **`psfdeleteglyphs [-i DELETELIST] [--reverse] infont [outfont]`**
@@ -650,12 +650,12 @@ This will take the definitions in newglyphs.csv and create the new glyphs using 
 
 ---
 #### psfmakewoffmetadata
-Usage: **`psfmakewoffmetadata -n PRIMARYFONTNAME -i ORGID [-f FONTLOG]  [-o OUTPUT] fontfile.ufo`**
+Usage: **`psfmakewoffmetadata -n PRIMARYFONTNAME -i ORGID [-f FONTLOG]  [-o OUTPUT]  [--populateufowoff] [--force] fontfile.ufo`**
 
 
-Make the WOFF metadata xml file based on input UFO and FONTLOG.txt.
+Make the WOFF metadata xml file based on input UFO.  If woffMetadataCredits and/or woffMetadataDescription are missing from the UFO, they will be constructed from FONTLOG - see below
 
-The primary font name and orgid need to be supplied on the command line. By default it reads FONTLOG.txt from the folder it is run in and outputs to *primaryfontname*-WOFF-metadata.xml.
+The primary font name and orgid need to be supplied on the command line. By default it outputs to *primaryfontname*-WOFF-metadata.xml.
 
 Example:
 
@@ -667,9 +667,15 @@ It constructs the information needed from:
 
 - The supplied primary font name and orgid
 - Information within the primary font file
-- Information within the FONTLOG.txt
 
-FONTLOG.txt needs to be formatted according to the pattern used for most SIL font packages. The description in the xml file is created using the contents of the FONTLOG, starting after the "Basic Font Information" header and finishing before the "Information for Contributors" header (if present) or the "Acknowledgements" header otherwise. The credits are created from the N:, W:, D: and E: sets of values in the acknowledgements section, though E: is not used. One credit is created from each set of values and sets should be separated by blank lines.
+If it needs to construct the credits and description fields from FONTLOG, that file needs to be formatted according to the pattern used for most SIL font packages. The description is created using the contents of the FONTLOG, starting after the "Basic Font Information" header and finishing before the "Information for Contributors" header (if present) or the "Acknowledgements" header otherwise. The credits are created from the N:, W:, D: and E: sets of values in the acknowledgements section, though E: is not used. One credit is created from each set of values and sets should be separated by blank lines. By default it reads FONTLOG.txt from the folder it is run in.
+
+If woffMetadataCredits and woffMetadataDescription are missing from the UFO, there are options to update the UFO with the values constructed from FONTLOG:
+
+```
+  --populateufowoff  Add woffMetadataCredits and woffMetadataDescription to UFO if missing
+  --force            Update the above fields from FONTLOG even if already present in UFO  
+```
 
 ---
 ####  psfnormalize
