@@ -56,7 +56,6 @@ def doit(args):
             missing = field if missing is None else missing + ", " + field
             ufofields[field] = None
         else:
-            logger.log(field + " found in fontinfo")
             ufofields[field] = fi.getval(field)[ufowoff[field]]
 
     # Process --populateufowoff setting, if present
