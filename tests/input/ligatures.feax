@@ -1,0 +1,12 @@
+
+baseClass a <anchor 200 200> @TOP_1;
+baseClass fi <anchor 200 0> @BOTTOM_1;
+baseClass fi <anchor 400 0> @BOTTOM_2;
+markClass acute <anchor 0 200> @TOP;
+markClass circumflex <anchor 200 0> @BOTTOM;
+
+feature test {
+    pos ligature [a fi] @BOTTOM_1 mark @BOTTOM @TOP_1 mark @TOP
+            ligComponent @BOTTOM_2 mark @BOTTOM;
+} test;
+

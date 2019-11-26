@@ -33,7 +33,7 @@ def test_run():
 
 def test_diffs(): # Do a diff on all output files
     for name in test_files:
-        result = silfont.util.test_diffs("psfmakefea", testname, diffexts)
+        result = silfont.util.test_diffs("psfmakefea", name, diffexts)
         assert result
 
 if __name__ == "__main__":

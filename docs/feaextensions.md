@@ -187,6 +187,30 @@ pos mark @MARK_BASE_CLASS mark @MARK_MARK_CLASS;
 
 Would expand out to a list of mark mark attachment rules.
 
+#### Ligature Attachment
+
+Ligature attachment involves all the attachments to a ligature in a single rule. Given a list of possible ligature glyphs, the ligature positioning rule has been extended to allow the use of baseClasses instead of the base anchor on the ligature. For a noddy example:
+
+```
+baseClass a <anchor 200 200> @TOP_1;
+baseClass fi <anchor 200 0> @BOTTOM_1;
+baseClass fi <anchor 400 0> @BOTTOM_2;
+markClass acute <anchor 0 200> @TOP;
+markClass circumflex <anchor 200 0> @BOTTOM;
+
+pos ligature [a fi] @BOTTOM_1 mark @BOTTOM @TOP_1 mark @TOP
+        ligComponent @BOTTOM_2 mark @BOTTOM;
+```
+
+becomes
+
+```
+pos ligature a <anchor 200 200> mark @TOP
+    ligComponent <anchor NULL>;
+pos ligature fi <anchor 200 0> mark @BOTTOM
+    ligComponent <anchor 400 0> mark @BOTTOM;
+```
+
 ### ifinfo
 
 This statement initiates a block either of statements or within another block. The block is only processed if the ifinfo condition is met. ifinfo takes two parameters. The first is a name that is an entry in a fontinfo.plist. The second is a string containing a regular expression that is matched against the given value in the fontinfo.plist. If there is a match, the condition is considered to be met.
