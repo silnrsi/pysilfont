@@ -10,6 +10,7 @@ This document describes the functionality of `psfmakefea` and lists the extensio
     - [baseclass](#baseclass)
         - [Cursive Attachment](#cursive-attachment)
         - [Mark Attachment](#mark-attachment)
+        - [Ligature Attachment](#ligature-attachment)
     - [ifinfo](#ifinfo)
     - [ifclass](#ifclass)
     - [do](#do)
@@ -33,6 +34,7 @@ This document describes the functionality of `psfmakefea` and lists the extensio
         - [Processing](#processing)
         - [Example](#example)
     - [Support classes in alternate lookups](#support-classes-in-alternate-lookups)
+    - [groups.plist](#groupsplist)
 
 <!-- /TOC -->
 ## Generated Classes
