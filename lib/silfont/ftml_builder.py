@@ -78,7 +78,7 @@ class FTML(object):
         # Initialize state
         self._curTest = None
         self.closeTestGroup()
-        self._defaultRTL = defaultrtl
+        self.defaultRTL = defaultrtl
         # Add first testgroup if requested
         if rendercheck:
             self.startTestGroup("Rendering Check")
@@ -94,7 +94,7 @@ class FTML(object):
         self._lastRTL = None
 
     def addToTest(self, uid, s = "", label = None, comment = None, rtl = None):
-        if rtl is None: rtl = self._defaultRTL
+        if rtl is None: rtl = self.defaultRTL
         if (self._lastUID and uid and uid not in range(self._lastUID, self._lastUID + 2))\
                 or (self._lastRTL is not None and rtl != self._lastRTL):
             self.closeTest()
