@@ -182,8 +182,12 @@
     <string>L_tnS_mI_.glif</string>
     <key>LtnSmIJ</key>
     <string>L_tnS_mI_J_.glif</string>
+    <key>LtnSmITilde</key>
+    <string>L_tnS_mI_T_ilde.glif</string>
     <key>LtnSmITildeGrave</key>
     <string>L_tnS_mI_T_ildeG_rave.glif</string>
+    <key>LtnSmITildeGraveCedilla</key>
+    <string>L_tnS_mI_T_ildeG_raveC_edilla.glif</string>
     <key>LtnSmJ</key>
     <string>L_tnS_mJ_.glif</string>
     <key>LtnSmK</key>

@@ -14,7 +14,7 @@ testname = "psfbuildcompgc"
 cl = "psfbuildcompgc tests/input/font-psf-test/source/PsfTest-Regular.ufo -i tests/input/psfbuildcomp.txt -l local/testresults/fontparts/psfbuildcompgc.log"
 outfont = "local/testresults/fontparts/psfbuildcompgc.ufo" # Set to None for commands which don't output a font
 diffexts = [".ufo", ".log"] # List of extensions of all output files
-exp_errors = 2   # These may need updating if the test ufo is updated
+exp_errors = 0   # These may need updating if the test ufo is updated
 exp_warnings = 0 # The test ufo should have some errors/warnings to test the code!
 
 # Code after this can be the same for most/all tests; if needed to be different for a test remove this comment!
