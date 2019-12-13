@@ -211,6 +211,7 @@ class FChar(object):
             self.logger.log('USV %04X not defined; no properties known' % uid, 'W')
         self.feats = set()  # feat tags that affect this char
         self.langs = set()  # lang tags that affect this char
+        self.aps = set()
         self.altnames = {}  # alternate glyph names.
             # the above is a dict keyed by either:
             #   lang tag e.g., 'ur', or
@@ -226,6 +227,7 @@ class FChar(object):
                 name = a.element.get('name')
                 if apRE.match(name) is None:
                     continue
+                self.aps.add(name)
                 if name.startswith("_") :
                     self.isMark = True
                 else:
