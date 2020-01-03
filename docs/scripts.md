@@ -713,6 +713,11 @@ psfremovegliflibkeys GentiumPlus-Regular.ufo key1 key2 -b start1 start2
 
 This will remove any keys that match key1 or key2 or begin with start1 or start2
 
+Note - Special handling for com.schriftgestaltung.Glyphs.originalWidth:
+- Due to a glyphsLib bug, advance width is sometimes moved to this key, so if this key is set for deletion
+  - If advance width is not set in the glif, it is set to com.schriftgestaltung.Glyphs.originalWidth
+  - com.schriftgestaltung.Glyphs.originalWidth is then deleted
+
 ---
 ####  psfrenameglyphs
 Usage: **`psfrenameglyphs [--mergecomps] [-c CLASSFILE] -i INPUT ifont [ofont]`**

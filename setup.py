@@ -6,7 +6,7 @@ __copyright__ = 'Copyright (c) 2014 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __version__ = '1.4.3.dev0'
 
-import sys, os, imp
+import sys, os, importlib
 
 try:
     from setuptools import setup
@@ -16,9 +16,9 @@ except ImportError :
 
 warnings = []
 if sys.argv[1] in ('develop', 'install') :
-    for m in ('defcon', 'fontMath', 'fontParts', 'fontTools', 'glyphConstruction', 'glyphsLib', 'harfbuzz', 'palaso', 'lz4', 'mutatorMath', 'odf', 'ufo2ft'):
+    for m in ('defcon', 'fontMath', 'fontParts', 'fontTools', 'glyphConstruction', 'glyphsLib', 'lz4', 'mutatorMath', 'palaso', 'odf', 'ufo2ft'):
         try:
-            imp.find_module(m)
+            module = importlib.import_module(m)
         except ImportError : warnings.append("- Some modules/scripts require the python %s package which is not currently installed" % m)
 
 long_description =  "A growing collection of font utilities mainly written in Python designed to help with various aspects of font design and production.\n"
