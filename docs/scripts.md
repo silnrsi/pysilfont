@@ -320,7 +320,7 @@ Usage:
 **`psfcreateinstances -f [--roundInstances] designspace_file_or_folder`**
 
 **`psfcreateinstances [-i INSTANCENAME] [-a INSTANCEATTR] [-v INSTANCEVAL] [-o OUTPUT]
-[--forceInterpolation] [--roundInstances] designspace_file`**
+[--forceInterpolation] [--roundInstances] [--weightfix|-W] designspace_file`**
 
 
 Create one or more instance UFOs from one or more designspace files.
@@ -340,9 +340,11 @@ Omitting the `-f` requires that the final parameter be a designspace file (not a
   - instance name, specified by `-i`, or
   - a point on one of the defined axes, specified by `-a` and `-v`. If more than one instance matches this axis value, all are built.
 - The default location for the generated UFO(s) can be changed using `-o` option to specify a path to be prefixed to that specified in the designspace.
-- In cases where the designspace coordinates of an instance match a master, glyphs will be copied rather than interpolated, which is useful for masters that do not have compatible glyph designs and thus cannot be interpolated. This behavior can be overridden using the `--forceInterpolation` option.  
+- In cases where the designspace coordinates of an instance match a master, glyphs will be copied rather than interpolated, which is useful for masters that do not have compatible glyph designs and thus cannot be interpolated. This behavior can be overridden using the `--forceInterpolation` option.
 
 Whenever interpolation is done, the calculations can result in non-integer values within the instance UFOs. The `--roundInstances` option will apply integer rounding to all such values.
+
+When `--weightfix` (or `-W`) is provided, instance weights are changed to either 700 (Bold) or 400 (Regular) based on whether or not the `stylemapstylename` instance attribute begins with `bold`.
 
 ---
 #### psfcsv2comp
@@ -710,6 +712,11 @@ psfremovegliflibkeys GentiumPlus-Regular.ufo key1 key2 -b start1 start2
 ```
 
 This will remove any keys that match key1 or key2 or begin with start1 or start2
+
+Note - Special handling for com.schriftgestaltung.Glyphs.originalWidth:
+- Due to a glyphsLib bug, advance width is sometimes moved to this key, so if this key is set for deletion
+  - If advance width is not set in the glif, it is set to com.schriftgestaltung.Glyphs.originalWidth
+  - com.schriftgestaltung.Glyphs.originalWidth is then deleted
 
 ---
 ####  psfrenameglyphs

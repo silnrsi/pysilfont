@@ -5,12 +5,13 @@ from fontTools.feaLib.lexer import IncludingLexer, Lexer
 import silfont.feax_lexer as feax_lexer
 from fontTools.feaLib.error import FeatureLibError
 import silfont.feax_ast as astx
-import io, re, math
+import io, re, math, os
 import logging
 
 class feaplus_ast(object) :
     MarkBasePosStatement = astx.ast_MarkBasePosStatement
     MarkMarkPosStatement = astx.ast_MarkMarkPosStatement
+    MarkLigPosStatement = astx.ast_MarkLigPosStatement
     CursivePosStatement = astx.ast_CursivePosStatement
     BaseClass = astx.ast_BaseClass
     MarkClass = astx.ast_MarkClass
@@ -63,6 +64,7 @@ class feaplus_parser(Parser) :
             'allglyphs': lambda : self.glyphs.keys(),
             'lf': lambda : "\n",
             'info': lambda s: self.fontinfo.get(s, ""),
+            'fileexists': lambda s: os.path.exists(s),
             'kerninfo': lambda s:[(k1, k2, v) for k1, x in self.kerninfo.items() for k2, v in x.items()]
         }
         # Document which builtins we really need. Of course still insecure.
@@ -174,6 +176,38 @@ class feaplus_parser(Parser) :
         else: # handle pos cursive @baseClass @baseClass;
             mc = self.expect_markClass_reference_()
             return self.ast.CursivePosStatement(glyphclass.markClass, None, mc, location=location)
+
+    def parse_position_ligature_(self, enumerated, vertical):
+        location = self.cur_token_location_
+        self.expect_keyword_("ligature")
+        if enumerated:
+            raise FeatureLibError(
+                '"enumerate" is not allowed with '
+                'mark-to-ligature attachment positioning',
+                location)
+        ligatures = self.parse_glyphclass_(accept_glyphname=True)
+        marks = [self._parse_anchorclass_marks_()]
+        while self.next_token_ == "ligComponent":
+            self.expect_keyword_("ligComponent")
+            marks.append(self._parse_anchorclass_marks_())
+        self.expect_symbol_(";")
+        return self.ast.MarkLigPosStatement(ligatures, marks, location=location)
+
+    def _parse_anchorclass_marks_(self):
+        """Parses a sequence of [<anchor> | @BASECLASS mark @MARKCLASS]*."""
+        anchorMarks = []  # [(self.ast.Anchor, markClassName)*]
+        while True:
+            if self.next_token_ == "<":
+                anchor = self.parse_anchor_()
+            else:
+                anchor = self.parse_class_name_()
+            if anchor is not None:
+                self.expect_keyword_("mark")
+                markClass = self.expect_markClass_reference_()
+                anchorMarks.append((anchor, markClass))
+            if self.next_token_ == "ligComponent" or self.next_token_ == ";":
+                break
+        return anchorMarks
 
     # like base class parseMarkClass
     # but uses BaseClass and BaseClassDefinition which subclass Mark counterparts

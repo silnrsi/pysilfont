@@ -315,6 +315,8 @@
       <string>LtnSmITildeGrave</string>
       <string>LtnCapCAcuteCedilla</string>
       <string>LtnSmCAcuteCedilla</string>
+      <string>LtnSmITilde</string>
+      <string>LtnSmITildeGraveCedilla</string>
     </array>
     <key>public.postscriptNames</key>
     <dict>

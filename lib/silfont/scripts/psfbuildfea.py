@@ -13,20 +13,38 @@ from fontTools.ttLib import TTFont
 
 from silfont.core import execute
 
-def keepIndexBuilder(self, tag):
-    assert tag in ('GPOS', 'GSUB'), tag
-    for lookup in self.lookups_:
-        lookup.lookup_index = None
-    lookups = []
-    for lookup in self.lookups_:
-        if lookup.table != tag:
-            continue
-        lookup.lookup_index = len(lookups)
-        lookup.map_index = lookup.lookup_index
-        lookups.append(lookup)
-    return [l.build() for l in lookups]
+class MyBuilder(Builder):
 
-Builder.buildLookups_ = keepIndexBuilder
+    def __init__(self, font, featurefile, lateSortLookups = False):
+        super(MyBuilder, self).__init__(font, featurefile)
+        self.lateSortLookups = lateSortLookups
+
+    def buildLookups_(self, tag):
+        assert tag in ('GPOS', 'GSUB'), tag
+        countFeatureLookups = 0
+        for lookup in self.lookups_:
+            lookup.lookup_index = None
+            if lookup.table == tag and getattr(lookup, '_feature', "") != "":
+                countFeatureLookups += 1
+        lookups = []
+        latelookups = []
+        for lookup in self.lookups_:
+            if lookup.table != tag:
+                continue
+            if self.lateSortLookups and getattr(lookup, '_feature', "") == "":
+                lookup.lookup_index = countFeatureLookups + len(latelookups)
+                latelookups.append(lookup)
+            else:
+                lookup.lookup_index = len(lookups)
+                lookups.append(lookup)
+            lookup.map_index = lookup.lookup_index
+        return [l.build() for l in lookups + latelookups]
+
+    def add_lookup_to_feature_(self, lookup, feature_name):
+        super(MyBuilder, self).add_lookup_to_feature_(lookup, feature_name)
+        lookup._feature = feature_name
+
+
 #TODO: provide more argument info
 argspec = [
     ('input_fea', {'help': 'Input fea file'}, {}),
@@ -35,6 +53,7 @@ argspec = [
     ('-v', '--verbose', {'help': 'Repeat to increase verbosity', 'action': 'count', 'default': 0}, {}),
     ('-m', '--lookupmap', {'help': 'File into which place lookup map'}, {}),
     ('-l','--log',{'help': 'Optional log file'}, {'type': 'outfile', 'def': '_buildfea.log', 'optlog': True}),
+    ('-e','--end',{'help': 'Push lookups not in features to the end', 'action': 'store_true'}, {}),
 ]
 
 def doit(args) :
@@ -42,7 +61,7 @@ def doit(args) :
     configLogger(level=levels[min(len(levels) - 1, args.verbose)])
 
     font = TTFont(args.input_font)
-    builder = Builder(font, args.input_fea)
+    builder = MyBuilder(font, args.input_fea, lateSortLookups = args.end)
     builder.build()
     if args.lookupmap:
         with open(args.lookupmap, "w") as outf:

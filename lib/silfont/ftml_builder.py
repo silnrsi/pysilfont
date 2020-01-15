@@ -78,7 +78,7 @@ class FTML(object):
         # Initialize state
         self._curTest = None
         self.closeTestGroup()
-        self._defaultRTL = defaultrtl
+        self.defaultRTL = defaultrtl
         # Add first testgroup if requested
         if rendercheck:
             self.startTestGroup("Rendering Check")
@@ -94,7 +94,7 @@ class FTML(object):
         self._lastRTL = None
 
     def addToTest(self, uid, s = "", label = None, comment = None, rtl = None):
-        if rtl is None: rtl = self._defaultRTL
+        if rtl is None: rtl = self.defaultRTL
         if (self._lastUID and uid and uid not in range(self._lastUID, self._lastUID + 2))\
                 or (self._lastRTL is not None and rtl != self._lastRTL):
             self.closeTest()
@@ -211,6 +211,7 @@ class FChar(object):
             self.logger.log('USV %04X not defined; no properties known' % uid, 'W')
         self.feats = set()  # feat tags that affect this char
         self.langs = set()  # lang tags that affect this char
+        self.aps = set()
         self.altnames = {}  # alternate glyph names.
             # the above is a dict keyed by either:
             #   lang tag e.g., 'ur', or
@@ -226,6 +227,7 @@ class FChar(object):
                 name = a.element.get('name')
                 if apRE.match(name) is None:
                     continue
+                self.aps.add(name)
                 if name.startswith("_") :
                     self.isMark = True
                 else:
@@ -506,7 +508,7 @@ class FTMLBuilder(object):
         l = [self.features[tag].tvlist for tag in sorted(feats)]
         return product(*l)
 
-    def render(self, uids, ftml, keyUID = 0, addBreaks = True, rtl = None):
+    def render(self, uids, ftml, keyUID = 0, addBreaks = True, rtl = None, dualJoinMode = 3):
         """ general purpose (but not required) function to generate ftml for a character sequence """
         if len(uids) == 0:
             return
@@ -553,15 +555,20 @@ class FTMLBuilder(object):
         s = ''.join([chr(uid) for uid in uids])
         if zwjBefore or zwjAfter:
             # Show contextual forms:
+            # Start with isolate
             t = u'{0} '.format(s)
-            if zwjAfter:
-                t += u'{0}\u200D '.format(s)
-                if zwjBefore:
-                    t += u'\u200D{0}\u200D '.format(s)
-            if zwjBefore:
-                t += u'\u200D{0} '.format(s)
             if zwjBefore and zwjAfter:
-                t += u'{0}{0}{0}'.format(s)
+                # For sequences that show dual-joining behavior, what we show depends on dualJoinMode:
+                if dualJoinMode & 1:
+                    # show initial, medial, final separated by space:
+                    t += u'{0}\u200D \u200D{0}\u200D \u200D{0} '.format(s)
+                if dualJoinMode & 2:
+                    # show 3 joined forms in sequence:
+                    t += u'{0}{0}{0} '.format(s)
+            elif zwjAfter:
+                t += u'{0}\u200D '.format(s)
+            elif zwjBefore:
+                t += u'\u200D{0} '.format(s)
             if addBreaks: ftml.closeTest()
             ftml.addToTest(keyUID, t, label = label, comment = comment, rtl = rtl)
             if addBreaks: ftml.closeTest()

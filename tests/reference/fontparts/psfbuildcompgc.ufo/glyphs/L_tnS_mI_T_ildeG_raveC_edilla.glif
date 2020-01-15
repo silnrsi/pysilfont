@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<glyph name="LtnSmITildeGraveCedilla" format="2">
+  <advance width="1150.0"/>
+  <unicode hex="E010"/>
+  <note>
+i cedilla tilde grave
+</note>
+  <outline>
+    <component base="LtnSmDotlessI" xOffset="590.0"/>
+    <component base="CombCedilla" xOffset="590.0"/>
+    <component base="CombTilde" xOffset="1165.0" yOffset="-1100.0"/>
+    <component base="CombGrave" xOffset="1140.0" yOffset="-725.0"/>
+  </outline>
+</glyph>

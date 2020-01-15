@@ -18,6 +18,7 @@ def asFea(g):
         return g
 
 ast.asFea = asFea
+SHIFT = ast.SHIFT
 
 def asLiteralFea(self, indent=""):
     Element.mode = 'literal'
@@ -142,6 +143,44 @@ class ast_CursivePosStatement(ast.CursivePosStatement):
     def build(self, builder) :
         #TODO: do the right thing here (write to ttf?)
         pass
+
+class ast_MarkLigPosStatement(ast.MarkLigPosStatement):
+    def __init__(self, ligatures, marks, location=None):
+        ast.MarkLigPosStatement.__init__(self, ligatures, marks, location)
+        self.classBased = False
+        for l in marks:
+            if l is not None:
+                for m in l:
+                    if m is not None and not isinstance(m[0], ast.Anchor):
+                        self.classBased = True
+                        break
+
+    def build(self, builder):
+        builder.add_mark_lig_pos(self.location, self.ligatures.glyphSet(), self.marks)
+
+    def asFea(self, indent=""):
+        if not self.classBased or self.mode == "literal":
+            return super(ast_MarkLigPosStatement, self).asFea(indent)
+
+        res = []
+        for g in self.ligatures.glyphSet():
+            comps = []
+            for l in self.marks:
+                onecomp = []
+                if l is not None and len(l):
+                    for a, m in l:
+                        if not isinstance(a, ast.Anchor):
+                            if g not in a.markClass.glyphs:
+                                continue
+                            left = a.markClass.glyphs[g].anchor.asFea()
+                        else:
+                            left = a.asFea()
+                        onecomp.append("{} mark @{}".format(left, m.name))
+                if not len(onecomp):
+                    onecomp = ["<anchor NULL>"]
+                comps.append(" ".join(onecomp))
+            res.append("pos ligature {} ".format(asFea(g)) + ("\n"+indent+SHIFT+"ligComponent ").join(comps))
+        return (";\n"+indent).join(res) + ";"
 
 #similar to ast.MultipleSubstStatement
 #one-to-many substitution, one glyph class is on LHS, multiple glyph classes may be on RHS
