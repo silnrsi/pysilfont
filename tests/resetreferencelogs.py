@@ -53,7 +53,7 @@ for log in logs:
     outlog.close()
     # Only update the .lg if it has changed
     diff = text_diff(outtmp, outlg, ignore_chars=20)
-    if diff.returncode: # Either the are different or .lg file is missing
+    if diff.returncode: # Either they are different or .lg file is missing
         try:
             os.remove(outlg)
         except:

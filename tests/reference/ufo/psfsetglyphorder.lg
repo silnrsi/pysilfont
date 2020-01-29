@@ -1,152 +1,152 @@
-2019-04-16 14:14:34 Progress: Opening file for input: tests/input/glyph_data.csv
-2019-04-16 14:14:34 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
-2019-04-16 14:14:34 Info:     Processing Glyph Layer 0: public.defaultglyphs
-2019-04-16 14:14:34 Progress: Checking fontinfo.plist metadata
-2019-04-16 14:14:34 Warning:  openTypeNameSampleText is missing from fontinfo.plist
-2019-04-16 14:14:34 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
-2019-04-16 14:14:34 Info:     Types: Old - list, New - NoneType
-2019-04-16 14:14:34 Warning:  year would be removed from fontinfo  Old value: 2019
-2019-04-16 14:14:34 Info:     Types: Old - int, New - NoneType
-2019-04-16 14:14:34 Warning:  capHeight would be updated  Old value: 1485.3, new value: 1485
-2019-04-16 14:14:34 Info:     Types: Old - float, New - int
-2019-04-16 14:14:34 Warning:  styleMapFamilyName would be uppdated  Old value: Psf test, new value: Psf Test
-2019-04-16 14:14:34 Info:     Types: Old - string, New - string
-2019-04-16 14:14:34 Warning:  openTypeOS2TypoLineGap would be updated  Old value: 1, new value: 0
-2019-04-16 14:14:34 Info:     Types: Old - int, New - int
-2019-04-16 14:14:34 Warning:  openTypeNamePreferredFamilyName would be updated  Old value: Psf Testing, new value: Psf Test
-2019-04-16 14:14:34 Info:     Types: Old - string, New - string
-2019-04-16 14:14:34 Progress: Checking lib.plist metadata
-2019-04-16 14:14:34 Progress: Check & fix results:- Errors: 0, Changes to make: 6, Other warnings: 1
-2019-04-16 14:14:34 Progress: See log file for details
-2019-04-16 14:14:34 Info:     No glyph in font for LtnSmEAcute
-2019-04-16 14:14:34 Info:     No glyph in font for LtnSmIAcute
-2019-04-16 14:14:34 Info:     No glyph in font for LtnSmOAcute
-2019-04-16 14:14:34 Info:     No glyph in font for LtnSmUAcute
-2019-04-16 14:14:34 Info:     No glyph in font for Bullet
-2019-04-16 14:14:34 Info:     No glyph in font for AcuteAccent
-2019-04-16 14:14:34 Info:     No glyph in font for LtnCapEAcute
-2019-04-16 14:14:34 Info:     No glyph in font for LtnCapAAcute
-2019-04-16 14:14:34 Info:     No glyph in font for LtnCapIAcute
-2019-04-16 14:14:34 Info:     No glyph in font for LtnCapOAcute
-2019-04-16 14:14:34 Info:     No glyph in font for LtnCapUAcute
-2019-04-16 14:14:34 Info:     No glyph in font for ModCircumAccent
-2019-04-16 14:14:34 Info:     No glyph in font for DblAcuteAccent
-2019-04-16 14:14:34 Info:     No glyph in font for LtnSmYAcute
-2019-04-16 14:14:34 Info:     No glyph in font for LtnCapYAcute
-2019-04-16 14:14:34 Info:     No glyph in font for SupOne
-2019-04-16 14:14:34 Info:     No glyph in font for SupThree
-2019-04-16 14:14:34 Info:     No glyph in font for VulgFracOneHalf
-2019-04-16 14:14:34 Info:     No glyph in font for VulgFracOneQuarter
-2019-04-16 14:14:34 Info:     No glyph in font for VulgFracThreeQuarters
-2019-04-16 14:14:34 Info:     No glyph in font for BulletOperator
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph .notdef
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph .null
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph Ampersand
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph Apos
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph Asterisk
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph AtSgn
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph Colon
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph CombCircum
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph CombDiaer
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph CombGrave
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph CombRingAbv
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph CombTilde
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph Comma
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph DigitEight
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph DigitFive
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph DigitFour
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph DigitNine
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph DigitOne
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph DigitSeven
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph DigitSix
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph DigitThree
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph DigitTwo
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph DigitZero
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph DollarSgn
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph DottedCirc
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph EqSgn
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph ExclamationMrk
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph FullStop
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph GTSgn
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph GraveAccent
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph Hyphen
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph Hyphen_Soft
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LTSgn
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LftCurlyBrac
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LftParen
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LftSqrBrac
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LowLine
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapA
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapADiaer
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapB
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapC
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapD
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapE
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapF
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapG
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapH
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapI
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapJ
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapK
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapL
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapM
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapN
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapO
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapP
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapQ
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapR
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapS
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapT
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapU
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapV
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapW
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapX
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnCapY
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmA
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmACircum
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmADiaer
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmAGrave
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmARingAbv
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmATilde
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmB
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmC
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmD
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmE
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmF
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmG
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmH
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmI
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmJ
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmK
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmL
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmM
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmN
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmO
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmP
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmQ
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmR
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmS
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmT
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmU
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmV
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmW
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmX
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph LtnSmY
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph NonBreakingHyphen
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph NumSgn
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph PercentSgn
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph PlusSgn
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph QstnMrk
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph QuotMrk
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph RtCurlyBrac
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph RtParen
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph RtSqrBrac
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph Semicolon
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph Solidus
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph Space
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph Tilde
-2019-04-16 14:14:34 Info:     No entry in input file for font glyph VertLine
-2019-04-16 14:14:34 Progress: Processing font for output
-2019-04-16 14:14:34 Progress: Output UFO already exists - reading for comparison
-2019-04-16 14:14:34 Progress: Writing font to local/testresults/ufo/psfsetglyphorder.ufo
-2019-04-16 14:14:34 Info:     Processing glyphs directory
+2020-01-29 10:01:26 Progress: Opening file for input: tests/input/glyph_data.csv
+2020-01-29 10:01:26 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
+2020-01-29 10:01:26 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2020-01-29 10:01:26 Progress: Checking fontinfo.plist metadata
+2020-01-29 10:01:26 Warning:  openTypeNameSampleText is missing from fontinfo.plist
+2020-01-29 10:01:26 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
+2020-01-29 10:01:26 Info:     Types: Old - list, New - NoneType
+2020-01-29 10:01:26 Warning:  year would be removed from fontinfo  Old value: 2020
+2020-01-29 10:01:26 Info:     Types: Old - int, New - NoneType
+2020-01-29 10:01:26 Warning:  capHeight would be updated  Old value: 1485.3, new value: 1485
+2020-01-29 10:01:26 Info:     Types: Old - float, New - int
+2020-01-29 10:01:26 Warning:  styleMapFamilyName would be uppdated  Old value: Psf test, new value: Psf Test
+2020-01-29 10:01:26 Info:     Types: Old - string, New - string
+2020-01-29 10:01:26 Warning:  openTypeOS2TypoLineGap would be updated  Old value: 1, new value: 0
+2020-01-29 10:01:26 Info:     Types: Old - int, New - int
+2020-01-29 10:01:26 Warning:  openTypeNamePreferredFamilyName would be updated  Old value: Psf Testing, new value: Psf Test
+2020-01-29 10:01:26 Info:     Types: Old - string, New - string
+2020-01-29 10:01:26 Progress: Checking lib.plist metadata
+2020-01-29 10:01:26 Progress: Check & fix results:- Errors: 0, Changes to make: 6, Other warnings: 1
+2020-01-29 10:01:26 Progress: See log file for details
+2020-01-29 10:01:26 Info:     No glyph in font for LtnSmEAcute
+2020-01-29 10:01:26 Info:     No glyph in font for LtnSmIAcute
+2020-01-29 10:01:26 Info:     No glyph in font for LtnSmOAcute
+2020-01-29 10:01:26 Info:     No glyph in font for LtnSmUAcute
+2020-01-29 10:01:26 Info:     No glyph in font for Bullet
+2020-01-29 10:01:26 Info:     No glyph in font for AcuteAccent
+2020-01-29 10:01:26 Info:     No glyph in font for LtnCapEAcute
+2020-01-29 10:01:26 Info:     No glyph in font for LtnCapAAcute
+2020-01-29 10:01:26 Info:     No glyph in font for LtnCapIAcute
+2020-01-29 10:01:26 Info:     No glyph in font for LtnCapOAcute
+2020-01-29 10:01:26 Info:     No glyph in font for LtnCapUAcute
+2020-01-29 10:01:26 Info:     No glyph in font for ModCircumAccent
+2020-01-29 10:01:26 Info:     No glyph in font for DblAcuteAccent
+2020-01-29 10:01:26 Info:     No glyph in font for LtnSmYAcute
+2020-01-29 10:01:26 Info:     No glyph in font for LtnCapYAcute
+2020-01-29 10:01:26 Info:     No glyph in font for SupOne
+2020-01-29 10:01:26 Info:     No glyph in font for SupThree
+2020-01-29 10:01:26 Info:     No glyph in font for VulgFracOneHalf
+2020-01-29 10:01:26 Info:     No glyph in font for VulgFracOneQuarter
+2020-01-29 10:01:26 Info:     No glyph in font for VulgFracThreeQuarters
+2020-01-29 10:01:26 Info:     No glyph in font for BulletOperator
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph .notdef
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph .null
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph Ampersand
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph Apos
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph Asterisk
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph AtSgn
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph Colon
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph CombCircum
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph CombDiaer
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph CombGrave
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph CombRingAbv
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph CombTilde
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph Comma
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph DigitEight
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph DigitFive
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph DigitFour
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph DigitNine
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph DigitOne
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph DigitSeven
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph DigitSix
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph DigitThree
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph DigitTwo
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph DigitZero
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph DollarSgn
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph DottedCirc
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph EqSgn
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph ExclamationMrk
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph FullStop
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph GTSgn
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph GraveAccent
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph Hyphen
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph Hyphen_Soft
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LTSgn
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LftCurlyBrac
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LftParen
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LftSqrBrac
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LowLine
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapA
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapADiaer
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapB
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapC
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapD
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapE
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapF
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapG
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapH
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapI
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapJ
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapK
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapL
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapM
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapN
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapO
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapP
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapQ
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapR
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapS
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapT
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapU
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapV
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapW
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapX
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnCapY
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmA
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmACircum
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmADiaer
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmAGrave
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmARingAbv
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmATilde
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmB
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmC
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmD
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmE
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmF
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmG
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmH
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmI
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmJ
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmK
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmL
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmM
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmN
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmO
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmP
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmQ
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmR
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmS
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmT
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmU
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmV
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmW
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmX
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph LtnSmY
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph NonBreakingHyphen
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph NumSgn
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph PercentSgn
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph PlusSgn
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph QstnMrk
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph QuotMrk
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph RtCurlyBrac
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph RtParen
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph RtSqrBrac
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph Semicolon
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph Solidus
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph Space
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph Tilde
+2020-01-29 10:01:26 Info:     No entry in input file for font glyph VertLine
+2020-01-29 10:01:26 Progress: Processing font for output
+2020-01-29 10:01:26 Progress: Output UFO already exists - reading for comparison
+2020-01-29 10:01:26 Progress: Writing font to local/testresults/ufo/psfsetglyphorder.ufo
+2020-01-29 10:01:26 Info:     Processing glyphs directory
