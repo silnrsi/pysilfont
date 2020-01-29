@@ -40,7 +40,7 @@ setup(
     maintainer = 'SIL International',
     maintainer_email = 'fonts@sil.org',
     url = 'http://github.com/silnrsi/pysilfont',
-    packages = ["silfont", "silfont.scripts"],
+    packages = ["silfont", "silfont.scripts", "silfont.fbtests"],
     package_dir = {'':'lib'},
     entry_points={'console_scripts': cscripts},
     license = 'MIT',
