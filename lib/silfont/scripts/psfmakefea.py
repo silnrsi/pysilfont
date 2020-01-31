@@ -317,7 +317,7 @@ argspec = [
 ]
 
 def doit(args) :
-    defines = dict(x.split('=') for x in args.define)
+    defines = dict(x.split('=') for x in args.define) if args.define else {}
     font = Font(defines)
     # if args.debug:
     #     import pdb; pdb.set_trace()
