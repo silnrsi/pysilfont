@@ -40,7 +40,7 @@ class feaplus_parser(Parser) :
     }
     ast = feaplus_ast()
 
-    def __init__(self, filename, glyphmap, fontinfo, kerninfo) :
+    def __init__(self, filename, glyphmap, fontinfo, kerninfo, defines) :
         if filename is None :
             empty_file = io.StringIO("")
             super(feaplus_parser, self).__init__(empty_file, glyphmap)
@@ -49,6 +49,7 @@ class feaplus_parser(Parser) :
         self.fontinfo = fontinfo
         self.kerninfo = kerninfo
         self.glyphs = glyphmap
+        self.defines = defines
         self.fns = {
             '__builtins__': None,
             're' : re,
@@ -65,7 +66,8 @@ class feaplus_parser(Parser) :
             'lf': lambda : "\n",
             'info': lambda s: self.fontinfo.get(s, ""),
             'fileexists': lambda s: os.path.exists(s),
-            'kerninfo': lambda s:[(k1, k2, v) for k1, x in self.kerninfo.items() for k2, v in x.items()]
+            'kerninfo': lambda s:[(k1, k2, v) for k1, x in self.kerninfo.items() for k2, v in x.items()],
+            'opt': lambda s: self.defines.get(s, "")
         }
         # Document which builtins we really need. Of course still insecure.
         for x in ('True', 'False', 'None', 'int', 'float', 'str', 'abs', 'all', 'any', 'bool',

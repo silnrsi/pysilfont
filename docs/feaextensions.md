@@ -284,6 +284,7 @@ There are various python functions that are especially supported, along with the
 | feaclass   | _classname_             | Returns a list of the glyph names in a class as a python list |
 | info       | _finfoelement_          | Looks up the entry in the fontinfo plist and returns its value |
 | kerninfo |                           | Returns a list of tuples (left, right, kern_value) |
+| opt     | _defined_                  | Looks up a given -D/--define variable. Returns empty string if missing |
 | MINx       | _glyphname_             | Returns the minimum x value of the bounding box of the glyph |
 | MINy       | _glyphname_             | Returns the minimum y value of the bounding box of the glyph |
 | MAXx       | _glyphname_             | Returns the maximum x value of the bounding box of the glyph |

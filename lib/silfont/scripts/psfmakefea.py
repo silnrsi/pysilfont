@@ -59,12 +59,13 @@ def decode_element(e):
     return res
 
 class Font(object) :
-    def __init__(self):
+    def __init__(self, defines = None):
         self.glyphs = OrderedDict()
         self.classes = OrderedDict()
         self.all_aps = OrderedDict()
         self.fontinfo = {}
         self.kerns = {}
+        self.defines = {} if defines is None else defines
 
     def readaps(self, filename, omitaps='', params = None) :
         omittedaps = set(omitaps.replace(',',' ').split())  # allow comma- and/or space-separated list
@@ -309,13 +310,15 @@ argspec = [
     ('-o', '--output', {'help': 'Output fea file'}, {}),
     ('-c', '--classfile', {'help': 'Classes file'}, {}),
     ('-L', '--ligmode', {'help': 'Parse ligatures: last - use last element as class name, first - use first element as class name, lastcomp, firstcomp - final variants are part of the component not the whole ligature'}, {}),
+    ('-D', '--define', {'action': 'append', 'help': 'Add option definition to pass to fea code --define=var=val'}, {}),
     # ('--debug', {'help': 'Drop into pdb', 'action': 'store_true'}, {}),
     ('--classprops', {'help': 'Include property elements from classes file', 'action': 'store_true'}, {}),
     ('--omitaps', {'help': 'names of attachment points to omit (comma- or space-separated)', 'default': '', 'action': 'store'}, {})
 ]
 
 def doit(args) :
-    font = Font()
+    defines = dict(x.split('=') for x in args.define)
+    font = Font(defines)
     # if args.debug:
     #     import pdb; pdb.set_trace()
     if "checkfix" not in args.params:
@@ -328,7 +331,7 @@ def doit(args) :
     if args.classfile:
         font.read_classes(args.classfile, classproperties = args.classprops)
 
-    p = feaplus_parser(None, font.glyphs, font.fontinfo, font.kerns)
+    p = feaplus_parser(None, font.glyphs, font.fontinfo, font.kerns, font.defines)
     doc_ufo = p.parse() # returns an empty ast.FeatureFile
 
     # Add goodies from the font
