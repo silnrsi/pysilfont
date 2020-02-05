@@ -7,16 +7,31 @@ __author__ = 'David Raymond'
 
 from silfont.fbtests.ttfchecks import remove_check_list, make_profile, check, PASS, FAIL
 
-# Overrides for standard exclusions
+# remove_check_list is a list of all checks that will be removed from the standard list of check fontbakery runs
 
-remove_check_list.remove("com.google.fonts/check/dsig") # reinstage running fo dsig check
+# This list cans be edited to override the standard exclusions
 
-remove_check_list.append("com.google.fonts/check/hinting_impact") # don't run hinting_impact check
 
-## Need to add details of how to create new tests
+# To reinstate a check that is normally excluded, remove it from the exclude list
+remove_check_list.remove("com.google.fonts/check/dsig") # The dsig check will now get run
+
+# To prevent a standard check from running, add it to the exclude list
+
+remove_check_list.append("com.google.fonts/check/hinting_impact") # hinting_impact will now not be run
 
 # Create the fontbakery profile
 profile = make_profile(remove_check_list)
+
+# Add any project-specific tests.
+
+@profile.register_check
+@check(
+  id = 'org.sil.software/dummy'
+)
+def org_sil_software_dummy():
+  """Dummy test that always fails"""
+  if True: yield FAIL, "Oops!"
+
 
 '''
 Run this using 
