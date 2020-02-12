@@ -11,13 +11,19 @@ from fontbakery.message import Message
 from fontbakery.fonts_profile import profile_factory
 from fontbakery.constants import PriorityLevel, NameID, PlatformID, WindowsEncodingID
 
+from collections import OrderedDict
+
 # Set imports of standard ttf tests
 
-profile_imports = ("fontbakery.profiles.universal", "fontbakery.profiles.googlefonts", "fontbakery.profiles.adobefonts" )
+profile_imports = ("fontbakery.profiles.universal",
+                   "fontbakery.profiles.googlefonts",
+                   "fontbakery.profiles.adobefonts",
+                   "fontbakery.profiles.notofonts",
+                   "fontbakery.profiles.fontval")
 
 # Create list of checks that we won't run (by default)
 
-remove_check_list = [
+exclude_list = [
         "com.adobe.fonts/check/cff_call_depth",
         "com.adobe.fonts/check/cff2_call_depth",
         "com.google.fonts/check/all_glyphs_have_codepoints",
@@ -95,22 +101,28 @@ remove_check_list = [
         "com.google.fonts/check/dsig",
         "com.google.fonts/check/dsig:adobefonts",
         "com.google.fonts/check/monospace",
-        "com.google.fonts/check/monospace_max_advancewidth",
-        "com.google.fonts/check/ftxvalidator_is_available"
+        "com.google.fonts/check/ftxvalidator_is_available",
+        "com.google.fonts/check/fontvalidator" # This caused an ERROR condition when DR ran it.  Not investigated why
 ]
 
 # Add our own checks. If variants of standard tests use same name structure
 
 @check(
-  id = 'org.sil.software/check/name/version_format'
+  id = 'org.sil.software/check/name/version_format',
+  rationale = """
+    Based on com_google_fonts_check_name_version_format but:
+     - Allows major version to be 0
+     - checks for exactly 3 digits after decimal point
+     - Allows for extra info after numbers, eg for beta or dev versions
+  """
 )
 def org_sil_software_version_format(ttFont):
-  """Version format is correct in 'name' table?
-  Based on com_google_fonts_check_name_version_format but checks for exactly 3 digits after decimal point"""
+  "Version format is correct in 'name' table?"
+
   from fontbakery.utils import get_name_entry_strings
   import re
   def is_valid_version_format(value):
-    return re.match(r'Version [1-9][0-9]*\.\d{3}$', value)
+    return re.match(r'Version [0-9]+\.\d{3}( .+)*$', value)
 
   failed = False
   version_entries = get_name_entry_strings(ttFont, NameID.VERSION_STRING)
@@ -133,15 +145,62 @@ def org_sil_software_version_format(ttFont):
   if not failed:
     yield PASS, "Version format in NAME table entries is correct."
 
-def make_profile(remove_check_list):
+def make_profile(exclude_list, variable_font=False):
     profile = profile_factory(default_section=Section("SIL Fonts"))
     profile.auto_register(globals())
-    for checkid in remove_check_list:
+
+    # Exclude all the checks we don't want to run
+    for checkid in exclude_list:
         if checkid in profile._check_registry:
             profile.remove_check(checkid)
         else:
             print("********************* " + checkid + " not in profile **************************")
+
+    # Exclude further sets of test to reduce number of skips and so have less clutter in html results
+    # (Currently just working with variable font tests, but structured to cover more types of checks later)
+    for checkid in sorted(set(profile._check_registry.keys())):
+        section = profile._check_registry[checkid]
+        check = section.get_check(checkid)
+        conditions = getattr(check, "conditions")
+        exclude = False
+
+        if variable_font and "not is_variable_font" in conditions: exclude = True
+        if not variable_font and "is_variable_font" in conditions: exclude = True
+
+        if exclude: profile.remove_check(checkid)
+
     return profile
 
-profile = make_profile(remove_check_list)
+def all_checks_dict(): # An ordered dict of all checks designed for exporting the data
+    profile = profile_factory(default_section=Section("SIL Fonts"))
+    profile.auto_register(globals())
+    check_dict=OrderedDict()
+
+    for checkid in sorted(set(profile._check_registry.keys())):
+        section = profile._check_registry[checkid]
+        check = section.get_check(checkid)
+
+        conditions = getattr(check, "conditions")
+        conditionstxt=""
+        for condition in conditions:
+            conditionstxt += condition + "\n"
+        conditionstxt = conditionstxt.strip()
+
+        rationale = getattr(check,"rationale")
+        rationale = "" if rationale is None else rationale.strip().replace("\n    ", "\n") # Remove extraneous whitespace
+
+        if checkid in exclude_list:
+            siltype = "Exclude"
+        else:
+            siltype = ""
+
+        item = {"siltype": siltype,
+                "section": section.name,
+                "description": getattr(check, "description"),
+                "rationale": rationale,
+                "conditions": conditionstxt
+                }
+        check_dict[checkid] = item
+
+    return check_dict
 
