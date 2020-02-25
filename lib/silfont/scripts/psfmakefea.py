@@ -162,7 +162,7 @@ class Font(object) :
             # pull off suffix and make classes
             # TODO: handle ligatures
             base = name
-            if ligmode is None or 'comp' not in ligmode:
+            if ligmode is None or 'comp' not in ligmode or "_" not in name:
                 pos = base.rfind('.')
                 while pos > 0 :
                     old_base = base
