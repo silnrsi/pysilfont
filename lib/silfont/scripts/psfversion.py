@@ -11,8 +11,9 @@ import silfont
 
 def cmd() :
 
-    deps = (  # (module, used by, min reccomended version)
+    deps = (  # (module, used by, min recommended version)
         ('defcon', '?', ''),
+        ('fontbakery', '?', ''),
         ('fontMath', '?', ''),
         ('fontParts', '?', ''),
         ('fontTools', '?', ''),
@@ -23,6 +24,7 @@ def cmd() :
         ('odf', '?', ''),
         ('palaso', '?', ''),
         ('ufo2ft', '?', ''),
+        ('ufoLib2', '?', ''),
         )
 
     # Pysilfont info
