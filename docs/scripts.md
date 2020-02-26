@@ -384,7 +384,7 @@ For example this command creates a new font which by default has Khamti behaviou
 ```
 psfdeflang -L kht Padauk-Regular.ttf Padauk_kht-Regular.ttf
 ```
-and FONTLOG.txt
+
 ---
 ####  psfdeleteglyphs
 Usage: **`psfdeleteglyphs [-i DELETELIST] [--reverse] infont [outfont]`**
@@ -655,7 +655,14 @@ This will take the definitions in newglyphs.csv and create the new glyphs using 
 Usage: **`psfmakewoffmetadata -n PRIMARYFONTNAME -i ORGID [-f FONTLOG]  [-o OUTPUT]  [--populateufowoff] [--force] fontfile.ufo`**
 
 
-Make the WOFF metadata xml file based on input UFO.  If woffMetadataCredits and/or woffMetadataDescription are missing from the UFO, they will be constructed from FONTLOG - see below
+Make the WOFF metadata xml file based on input UFO.  If woffMetadataCredits and/or woffMetadataDescription are missing 
+from the UFO, they will be constructed from FONTLOG - see below
+
+Note: Currently fontTools, which several pysilfont scripts use, can't open UFO files with with woff fields in, so until it 
+does it is recommended that:
+
+- FONTLOG is used as the source for the credits and description
+- `--populateufowoff` is not used.
 
 The primary font name and orgid need to be supplied on the command line. By default it outputs to *primaryfontname*-WOFF-metadata.xml.
 

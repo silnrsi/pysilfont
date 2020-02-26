@@ -1,10 +1,9 @@
-2019-11-19 11:42:43 Progress: Opening file for input: tests/input/psfmakewoffmetadata.txt
-2019-11-19 11:42:43 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Regular.ufo
-2019-11-19 11:42:43 Progress: Checking fontinfo.plist metadata
-2019-11-19 11:42:43 Warning:  openTypeNameSampleText is missing from fontinfo.plist
-2019-11-19 11:42:43 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
-2019-11-19 11:42:43 Progress: Checking lib.plist metadata
-2019-11-19 11:42:43 Progress: Check & fix results:- Errors: 0, Changes to make: 1, Other warnings: 1
-2019-11-19 11:42:43 Progress: See log file for details
-2019-11-19 11:42:43 Warning:  WOFF field(s) missing from fontinfo.plist will be generated from FONTLOG.txt: woffMetadataCredits, woffMetadataDescription
-2019-11-19 11:42:43 Progress: Writing to : local/testresults/ufo/psfmakewoffmetadata.xml
+2020-02-26 12:00:57 Progress: Opening file for input: tests/input/psfmakewoffmetadata.txt
+2020-02-26 12:00:57 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Regular.ufo
+2020-02-26 12:00:57 Progress: Checking fontinfo.plist metadata
+2020-02-26 12:00:57 Warning:  openTypeNameSampleText is missing from fontinfo.plist
+2020-02-26 12:00:57 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
+2020-02-26 12:00:57 Progress: Checking lib.plist metadata
+2020-02-26 12:00:57 Progress: Check & fix results:- Errors: 0, Changes to make: 1, Other warnings: 1
+2020-02-26 12:00:57 Progress: See log file for details
+2020-02-26 12:00:57 Progress: Writing to : local/testresults/ufo/psfmakewoffmetadata.xml

@@ -40,6 +40,7 @@ if not os.path.isdir(logsdir):
 
 # Read the new log files and create new .lg files from them
 logs = glob.iglob(logsdir + "*.log")
+updates = False
 for log in logs:
     inlog = io.open(log, mode="r", encoding="utf-8")
     testn = os.path.splitext(os.path.split(log)[1])[0]
@@ -59,6 +60,8 @@ for log in logs:
         except:
             pass
         os.rename(outtmp, outlg)
+        updates = True
         print(outlg + " recreated")
     else:
         os.remove(outtmp)
+if updates: print("Run tests/setuptestdata.py to reset reference .log files")

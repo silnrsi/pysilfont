@@ -65,7 +65,7 @@ def doit(args):
             logger.log("Use --force to force update of those fields, or rerun without --populateufowoff", "S")
 
     if args.populateufowoff or missing is not None:
-        if missing: logger.log("WOFF field(s) missing from fontinfo.plist will be generated from FONTLOG.txt: " + missing, "W")
+        # if missing: logger.log("WOFF field(s) missing from fontinfo.plist will be generated from FONTLOG.txt: " + missing, "W")
         # Parse the fontlog file
         (section, match) = readuntil(fontlog, ("Basic Font Information",))  # Skip until start of "Basic Font Information" section
         if match is None: logger.log("No 'Basic Font Information' section in fontlog", "S")
