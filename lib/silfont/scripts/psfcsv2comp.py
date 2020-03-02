@@ -65,7 +65,7 @@ def doit(args):
         logger.log('Error reading csv input field: ' + e.message, 'S')
 
     # Now make strip AP names; pair up with columns so easy to iterate:
-    apInfo = zip(apCols, [x.strip() for x in apList])
+    apInfo = list(zip(apCols, [x.strip() for x in apList]))
 
     # If -f specified, make sure we have the fonts column
     if whichfont is not None:
