@@ -122,8 +122,21 @@ Creates or updates composite glyphs in a UFO based on an external text file of d
 Example usage:
 
 ```
+# add composites to font (making backup first)
 psfbuildcomp -i composites.txt font.ufo
-psfbuildcomp -i newcomps.txt -f -r V Andika-BoldItalic.ufo Andika-BoldItalic.ufo
+
+# add composites even for glyphs that have outlines, and write to a new font
+psfbuildcomp -i comps.txt -f -r V Andika-BoldItalic.ufo new.ufo
+
+# report only, with no change to font
+psfbuildcomp -i comps.txt -a -r I font.ufo
+
+# remove unwanted anchors 'above' and 'below', including '_' versions:
+psfbuildcomp -i comps.txt --remove "_?(above|below)" font.ufo
+
+# also preserve 'diaA' and 'diaB' on composites that exist but are being replaced:
+psfbuildcomp -i comps.txt --remove "_?(above|below)" --preserve "dia[AB]" font.ufo
+
 ```
 
 optional arguments:
@@ -134,6 +147,10 @@ optional arguments:
   -a, --analysis        Analysis only; no output font generated
   -c, --color           Mark cells of generated glyphs (dark green)
   -f, --force           Force overwrite of glyphs having outlines
+  --remove REMOVE       a regex matching anchor names that should always be
+                        removed from generated composite glyphs
+  --preserve PRESERVE   a regex matching anchor names that, if present in
+                        glyphs about to be replaced, should not be overwritten
   -r {X,S,E,P,W,I,V}, --report {X,S,E,P,W,I,V}
                         Set reporting level for log
 ```
