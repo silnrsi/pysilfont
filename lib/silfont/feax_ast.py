@@ -195,24 +195,27 @@ class ast_MultipleSubstStatement(ast.Statement):
         self.prefix, self.glyph, self.suffix = prefix, glyph, suffix
         self.replacement = replacement
         self.forceChain = forceChain
-        if len(self.glyph.glyphSet()) > 1 :
-            for i, r in enumerate(self.replacement) :
-                if len(r.glyphSet()) > 1 :
-                    self.multindex = i #first RHS slot with a glyph class
-                    break
+        lenglyphs = len(self.glyph.glyphSet())
+        for i, r in enumerate(self.replacement) :
+            if len(r.glyphSet()) == lenglyphs:
+                self.multindex = i #first RHS slot with a glyph class
+                break
+        else:
+            if lenglyphs > 1:
+                raise FeatureLibError("No replacement class is of the same length as the matching class",
+                                        location)
             else:
                 self.multindex = 0;
-        else :
-            self.multindex = 0
 
     def build(self, builder):
         prefix = [p.glyphSet() for p in self.prefix]
         suffix = [s.glyphSet() for s in self.suffix]
         glyphs = self.glyph.glyphSet()
         replacements = self.replacement[self.multindex].glyphSet()
-        for i in range(min(len(glyphs), len(replacements))) :
+        lenglyphs = len(glyphs)
+        for i in range(max(lenglyphs, len(replacements))) :
             builder.add_multiple_subst(
-                self.location, prefix, glyphs[i], suffix,
+                self.location, prefix, glyphs[i if lenglyphs > 1 else 0], suffix,
                 self.replacement[0:self.multindex] + [replacements[i]] + self.replacement[self.multindex+1:],
                 self.forceChain)
 
@@ -227,9 +230,11 @@ class ast_MultipleSubstStatement(ast.Statement):
             return res
         glyphs = self.glyph.glyphSet()
         replacements = self.replacement[self.multindex].glyphSet()
-        for i in range(min(len(glyphs), len(replacements))) :
+        lenglyphs = len(glyphs)
+        count = max(lenglyphs, len(replacements))
+        for i in range(count) :
             res += ("\n" + indent if i > 0 else "") + "sub " + pres
-            res += asFea(glyphs[i]) + mark + sufs
+            res += asFea(glyphs[i if lenglyphs > 1 else 0]) + mark + sufs
             res += " by "
             res += " ".join(asFea(g) for g in self.replacement[0:self.multindex] + [replacements[i]] + self.replacement[self.multindex+1:])
             res += ";" 
@@ -250,25 +255,29 @@ class ast_LigatureSubstStatement(ast.Statement):
         ast.Statement.__init__(self, location)
         self.prefix, self.glyphs, self.suffix = (prefix, glyphs, suffix)
         self.replacement, self.forceChain = replacement, forceChain
-        if len(self.replacement.glyphSet()) > 1:
-            for i, g in enumerate(self.glyphs):
-                if len(g.glyphSet()) > 1:
-                    self.multindex = i #first LHS slot with a glyph class
-                    break
+        lenreplace = len(self.replacement.glyphSet())
+        for i, g in enumerate(self.glyphs):
+            if len(g.glyphSet()) == lenreplace:
+                self.multindex = i #first LHS slot with a glyph class
+                break
         else:
-            self.multindex = 0
+            if lenreplace > 1:
+                raise FeatureLibError("No class matches replacement class length", location)
+            else:
+                self.multindex = 0
 
     def build(self, builder):
         prefix = [p.glyphSet() for p in self.prefix]
         glyphs = [g.glyphSet() for g in self.glyphs]
         suffix = [s.glyphSet() for s in self.suffix]
         replacements = self.replacement.glyphSet()
+        lenreplace = len(replacements.glyphSet())
         glyphs = self.glyphs[self.multindex].glyphSet()
-        for i in range(min(len(glyphs), len(replacements))):
+        for i in range(max(len(glyphs), len(replacements))):
             builder.add_ligature_subst(
                 self.location, prefix,
                 self.glyphs[:self.multindex] + glyphs[i] + self.glyphs[self.multindex+1:],
-                suffix, replacements[i], self.forceChain)
+                suffix, replacements[i if lenreplace > 1 else 0], self.forceChain)
 
     def asFea(self, indent=""):
         res = ""
@@ -281,11 +290,13 @@ class ast_LigatureSubstStatement(ast.Statement):
             return res
         glyphs = self.glyphs[self.multindex].glyphSet()
         replacements = self.replacement.glyphSet()
-        for i in range(min(len(glyphs), len(replacements))) :
+        lenreplace = len(replacements)
+        count = max(len(glyphs), len(replacements))
+        for i in range(count) :
             res += ("\n" + indent if i > 0 else "") + "sub " + pres
             res += " ".join(asFea(g)+mark for g in self.glyphs[:self.multindex] + [glyphs[i]] + self.glyphs[self.multindex+1:])
             res += sufs + " by "
-            res += asFea(replacements[i])
+            res += asFea(replacements[i if lenreplace > 1 else 0])
             res += ";"
         return res
 
