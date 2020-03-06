@@ -147,6 +147,7 @@ optional arguments:
   -a, --analysis        Analysis only; no output font generated
   -c, --color           Mark cells of generated glyphs (dark green)
   -f, --force           Force overwrite of glyphs having outlines
+  -n, --noflatten       Do not flatten component references
   --remove REMOVE       a regex matching anchor names that should always be
                         removed from generated composite glyphs
   --preserve PRESERVE   a regex matching anchor names that, if present in

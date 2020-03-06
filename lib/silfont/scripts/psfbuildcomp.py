@@ -24,6 +24,7 @@ argspec = [
     ('-a','--analysis',{'help': 'Analysis only; no output font generated', 'action': 'store_true'},{}),
     ('-c','--color',{'help': 'Color cells of generated glyphs', 'action': 'store_true'},{}),
     ('-f','--force',{'help': 'Force overwrite of glyphs having outlines', 'action': 'store_true'},{}),
+    ('-n','--noflatten',{'help': 'Do not flatten component references', 'action': 'store_true'},{}),
     ('--remove',{'help': 'a regex matching anchor names that should always be removed from composites'},{}),
     ('--preserve', {'help': 'a regex matching anchor names that, if present in glyphs about to be replace, should not be overwritten'}, {}),
     # 'choices' for -r should correspond to infont.logger.loglevels.keys() ### -r may move to core.py eventually
@@ -70,7 +71,6 @@ def doit(args) :
 
     ### temp section (these may someday be passed as optional parameters)
     RemoveUsedAnchors = True
-    FlattenComponents = True
     ### end of temp section
 
     cgobj = CompGlyph()
@@ -175,8 +175,8 @@ def doit(args) :
         for c in componentlist:
             infont.logger.log(str(c), "V")
 
-        # Flatten components
-        if FlattenComponents:
+        # Flatten components unless -n set
+        if not args.noflatten:
             newcomponentlist = []
             for compdic in componentlist:
                 c = compdic['base']
