@@ -121,6 +121,11 @@ def doit(args) :
                 xbase = xadvance
                 xOffset = xbase
                 yOffset = 0
+                # Find advance width of currglyph and add to xadvance
+                if 'advance' in cg:
+                    cgadvance = cg['advance']
+                    if cgadvance is not None and cgadvance.element.get('width') is not None:
+                        xadvance += int(float(cgadvance.element.get('width')))
             else:                 	# this is 'attach'
                 if diacAP is not None: # find diacritic Attachment Point in currglyph
                     if diacAP not in cganc:
@@ -151,11 +156,6 @@ def doit(args) :
             if yOffset != 0: componentdic['yOffset'] = str(yOffset)
             componentlist.append( componentdic )
 
-            # Find advance width of currglyph and add to xadvance
-            cgadvance = cg['advance'] if 'advance' in cg else None
-            if cgadvance is not None and cgadvance.element.get('width') is not None :
-                xadvance += int(float(cgadvance.element.get('width')))
-
             # Move anchor information to targetglyphanchors
             for a in cg['anchor']:
                 dic = a.element.attrib
@@ -168,10 +168,12 @@ def doit(args) :
                 infont.logger.log("Adding anchor " + thisanchorname + ": " + str(targetglyphanchors[thisanchorname]), "V")
             infont.logger.log(str(targetglyphanchors),"V")
 
-        xbase = xadvance + rsb ### adjust with rsb
-        if adv is not None: xbase = adv ### if adv specified, then this advance value overrides calculated value
+        if adv is not None:
+            xadvance = adv  ### if adv specified, then this advance value overrides calculated value
+        else:
+            xadvance += rsb ### adjust with rsb
 
-        infont.logger.log("Glyph: " + targetglyphname + ", " + str(targetglyphunicode) + ", " + str(xbase), "V")
+        infont.logger.log("Glyph: " + targetglyphname + ", " + str(targetglyphunicode) + ", " + str(xadvance), "V")
         for c in componentlist:
             infont.logger.log(str(c), "V")
 
@@ -234,7 +236,7 @@ def doit(args) :
             # actually add the glyph to the font
             infont.deflayer.addGlyph(targetglyph)
 
-        targetglyph.add('advance',{'width': str(xbase)} )
+        targetglyph.add('advance',{'width': str(xadvance)} )
         if targetglyphunicode: # remove any existing unicode value(s) before adding unicode value
             for i in xrange(len(targetglyph['unicode'])-1,-1,-1):
                 targetglyph.remove('unicode',index=i)
