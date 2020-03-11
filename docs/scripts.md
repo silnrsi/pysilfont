@@ -31,6 +31,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfexportpsnames](#psfexportpsnames) | Export a map of glyph name to PS name to a csv file |
 | [psfexportunicodes](#psfexportunicodes) | Export a map of glyph name to unicode value to a csv file |
 | [psffixffglifs](#psffixffglifs) | Make changes needed to a UFO following processing by FontForge |
+| [psfftml2TThtml](#psfftml2TThtml) | Convert FTML document to html and fonts for testing TypeTuner |
 | [psfftml2odt](#psfftml2odt) | Create a LibreOffice Writer file from an FTML test description |
 | [psfgetglyphnames](#psfgetglyphnames) | Create a file of glyphs to import from a list of characters to import |
 | [psfglyphs2ufo](#psfglyphs2ufo) | Export all the masters in a .glyphs file to UFOs |
@@ -512,6 +513,63 @@ Note that other changes are reversed by standard [normalization](docs.md#Normali
 ```
 psffixffglifs font.ufo -p checkfix=y
 ```
+
+---
+#### psfftml2TThtml
+Usage: **`usage: psfftml2TThtml --ftml FTML --xslt XSLT ttfont map`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Used for testing TypeTuner code, this tool:
+- for each FTML document supplied:
+  - based on the styles therein, creates TypeTuned fonts that should do the same thing
+  - emits an HTML document that shows the FTML data rendered using both:
+    - The original font (using font features or language tags)
+    - The corresponding TypeTuned font 
+
+
+positional arguments:
+```
+  ttfont                Input Tunable TTF file
+  map                   Feature mapping CSV file
+```
+
+The `map` parameter must be a CSV that maps names of font feature tags, font feature values and language tags used in the FTML document(s) to the corresponding TypeTuner feature names and values. For example the following CSV file:
+
+```
+# Langage tag mappings:
+# lang=langtag,TT feat,value
+lang=sd,Language,Sindhi
+lang=ur,Language,Urdu
+
+# Feature tag mappings:
+# OT feature,TT feat,default,value 1,value 2,...
+cv48,Heh,Standard,Sindhi-style,Urdu-style
+```
+maps:
+- langtag `sd` to the TypeTuner feature named `Language` with value `Sindhi`
+- langtag `ur` to the TypeTuner feature named `Language` with value `Urdu`
+- font feature `cv48` to the TypeTuner feature named `Heh`, with following TypeTuner value names:
+  - cv48 value `0` to `Standard`
+  - cv48 value `1` to `Sindhi-style`
+  - cv48 value `2` to `Urdu-style`
+
+other arguments:
+```
+  -h, --help            show this help message and exit
+  -o OUTPUTDIR, --outputdir OUTPUTDIR
+                        Output directory, default: tests/typetuner
+  --ftml FTML           ftml file(s) to process. Can be used multiple
+                        times and can contain filename patterns.
+  --xslt XSLT           standard FTML xslt file
+  --norebuild           assume existing fonts are good
+  -l LOG, --log LOG     Log file
+  -p PARAMS, --params PARAMS
+                        Other parameters - see parameters.md for details
+  -q, --quiet           Quiet mode - only display severe errors
+```
+
+For reliability, the program re-builds each needed font even if that font was built during a previous run of the program. For debugging, specifying `--norebuild` will speed up the program by assuming previously built fonts are usable.
 
 ---
 #### psfftml2odt
