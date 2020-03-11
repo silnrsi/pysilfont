@@ -40,7 +40,7 @@ def doit(args):
                   "openTypeNameLicense", "copyright", "trademark"):
         if field in fi:
             ufofields[field] = fi[field][1].text
-        else:
+        elif field != 'trademark':      # trademark is no longer required
             missing = field if missing is None else missing + ", " + field
     if missing is not None: logger.log("Field(s) missing from fontinfo.plist: " + missing, "S")
 
@@ -169,9 +169,11 @@ def doit(args):
     file.write('    </text>\n')
     file.write('  </copyright>\n')
 
-    file.write('  <trademark>\n')
-    file.write('    <text lang="en">' + textprotect(ufofields["trademark"]) + '</text>\n')
-    file.write('  </trademark>\n')
+    if 'trademark' in ufofields:
+        file.write('  <trademark>\n')
+        file.write('    <text lang="en">' + textprotect(ufofields["trademark"]) + '</text>\n')
+        file.write('  </trademark>\n')
+
     file.write('</metadata>')
 
     file.close()
