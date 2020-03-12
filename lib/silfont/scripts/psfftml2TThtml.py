@@ -122,7 +122,7 @@ def cache_font(feats, lang, norebuild):
                 logger.log('Invalid CSS feature setting in ftml: {}'.format(setting), 'E')
                 fatal_errors = True
                 continue
-            f,v = m.groups()  # OpenType tag and value
+            f,v = m.groups()  # Feature tag and value
             if v in ['normal','off']:
                 v = '0'
             elif v == 'on':
@@ -141,7 +141,7 @@ def cache_font(feats, lang, norebuild):
             try:
                 fmap = feat_maps[f]
             except KeyError:
-                logger.log('OpenType feature {} not found in map file'.format(f), 'E')
+                logger.log('Font feature "{}" not found in map file'.format(f), 'E')
                 fatal_errors = True
                 continue
 
@@ -170,7 +170,7 @@ def cache_font(feats, lang, norebuild):
                 parts.append(f+v)
     if lang:
             if lang not in lang_maps:
-                logger.log('TypeTuner language "{} not found in map file'.format(lang), 'E')
+                logger.log('Language tag "{}" not found in map file'.format(lang), 'E')
                 fatal_errors = True
             else:
                 # Translate to TypeTuner feature & value using the map file
