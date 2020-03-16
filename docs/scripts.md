@@ -711,6 +711,12 @@ Note that this second type of input allows for two other parameters:
 
 - _skew_ indicates how much the glyph should be skewed, with a skew of 1 indicating a 45° skew. The origin for the skew is (0,0).
 
+There are also two further transformation parameters that can be added to _org.sil.lcg.transforms_ solely for the purpose of documenting post-transformation manual design adjustments. **These are not read or applied by the script. They are only to hold information for the designer.**:
+
+- _manAdjustX_ indicates how much x-axis weight in units should be manually added to glyphs after the script has been applied.
+
+- _manAdjustY_ indicates how much y-axis weight in units should be manually added to glyphs after the script has been applied.
+
 Examples:
 
 ```
