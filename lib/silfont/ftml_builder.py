@@ -473,7 +473,7 @@ class FTMLBuilder(object):
                                         for v in vals:
                                             # remember the glyph name for this feature/value combination:
                                             feat = '{}={}'.format(tag,v)
-                                            if feat not in c.altnames:
+                                            if c is not None and feat not in c.altnames:
                                                 c.altnames[feat] = gname
                                     vals.append(feature.maxval)
                                     feature.maxval = max(vals)
