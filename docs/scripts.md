@@ -42,6 +42,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfnormalize](#psfnormalize) | Normalize a UFO and optionally converts it between UFO2 and UFO3 versions |
 | [psfremovegliflibkeys](#psfremovegliflibkeys) | Remove keys from glif lib entries |
 | [psfrenameglyphs](#psfrenameglyphs) | Within a UFO and class definition, assign new working names to glyphs based on csv input file |
+| [psfrunfbprofile](#psfrunfbprofile) | Run Font Bakery tests using a standard profile with option to specify an alternative profile |
 | [psfsetassocfeat](#psfsetassocfeat) | Add associate feature info to glif lib based on a csv file |
 | [psfsetassocuids](#psfsetassocuids) | Add associate UID info to glif lib based on a csv file |
 | [psfsetglyphorder](#psfsetglyphorder) | Load glyph order data into public.glyphOrder based on a text file |
@@ -525,7 +526,7 @@ Used for testing TypeTuner code, this tool:
   - based on the styles therein, creates TypeTuned fonts that should do the same thing
   - emits an HTML document that shows the FTML data rendered using both:
     - The original font (using font features or language tags)
-    - The corresponding TypeTuned font 
+    - The corresponding TypeTuned font
 
 
 positional arguments:
@@ -737,10 +738,10 @@ This will take the definitions in newglyphs.csv and create the new glyphs using 
 Usage: **`psfmakewoffmetadata -n PRIMARYFONTNAME -i ORGID [-f FONTLOG]  [-o OUTPUT]  [--populateufowoff] [--force] fontfile.ufo`**
 
 
-Make the WOFF metadata xml file based on input UFO.  If woffMetadataCredits and/or woffMetadataDescription are missing 
+Make the WOFF metadata xml file based on input UFO.  If woffMetadataCredits and/or woffMetadataDescription are missing
 from the UFO, they will be constructed from FONTLOG - see below
 
-Note: Currently fontTools, which several pysilfont scripts use, can't open UFO files with with woff fields in, so until it 
+Note: Currently fontTools, which several pysilfont scripts use, can't open UFO files with with woff fields in, so until it
 does it is recommended that:
 
 - FONTLOG is used as the source for the credits and description
@@ -831,6 +832,21 @@ dotcenter,dot1     # this glyph has _center anchor
 would cause `dotabove` to be renamed `dot1` while `dotbelow` and `dotabove` would be deleted. Any composite glyphs that reference any of `dotabove`, `dotbelow`, or `dotcenter` will be adjusted to refer to `dot1`. The `_below` anchor from `dotbelow` and the `_center` anchor from `dotcenter` will be copied to `dot1` (overwriting any anchors by the same names).
 
 When there are multiple layers in the UFO, glyphs will be renamed in all layers providing the glyph is in the default layer.  If the glyph is only in non-default layers the glyph will need renaming manually.
+
+---
+####  psfrunfbprofile
+Usage: **`psfrunfbprofile [--profile PROFILE] [--htmlfile HTMLFILE] fonts [fonts ...]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Run Font Bakery tests using a standard profile and report results in a table on screen.  Multiple fonts can be specified, including using wildcards, but all should be in the same directory.  For ttf files, the profile will be Pysilfont's ttfchecks.py.  UFO files are not yet supported.
+
+An alternative profile can be specified with `--profile`. See examples/fbttfchecks.py for an example of a profile that amends the behaviour of ttfchecks.py.
+
+To see more details of results, use `--html HTMLFILE` to write an html file in the same format Font Bakery outputs.  Pysilfont's standard logging parameters (-p scrlevel and -p loglevel) also change the level of information `psfrunfbchecks` outputs.
+
+NOTE - since this is a new command, its actions may change!
+
 
 ---
 ####  psfsetassocfeat

@@ -19,6 +19,7 @@ def cmd() :
         ('fontTools', '?', ''),
         ('glyphConstruction', '?', ''),
         ('glyphsLib', '?', ''),
+        ('lxml','?', ''),
         ('lz4', '?', ''),
         ('mutatorMath', '?', ''),
         ('odf', '?', ''),

@@ -204,3 +204,4 @@ def all_checks_dict(): # An ordered dict of all checks designed for exporting th
 
     return check_dict
 
+profile = make_profile(exclude_list)
