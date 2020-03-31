@@ -75,30 +75,36 @@ def doit(args):
 
     checks = {}
     maxname = 11
+    somedebug = False
 
     for section in sections:
         secchecks = section["checks"]
         for check in secchecks:
             fontfile = check["filename"] if "filename" in check else "Family-wide"
             if fontfile not in checks:
-                checks[fontfile] = {"ERROR": [], "FAIL": [], "WARN": [], "INFO": [], "SKIP": [], "PASS": []}
+                checks[fontfile] = {"ERROR": [], "FAIL": [], "WARN": [], "INFO": [], "SKIP": [], "PASS": [], "DEBUG": []}
                 path, name = os.path.split(fontfile)
                 checks[fontfile]["name"]=name
                 if len(name) > maxname: maxname = len(name)
             status = check["logs"][0]["status"]
             checks[fontfile][status].append(check)
+            if status == "DEBUG": somedebug = True
 
     if htmlfile:
         logger.log("Writing results to " + htmlfile, "P")
         with open(htmlfile, 'w') as hfile:
             hfile.write(hr.get_html())
 
-    fbstats   = ("ERROR", "FAIL", "WARN", "INFO", "SKIP", "PASS")
-    psflevels = ("E",     "W",    "W",    "I",    "I",    "V")
+    fbstats   = ["ERROR", "FAIL", "WARN", "INFO", "SKIP", "PASS"]
+    psflevels = ["E",     "W",    "W",    "I",    "I",    "V"]
+    if somedebug: # Only have debug column if some degus statuses are present
+        fbstats.append("DEBUG")
+        psflevels.append("W")
     wrapper = TextWrapper(width=120, initial_indent="   ", subsequent_indent="   ")
     errorcnt = 0
     summarymess = "Check status summary:\n"
     summarymess += "{:{pad}}ERROR  FAIL  WARN  INFO  SKIP  PASS".format("", pad=maxname+4)
+    if somedebug: summarymess += "  DEBUG"
     fontlist = list(sorted(x for x in checks if x != "Family-wide")) + ["Family-wide"] # Sort with Family-wide last
     for fontfile in fontlist:
         summarymess += "\n  {:{pad}}".format(checks[fontfile]["name"], pad=maxname)
@@ -106,7 +112,7 @@ def doit(args):
             psflevel = psflevels[i]
             checklist = checks[fontfile][status]
             cnt = len(checklist)
-            summarymess += "{:6d}".format(cnt)
+            if cnt > 0 or status != "DEBUG": summarymess += "{:6d}".format(cnt) # Suppress 0 for DEBUG
             if cnt:
                 if status == "ERROR": errorcnt += cnt
                 messparts = ["Checks with status {} for {}".format(status, checks[fontfile]["name"])]
