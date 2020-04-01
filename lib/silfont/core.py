@@ -432,9 +432,12 @@ def execute(tool, fn, scriptargspec, chain = None):
 
     # Process the first positional parameter to get defaults for file names
     fppval = getattr(args, arginfo[0]['name'])
-    if isinstance(fppval, list): fppval = fppval[0] # For when nargs="+" or nargs="*" is used a list is returned
-    if fppval is None: fppval = ""  # For scripts that can be run with no positional parameters
-    (fppath, fpbase, fpext) = splitfn(fppval)  # First pos param use for defaulting
+    if isinstance(fppval, list): # When nargs="+" or nargs="*" is used a list is returned
+        (fppath, fpbase, fpext) = splitfn(fppval[0])
+        if len(fppval) > 1 : fpbase = "wildcard"
+    else:
+        if fppval is None: fppval = ""  # For scripts that can be run with no positional parameters
+        (fppath, fpbase, fpext) = splitfn(fppval)  # First pos param use for defaulting
 
     # Process parameters
     if chain:

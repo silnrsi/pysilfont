@@ -21,7 +21,7 @@ argspec = [
     ('fonts',{'help': 'font(s) to run checks against; wildcards allowed', 'nargs': "+"}, {'type': 'filename'}),
     ('--profile', {'help': 'profile to use instead of Pysilfont default'}, {}),
     ('--html', {'help': 'Write html report to htmlfile', 'metavar': "HTMLFILE"}, {}),
-    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': 'psfrunfbprofile.log'})]
+    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_runfbprofile.log'})]
 
 def doit(args):
 
@@ -43,6 +43,8 @@ def doit(args):
                 if ftype != fontstype:
                     logger.log("All fonts must be of the same type - both UFO and ttf/otf fonts supplied", "S")
             fonts.append(fullpath)
+
+    if fonts == [] : logger.log("No files match the filespec provided for fonts: " + str(args.fonts), "S")
 
     # Create the profile object
     if args.profile:
