@@ -835,7 +835,7 @@ When there are multiple layers in the UFO, glyphs will be renamed in all layers 
 
 ---
 ####  psfrunfbprofile
-Usage: **`psfrunfbprofile [--profile PROFILE] [--htmlfile HTMLFILE] fonts [fonts ...]`**
+Usage: **`psfrunfbprofile [--profile PROFILE] [--html HTMLFILE] fonts [fonts ...]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
