@@ -493,13 +493,15 @@ It includes comments at the start saying when it was run etc unless \-\-nocommen
 
 ---
 ####  psfexportunicodes
-Usage: **`psfexportunicodes  [-o OUTPUT] [--nocomments] ifont`**
+Usage: **`psfexportunicodes  [-o OUTPUT] [--nocomments] [--allglyphs] ifont`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-Export a mapping of glyph name to unicode to a csv file, format "glyphname,unicode" for glyphs that have a defined unicode. Does not support double-encoded glyphs.
+Export a mapping of glyph name to unicode to a csv file, format "glyphname,unicode" for glyphs that have a defined unicode. _Note: multiple-encoded glyphs will be ignored._
 
 It includes comments at the start saying when it was run etc unless \-\-nocomments is specified
+
+A complete list of glyphs (both encoded and unencoded) can be generated with \-\-allglyphs.
 
 ---
 ####  psffixffglifs

@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 __doc__ = '''Export the name and unicode of glyphs that have a defined unicode to a csv file. Does not support double-encoded glyphs.
 - csv format glyphname,unicode'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2016 SIL International (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2016-2020 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Victor Gaultney, based on UFOexportPSname.py'
 
@@ -15,7 +15,8 @@ argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
     ('-o','--output',{'help': 'Output csv file'}, {'type': 'outfile', 'def': suffix+'.csv'}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': suffix+'.log'}),
-    ('--nocomments',{'help': 'No comments in output files', 'action': 'store_true', 'default': False},{})]
+    ('--nocomments',{'help': 'No comments in output files', 'action': 'store_true', 'default': False},{}),
+    ('--allglyphs',{'help': 'Export names of all glyphs even without', 'action': 'store_true', 'default': False},{})]
 
 def doit(args) :
     font = args.ifont
@@ -33,6 +34,9 @@ def doit(args) :
         if len(glyph["unicode"]) == 1 :
             unival = glyph["unicode"][0].hex
             outfile.write(glyphn + "," + unival + "\n")
+        else :
+            if args.allglyphs :
+                outfile.write(glyphn + "," + "\n")
             
     return
 
