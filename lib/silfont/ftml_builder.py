@@ -508,7 +508,7 @@ class FTMLBuilder(object):
         l = [self.features[tag].tvlist for tag in sorted(feats)]
         return product(*l)
 
-    def render(self, uids, ftml, keyUID = 0, addBreaks = True, rtl = None, dualJoinMode = 3):
+    def render(self, uids, ftml, keyUID = 0, addBreaks = True, rtl = None, dualJoinMode = 3, label = None, comment = None):
         """ general purpose (but not required) function to generate ftml for a character sequence """
         if len(uids) == 0:
             return
@@ -519,15 +519,16 @@ class FTMLBuilder(object):
         uidLen = len(uids)
         # if keyUID wasn't supplied, use startUID
         if keyUID == 0: keyUID = startUID
-        # Construct label from uids:
-        label = '\n'.join(['U+{0:04X}'.format(u) for u in uids])
-        # Construct comment from glyph names:
-        comment = ' '.join([self._charFromUID[u].basename for u in uids])
+        if label is None:
+            # Construct label from uids:
+            label = '\n'.join(['U+{0:04X}'.format(u) for u in uids])
+        if comment is None:
+            # Construct comment from glyph names:
+            comment = ' '.join([self._charFromUID[u].basename for u in uids])
         # see if uid list includes a mirrored char
         hasMirrored = bool(len([x for x in uids if get_ucd(x,'Bidi_M')]))
         # Analyze first and last joining char
         joiningChars = [x for x in uids if get_ucd(x, 'jt') != 'T']
-        # joiningChars = [x for x in uids if Char.getIntPropertyValue(x, UProperty.JOINING_TYPE) != TRANSPARENT]
         if len(joiningChars):
             # If first or last non-TRANSPARENT char is a joining char, then we need to emit examples with zwj
             # Assumes any non-TRANSPARENT char that is bc != L must be a rtl character of some sort
