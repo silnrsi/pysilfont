@@ -564,7 +564,7 @@ other arguments:
                         Output directory, default: tests/typetuner
   --ftml FTML           ftml file(s) to process. Can be used multiple
                         times and can contain filename patterns.
-  --xslt XSLT           standard FTML xslt file
+  --xsl XSL             standard xsl file. Default: ../tools/ftml.xsl
   --norebuild           assume existing fonts are good
   -l LOG, --log LOG     Log file
   -p PARAMS, --params PARAMS
