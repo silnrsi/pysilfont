@@ -21,7 +21,7 @@ argspec = [
     ('map', {'help': 'Feature mapping CSV file'}, {'type': 'incsv'}),
     ('-o', '--outputdir', {'help': 'Output directory. Default: tests/typetuner', 'default': 'tests/typetuner'}, {}),
     ('--ftml', {'help': 'ftml file(s) to process. Can be used multiple times and can contain filename patterns.', 'action': 'append'}, {}),
-    ('--xslt', {'help': 'standard xslt file. Default: ../tools/ftml.xsl', 'default': '../tools/ftml.xsl'}, {'type': 'filename'}),
+    ('--xsl', {'help': 'standard xsl file. Default: ../tools/ftml.xsl', 'default': '../tools/ftml.xsl'}, {'type': 'filename'}),
     ('--norebuild', {'help': 'assume existing fonts are good', 'action': 'store_true'}, {}),
     ]
 
@@ -243,7 +243,7 @@ def cache_font(feats, lang, norebuild):
 
     # Now invoke TypeTuner to create the tuned font
     try:
-        cmd = ['typetuner.bat', '-o', ttfname, '-n', font_tag, sfname, sourcettf]
+        cmd = ['typetuner', '-o', ttfname, '-n', font_tag, sfname, sourcettf]
         res = check_output(cmd)
         if len(res):
             print('\n', res)
@@ -288,7 +288,7 @@ def doit(args) :
         feat_all[ttfeat.name] = ttfeat
 
     # Open and prepare the xslt file to transform the ftml:
-    xslt = ET.parse(args.xslt)
+    xslt = ET.parse(args.xsl)
     xslt_transform = ET.XSLT(xslt)
 
 
