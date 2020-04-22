@@ -592,7 +592,7 @@ If the font specified with the -f parameter contains a '.' it is assumed to be a
 
 ---
 #### psfgetglyphnames
-Usage: **`psfgetglyphnames [-i INPUT] [-a AGLFN] ifont glyphs`**
+Usage: **`psfgetglyphnames [-i INPUT] [-a AGLFN] [-u] ifont glyphs`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
@@ -606,6 +606,11 @@ The AGLFN option will rename glyphs on import if found in the
 Adobe Glyph List For New Fonts (AGLFN).
 The format for this file is the same as the AGLFN from Adobe,
 except that the delimiter is a comma, not a semi-colon.
+
+Glyphs will also be renamed if the `-u` option is specified.
+The new glyphname will start with `uni` if the character is in the BMP,
+otherwise it will start with `u`. If both the `-u` and the AGLFN option are specified,
+the name in the AGLFN will be used.
 
 ---
 ####  psfglyphs2ufo

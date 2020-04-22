@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 __doc__ = '''Create a list of glyphs to import from a list of characters.'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2019 SIL International (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2019-2020 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Bobby de Vos'
 
@@ -14,6 +14,7 @@ argspec = [
     ('glyphs',{'help': 'List of glyphs for psfcopyglyphs'}, {'type': 'outfile'}),
     ('-i', '--input', {'help': 'List of characters to import'}, {'type': 'infile', 'def': None}),
     ('-a','--aglfn',{'help': 'AGLFN list'}, {'type': 'incsv', 'def': None}),
+    ('-u','--uni',{'help': 'Generate uni or u glyph names if not in AGLFN', 'action': 'store_true', 'default': False}, {}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': suffix+'.log'})
     ]
 
@@ -58,9 +59,24 @@ def doit(args) :
 
         # Specify the glyph to copy
         codepoint = int(line, 16)
-        usv = '{:04X}'.format(codepoint)
+        usv = f'{codepoint:04X}'
+
+        # Specify how to construct default AGLFN name
+        # if codepoint is not listed in the AGLFN file
+        glyph_prefix = 'uni'
+        if codepoint > 0xFFFF:
+            glyph_prefix = 'u'
+
         if codepoint in cmap:
-            aglfn_name = aglfn.get(codepoint, '')
+            # By default codepoints not listed in the AGLFN file
+            # will be imported with the glyph name of the source UFO
+            default_aglfn = ''
+            if args.uni:
+                # Provide AGLFN compatible names if requested
+                default_aglfn = f'{glyph_prefix}{usv}'
+
+            # Create control file for use with psfcopyglyphs
+            aglfn_name = aglfn.get(codepoint, default_aglfn)
             glyph_name = cmap[codepoint]
             if '_' in glyph_name and aglfn_name == '':
                 aglfn_name = glyph_name.replace('_', '')
