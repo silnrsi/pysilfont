@@ -81,14 +81,49 @@ class FTML(object):
         self.defaultRTL = defaultrtl
         # Add first testgroup if requested
         if rendercheck:
-            self.startTestGroup("Rendering Check")
+            self.startTestGroup("Rendering Check", background="#F0F0F0")
             self.addToTest(None, "RenderingUnknown", "check", rtl = False)
             self.closeTest()
             self.closeTestGroup()
 
-    def closeTest(self, comment = None ):
-        if self._curTest and comment is not None:
-            self._curTest.comment = comment
+    _colorMap = {
+        'aqua':    '#00ffff',
+        'black':   '#000000',
+        'blue':    '#0000ff',
+        'fuchsia': '#ff00ff',
+        'green':   '#008000',
+        'grey':    '#808080',
+        'lime':    '#00ff00',
+        'maroon':  '#800000',
+        'navy':    '#000080',
+        'olive':   '#808000',
+        'purple':  '#800080',
+        'red':     '#ff0000',
+        'silver':  '#c0c0c0',
+        'teal':    '#008080',
+        'white':   '#ffffff',
+        'yellow':  '#ffff00',
+        'orange':  '#ffa500'
+    }
+
+    @staticmethod
+    def _getColor(color):
+        if color is None or len(color) == 0:
+            return None
+        color = color.lower()
+        if color in FTML._colorMap:
+            return FTML._colorMap[color]
+        if re.match(r'#[0-9a-f]{6}$', color):
+            return color
+        self.logger.log(f'Color "{color}" not understood; ignored', 'W')
+        return None
+
+    def closeTest(self, comment = None):
+        if self._curTest:
+            if comment is not None:
+                self._curTest.comment = comment
+            if self._curColor:
+                self._curTest.background = self._curColor
         self._curTest = None
         self._lastUID = None
         self._lastRTL = None
@@ -155,19 +190,35 @@ class FTML(object):
             self.closeTest()
         self._curLang = None
 
+    def setBackground(self, color):
+        color = self._getColor(color)
+        if color != self._curColor:
+            self.closeTest()
+        self._curColor = color
+
+    def clearBackground(self):
+        if self._curColor is not None:
+            self.closeTest()
+        self._curColor = None
+
     def closeTestGroup(self):
         self.closeTest()
         self._curTestGroup = None
         self._curFeatures = None
         self._curLang = None
+        self._curColor = None
 
-    def startTestGroup(self, label):
+    def startTestGroup(self, label, background = None):
         if self._curTestGroup is not None:
             if label == self._curTestGroup.label:
                 return
             self.closeTestGroup()
         # Add new test group
         self._curTestGroup = Ftestgroup(self._fxml, label = label)
+        background = self._getColor(background)
+        if background is not None:
+            self._curTestGroup.background = background
+
         # append to root test groups
         self._fxml.testgroups.append(self._curTestGroup)
 
