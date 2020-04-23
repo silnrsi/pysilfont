@@ -56,7 +56,7 @@ class FTML(object):
 
     # Assumes no nesting of test groups
 
-    def __init__(self, title, logger, comment = None, fontsrc = None, fontscale = None,
+    def __init__(self, title, logger, comment = None, fontsrc = None, fontlabel = None, fontscale = None,
                  widths = None, rendercheck = True, xslfn = None, defaultrtl = False):
         self.logger = logger
         # Initialize an Fxml object
@@ -65,10 +65,12 @@ class FTML(object):
         fxml.head.title = title
         fxml.head.comment = comment
         if isinstance(fontsrc, (tuple, list)):
-            # Not officially part of spec to allow multiple fontsrc
-            fxml.head.fontsrc = [Ffontsrc(fxml.head, text=fontsrc) for fontsrc in fontsrc]
+            # Allow multiple fontsrc
+            fxml.head.fontsrc = [Ffontsrc(fxml.head, text=fontsrc,
+                                          label=fontlabel[i] if fontlabel is not None and i < len(fontlabel) else None)
+                                 for i, fontsrc in enumerate(fontsrc)]
         elif fontsrc:
-            fxml.head.fontsrc = Ffontsrc(fxml.head, text = fontsrc)
+            fxml.head.fontsrc = Ffontsrc(fxml.head, text=fontsrc, label=fontlabel)
 
         if fontscale: fxml.head.fontscale = int(fontscale)
         if widths: fxml.head.widths = widths
