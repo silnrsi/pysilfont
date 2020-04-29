@@ -42,7 +42,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfnormalize](#psfnormalize) | Normalize a UFO and optionally converts it between UFO2 and UFO3 versions |
 | [psfremovegliflibkeys](#psfremovegliflibkeys) | Remove keys from glif lib entries |
 | [psfrenameglyphs](#psfrenameglyphs) | Within a UFO and class definition, assign new working names to glyphs based on csv input file |
-| [psfrunfbprofile](#psfrunfbprofile) | Run Font Bakery tests using a standard profile with option to specify an alternative profile |
+| [psfrunfbchecks](#psfrunfbchecks) | Run Font Bakery checks using a standard profile with option to specify an alternative profile |
 | [psfsetassocfeat](#psfsetassocfeat) | Add associate feature info to glif lib based on a csv file |
 | [psfsetassocuids](#psfsetassocuids) | Add associate UID info to glif lib based on a csv file |
 | [psfsetglyphorder](#psfsetglyphorder) | Load glyph order data into public.glyphOrder based on a text file |
@@ -592,7 +592,7 @@ If the font specified with the -f parameter contains a '.' it is assumed to be a
 
 ---
 #### psfgetglyphnames
-Usage: **`psfgetglyphnames [-i INPUT] [-a AGLFN] [-u] ifont glyphs`**
+Usage: **`psfgetglyphnames [-i INPUT] [-a AGLFN] ifont glyphs`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
@@ -606,11 +606,6 @@ The AGLFN option will rename glyphs on import if found in the
 Adobe Glyph List For New Fonts (AGLFN).
 The format for this file is the same as the AGLFN from Adobe,
 except that the delimiter is a comma, not a semi-colon.
-
-Glyphs will also be renamed if the `-u` option is specified.
-The new glyphname will start with `uni` if the character is in the BMP,
-otherwise it will start with `u`. If both the `-u` and the AGLFN option are specified,
-the name in the AGLFN will be used.
 
 ---
 ####  psfglyphs2ufo
@@ -841,8 +836,8 @@ would cause `dotabove` to be renamed `dot1` while `dotbelow` and `dotabove` woul
 When there are multiple layers in the UFO, glyphs will be renamed in all layers providing the glyph is in the default layer.  If the glyph is only in non-default layers the glyph will need renaming manually.
 
 ---
-####  psfrunfbprofile
-Usage: **`psfrunfbprofile [--profile PROFILE] [--html HTMLFILE] fonts [fonts ...]`**
+####  psfrunfbchecks
+Usage: **`psfrunfbchecks [--profile PROFILE] [--html HTMLFILE] fonts [fonts ...]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
@@ -851,8 +846,6 @@ Run Font Bakery tests using a standard profile and report results in a table on 
 An alternative profile can be specified with `--profile`. See examples/fbttfchecks.py for an example of a profile that amends the behaviour of ttfchecks.py.
 
 To see more details of results, use `--html HTMLFILE` to write an html file in the same format Font Bakery outputs.  Pysilfont's standard logging parameters (-p scrlevel and -p loglevel) also change the level of information `psfrunfbchecks` outputs.
-
-NOTE - since this is a new command, its actions may change!
 
 
 ---

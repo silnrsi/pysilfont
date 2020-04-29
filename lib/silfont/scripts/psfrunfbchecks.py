@@ -21,7 +21,7 @@ argspec = [
     ('fonts',{'help': 'font(s) to run checks against; wildcards allowed', 'nargs': "+"}, {'type': 'filename'}),
     ('--profile', {'help': 'profile to use instead of Pysilfont default'}, {}),
     ('--html', {'help': 'Write html report to htmlfile', 'metavar': "HTMLFILE"}, {}),
-    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_runfbprofile.log'})]
+    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_runfbchecks.log'})]
 
 def doit(args):
 
@@ -55,8 +55,13 @@ def doit(args):
         else:
             logger.log("UFO fonts not yet supported", "S")
 
-    imported = get_module(proname)
-    profile = get_module_profile(imported)
+    try:
+        module = get_module(proname)
+    except Exception as e:
+        logger.log("Failed to import profile: " + proname + "\n" + str(e), "S")
+    
+    profile = get_module_profile(module)
+    psfcheck_list = module.psfcheck_list
 
     # Create the runner and reporter objetcs, then run the tests
     runner = CheckRunner(profile, values={"fonts": fonts})
@@ -72,24 +77,36 @@ def doit(args):
 
     # Process the results
     results = sr.getdoc()
-    totals = results["result"]
     sections = results["sections"]
 
     checks = {}
     maxname = 11
     somedebug = False
+    overrides = {}
+    tempoverrides = False
 
     for section in sections:
         secchecks = section["checks"]
         for check in secchecks:
+            checkid = check["key"][1][17:-1]
             fontfile = check["filename"] if "filename" in check else "Family-wide"
-            if fontfile not in checks:
-                checks[fontfile] = {"ERROR": [], "FAIL": [], "WARN": [], "INFO": [], "SKIP": [], "PASS": [], "DEBUG": []}
-                path, name = os.path.split(fontfile)
-                checks[fontfile]["name"]=name
-                if len(name) > maxname: maxname = len(name)
+            path, fontname = os.path.split(fontfile)
+            if fontname not in checks:
+                checks[fontname] = {"ERROR": [], "FAIL": [], "WARN": [], "INFO": [], "SKIP": [], "PASS": [], "DEBUG": []}
+                if len(fontname) > maxname: maxname = len(fontname)
             status = check["logs"][0]["status"]
-            checks[fontfile][status].append(check)
+            if checkid in psfcheck_list:
+                # Look for status overrides
+                (changetype, temp) = ("temp_change_status", True) if "temp_change_status" in psfcheck_list[checkid]\
+                    else ("change_status", False)
+                if changetype in psfcheck_list[checkid]:
+                    change_status = psfcheck_list[checkid][changetype]
+                    if status in change_status:
+                        reason = change_status["reason"] if "reason" in change_status else None
+                        overrides[fontname + ", " + checkid] = (status + " to " + change_status[status], temp, reason)
+                        if temp: tempoverrides = True
+                        status = change_status[status]
+            checks[fontname][status].append(check)
             if status == "DEBUG": somedebug = True
 
     if htmlfile:
@@ -98,34 +115,52 @@ def doit(args):
             hfile.write(hr.get_html())
 
     fbstats   = ["ERROR", "FAIL", "WARN", "INFO", "SKIP", "PASS"]
-    psflevels = ["E",     "W",    "W",    "I",    "I",    "V"]
-    if somedebug: # Only have debug column if some degus statuses are present
+    psflevels = ["E",     "E",    "W",    "I",    "I",    "V"]
+    if somedebug: # Only have debug column if some debug statuses are present
         fbstats.append("DEBUG")
         psflevels.append("W")
     wrapper = TextWrapper(width=120, initial_indent="   ", subsequent_indent="   ")
     errorcnt = 0
+    failcnt = 0
     summarymess = "Check status summary:\n"
     summarymess += "{:{pad}}ERROR  FAIL  WARN  INFO  SKIP  PASS".format("", pad=maxname+4)
     if somedebug: summarymess += "  DEBUG"
     fontlist = list(sorted(x for x in checks if x != "Family-wide")) + ["Family-wide"] # Sort with Family-wide last
-    for fontfile in fontlist:
-        summarymess += "\n  {:{pad}}".format(checks[fontfile]["name"], pad=maxname)
+    for fontname in fontlist:
+        summarymess += "\n  {:{pad}}".format(fontname, pad=maxname)
         for i, status in enumerate(fbstats):
             psflevel = psflevels[i]
-            checklist = checks[fontfile][status]
+            checklist = checks[fontname][status]
             cnt = len(checklist)
             if cnt > 0 or status != "DEBUG": summarymess += "{:6d}".format(cnt) # Suppress 0 for DEBUG
             if cnt:
                 if status == "ERROR": errorcnt += cnt
-                messparts = ["Checks with status {} for {}".format(status, checks[fontfile]["name"])]
+                if status == "FAIL": failcnt += cnt
+                messparts = ["Checks with status {} for {}".format(status, fontname)]
                 for check in checklist:
                     messparts.append(" > {}".format(check["key"][1][17:-1]))
                     messparts += wrapper.wrap(check["logs"][0]["message"])
                 logger.log("\n".join(messparts) , psflevel)
+    if overrides != {}:
+        summarymess += "\n  Note: " + str(len(overrides)) + " Fontbakery statuses were overridden - see log file for details"
+        if tempoverrides: summarymess += "\n        ******** Some of the overrides were temporary overrides ********"
     logger.log(summarymess, "P")
-    if errorcnt > 0:
-        mess = str(errorcnt) + " test" if errorcnt == 1 else str(errorcnt) + " tests"
-        logger.log(mess + " failed to run.  This probably indicates a software issue rather than font issue", "S")
 
+    if overrides != {}:
+        for oname in overrides:
+            override = overrides[oname]
+            mess = "Status override for " + oname + ": " + override[0]
+            if override[1]: mess += " (Temporary override)"
+            logger.log(mess, "W")
+            if override[2] is not None: logger.log("Override reason: " + override[2], "I")
+
+    if errorcnt + failcnt > 0:
+        mess = str(failcnt) + " test(s) gave a status of FAIL" if failcnt > 0 else ""
+        if errorcnt > 0:
+            if failcnt > 0: mess += "\n                              "
+            mess += str(errorcnt) + " test(s) gave a status of ERROR which means they failed to execute properly." \
+                                    "\n                              " \
+                                    "   ERROR probably indicates a software issue rather than font issue"
+        logger.log(mess, "S")
 def cmd(): execute(None, doit, argspec)
 if __name__ == "__main__": cmd()
