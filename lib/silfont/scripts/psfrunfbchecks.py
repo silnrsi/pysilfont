@@ -21,12 +21,17 @@ argspec = [
     ('fonts',{'help': 'font(s) to run checks against; wildcards allowed', 'nargs': "+"}, {'type': 'filename'}),
     ('--profile', {'help': 'profile to use instead of Pysilfont default'}, {}),
     ('--html', {'help': 'Write html report to htmlfile', 'metavar': "HTMLFILE"}, {}),
-    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_runfbchecks.log'})]
+    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_runfbchecks.log'}),
+    ('--ttfaudit', {'help': 'Compare the list of ttf checks in pysilfont with those in Font Bakery and output a csv to "fonts". No checks are actually run',
+     'action': 'store_true', 'default': False}, {})]
 
 def doit(args):
 
     logger = args.logger
     htmlfile = args.html
+    if args.ttfaudit: # Special action to compare checks in profile against check_list values
+        audit(args.fonts, logger) # args.fonts used as output file name for audit
+        return
 
     # Process list of fonts supplied, expanding wildcards using glob if needed
     fonts = []
@@ -59,7 +64,7 @@ def doit(args):
         module = get_module(proname)
     except Exception as e:
         logger.log("Failed to import profile: " + proname + "\n" + str(e), "S")
-    
+
     profile = get_module_profile(module)
     psfcheck_list = module.psfcheck_list
 
@@ -162,5 +167,39 @@ def doit(args):
                                     "\n                              " \
                                     "   ERROR probably indicates a software issue rather than font issue"
         logger.log(mess, "S")
+
+def audit(fonts, logger):
+    if len(fonts) != 1: logger.log("For audit, specify output csv file instead of list of fonts", "S")
+    csvname = fonts[0]
+    from silfont.fbtests.ttfchecks import all_checks_dict
+    import csv
+    missingfromprofile=[]
+    missingfromchecklist=[]
+    checks = all_checks_dict()
+    logger.log("Opening " + csvname + " for audit output csv", "P")
+    with open(csvname, 'w', newline='') as csvfile:
+        csvwriter = csv.writer(csvfile, dialect='excel')
+        fields = ["id", "psfaction", "section", "description", "rationale", "conditions"]
+        csvwriter.writerow(fields)
+
+        for checkid in checks:
+            check = checks[checkid]
+            row = [checkid]
+            for field in fields:
+                if field != "id": row.append(check[field])
+            if check["section"] == "Missing": missingfromprofile.append(checkid)
+            if check["psfaction"] == "Not in psfcheck_list": missingfromchecklist.append(checkid)
+            csvwriter.writerow(row)
+    if missingfromprofile != []:
+        mess = "The following checks are in psfcheck_list but not in the ttfchecks.py profile:"
+        for checkid in missingfromprofile: mess += "\n                                " + checkid
+        logger.log(mess, "E")
+    if missingfromchecklist != []:
+        mess = "The following checks are in the ttfchecks.py profile but not in psfcheck_list:"
+        for checkid in missingfromchecklist: mess += "\n                                " + checkid
+        logger.log(mess, "E")
+
+    return
+
 def cmd(): execute(None, doit, argspec)
 if __name__ == "__main__": cmd()
