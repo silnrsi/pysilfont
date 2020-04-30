@@ -15,13 +15,15 @@ from silfont.core import execute
 
 class MyBuilder(Builder):
 
-    def __init__(self, font, featurefile, lateSortLookups = False):
+    def __init__(self, font, featurefile, lateSortLookups=False, fronts=None):
         super(MyBuilder, self).__init__(font, featurefile)
         self.lateSortLookups = lateSortLookups
+        self.fronts = fronts if fronts is not None else []
 
     def buildLookups_(self, tag):
         assert tag in ('GPOS', 'GSUB'), tag
         countFeatureLookups = 0
+        fronts = set([l for k, l in self.named_lookups_.items() if k in self.fronts])
         for lookup in self.lookups_:
             lookup.lookup_index = None
             if lookup.table == tag and getattr(lookup, '_feature', "") != "":
@@ -32,8 +34,14 @@ class MyBuilder(Builder):
             if lookup.table != tag:
                 continue
             if self.lateSortLookups and getattr(lookup, '_feature', "") == "":
-                lookup.lookup_index = countFeatureLookups + len(latelookups)
-                latelookups.append(lookup)
+                if lookup in fronts:
+                    lookup.lookup_index = countFeatureLookups
+                    for l in latelookups:
+                        l.lookup_index += 1
+                    latelookups.insert(0, lookup)
+                else:
+                    lookup.lookup_index = countFeatureLookups + len(latelookups)
+                    latelookups.append(lookup)
             else:
                 lookup.lookup_index = len(lookups)
                 lookups.append(lookup)
@@ -54,6 +62,7 @@ argspec = [
     ('-m', '--lookupmap', {'help': 'File into which place lookup map'}, {}),
     ('-l','--log',{'help': 'Optional log file'}, {'type': 'outfile', 'def': '_buildfea.log', 'optlog': True}),
     ('-e','--end',{'help': 'Push lookups not in features to the end', 'action': 'store_true'}, {}),
+    ('-F','--front',{'help': 'Pull named lookups to the front of unnamed list', 'action': 'append'}, {}),
 ]
 
 def doit(args) :
@@ -61,7 +70,7 @@ def doit(args) :
     configLogger(level=levels[min(len(levels) - 1, args.verbose)])
 
     font = TTFont(args.input_font)
-    builder = MyBuilder(font, args.input_fea, lateSortLookups = args.end)
+    builder = MyBuilder(font, args.input_fea, lateSortLookups=args.end, fronts=args.front)
     builder.build()
     if args.lookupmap:
         with open(args.lookupmap, "w") as outf:
