@@ -149,11 +149,11 @@ class Fhead(ETU.ETelement) :
         if self.comment   : x = ET.SubElement(element, 'comment') ; x.text = self.comment
         if self.fontscale : x = ET.SubElement(element, 'fontscale') ; x.text = str(self.fontscale)
         if isinstance(self.fontsrc, list):
-            # Not officially part of spec to allow multiple fontsrc
+            # Allow multiple fontsrc
             for fontsrc in self.fontsrc:
-                x = ET.SubElement(element, 'fontsrc') ; x.text = fontsrc.text
+                element.append(fontsrc.create_element())
         elif self.fontsrc is not None:
-            x = ET.SubElement(element, 'fontsrc') ; x.text = self.fontsrc.text
+            element.append(self.fontsrc.create_element())
         if self.styles :
             x = ET.SubElement(element, 'styles')
             for style in sorted(self.styles) : x.append(self.styles[style].create_element())
@@ -174,7 +174,7 @@ class Ffontsrc(ETU.ETelement) :
     # This library only supports a single font in the fontsrc as recommended by the FTML spec
     # Currently it only supports simple url() and local() values
 
-    def __init__(self, parent, element = None, text = None) :
+    def __init__(self, parent, element = None, text = None, label=None) :
         self.parent = parent
         self.logger = parent.logger
         self.parseerrors = []
@@ -188,7 +188,11 @@ class Ffontsrc(ETU.ETelement) :
             self.parseerrors.append(str(e) + ": " + txt)
         else :
             if text : element = ET.Element("fontsrc") ; element.text = txt
+            if label : element.set('label', label)
             super(Ffontsrc,self).__init__(element)
+            self.process_attributes((
+                ("label", "label", False),),
+                others=False)
             self.text = txt
             self.url = url
             self.local = local
@@ -205,6 +209,12 @@ class Ffontsrc(ETU.ETelement) :
         self.fontfamily = ff
         self.bold = bold
         self.italic = italic
+
+    def create_element(self) :
+        element = ET.Element("fontsrc")
+        element.text = self.text
+        if self.label  : element.set("label", self.label)
+        return element
 
 class Fstyle(ETU.ETelement) :
     def __init__(self, parent, element = None, name = None, feats = None, lang = None) :
