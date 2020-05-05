@@ -38,11 +38,12 @@ feat_all = dict()
 
 class feat(object):
     'TypeTuner feature'
-    def __init__(self, elem):
+    def __init__(self, elem, sortkey):
         self.name = elem.attrib.get('name')
         self.tag = elem.attrib.get('tag')
         self.default = elem.attrib.get('value')
         self.values = OrderedDict()
+        self.sortkey = sortkey
         for v in elem.findall('value'):
             # Only add those values which aren't importing line metrics
             if v.find("./cmd[@name='line_metrics_scaled']") is None:
@@ -231,7 +232,9 @@ def cache_font(feats, lang, norebuild):
 <!DOCTYPE features_set SYSTEM "feat_set.dtd">
 <features_set version = "1.0"/>
 ''')
-    for name, ttfeat in sorted(feat_all.items()):
+    # Note: Order of elements in settings file should be same as order in feat_all
+    # (because this is the way TypeTuner does it and some fonts may expect this)
+    for name, ttfeat in sorted(feat_all.items(), key=lambda x: x[1].sortkey):
         if name in ttsettings:
             # Output the non-default value for this one:
             ET.SubElement(root, 'feature',{'name': name, 'value': ttsettings[name]})
@@ -248,7 +251,7 @@ def cache_font(feats, lang, norebuild):
         if len(res):
             print('\n', res)
     except CalledProcessError as err:
-        logger("couldn't tune font: {}".format(err.output), 'S')
+        logger.log("couldn't tune font: {}".format(err.output), 'S')
 
     return font_tag
 
@@ -282,9 +285,9 @@ def doit(args) :
     root = ET.fromstring(feat_xml)
     if root.tag != 'all_features':
         logger.log("Invalid TypeTuner feature file: missing root element", "S")
-    for f in root.findall('.//feature'):
+    for i, f in enumerate(root.findall('.//feature')):
         # add to dictionary
-        ttfeat = feat(f)
+        ttfeat = feat(f,i)
         feat_all[ttfeat.name] = ttfeat
 
     # Open and prepare the xslt file to transform the ftml:
