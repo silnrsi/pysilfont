@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from __future__ import unicode_literals
 __doc__ = '''Checks a UFO for the presence of glyphs that represent the
 Recommended characters for Non-Roman fonts and warns if any are missing.
 http://scriptsource.org/entry/gg5wm9hhd3'''

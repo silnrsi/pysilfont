@@ -6,13 +6,13 @@ In addition, all scripts will output UFOs in a normalized form, designed to work
 
 Please read the main [documentation](docs/docs.md) is in the docs folder for more details.  Within there is a list of [scripts](docs/scripts.md).
 
-# NOTICE - Python 2 support to be withdrawn
+# NOTICE - Python 2 support withdrawn
 
-Pysilfont now works with Python 2 & 3.  Full support for Python 2 will be withdrawn shortly.
+Pysilfont now requires Python 3.6 or higher.
 
 ## Installation
 
-Pysilfont requires Python (version 2.7.x or 3.6+) and python-setuptools. Some scripts also need other libraries.
+Pysilfont requires Python 3.6+ and python-setuptools. Some scripts also need other libraries.
 
 _Note: We are experiencing issues with upgrades to existing installations and with uninstalling, so these notes are under review._
 
@@ -23,25 +23,25 @@ First clone this repository or download the files from [this github URL](https:/
 To install the module and the scripts for the current user only run:
 
 ```
-python setup.py install --user --record installed-files.txt
+python3 setup.py install --user --record installed-files.txt
 ```
 
 or, if multiple users use your system and you want to install for all users, run:
 
 ```
-sudo python setup.py install --record installed-files.txt
+sudo python3 setup.py install --record installed-files.txt
 ```
 
 If setup.py fails with a message that python-setuptools is missing, run the following to install it, then run setup.py again.
 
 ```
-sudo apt-get install python-setuptools
+sudo apt-get install python3-setuptools
 ```
 
-If upgrading an existing installation you will need to clean up from previous installations by running this before the commands above:
+If upgrading an existing installation you may need to clean up from previous installations by running this before the commands above:
 
 ```
-python setup.py clean --all
+python3 setup.py clean --all
 ```
 
 
@@ -50,6 +50,8 @@ python setup.py clean --all
 (to be added)
 
 ### Uninstalling pysilfont
+
+
 
 To uninstall pysilfont run:
 

@@ -1,16 +1,10 @@
 #!/usr/bin/env python
-from __future__ import unicode_literals
 'Classes and functions for use handling Ufont UFO font objects in pysilfont scripts'
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
-try:
-    str = unicode
-    chr = unichr
-except NameError: # Will  occur with Python 3
-    pass
 from xml.etree import ElementTree as ET
 import sys, os, shutil, filecmp, io, re
 import warnings
@@ -266,7 +260,7 @@ class Ufont(object):
                 self.outparams["attribOrders"][elemname] = ETU.makeAttribOrder(value)
             else:
                 self.outparams[parn] = value
-        if self.outparams["UFOversion"] is "": self.outparams["UFOversion"] = self.UFOversion
+        if self.outparams["UFOversion"] == "": self.outparams["UFOversion"] = self.UFOversion
 
         # Set flags for checking and fixing metadata
         cf = self.paramset["checkfix"].lower()

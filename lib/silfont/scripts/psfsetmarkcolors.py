@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from __future__ import unicode_literals
 __doc__ = ''' Sets the cell mark color of glyphs in a UFO
 - Input file is a list of glpyh names (or unicode values if -u is specified
 - Color can be numeric or certain names, eg "0.85,0.26,0.06,1" or "g_red"

@@ -1,20 +1,30 @@
 # Changelog
 
-## [1.4.3] - Draft updates
+## [1.5.0] - 2020-05-20 - Maintenance Release; Python 2 support removed
 
+Added support for Font Bakery to make it simple for projects to run a standard set ot checks designed to fit in 
+with [Font Development Best Practices](https://silnrsi.github.io/FDBP/en-US/index.html).
 
+Improvements to feax support
+
+Many other updates
 
 ### Added
 
-
+| Command | Description |
+| ------- | ----------- |
+| [psfftml2TThtml.py](docs/scripts.md#psfftml2TThtml.py) | Convert FTML document to html and fonts for testing TypeTuner |
+| [psfmakescaledshifted](docs/scripts.md#psfmakescaledshifted) | Creates scaled and shifted versions of glyphs |
+| [psfrunfbchecks](docs/scripts.md#psfrunfbchecks) | Run Font Bakery checks using a standard profile with option to specify an alternative profile |
+| [psfsetdummydsig](docs/scripts.md#psfsetdummydsig) | Put a dummy DSIG table into a TTF font |
 
 ### Changed
 
-
+Multiple minor changes and bug fixes
 
 ### Removed
 
-
+None
 
 ## [1.4.2] - 2019-07-30 - Maintenance release
 
@@ -32,15 +42,15 @@ Some changes are detailed below, but check commit logs for full details.
 
 | Command | Description |
 | ------- | ----------- |
-| [psfbuildcompgc](#psfbuildcompgc) | Add composite glyphs to UFO using glyphConstruction based on a CD file |
-| [psfdeflang](#psfdeflang) | Changes default language behaviour in a font |
-| [psfdupglyphs](#psfdupglyphs) | Duplicates glyphs in a UFO based on a csv definition |
-| [psfexportmarkcolors](#psfexportmarkcolors) | Export csv of mark colors |
-| [psffixffglifs](#psffixffglifs) | Make changes needed to a UFO following processing by FontForge |
-| [psfgetglyphnames](#psfgetglyphnames) | Create a file of glyphs to import from a list of characters to import |
-| [psfmakedeprecated](#psfmakedeprecated) | Creates deprecated versions of glyphs |
-| [psfsetmarkcolors](#psfsetmarkcolors) | Set mark colors based on csv file |
-| [psftuneraliases](#psftuneraliases) | Merge alias information into TypeTuner feature xml file |
+| [psfbuildcompgc](docs/scripts.md#psfbuildcompgc) | Add composite glyphs to UFO using glyphConstruction based on a CD file |
+| [psfdeflang](docs/scripts.md#psfdeflang) | Changes default language behaviour in a font |
+| [psfdupglyphs](docs/scripts.md#psfdupglyphs) | Duplicates glyphs in a UFO based on a csv definition |
+| [psfexportmarkcolors](docs/scripts.md#psfexportmarkcolors) | Export csv of mark colors |
+| [psffixffglifs](docs/scripts.md#psffixffglifs) | Make changes needed to a UFO following processing by FontForge |
+| [psfgetglyphnames](docs/scripts.md#psfgetglyphnames) | Create a file of glyphs to import from a list of characters to import |
+| [psfmakedeprecated](docs/scripts.md#psfmakedeprecated) | Creates deprecated versions of glyphs |
+| [psfsetmarkcolors](docs/scripts.md#psfsetmarkcolors) | Set mark colors based on csv file |
+| [psftuneraliases](docs/scripts.md#psftuneraliases) | Merge alias information into TypeTuner feature xml file |
 
 ### Changed
 

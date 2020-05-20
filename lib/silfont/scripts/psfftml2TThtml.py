@@ -1,5 +1,4 @@
 #! /usr/bin/python3
-from __future__ import unicode_literals, print_function
 '''Build fonts for all combinations of TypeTuner features needed for specific ftml then build html that uses those fonts'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2019 SIL International  (http://www.sil.org)'

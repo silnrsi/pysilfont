@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from __future__ import unicode_literals
 __doc__ = '''Copy metadata between fonts in different (related) families
 Usually run against the master (regular) font in each family then data synced within family afterwards'''
 __url__ = 'http://github.com/silnrsi/pysilfont'

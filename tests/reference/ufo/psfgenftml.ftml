@@ -4,7 +4,7 @@
   <head>
     <title>ftml_builder test</title>
   </head>
-  <testgroup label="Rendering Check">
+  <testgroup background="#f0f0f0" label="Rendering Check">
     <test label="check">
       <string>RenderingUnknown</string>
     </test>

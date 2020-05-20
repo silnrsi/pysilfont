@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 from fontTools.feaLib.lexer import IncludingLexer, Lexer
 from fontTools.feaLib.error import FeatureLibError
 import re, io

@@ -4,7 +4,7 @@ from __future__ import print_function
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2014 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
-__version__ = '1.4.3.dev0'
+__version__ = '1.5.0'
 
 import sys, os, importlib
 
@@ -13,6 +13,8 @@ try:
 except ImportError :
     print("pysilfont requires setuptools - see installation notes in README.md")
     sys.exit(1)
+
+if sys.version_info < (3,6): sys.exit('Sorry, Python < 3.6 is not supported')
 
 warnings = []
 if sys.argv[1] in ('develop', 'install') :
@@ -47,7 +49,6 @@ setup(
     platforms = ['Linux','Win32','Mac OS X'],
     classifiers = [
         "Environment :: Console",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.6",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",

@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from __future__ import unicode_literals
 __doc__ = '''Set the unicodes of glyphs in a font based on an external file. Note that this will not currently remove any unicode values that already exist in unlisted glyphs
 - csv format glyphname,unicode'''
 __url__ = 'http://github.com/silnrsi/pysilfont'

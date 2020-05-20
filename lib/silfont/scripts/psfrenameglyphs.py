@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from __future__ import unicode_literals
 __doc__ = '''Assign new working names to glyphs based on csv input file
 - csv format oldname,newname'''
 __url__ = 'http://github.com/silnrsi/pysilfont'

@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 from fontTools.feaLib import ast
 from fontTools.feaLib.parser import Parser
 from fontTools.feaLib.lexer import IncludingLexer, Lexer
@@ -252,7 +251,7 @@ class feaplus_parser(Parser) :
         else:
             keyword = None
         self.expect_symbol_(";")
-        if len(new) is 0 and not any(lookups):
+        if len(new) == 0 and not any(lookups):
             raise FeatureLibError(
                 'Expected "by", "from" or explicit lookup references',
                 self.cur_token_location_)

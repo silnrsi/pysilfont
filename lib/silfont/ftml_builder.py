@@ -1,16 +1,10 @@
 #!/usr/bin/env python
-from __future__ import unicode_literals
 'classes and functions for building ftml tests from glyph_data.csv and UFO'
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2018 SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Bob Hallissy'
 
-try:
-    str = unicode
-    chr = unichr
-except NameError: # Will  occur with Python 3
-    pass
 from silfont.ftml import Fxml, Ftestgroup, Ftest, Ffontsrc
 from palaso.unicode.ucd import get_ucd
 from itertools import product

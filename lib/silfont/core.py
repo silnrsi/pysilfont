@@ -1,16 +1,10 @@
 #!/usr/bin/env python
-from __future__ import print_function, unicode_literals
 'General classes and functions for use in pysilfont scripts'
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2014-2020 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
-try:
-    str = unicode
-    chr = unichr
-except NameError: # Will  occur with Python 3
-    pass
 from glob import glob
 from collections import OrderedDict
 import sys, os, argparse, datetime, shutil, csv, codecs, io
@@ -481,14 +475,14 @@ def execute(tool, fn, scriptargspec, chain = None):
         logfile = None
         logname = args.log if 'log' in args.__dict__ and args.log is not None else ""
         if 'log' in args.__dict__:
-            if logdef is not None and (logname is not "" or optlog == False):
+            if logdef is not None and (logname != "" or optlog == False):
                 (path, base, ext) = splitfn(logname)
                 (dpath, dbase, dext) = splitfn(logdef)
                 if not path:
                     if base and ext:  # If both specified then use cwd, ie no path
                         path = ""
                     else:
-                        path = (fppath if dpath is "" else os.path.join(fppath, dpath))
+                        path = (fppath if dpath == "" else os.path.join(fppath, dpath))
                         path = os.path.join(path, "logs")
                 if not base:
                     if dbase == "":
@@ -681,7 +675,7 @@ def execute(tool, fn, scriptargspec, chain = None):
 
     if logger.errorcount or logger.warningcount:
         message = "Command completed with " + str(logger.errorcount) + " errors and " + str(logger.warningcount) + " warnings"
-        if logger.scrlevel in ("S", "E") and logname is not "":
+        if logger.scrlevel in ("S", "E") and logname != "":
             if logger.scrlevel == "S" or logger.warningcount: message = message + " - see " + logname
         if logger.errorcount:
             if quiet: logger.raisescrlevel("E")

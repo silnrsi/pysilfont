@@ -865,6 +865,19 @@ _([Standard options](docs.md#standard-command-line-options) also apply)_
 Add associate UID info to org.sil.assocUIDs in glif lib based on a csv file - could be one value for variant UIDs and multiple for ligatures,   format "glyphname,UID[,UID]"
 
 ---
+#### psfsetdummydsig
+Usage: **`psfsetdummydsig -i inputfont -o outputfont`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Put a dummy DSIG table into a font in TTF format (using fontTools)
+
+```
+-i [--ifont] inputfont    (Input file in TTF format)
+-o [--ofont] outputfont   (Output file in TTF format)
+```
+
+---
 ####  psfsetglyphorder
 Usage: **`psfsetglyphorder [--gname GNAME] [--header HEADER] [--field FIELD] [-i INPUT] [-x] ifont [ofont]`**
 
@@ -1137,24 +1150,6 @@ _This section is Work In Progress!_
 
 - input                 Input file of CD in XML format
 - output                Output file of CD in single line format
-
-
----
-#### psfsetdummydsig
-Usage: **`psfsetdummydsig -i inputfont -o outputfont`**
-
-Put a dummy DSIG table into a font in TTF format (using fontTools)
-
-```
--i [--ifont] inputfont    (Input file in TTF format)
--o [--ofont] outputfont   (Output file in TTF format)
-```
-
-optional arguments:
-
-```
--l [--log]  logfile.log   (output log file)
-```
 
 
 ---
