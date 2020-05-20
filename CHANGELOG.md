@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.5.1.dev0] - Placeholder for next release
+
+
+
+### Added
+
+| Command | Description |
+| ------- | ----------- |
+| Command | Purpose  |
+
+### Changed
+
+
+### Removed
+
+
 ## [1.5.0] - 2020-05-20 - Maintenance Release; Python 2 support removed
 
 Added support for Font Bakery to make it simple for projects to run a standard set ot checks designed to fit in 
