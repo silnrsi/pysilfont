@@ -990,7 +990,7 @@ class Uoutline(Uelement):
             elif isinstance(item, ET.Element):
                 elem = item
             else:
-                self.logger.log("item should be dict, element, Ucontour or Ucomponent", "S")
+                self.glif.logger.log("item should be dict, element, Ucontour or Ucomponent", "S")
             if typ == 'component':
                 obj = Ucomponent(self,elem)
             else:
@@ -1000,7 +1000,7 @@ class Uoutline(Uelement):
         if type == "contour": self.contours.append(obj)
 
     def insertobject(self, index, item, typ): # Needs updating to match appendobject
-        self.logger.log("insertobject currently buggy so don't use!", "X")
+        self.glif.logger.log("insertobject currently buggy so don't use!", "X")
         # Bug is that index for super... should be different than other lines.
         # need to think through logic to sort this out...
 

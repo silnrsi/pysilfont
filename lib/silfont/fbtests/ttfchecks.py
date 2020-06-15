@@ -38,8 +38,6 @@ def org_sil_software_version_format(ttFont):
 
   from fontbakery.utils import get_name_entry_strings
   import re
-  def is_valid_version_format(value):
-    return re.match(r'Version [0-9]+\.\d{3}( .+)*$', value)
 
   failed = False
   warned = False
@@ -52,7 +50,7 @@ def org_sil_software_version_format(ttFont):
                   f" (nameID={NameID.VERSION_STRING}) entry")
 
   for ventry in version_entries:
-    if not re.match(r'Version [0-9]+\.\d{3}( .+)*$', ventry):
+    if not re.match(r'Version [0-9]+\.\d{3}(;? .+)*$', ventry):
       failed = True
       yield FAIL,\
             Message("bad-version-strings",
@@ -84,7 +82,7 @@ def make_profile(check_list, variable_font=False):
             exclude = check_item["exclude"] if "exclude" in check_item else False
             if exclude: profile.remove_check(checkid)
 
-    # Exclude further sets of test to reduce number of skips and so have less clutter in html results
+    # Exclude further sets of checks to reduce number of skips and so have less clutter in html results
     # (Currently just working with variable font tests, but structured to cover more types of checks later)
     for checkid in sorted(set(profile._check_registry.keys())):
         section = profile._check_registry[checkid]
@@ -149,6 +147,7 @@ psfcheck_list['com.adobe.fonts/check/fsselection_matches_macstyle']             
 psfcheck_list['com.adobe.fonts/check/name/empty_records']                         = {}
 psfcheck_list['com.adobe.fonts/check/name/postscript_name_consistency']           = {}
 psfcheck_list['com.adobe.fonts/check/name/postscript_vs_cff']                     = {'exclude': True}
+psfcheck_list['com.google.fonts/check/STAT_strings']                              = {}
 psfcheck_list['com.google.fonts/check/aat']                                       = {}
 psfcheck_list['com.google.fonts/check/all_glyphs_have_codepoints']                = {'exclude': True}
 psfcheck_list['com.google.fonts/check/canonical_filename']                        = {}
@@ -156,11 +155,11 @@ psfcheck_list['com.google.fonts/check/cmap/unexpected_subtables']               
 psfcheck_list['com.google.fonts/check/code_pages']                                = {}
 psfcheck_list['com.google.fonts/check/contour_count']                             = {'exclude': True}
 psfcheck_list['com.google.fonts/check/description/broken_links']                  = {'exclude': True}
+psfcheck_list['com.google.fonts/check/description/eof_linebreak']                 = {}
 psfcheck_list['com.google.fonts/check/description/git_url']                       = {'exclude': True}
 psfcheck_list['com.google.fonts/check/description/max_length']                    = {'exclude': True}
 psfcheck_list['com.google.fonts/check/description/min_length']                    = {'exclude': True}
 psfcheck_list['com.google.fonts/check/description/valid_html']                    = {'exclude': True}
-psfcheck_list['com.google.fonts/check/description/variable_font']                 = {'exclude': True}
 psfcheck_list['com.google.fonts/check/dsig']                                      = {'exclude': True}
 psfcheck_list['com.google.fonts/check/dsig:adobefonts']                           = {'exclude': True}
 psfcheck_list['com.google.fonts/check/epar']                                      = {'exclude': True}
@@ -191,6 +190,9 @@ psfcheck_list['com.google.fonts/check/ftxvalidator']                            
 psfcheck_list['com.google.fonts/check/ftxvalidator_is_available']                 = {'exclude': True}
 psfcheck_list['com.google.fonts/check/fvar_name_entries']                         = {}
 psfcheck_list['com.google.fonts/check/gasp']                                      = {'exclude': True}
+psfcheck_list['com.google.fonts/check/gdef_mark_chars']                           = {}
+psfcheck_list['com.google.fonts/check/gdef_non_mark_chars']                       = {}
+psfcheck_list['com.google.fonts/check/gdef_spacing_marks']                        = {}
 psfcheck_list['com.google.fonts/check/glyf_non_transformed_duplicate_components'] = {}
 psfcheck_list['com.google.fonts/check/glyf_unused_data']                          = {}
 psfcheck_list['com.google.fonts/check/glyph_coverage']                            = {'exclude': True}
@@ -203,7 +205,7 @@ psfcheck_list['com.google.fonts/check/kern_table']                              
 psfcheck_list['com.google.fonts/check/kerning_for_non_ligated_sequences']         = {'exclude': True}
 psfcheck_list['com.google.fonts/check/ligature_carets']                           = {'exclude': True}
 psfcheck_list['com.google.fonts/check/linegaps']                                  = {}
-psfcheck_list['com.google.fonts/check/license/OFL_copyright']                     = {}
+psfcheck_list['com.google.fonts/check/license/OFL_copyright']                     = {'exclude': True}
 psfcheck_list['com.google.fonts/check/loca/maxp_num_glyphs']                      = {}
 psfcheck_list['com.google.fonts/check/mac_style']                                 = {}
 psfcheck_list['com.google.fonts/check/mandatory_glyphs']                          = {}
@@ -279,7 +281,9 @@ psfcheck_list['com.google.fonts/check/post_table_version']                      
 #psfcheck_list['com.google.fonts/check/production_encoded_glyphs']                 = {} # Currently disabled by FB
 psfcheck_list['com.google.fonts/check/production_glyphs_similarity']              = {}
 psfcheck_list['com.google.fonts/check/repo/dirname_matches_nameid_1']             = {'exclude': True}
+psfcheck_list['com.google.fonts/check/repo/fb_report']                            = {}
 psfcheck_list['com.google.fonts/check/repo/vf_has_static_fonts']                  = {}
+psfcheck_list['com.google.fonts/check/repo/zip_files']                            = {}
 psfcheck_list['com.google.fonts/check/required_tables']                           = {}
 psfcheck_list['com.google.fonts/check/smart_dropout']                             = {'exclude': True}
 psfcheck_list['com.google.fonts/check/superfamily/list']                          = {}
@@ -310,6 +314,7 @@ psfcheck_list['com.google.fonts/check/varfont/regular_slnt_coord']              
 psfcheck_list['com.google.fonts/check/varfont/regular_wdth_coord']                = {}
 psfcheck_list['com.google.fonts/check/varfont/regular_wght_coord']                = {}
 psfcheck_list['com.google.fonts/check/varfont/slnt_range']                        = {}
+psfcheck_list['com.google.fonts/check/varfont/unsupported_axes']                  = {}
 psfcheck_list['com.google.fonts/check/varfont/wdth_valid_range']                  = {}
 psfcheck_list['com.google.fonts/check/varfont/wght_valid_range']                  = {}
 psfcheck_list['com.google.fonts/check/vendor_id']                                 = {}

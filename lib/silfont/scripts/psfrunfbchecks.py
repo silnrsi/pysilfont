@@ -6,7 +6,7 @@ __copyright__ = 'Copyright (c) 2020 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
-import json, sys, glob, os
+import glob, os, csv
 
 from textwrap import TextWrapper
 
@@ -21,17 +21,28 @@ argspec = [
     ('fonts',{'help': 'font(s) to run checks against; wildcards allowed', 'nargs': "+"}, {'type': 'filename'}),
     ('--profile', {'help': 'profile to use instead of Pysilfont default'}, {}),
     ('--html', {'help': 'Write html report to htmlfile', 'metavar': "HTMLFILE"}, {}),
-    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_runfbchecks.log'}),
+    ('--csv',{'help': 'Write results to csv file'}, {'type': 'filename', 'def': None}),
     ('--ttfaudit', {'help': 'Compare the list of ttf checks in pysilfont with those in Font Bakery and output a csv to "fonts". No checks are actually run',
-     'action': 'store_true', 'default': False}, {})]
+     'action': 'store_true', 'default': False}, {}),
+    ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': '_runfbchecks.log'})]
 
 def doit(args):
 
     logger = args.logger
     htmlfile = args.html
+
     if args.ttfaudit: # Special action to compare checks in profile against check_list values
         audit(args.fonts, logger) # args.fonts used as output file name for audit
         return
+
+    if args.csv:
+        try:
+            csvfile = open(args.csv, 'w')
+            csvwriter = csv.writer(csvfile)
+        except Exception as e:
+            logger.log("Failed to open " + args.csv + ": " + str(e), "S")
+    else:
+        csvfile = None
 
     # Process list of fonts supplied, expanding wildcards using glob if needed
     fonts = []
@@ -50,6 +61,10 @@ def doit(args):
             fonts.append(fullpath)
 
     if fonts == [] : logger.log("No files match the filespec provided for fonts: " + str(args.fonts), "S")
+
+    # Find the main folder name for ttf files - strips "results" if present
+    (path, ttfdir) = os.path.split(os.path.dirname(fonts[0]))
+    if ttfdir == ("results"): ttfdir = os.path.basename(path)
 
     # Create the profile object
     if args.profile:
@@ -99,7 +114,7 @@ def doit(args):
             if fontname not in checks:
                 checks[fontname] = {"ERROR": [], "FAIL": [], "WARN": [], "INFO": [], "SKIP": [], "PASS": [], "DEBUG": []}
                 if len(fontname) > maxname: maxname = len(fontname)
-            status = check["logs"][0]["status"]
+            status = check["result"]
             if checkid in psfcheck_list:
                 # Look for status overrides
                 (changetype, temp) = ("temp_change_status", True) if "temp_change_status" in psfcheck_list[checkid]\
@@ -110,7 +125,7 @@ def doit(args):
                         reason = change_status["reason"] if "reason" in change_status else None
                         overrides[fontname + ", " + checkid] = (status + " to " + change_status[status], temp, reason)
                         if temp: tempoverrides = True
-                        status = change_status[status]
+                        status = change_status[status] ## Should validate new status is one of FAIL, WARN or PASS
             checks[fontname][status].append(check)
             if status == "DEBUG": somedebug = True
 
@@ -143,8 +158,15 @@ def doit(args):
                 if status == "FAIL": failcnt += cnt
                 messparts = ["Checks with status {} for {}".format(status, fontname)]
                 for check in checklist:
-                    messparts.append(" > {}".format(check["key"][1][17:-1]))
-                    messparts += wrapper.wrap(check["logs"][0]["message"])
+                    checkid = check["key"][1][17:-1]
+                    csvline = [ttfdir, fontname, check["key"][1][17:-1], status, check["description"]]
+                    messparts.append(" > {}".format(checkid))
+                    for record in check["logs"]:
+                        message = record["message"]
+                        if record["status"] != status: message = record["status"] + " " + message
+                        messparts += wrapper.wrap(message)
+                        csvline.append(message)
+                    if csvfile and status != "PASS": csvwriter.writerow(csvline)
                 logger.log("\n".join(messparts) , psflevel)
     if overrides != {}:
         summarymess += "\n  Note: " + str(len(overrides)) + " Fontbakery statuses were overridden - see log file for details"
