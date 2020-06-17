@@ -9,6 +9,7 @@ __author__ = 'Martin Hosken'
 from fontTools.feaLib.builder import Builder
 from fontTools import configLogger
 from fontTools.ttLib import TTFont
+from fontTools.ttLib.tables.otTables import lookupTypes
 
 from silfont.core import execute
 
@@ -23,29 +24,30 @@ class MyBuilder(Builder):
         assert tag in ('GPOS', 'GSUB'), tag
         countFeatureLookups = 0
         fronts = set([l for k, l in self.named_lookups_.items() if k in self.fronts])
-        for lookup in self.lookups_:
-            lookup.lookup_index = None
-            if lookup.table == tag and getattr(lookup, '_feature', "") != "":
+        for bldr in self.lookups_:
+            bldr.lookup_index = None
+            if bldr.table == tag and getattr(bldr, '_feature', "") != "":
                 countFeatureLookups += 1
         lookups = []
         latelookups = []
-        for lookup in self.lookups_:
-            if lookup.table != tag:
+        for bldr in self.lookups_:
+            if bldr.table != tag:
                 continue
-            if self.lateSortLookups and getattr(lookup, '_feature', "") == "":
-                if lookup in fronts:
-                    lookup.lookup_index = countFeatureLookups
+            if self.lateSortLookups and getattr(bldr, '_feature', "") == "":
+                if bldr in fronts:
                     for l in latelookups:
                         l.lookup_index += 1
-                    latelookups.insert(0, lookup)
+                    latelookups.insert(0, bldr)
                 else:
-                    lookup.lookup_index = countFeatureLookups + len(latelookups)
-                    latelookups.append(lookup)
+                    latelookups.append(bldr)
             else:
-                lookup.lookup_index = len(lookups)
-                lookups.append(lookup)
-            lookup.map_index = lookup.lookup_index
-        return [l.build() for l in lookups + latelookups]
+                bldr.lookup_index = len(lookups)
+                lookups.append(bldr)
+            bldr.map_index = bldr.lookup_index
+        numl = len(lookups)
+        for i, l in enumerate(latelookups):
+            l.lookup_index = numl + i
+        return [b.build() for b in lookups + latelookups]
 
     def add_lookup_to_feature_(self, lookup, feature_name):
         super(MyBuilder, self).add_lookup_to_feature_(lookup, feature_name)
