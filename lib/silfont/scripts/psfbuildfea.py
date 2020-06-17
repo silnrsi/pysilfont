@@ -35,18 +35,17 @@ class MyBuilder(Builder):
                 continue
             if self.lateSortLookups and getattr(bldr, '_feature', "") == "":
                 if bldr in fronts:
-                    for l in latelookups:
-                        l.lookup_index += 1
                     latelookups.insert(0, bldr)
                 else:
                     latelookups.append(bldr)
             else:
                 bldr.lookup_index = len(lookups)
                 lookups.append(bldr)
-            bldr.map_index = bldr.lookup_index
+                bldr.map_index = bldr.lookup_index
         numl = len(lookups)
         for i, l in enumerate(latelookups):
             l.lookup_index = numl + i
+            l.map_index = l.lookup_index
         return [b.build() for b in lookups + latelookups]
 
     def add_lookup_to_feature_(self, lookup, feature_name):
