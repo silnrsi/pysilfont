@@ -837,16 +837,31 @@ When there are multiple layers in the UFO, glyphs will be renamed in all layers 
 
 ---
 ####  psfrunfbchecks
-Usage: **`psfrunfbchecks [--profile PROFILE] [--html HTMLFILE] fonts [fonts ...]`**
+Usage: **`psfrunfbchecks [--profile PROFILE] [--html HTMLFILE] [--csv CSV]
+                      [--ttfaudit] fonts [fonts ...]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-Run Font Bakery tests using a standard profile and report results in a table on screen.  Multiple fonts can be specified, including using wildcards, but all should be in the same directory.  For ttf files, the profile will be Pysilfont's ttfchecks.py.  UFO files are not yet supported.
+Run Font Bakery tests using a standard profile and report results in a table on screen.  Multiple fonts can be specified, 
+including using wildcards, but all should be in the same directory.  
+For ttf files, the profile will be Pysilfont's ttfchecks.py.  UFO files are not yet supported.
 
-An alternative profile can be specified with `--profile`. See examples/fbttfchecks.py for an example of a profile that amends the behaviour of ttfchecks.py.
+An alternative profile can be specified with `--profile`. 
+See examples/fbttfchecks.py for an example of a profile that amends the behaviour of ttfchecks.py.  This includes options to change which checks are run and to override the status reported by checks.
 
-To see more details of results, use `--html HTMLFILE` to write an html file in the same format Font Bakery outputs.  Pysilfont's standard logging parameters (-p scrlevel and -p loglevel) also change the level of information `psfrunfbchecks` outputs.
+Example use with a project-specific profile:
 
+```
+psfrunfbchecks --profile fbttfchecks.py results/*.ttf
+```
+To see more details of results, use `--html HTMLFILE` to write an html file in the same format that Font Bakery outputs.
+  
+`--csv CSV` creates a csv file with one line per check that is run.  This can be used with diff tools to compare results from different runs (or following upgrades to Font Bakery.)
+   
+Pysilfont's standard logging parameters (-p scrlevel and -p loglevel) also change the level of information `psfrunfbchecks` outputs.
+
+A special option, `--ttfaudit` compares the list of checks within ttfchecks.py against those in Font Bakery and reports any descrepancies to screen.
+It also writes a csv file containing a list of all checks.  Usage `psfrunfbchecks --ttfaudit csvfile`
 
 ---
 ####  psfsetassocfeat

@@ -39,6 +39,7 @@ def doit(args):
         try:
             csvfile = open(args.csv, 'w')
             csvwriter = csv.writer(csvfile)
+            csvlines = []
         except Exception as e:
             logger.log("Failed to open " + args.csv + ": " + str(e), "S")
     else:
@@ -166,8 +167,10 @@ def doit(args):
                         if record["status"] != status: message = record["status"] + " " + message
                         messparts += wrapper.wrap(message)
                         csvline.append(message)
-                    if csvfile and status != "PASS": csvwriter.writerow(csvline)
+                    if csvfile: csvlines.append(csvline)
                 logger.log("\n".join(messparts) , psflevel)
+    if csvfile: # Output to csv file, worted by font then checkID
+        for line in sorted(csvlines, key = lambda x: (x[1],x[2])): csvwriter.writerow(line)
     if overrides != {}:
         summarymess += "\n  Note: " + str(len(overrides)) + " Fontbakery statuses were overridden - see log file for details"
         if tempoverrides: summarymess += "\n        ******** Some of the overrides were temporary overrides ********"
@@ -194,7 +197,6 @@ def audit(fonts, logger):
     if len(fonts) != 1: logger.log("For audit, specify output csv file instead of list of fonts", "S")
     csvname = fonts[0]
     from silfont.fbtests.ttfchecks import all_checks_dict
-    import csv
     missingfromprofile=[]
     missingfromchecklist=[]
     checks = all_checks_dict()
