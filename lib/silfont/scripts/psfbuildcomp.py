@@ -189,12 +189,11 @@ def doit(args) :
                 if g['outline'] and g['outline'].components and not g['outline'].contours:
                     # for each component, get base, x1, y1 and create new entry with base, x+x1, y+y1
                     for subcomp in g['outline'].components:
-                        b = subcomp.element.get('base')
-                        x1 = subcomp.element.get('xOffset')
-                        y1 = subcomp.element.get('yOffset')
+                        componentdic = subcomp.element.attrib.copy()
+                        x1 = componentdic.pop('xOffset', 0)
+                        y1 = componentdic.pop('yOffset', 0)
                         xOffset = addtwo(x, x1)
                         yOffset = addtwo(y, y1)
-                        componentdic = {'base': b}
                         if xOffset != 0: componentdic['xOffset'] = str(xOffset)
                         if yOffset != 0: componentdic['yOffset'] = str(yOffset)
                         newcomponentlist.append( componentdic )
