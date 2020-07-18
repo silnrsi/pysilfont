@@ -272,7 +272,7 @@ class feaplus_parser(Parser) :
                 raise FeatureLibError(
                     'Expected a single glyphclass after "from"',
                     location)
-            if len(new[0].glyphSet()) % len(old[0].glyphSet()) != 0:
+            if len(old[0].glyphSet()) == 0 or len(new[0].glyphSet()) % len(old[0].glyphSet()) != 0:
                 raise FeatureLibError(
                     'The glyphclass after "from" must be a multiple of length of the glyphclass on before',
                     location)
