@@ -9,7 +9,7 @@ from fontbakery.checkrunner import Section, PASS, FAIL, WARN, ERROR, INFO, SKIP
 from fontbakery.callable import condition, check, disable
 from fontbakery.message import Message
 from fontbakery.fonts_profile import profile_factory
-from fontbakery.constants import PriorityLevel, NameID, PlatformID, WindowsEncodingID
+from fontbakery.constants import NameID, PlatformID, WindowsEncodingID
 
 from collections import OrderedDict
 
