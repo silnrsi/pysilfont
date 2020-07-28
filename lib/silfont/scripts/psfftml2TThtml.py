@@ -269,13 +269,22 @@ def doit(args) :
 
     # Read and save feature mapping
     for r in args.map:
-        if r[0].startswith('#'):
+        # remove empty cells from the end
+        while len(r) and len(r[-1]) == 0:
+            r.pop()
+        if len(r) == 0 or r[0].startswith('#'):
             continue
         elif r[0].startswith('lang='):
-            r[0] = r[0][5:]
-            lang_maps[r[0]] = lang_map(r)
+            if len(r[0]) < 7 or len(r) != 3:
+                logger.log("Invalid lang mapping: '" + ','.join(r) + "' ignored", "W")
+            else:
+                r[0] = r[0][5:]
+                lang_maps[r[0]] = lang_map(r)
         else:
-            feat_maps[r[0]] = feat_map(r)
+            if len(r) < 4:
+                logger.log("Invalid feature mapping: '" + ','.join(r) + "' ignored", "W")
+            else:
+                feat_maps[r[0]] = feat_map(r)
 
     # Open and verify input file is a tunable font; extract and parse feat_all from font.
     font = ttLib.TTFont(sourcettf)
