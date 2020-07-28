@@ -1,3 +1,4 @@
-2018-10-04 12:10:51 Progress: Renaming the input ttf glyphs based on production names in the UFO
-2018-10-04 12:10:51 Progress: Saving the output ttf file
-2018-10-04 12:10:51 Progress: Done
+2020-07-28 14:36:06 Progress: Running:  psfchangettfglyphnames tests/input/font-psf-test/source/PsfTest-Regular.ufo tests/input/PsfTest-R.ttf local/testresults/ufo/psfchangettfglyphnames.ttf -l local/testresults/ufo/psfchangettfglyphnames.log
+2020-07-28 14:36:06 Progress: Renaming the input ttf glyphs based on production names in the UFO
+2020-07-28 14:36:06 Progress: Saving the output ttf file
+2020-07-28 14:36:06 Progress: Done

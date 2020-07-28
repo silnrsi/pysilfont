@@ -1,24 +1,25 @@
-2020-01-29 10:01:24 Progress: Opening file for input: tests/input/psfcopyglyphs.csv
-2020-01-29 10:01:24 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
-2020-01-29 10:01:24 Progress: Checking fontinfo.plist metadata
-2020-01-29 10:01:24 Warning:  openTypeNameSampleText is missing from fontinfo.plist
-2020-01-29 10:01:24 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
-2020-01-29 10:01:24 Warning:  year would be removed from fontinfo  Old value: 2020
-2020-01-29 10:01:24 Warning:  capHeight would be updated  Old value: 1485.3, new value: 1485
-2020-01-29 10:01:24 Warning:  styleMapFamilyName would be uppdated  Old value: Psf test, new value: Psf Test
-2020-01-29 10:01:24 Warning:  openTypeOS2TypoLineGap would be updated  Old value: 1, new value: 0
-2020-01-29 10:01:24 Warning:  openTypeNamePreferredFamilyName would be updated  Old value: Psf Testing, new value: Psf Test
-2020-01-29 10:01:24 Progress: Checking lib.plist metadata
-2020-01-29 10:01:24 Progress: Check & fix results:- Errors: 0, Changes to make: 6, Other warnings: 1
-2020-01-29 10:01:24 Progress: See log file for details
-2020-01-29 10:01:24 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Regular.ufo
-2020-01-29 10:01:24 Progress: Checking fontinfo.plist metadata
-2020-01-29 10:01:24 Warning:  openTypeNameSampleText is missing from fontinfo.plist
-2020-01-29 10:01:24 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
-2020-01-29 10:01:24 Progress: Checking lib.plist metadata
-2020-01-29 10:01:24 Progress: Check & fix results:- Errors: 0, Changes to make: 1, Other warnings: 1
-2020-01-29 10:01:24 Progress: See log file for details
-2020-01-29 10:01:24 Warning:  Line 4: Glyph 'Colon' already present; skipping
-2020-01-29 10:01:24 Progress: Processing font for output
-2020-01-29 10:01:24 Progress: Output UFO already exists - reading for comparison
-2020-01-29 10:01:24 Progress: Writing font to local/testresults/ufo/psfcopyglyphs.ufo
+2020-07-28 14:36:06 Progress: Running:  psfcopyglyphs -s tests/input/font-psf-test/source/PsfTest-Regular.ufo tests/input/font-psf-test/source/PsfTest-Italic.ufo -i tests/input/psfcopyglyphs.csv -l local/testresults/ufo/psfcopyglyphs.log --rename newname --unicode usv
+2020-07-28 14:36:06 Progress: Opening file for input: tests/input/psfcopyglyphs.csv
+2020-07-28 14:36:06 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
+2020-07-28 14:36:06 Progress: Checking fontinfo.plist metadata
+2020-07-28 14:36:06 Warning:  openTypeNameSampleText is missing from fontinfo.plist
+2020-07-28 14:36:06 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
+2020-07-28 14:36:06 Warning:  year would be removed from fontinfo  Old value: 2020
+2020-07-28 14:36:06 Warning:  capHeight would be updated  Old value: 1485.3, new value: 1485
+2020-07-28 14:36:06 Warning:  styleMapFamilyName would be uppdated  Old value: Psf test, new value: Psf Test
+2020-07-28 14:36:06 Warning:  openTypeOS2TypoLineGap would be updated  Old value: 1, new value: 0
+2020-07-28 14:36:06 Warning:  openTypeNamePreferredFamilyName would be updated  Old value: Psf Testing, new value: Psf Test
+2020-07-28 14:36:06 Progress: Checking lib.plist metadata
+2020-07-28 14:36:06 Progress: Check & fix results:- Errors: 0, Changes to make: 6, Other warnings: 1
+2020-07-28 14:36:06 Progress: See log file for details
+2020-07-28 14:36:06 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Regular.ufo
+2020-07-28 14:36:06 Progress: Checking fontinfo.plist metadata
+2020-07-28 14:36:06 Warning:  openTypeNameSampleText is missing from fontinfo.plist
+2020-07-28 14:36:06 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
+2020-07-28 14:36:06 Progress: Checking lib.plist metadata
+2020-07-28 14:36:06 Progress: Check & fix results:- Errors: 0, Changes to make: 1, Other warnings: 1
+2020-07-28 14:36:06 Progress: See log file for details
+2020-07-28 14:36:06 Warning:  Line 4: Glyph 'Colon' already present; skipping
+2020-07-28 14:36:06 Progress: Processing font for output
+2020-07-28 14:36:06 Progress: Output UFO already exists - reading for comparison
+2020-07-28 14:36:06 Progress: Writing font to local/testresults/ufo/psfcopyglyphs.ufo

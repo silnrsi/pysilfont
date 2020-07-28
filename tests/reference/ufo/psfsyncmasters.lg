@@ -1,11 +1,12 @@
-2018-09-13 17:54:43 Warning:  PsfTest-Bold.ufo com.schriftgestaltung.glyphOrder updated:  Old value: ['.notdef', '.null',..., new value: ['.notdef', '.null',...
-2018-09-13 17:54:43 Progress: Writing updated lib.plist to lib_new.plist
-2018-09-13 17:54:43 Progress: Writing updated fontinfo.plist to fontinfo_new.plist
-2018-09-13 17:54:43 Warning:  PsfTest-Italic.ufo openTypeNamePreferredFamilyName updated:  Old value: Psf Testing, new value: Psf Test
-2018-09-13 17:54:43 Warning:  PsfTest-Italic.ufo openTypeOS2TypoLineGap updated:  Old value: 1, new value: 0
-2018-09-13 17:54:43 Warning:  PsfTest-Italic.ufo styleMapFamilyName updated:  Old value: Psf test, new value: Psf Test
-2018-09-13 17:54:43 Progress: Writing updated fontinfo.plist to fontinfo_new.plist
-2018-09-13 17:54:43 Warning:  PsfTest-BoldItalic.ufo openTypeHheaAscender updated:  Old value: 2200, new value: 2100
-2018-09-13 17:54:43 Warning:  PsfTest-BoldItalic.ufo postscriptFamilyBlues removed:  Old value: []
-2018-09-13 17:54:43 Progress: Writing updated fontinfo.plist to fontinfo_new.plist
-2018-09-13 17:54:43 Progress: psfsyncmasters completed
+2020-07-28 14:36:09 Progress: Running:  psfsyncmasters -n tests/input/font-psf-test/source/PsfTestRoman.designspace tests/input/font-psf-test/source/PsfTestItalic.designspace -l local/testresults/ufo/psfsyncmasters.log
+2020-07-28 14:36:09 Warning:  PsfTest-Bold.ufo com.schriftgestaltung.glyphOrder updated:  Old value: ['.notdef', '.null',..., new value: ['.notdef', '.null',...
+2020-07-28 14:36:09 Progress: Writing updated lib.plist to lib_new.plist
+2020-07-28 14:36:09 Progress: Writing updated fontinfo.plist to fontinfo_new.plist
+2020-07-28 14:36:09 Warning:  PsfTest-Italic.ufo openTypeNamePreferredFamilyName updated:  Old value: Psf Testing, new value: Psf Test
+2020-07-28 14:36:09 Warning:  PsfTest-Italic.ufo openTypeOS2TypoLineGap updated:  Old value: 1, new value: 0
+2020-07-28 14:36:09 Warning:  PsfTest-Italic.ufo styleMapFamilyName updated:  Old value: Psf test, new value: Psf Test
+2020-07-28 14:36:09 Progress: Writing updated fontinfo.plist to fontinfo_new.plist
+2020-07-28 14:36:09 Warning:  PsfTest-BoldItalic.ufo openTypeHheaAscender updated:  Old value: 2200, new value: 2100
+2020-07-28 14:36:09 Warning:  PsfTest-BoldItalic.ufo postscriptFamilyBlues removed:  Old value: []
+2020-07-28 14:36:09 Progress: Writing updated fontinfo.plist to fontinfo_new.plist
+2020-07-28 14:36:09 Progress: psfsyncmasters completed

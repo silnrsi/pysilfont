@@ -1,27 +1,28 @@
-2019-04-16 14:14:34 Progress: Opening file for input: tests/input/psfrenameglyphs.csv
-2019-04-16 14:14:34 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Bold.ufo
-2019-04-16 14:14:34 Info:     Processing Glyph Layer 0: public.defaultglyphs
-2019-04-16 14:14:34 Progress: Checking fontinfo.plist metadata
-2019-04-16 14:14:34 Warning:  openTypeNameSampleText is missing from fontinfo.plist
-2019-04-16 14:14:34 Warning:  openTypeOS2FamilyClass removed from fontinfo.  Old value: [0, 0]
-2019-04-16 14:14:34 Info:     Types: Old - list, New - NoneType
-2019-04-16 14:14:34 Progress: Checking lib.plist metadata
-2019-04-16 14:14:34 Progress: Check & fix results:- Errors: 0, Changes made: 1, Other warnings: 1
-2019-04-16 14:14:34 Progress: See log file for details
-2019-04-16 14:14:34 Info:     Pass 1 (Font): Renamed Apos to Bpos
-2019-04-16 14:14:34 Info:     Pass 1 (PGO): Renamed Apos to Bpos
-2019-04-16 14:14:34 Info:     Pass 1 (csGO): Renamed Apos to Bpos
-2019-04-16 14:14:34 Info:     Pass 1 (psn): Renamed Apos to Bpos
-2019-04-16 14:14:34 Info:     Pass 1 (Font): Renamed Asterisk to Star
-2019-04-16 14:14:34 Info:     Pass 1 (PGO): Renamed Asterisk to Star
-2019-04-16 14:14:34 Info:     Pass 1 (csGO): Renamed Asterisk to Star
-2019-04-16 14:14:34 Info:     Pass 1 (psn): Renamed Asterisk to Star
-2019-04-16 14:14:34 Info:     glyph name not in font: Commer
-2019-04-16 14:14:34 Info:     glyph name not in publicGlyphorder: Commer
-2019-04-16 14:14:34 Info:     glyph name not in csGlyphorder: Commer
-2019-04-16 14:14:34 Info:     glyph name not in psnames: Commer
-2019-04-16 14:14:34 Progress: 2 glyphs renamed in UFO
-2019-04-16 14:14:34 Progress: Processing font for output
-2019-04-16 14:14:34 Progress: Output UFO already exists - reading for comparison
-2019-04-16 14:14:34 Progress: Writing font to local/testresults/ufo/psfrenameglyphs.ufo
-2019-04-16 14:14:34 Info:     Processing glyphs directory
+2020-07-28 14:36:08 Progress: Running:  psfrenameglyphs tests/input/font-psf-test/source/PsfTest-Bold.ufo -i tests/input/psfrenameglyphs.csv -l local/testresults/ufo/psfrenameglyphs.log -p loglevel=i -p checkfix=fix
+2020-07-28 14:36:08 Progress: Opening file for input: tests/input/psfrenameglyphs.csv
+2020-07-28 14:36:08 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Bold.ufo
+2020-07-28 14:36:08 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2020-07-28 14:36:08 Progress: Checking fontinfo.plist metadata
+2020-07-28 14:36:08 Warning:  openTypeNameSampleText is missing from fontinfo.plist
+2020-07-28 14:36:08 Warning:  openTypeOS2FamilyClass removed from fontinfo.  Old value: [0, 0]
+2020-07-28 14:36:08 Info:     Types: Old - list, New - NoneType
+2020-07-28 14:36:08 Progress: Checking lib.plist metadata
+2020-07-28 14:36:08 Progress: Check & fix results:- Errors: 0, Changes made: 1, Other warnings: 1
+2020-07-28 14:36:08 Progress: See log file for details
+2020-07-28 14:36:08 Info:     Pass 1 (Font): Renamed Apos to Bpos
+2020-07-28 14:36:08 Info:     Pass 1 (PGO): Renamed Apos to Bpos
+2020-07-28 14:36:08 Info:     Pass 1 (csGO): Renamed Apos to Bpos
+2020-07-28 14:36:08 Info:     Pass 1 (psn): Renamed Apos to Bpos
+2020-07-28 14:36:08 Info:     Pass 1 (Font): Renamed Asterisk to Star
+2020-07-28 14:36:08 Info:     Pass 1 (PGO): Renamed Asterisk to Star
+2020-07-28 14:36:08 Info:     Pass 1 (csGO): Renamed Asterisk to Star
+2020-07-28 14:36:08 Info:     Pass 1 (psn): Renamed Asterisk to Star
+2020-07-28 14:36:08 Info:     glyph name not in font: Commer
+2020-07-28 14:36:08 Info:     glyph name not in publicGlyphorder: Commer
+2020-07-28 14:36:08 Info:     glyph name not in csGlyphorder: Commer
+2020-07-28 14:36:08 Info:     glyph name not in psnames: Commer
+2020-07-28 14:36:08 Progress: 2 glyphs renamed in UFO
+2020-07-28 14:36:08 Progress: Processing font for output
+2020-07-28 14:36:08 Progress: Output UFO already exists - reading for comparison
+2020-07-28 14:36:08 Progress: Writing font to local/testresults/ufo/psfrenameglyphs.ufo
+2020-07-28 14:36:08 Info:     Processing glyphs directory

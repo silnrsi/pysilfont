@@ -1,1 +1,2 @@
-2019-11-28 15:30:25 Progress: Opening file for input: tests/input/psfbuildcomp.txt
+2020-07-28 14:48:16 Progress: Running:  psfbuildcompgc tests/input/font-psf-test/source/PsfTest-Regular.ufo -i tests/input/psfbuildcomp.txt -l local/testresults/fontparts/psfbuildcompgc.log
+2020-07-28 14:48:16 Progress: Opening file for input: tests/input/psfbuildcomp.txt

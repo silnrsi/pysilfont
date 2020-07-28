@@ -1,15 +1,16 @@
-2020-01-29 10:01:27 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
-2020-01-29 10:01:27 Progress: Checking fontinfo.plist metadata
-2020-01-29 10:01:27 Warning:  openTypeNameSampleText is missing from fontinfo.plist
-2020-01-29 10:01:27 Warning:  openTypeOS2FamilyClass removed from fontinfo.  Old value: [0, 0]
-2020-01-29 10:01:27 Warning:  year removed from fontinfo.  Old value: 2020
-2020-01-29 10:01:27 Warning:  capHeight updated  Old value: 1485.3, new value: 1485
-2020-01-29 10:01:27 Warning:  styleMapFamilyName uppdated  Old value: Psf test, new value: Psf Test
-2020-01-29 10:01:27 Warning:  openTypeOS2TypoLineGap updated  Old value: 1, new value: 0
-2020-01-29 10:01:27 Warning:  openTypeNamePreferredFamilyName updated  Old value: Psf Testing, new value: Psf Test
-2020-01-29 10:01:27 Progress: Checking lib.plist metadata
-2020-01-29 10:01:27 Progress: Check & fix results:- Errors: 0, Changes made: 6, Other warnings: 1
-2020-01-29 10:01:27 Progress: See log file for details
-2020-01-29 10:01:27 Progress: Processing font for output
-2020-01-29 10:01:27 Progress: Output UFO already exists - reading for comparison
-2020-01-29 10:01:27 Progress: Writing font to local/testresults/ufo/psfnormalize.ufo
+2020-07-28 14:36:09 Progress: Running:  psfnormalize tests/input/font-psf-test/source/PsfTest-Italic.ufo -l local/testresults/ufo/psfnormalize.log -p checkfix=fix
+2020-07-28 14:36:09 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
+2020-07-28 14:36:09 Progress: Checking fontinfo.plist metadata
+2020-07-28 14:36:09 Warning:  openTypeNameSampleText is missing from fontinfo.plist
+2020-07-28 14:36:09 Warning:  openTypeOS2FamilyClass removed from fontinfo.  Old value: [0, 0]
+2020-07-28 14:36:09 Warning:  year removed from fontinfo.  Old value: 2020
+2020-07-28 14:36:09 Warning:  capHeight updated  Old value: 1485.3, new value: 1485
+2020-07-28 14:36:09 Warning:  styleMapFamilyName uppdated  Old value: Psf test, new value: Psf Test
+2020-07-28 14:36:09 Warning:  openTypeOS2TypoLineGap updated  Old value: 1, new value: 0
+2020-07-28 14:36:09 Warning:  openTypeNamePreferredFamilyName updated  Old value: Psf Testing, new value: Psf Test
+2020-07-28 14:36:09 Progress: Checking lib.plist metadata
+2020-07-28 14:36:09 Progress: Check & fix results:- Errors: 0, Changes made: 6, Other warnings: 1
+2020-07-28 14:36:09 Progress: See log file for details
+2020-07-28 14:36:09 Progress: Processing font for output
+2020-07-28 14:36:09 Progress: Output UFO already exists - reading for comparison
+2020-07-28 14:36:09 Progress: Writing font to local/testresults/ufo/psfnormalize.ufo

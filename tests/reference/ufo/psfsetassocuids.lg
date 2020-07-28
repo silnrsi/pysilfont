@@ -1,15 +1,16 @@
-2019-04-16 14:14:34 Progress: Opening file for input: tests/input/psfsetassocuids.csv
-2019-04-16 14:14:34 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Bold.ufo
-2019-04-16 14:14:34 Info:     Processing Glyph Layer 0: public.defaultglyphs
-2019-04-16 14:14:34 Progress: Checking fontinfo.plist metadata
-2019-04-16 14:14:34 Warning:  openTypeNameSampleText is missing from fontinfo.plist
-2019-04-16 14:14:34 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
-2019-04-16 14:14:34 Info:     Types: Old - list, New - NoneType
-2019-04-16 14:14:34 Progress: Checking lib.plist metadata
-2019-04-16 14:14:34 Progress: Check & fix results:- Errors: 0, Changes to make: 1, Other warnings: 1
-2019-04-16 14:14:34 Progress: See log file for details
-2019-04-16 14:14:34 Error:    No glyph in font for SupThree on line 1
-2019-04-16 14:14:34 Progress: Processing font for output
-2019-04-16 14:14:34 Progress: Output UFO already exists - reading for comparison
-2019-04-16 14:14:34 Progress: Writing font to local/testresults/ufo/psfsetassocuids.ufo
-2019-04-16 14:14:34 Info:     Processing glyphs directory
+2020-07-28 14:36:08 Progress: Running:  psfsetassocuids tests/input/font-psf-test/source/PsfTest-Bold.ufo -i tests/input/psfsetassocuids.csv -l local/testresults/ufo/psfsetassocuids.log -p loglevel=i
+2020-07-28 14:36:08 Progress: Opening file for input: tests/input/psfsetassocuids.csv
+2020-07-28 14:36:08 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Bold.ufo
+2020-07-28 14:36:08 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2020-07-28 14:36:08 Progress: Checking fontinfo.plist metadata
+2020-07-28 14:36:08 Warning:  openTypeNameSampleText is missing from fontinfo.plist
+2020-07-28 14:36:08 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
+2020-07-28 14:36:08 Info:     Types: Old - list, New - NoneType
+2020-07-28 14:36:08 Progress: Checking lib.plist metadata
+2020-07-28 14:36:08 Progress: Check & fix results:- Errors: 0, Changes to make: 1, Other warnings: 1
+2020-07-28 14:36:08 Progress: See log file for details
+2020-07-28 14:36:08 Error:    No glyph in font for SupThree on line 1
+2020-07-28 14:36:08 Progress: Processing font for output
+2020-07-28 14:36:08 Progress: Output UFO already exists - reading for comparison
+2020-07-28 14:36:08 Progress: Writing font to local/testresults/ufo/psfsetassocuids.ufo
+2020-07-28 14:36:08 Info:     Processing glyphs directory

@@ -513,8 +513,10 @@ def execute(tool, fn, scriptargspec, chain = None):
                 args.log = logfile
         # Set up logger details
         logger.loglevel = execparams['loglevel'].upper()
-        if not quiet: logger.scrlevel = execparams['scrlevel'].upper()
         logger.logfile = logfile
+        if not quiet: logger.scrlevel = "E"  # suppress next log message from screen
+        logger.log("Running:  " + " ".join(argv), "P")
+        if not quiet: logger.scrlevel = execparams['scrlevel'].upper()
         setattr(args, 'logger', logger)
 
 # Process the argument values returned from argparse

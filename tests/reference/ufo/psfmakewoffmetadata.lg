@@ -1,9 +1,10 @@
-2020-02-26 12:00:57 Progress: Opening file for input: tests/input/psfmakewoffmetadata.txt
-2020-02-26 12:00:57 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Regular.ufo
-2020-02-26 12:00:57 Progress: Checking fontinfo.plist metadata
-2020-02-26 12:00:57 Warning:  openTypeNameSampleText is missing from fontinfo.plist
-2020-02-26 12:00:57 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
-2020-02-26 12:00:57 Progress: Checking lib.plist metadata
-2020-02-26 12:00:57 Progress: Check & fix results:- Errors: 0, Changes to make: 1, Other warnings: 1
-2020-02-26 12:00:57 Progress: See log file for details
-2020-02-26 12:00:57 Progress: Writing to : local/testresults/ufo/psfmakewoffmetadata.xml
+2020-07-28 14:36:08 Progress: Running:  psfmakewoffmetadata tests/input/font-psf-test/source/PsfTest-Regular.ufo -n Test -i SIL -f tests/input/psfmakewoffmetadata.txt -o local/testresults/ufo/psfmakewoffmetadata.xml -l local/testresults/ufo/psfmakewoffmetadata.log
+2020-07-28 14:36:08 Progress: Opening file for input: tests/input/psfmakewoffmetadata.txt
+2020-07-28 14:36:08 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Regular.ufo
+2020-07-28 14:36:08 Progress: Checking fontinfo.plist metadata
+2020-07-28 14:36:08 Warning:  openTypeNameSampleText is missing from fontinfo.plist
+2020-07-28 14:36:08 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
+2020-07-28 14:36:08 Progress: Checking lib.plist metadata
+2020-07-28 14:36:08 Progress: Check & fix results:- Errors: 0, Changes to make: 1, Other warnings: 1
+2020-07-28 14:36:08 Progress: See log file for details
+2020-07-28 14:36:08 Progress: Writing to : local/testresults/ufo/psfmakewoffmetadata.xml

@@ -1,8 +1,9 @@
-2018-10-04 22:18:40 Progress: Fixing data in PsfTest-Regular
-2018-10-04 22:18:40 Progress: Checking lib.plist
-2018-10-04 22:18:40 Progress: Checking fontinfo.plist
-2018-10-04 22:18:40 Progress: Writing out local/testresults/ufo/psfglyphs2ufo/PsfTest-Regular.ufo
-2018-10-04 22:18:40 Progress: Fixing data in PsfTest-Bold
-2018-10-04 22:18:40 Progress: Checking lib.plist
-2018-10-04 22:18:40 Progress: Checking fontinfo.plist
-2018-10-04 22:18:40 Progress: Writing out local/testresults/ufo/psfglyphs2ufo/PsfTest-Bold.ufo
+2020-07-28 14:36:07 Progress: Running:  psfglyphs2ufo --nofea tests/input/font-psf-test/source/PsfTestRoman.glyphs local/testresults/ufo/psfglyphs2ufo -l local/testresults/ufo/psfglyphs2ufo.log
+2020-07-28 14:36:08 Progress: Fixing data in PsfTest-Regular
+2020-07-28 14:36:08 Progress: Checking lib.plist
+2020-07-28 14:36:08 Progress: Checking fontinfo.plist
+2020-07-28 14:36:08 Progress: Writing out local/testresults/ufo/psfglyphs2ufo/PsfTest-Regular.ufo
+2020-07-28 14:36:08 Progress: Fixing data in PsfTest-Bold
+2020-07-28 14:36:08 Progress: Checking lib.plist
+2020-07-28 14:36:08 Progress: Checking fontinfo.plist
+2020-07-28 14:36:08 Progress: Writing out local/testresults/ufo/psfglyphs2ufo/PsfTest-Bold.ufo
