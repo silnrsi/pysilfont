@@ -267,9 +267,10 @@ class FChar(object):
         # Additional info from UFO:
         self.takesMarks = self.isMark = self.isBase = False
 
-    def checkAPs(self, gname, font, apRE):
-        # glean info from UFO
+    def checkGlyph(self, gname, font, apRE):
+        # glean info from UFO if glyph is present
         if gname in font.deflayer:
+            self.notInUFO = False
             for a in font.deflayer[gname]['anchor'] :
                 name = a.element.get('name')
                 if apRE.match(name) is None:
@@ -280,6 +281,8 @@ class FChar(object):
                 else:
                     self.takesMarks = True
             self.isBase = self.takesMarks and not self.isMark
+        else:
+            self.notInUFO = True
 
 
 class FSpecial(object):
@@ -326,6 +329,9 @@ class FTMLBuilder(object):
         self._charFromUID = {}
         self._charFromBasename = {}
         self._specialFromBasename = {}
+
+        # list of USVs that are in the CSV but whose glyphs are not in the UFO
+        self.uidsMissingFromUFO = set()
 
         # Compile --ap parameter
         if ap is None:
@@ -475,7 +481,9 @@ class FTMLBuilder(object):
                     c = self.addChar(uid, basename)
                 if font is not None:
                     # Examine APs to determine if this character takes marks:
-                    c.checkAPs(gname, font, self.apRE)
+                    c.checkGlyph(gname, font, self.apRE)
+                    if c.notInUFO:
+                        self.uidsMissingFromUFO.add(uid)
             elif len(uidList) > 1:
                 # Handle ligatures
                 c = self.addSpecial(uidList, basename)
@@ -487,7 +495,7 @@ class FTMLBuilder(object):
                 if basename in self._charFromBasename:
                     c = self._charFromBasename[basename]
                     # Check for additional AP info
-                    c.checkAPs(gname, font, self.apRE)
+                    c.checkGlyph(gname, font, self.apRE)
                 elif basename in self._specialFromBasename:
                     c = self._specialFromBasename[basename]
                 else:
