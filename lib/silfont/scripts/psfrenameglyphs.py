@@ -76,13 +76,15 @@ def doit(args) :
     deletelater = []        # Glyphs we'll delete after merging
 
     for r in incsv:
-        oldname = r[0]
-        newname = r[1]
-        csvmap[oldname]=newname
-
-        # ignore header row and rows where the newname is blank or same as oldname
-        if oldname == "Name" or newname == "":
+        oldname = r[0].strip()
+        newname = r[1].strip()
+        # ignore header row and rows where the newname is blank or a comment marker
+        if oldname == "Name" or oldname.startswith('#') or newname == "":
             continue
+        if len(oldname)==0:
+            logger.log('empty glyph oldname in glyph_data; ignored', 'W')
+            continue
+        csvmap[oldname]=newname
 
         if  oldname == newname:
             # Remember names that don't need to change
