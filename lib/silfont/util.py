@@ -7,6 +7,9 @@ __author__ = 'David Raymond'
 
 import os, subprocess, difflib, sys, io
 from silfont.core import execute
+from pkg_resources import resource_filename
+from csv import reader as csvreader
+
 try:
     from fontTools.ttLib import TTFont
 except Exception as e:
@@ -285,3 +288,23 @@ def colortoname(color, default=None):
         return colorstonameslist.get(color,default)
     else:
         return colorstonameslist.get(color)
+
+# Provide dict of required characters which match the supplied list of sets - sets can be basic, rtl or sil
+def required_chars(sets="basic"):
+    if type(sets) == str: sets = (sets,) # Convert single string to a tuple
+    rcfile = open(resource_filename('silfont','data/required_chars.csv'))
+    rcreader = csvreader(rcfile)
+    next(rcreader) # Read fist line which is headers
+    rcdict = {}
+    for line in rcreader:
+        unicode = line[0][2:]
+        item = {
+            "ps_name": line[1],
+            "glyph_name": line[2],
+            "sil_set": line[3],
+            "rationale": line[4],
+            "notes": line[5]
+        }
+        if item["sil_set"] in sets: rcdict[unicode] = item
+    return rcdict
+

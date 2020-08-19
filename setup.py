@@ -44,6 +44,7 @@ setup(
     url = 'http://github.com/silnrsi/pysilfont',
     packages = ["silfont", "silfont.scripts", "silfont.fbtests"],
     package_dir = {'':'lib'},
+    package_data = {"silfont": ["data/*.*"]},
     entry_points={'console_scripts': cscripts},
     license = 'MIT',
     platforms = ['Linux','Win32','Mac OS X'],
