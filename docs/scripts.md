@@ -216,20 +216,26 @@ psfchangettfglyphnames source/Harmattan-Regular.ufo results/in.ttf results/out.t
 
 ---
 #### psfcheckbasicchars
-Usage: **`psfcheckbasicchars [-r] ufo`**
+Usage: **`psfcheckbasicchars [-r] [-s] ufo`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-Used to check a UFO for the presence of glyphs that represent the characters in the list of [Recommended characters for Non-Roman fonts](http://scriptsource.org/entry/gg5wm9hhd3). Any missing characters are noted in the resulting log file along with the recommended AGL glyph name.
+Used to check a UFO for the presence of glyphs that represent the characters in the list of 
+[Recommended characters for Non-Roman fonts](https://github.com/silnrsi/pysilfont/blob/master/lib/silfont/data/required_chars.csv).
+Any missing characters are noted in the resulting log file along with the recommended AGL glyph name.
 
-By default only characters needed for all fonts (both LTR and RTL) will be checked.
-To check for characters needed only for RTL fonts, use the -r option.
+By default only characters needed for all fonts (both LTR and RTL) will be checked.\
+To also check for characters that only RTL fonts need, use the -r option.\
+To include characters that are in SIL's PUA block, use the -s option.
 
 Example usage:
 
 ```
 psfcheckbasicchars Nokyung-Regular.ufo
 ```
+
+There is more documentation about the character list [here](https://github.com/silnrsi/pysilfont/blob/master/lib/silfont/data/required_chars.md) 
+and additional information can be shown on screen or in the log file by increasing the log level to I (-p scrlevel=i or -p loglevel=i)
 
 ---
 #### psfcompdef2xml
