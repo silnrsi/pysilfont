@@ -52,8 +52,11 @@ def doit(args) :
     if cnt > 0:
         for usv in sorted(req_chars.keys()):
             item = req_chars[usv]
-            logger.log(usv + " from the " + item["sil_set"] +
-                       " set has no representative glyph (" + item["ps_name"] + ")", "W")
+            psname = item["ps_name"]
+            gname = item["glyph_name"]
+            name = psname if psname == gname else psname + ", " + gname
+            logger.log("U+" + usv + " from the " + item["sil_set"] +
+                       " set has no representative glyph (" + name + ")", "W")
             logger.log("Rationale: This character is needed " + rationales[item["rationale"]], "I")
             if item["notes"]:
                 logger.log(item["notes"], "I")
