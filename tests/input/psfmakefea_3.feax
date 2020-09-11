@@ -1,0 +1,20 @@
+@Tooth2w3wBelowMedi = [toothedbelow2w3w.medi];
+@Tooth2w2wBelowMedi = [toothedbelow2w2w.medi];
+@Tooth3wBelowMedi = [toothedbelow3w.medi];
+@Tooth2wBelowMedi = [toothedbelow2w.medi];
+
+lookup _Insert2Kashidas {
+    sub @Tooth2w2wBelowMedi by kashida kashida @Tooth2w2wBelowMedi;
+} _Insert2Kashidas;
+
+lookup _InsertKashida {
+    sub @Tooth2w2wBelowMedi by kashida @Tooth2w2wBelowMedi;
+} _InsertKashida;
+
+lookup ToothKashidasMM {
+  lookupflag IgnoreMarks;       
+    sub @Tooth2w3wBelowMedi' lookup _Insert2Kashidas  @Tooth3wBelowMedi;
+ifinfo(styleName, "Bold") {
+    sub @Tooth2wBelowMedi'     lookup _InsertKashida    @Tooth2wBelowMedi;  # BOLD
+}
+} ToothKashidasMM;

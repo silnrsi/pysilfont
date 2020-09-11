@@ -434,7 +434,7 @@ class feaplus_parser(Parser) :
             import inspect      # oh this is so ugly!
             calledby = inspect.stack()[2][3]    # called through lambda since extension
             if calledby == 'parse_block_':
-                self.parse_block_(block, False)
+                self.parse_subblock_(block, False)
             else:
                 self.parse_statements_block_(block)
             return block
@@ -455,7 +455,7 @@ class feaplus_parser(Parser) :
         import inspect      # oh this is so ugly! Instead caller should pass in context
         calledby = inspect.stack()[2][3]        # called through a lambda since extension
         if calledby == 'parse_block_':
-            self.parse_block_(block, False)
+            self.parse_subblock_(block, False)
         else:
             self.parse_statements_block_(block)
         return block
