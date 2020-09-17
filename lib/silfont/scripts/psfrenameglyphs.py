@@ -252,10 +252,20 @@ def doit(args) :
     # Iterate over all glyphs, and fix up any components that reference renamed glyphs
     for layer in font.layers:
         for name in layer:
-            for component in layer[name].etree.findall('./outline/component[@base]'):
+            glyph = layer[name]
+            for component in glyph.etree.findall('./outline/component[@base]'):
                 oldname = component.get('base')
                 if oldname in nameMap:
                     component.set('base', nameMap[oldname])
+                    logger.log(f'renamed component base {oldname} to {component.get("base")} in glyph {name} layer {layer.layername}', 'I')
+            lib = glyph['lib']
+            if lib:
+                if 'com.schriftgestaltung.Glyphs.ComponentInfo' in lib:
+                    for component in lib.getval('com.schriftgestaltung.Glyphs.ComponentInfo'):
+                        oldname = component['name']
+                        if oldname in nameMap:
+                            component['name'] = nameMap[oldname]
+                            logger.log(f'renamed component info {oldname} to {component["name"]} in glyph {name} layer {layer.layername}', 'I')
 
     # Delete anything we no longer need:
     for name in deletelater:
