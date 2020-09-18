@@ -10,6 +10,7 @@ import silfont.ufo as ufo
 from collections import OrderedDict
 from silfont.feax_parser import feaplus_parser
 from xml.etree import ElementTree as et
+import re
 
 from silfont.core import execute
 
@@ -141,12 +142,23 @@ class Font(object) :
     def read_classes(self, fname, classproperties=False):
         doc = et.parse(fname)
         for c in doc.findall('.//class'):
-            cl = []
-            self.classes[c.get('name')] = cl  # assumes class does not already exist
+            class_name = c.get('name')
+            m = re.search('\[(\d+)\]$', class_name)
+            # support fixedclasses like make_gdl.pl
+            if m:
+                class_nm = class_name[0:m.start()]
+                ix = int(m.group(1))
+            else:
+                class_nm = class_name
+                ix = None
+            cl = self.classes.setdefault(class_nm, [])
             for e in c.get('exts', '').split() + [""]:
                 for g in c.text.split():
                     if g+e in self.glyphs or (e == '' and g.startswith('@')):
-                        cl.append(g+e)
+                        if ix:
+                            cl.insert(ix, g+e)
+                        else:
+                            cl.append(g+e)
         if not classproperties:
             return
         for c in doc.findall('.//property'):
@@ -154,7 +166,7 @@ class Font(object) :
                 for g in c.text.split():
                     if g+e in self.glyphs:
                         cname = c.get('name') + "_" + c.get('value')
-                        self.classes.set_default(cname, []).append(g+e)
+                        self.classes.setdefault(cname, []).append(g+e)
                     
     def make_classes(self, ligmode) :
         for name, g in self.glyphs.items() :
