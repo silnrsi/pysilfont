@@ -17,6 +17,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfchangegdlnames](#psfchangegdlnames) | Change graphite names within GDL based on mappings files |
 | [psfchangettfglyphnames](#psfchangettfglyphnames) | Change glyph names in a ttf from working names to production names |
 | [psfcheckbasicchars](#psfcheckbasicchars) | Check UFO for glyphs that represent recommended basic characters |
+| [psfcheckclassorders](#psfcheckclassorders) | Verify classes defined in xml have correct ordering where needed |
 | [psfcompdef2xml](#psfcompdef2xml) | Convert composite definition file to XML format |
 | [psfcompressgr](#psfcompressgr) | Compress Graphite tables in a ttf font |
 | [psfcopyglyphs](#psfcopyglyphs) | Copy glyphs from one UFO to another with optional scale and rename |
@@ -236,6 +237,56 @@ psfcheckbasicchars Nokyung-Regular.ufo
 
 There is more documentation about the character list [here](https://github.com/silnrsi/pysilfont/blob/master/lib/silfont/data/required_chars.md) 
 and additional information can be shown on screen or in the log file by increasing the log level to I (-p scrlevel=i or -p loglevel=i)
+
+---
+#### psfcheckclassorders
+usage: **`psfcheckclassorders [--gname GNAME] [--header HEADER] [classes] [glyphdata]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Verify classes defined in xml have correct ordering where needed
+
+Looks for comment lines in the `classes` file that match the string:
+```
+  *NEXT n CLASSES MUST MATCH*
+```
+where `n` is the number of upcoming class definitions that must result in the
+same glyph alignment when glyph names are sorted by TTF order.
+
+```
+optional arguments:
+  classes           Class definition in XML format (default `classes.xml`)
+  glyphdata         Glyph info csv file (default `glyph_data.csv`)
+  --gname GNAME     Column header for glyph name (default `psfname`)
+  --sort HEADER     Column header for sort order (default `sort_final`)
+```
+#### Notes
+
+Classes defined in xml format (typically `source/classes.xml`) can be accessed by both Graphite and OpenType code. For historical reasons there is a difference in the way they are processed: for Graphite (only), the members of the classes are re-ordered based on the glyphIDs in the ttf. 
+
+For classes used just for rule contexts, glyph order doesn't matter. But for classes used for n-to-n substitutions, order *does* matter and the classes have to be "aligned".
+
+Based on the sort order information extracted from the `glyphdata` file, this tool examines specially-marked groups of class definitions from the `classes` file to determine if they remain aligned after classes are reordered, and issues error messages if not. Here is an example identifying a set of three classes that must align:
+```
+    <!-- *NEXT 3 CLASSES MUST MATCH* -->
+        
+    <class name='Damma'>
+        damma-ar shadda_damma-ar hamza_damma-ar
+    </class>
+    
+    <class name='Damma_filled'>
+        damma-ar.filled shadda_damma-ar.filled hamza_damma-ar.filled
+    </class>
+    
+    <class name='Damma_short'>
+        damma-ar.short shadda_damma-ar.short hamza_damma-ar.short
+    </class>
+  ```
+
+Note that the Graphite workflow extracts glyph order from the ttf file, but `psfcheckclassorders` gets it from `glyphdata` argument; there is, therefore, an assumption that the glyph order indicated in `glyphdata` actually matches that in the ttf file.
+
+`psfcheckclassorders` will also issue warning a warning message if there are glyphs named in the `classes` file which are not included in the `glyphdata` file. While this is [intentionally] not an error for either Graphite or OpenType (relavent tools simply ignore such missing glyphs), it may be helpful in catching typos that result in class miss-alignment and therefore bugs.  By default warning messages are sent to the log file;
+use `-p scrlevel=W` to also route them to the terminal.
 
 ---
 #### psfcompdef2xml
