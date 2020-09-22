@@ -21,7 +21,7 @@ argspec = [
     ('classes', {'help': 'class definition in XML format', 'nargs': '?', 'default': 'classes.xml'}, {'type': 'infile'}),
     ('glyphdata', {'help': 'Glyph info csv file', 'nargs': '?', 'default': 'glyph_data.csv'}, {'type': 'incsv'}),
     ('--gname', {'help': 'Column header for glyph name', 'default': 'glyph_name'}, {}),
-    ('--header', {'help': 'Column header(s) for sort order', 'default': 'sort_final'}, {}),
+    ('--sort', {'help': 'Column header(s) for sort order', 'default': 'sort_final'}, {}),
 ]
 
 # Dictionary of glyphName : sortValue
@@ -41,8 +41,8 @@ def doit(args):
         glyphnpos = fl.index(args.gname)
     else:
         logger.log("No" + args.gname + "field in csv headers", "S")
-    if args.header in fl:
-        sortpos = fl.index(args.header)
+    if args.sort in fl:
+        sortpos = fl.index(args.sort)
     else:
         logger.log('No "' + args.header + '" heading in csv headers"', "S")
     next(incsv.reader, None)  # Skip first line with containing headers
