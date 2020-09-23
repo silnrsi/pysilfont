@@ -261,11 +261,14 @@ def doit(args) :
             lib = glyph['lib']
             if lib:
                 if 'com.schriftgestaltung.Glyphs.ComponentInfo' in lib:
-                    for component in lib.getval('com.schriftgestaltung.Glyphs.ComponentInfo'):
-                        oldname = component['name']
-                        if oldname in nameMap:
-                            component['name'] = nameMap[oldname]
-                            logger.log(f'renamed component info {oldname} to {component["name"]} in glyph {name} layer {layer.layername}', 'I')
+                    cielem = lib['com.schriftgestaltung.Glyphs.ComponentInfo'][1]
+                    for component in cielem:
+                        for i in range(0,len(component),2):
+                            if component[i].text == 'name':
+                                oldname = component[i+1].text
+                                if oldname in nameMap:
+                                    component[i+1].text = nameMap[oldname]
+                                    logger.log(f'renamed component info {oldname} to {nameMap[oldname]} in glyph {name} layer {layer.layername}', 'I')
 
     # Delete anything we no longer need:
     for name in deletelater:
