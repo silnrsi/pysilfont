@@ -1178,7 +1178,9 @@ _([Standard options](docs.md#standard-command-line-options) also apply)_
 
 Merges lookup identifiers gleaned from the map.csv file (emitted from [psfbuildfea](#psfbuildfea)), along with OpenType and Graphite feature identifiers (obtained from a compiled font), into the `<aliases>` section of a TypeTuner features.xml file. At least one of `-m` and `-f` must be provided.
 
-As per prior technology, the alias names do not distinguish between GSUB and GPOS lookups and features, therefore using the same lookup name or feature tag for both GSUB and GPOS will cause the program to exit with an error.
+Aliases for OpenType features will generated only for the default language of each script and the alias names will be of the form `<featureTag>_<scriptTag>_dflt`. Alias names for Graphite features will be of the form `gr_<featureID>`.
+
+As per prior technology, the OpenType feature alias names do not distinguish between GSUB and GPOS lookups and features, therefore using the same lookup name or feature tag for both GSUB and GPOS will cause the program to exit with an error.
 
 ---
 ####  psfufo2glyphs
