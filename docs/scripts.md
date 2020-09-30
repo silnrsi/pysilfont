@@ -731,11 +731,11 @@ optional arguments:
 
 ---
 ####  psfmakescaledshifted
-Usage: **`psfmakescaledshifted -i INPUT -t TRANSFORM infont [outfont]`**
+Usage: **`psfmakescaledshifted [-c] -i INPUT -t TRANSFORM infont [outfont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-Creates scaled and shifted versions of glyphs: takes the specified glyph and creates a duplicate that is scaled and shifted according to the specified transform, and assigns a new unicode encoding to it.
+Creates scaled and shifted versions of glyphs: takes the specified glyph and creates a duplicate that is scaled and shifted according to the specified transform, and assigns a new unicode encoding to it. Optional -c marks cells of generated glyphs (dark blue).
 
 Input is a csv with three fields: *original,new,unicode*.
 
