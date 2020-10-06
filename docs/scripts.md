@@ -240,11 +240,11 @@ and additional information can be shown on screen or in the log file by increasi
 
 ---
 #### psfcheckclassorders
-usage: **`psfcheckclassorders [--gname GNAME] [--header HEADER] [classes] [glyphdata]`**
+usage: **`psfcheckclassorders [--gname GNAME] [--sort HEADER] [classes] [glyphdata]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-Verify classes defined in xml have correct ordering where needed
+Verify classes defined in xml have correct ordering where needed.
 
 Looks for comment lines in the `classes` file that match the string:
 ```
@@ -255,7 +255,7 @@ same glyph alignment when glyph names are sorted by TTF order.
 
 ```
 optional arguments:
-  classes           Class definition in XML format (default `classes.xml`)
+  classes           Class definition file in XML format (default `classes.xml`)
   glyphdata         Glyph info csv file (default `glyph_data.csv`)
   --gname GNAME     Column header for glyph name (default `psfname`)
   --sort HEADER     Column header for sort order (default `sort_final`)
