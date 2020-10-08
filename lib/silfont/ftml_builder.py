@@ -265,8 +265,10 @@ class FChar(object):
             #   feat tag and value, e.g., 'cv24=3'
             # and returns a the glyphname for that alternate.
         # Additional info from UFO:
-        self.takesMarks = self.isMark = self.isBase = False
+        self.takesMarks = self.isMark = self.isBase = self.notInUFO = False
 
+    # the static method FTMLBuilder.checkGlyph is likely preferred
+    #   but leave this instance method for backwards compatibility
     def checkGlyph(self, gname, font, apRE):
         # glean info from UFO if glyph is present
         if gname in font.deflayer:
@@ -299,8 +301,10 @@ class FSpecial(object):
         except KeyError:
             self.logger.log('USV %04X not defined; no properties known' % uids[0], 'W')
         self.feats = set()  # feat tags that affect this char
+        self.aps = set()
         self.langs = set()  # lang tags that affect this char
         self.altnames = {}  # alternate glyph names.
+        self.takesMarks = self.isMark = self.isBase = self.notInUFO = False
 
 class FTMLBuilder(object):
     """glyph_data and UFO processing for building FTML"""
@@ -328,6 +332,7 @@ class FTMLBuilder(object):
         # Be able to find chars and specials:
         self._charFromUID = {}
         self._charFromBasename = {}
+        self._specialFromUIDs = {}
         self._specialFromBasename = {}
 
         # list of USVs that are in the CSV but whose glyphs are not in the UFO
@@ -371,15 +376,15 @@ class FTMLBuilder(object):
             self.logger.log('Attempt to add duplicate basename %s' % basename, 'S')
         c = FSpecial(uids, basename, self.logger)
         # remember it:
+        self._specialFromUIDs[tuple(uids)] = c
         self._specialFromBasename[basename] = c
         return c
 
     def specials(self):
         return self._specialFromBasename.keys()
 
-    def special(self, basename):
-        return self._specialFromBasename[basename]
-
+    def special(self, x):
+        return self._specialFromBasename[x] if isinstance(x, str) else self._specialFromUIDs[tuple(x)]
 
     def _csvWarning(self, msg, exception = None):
         m = "glyph_data line {1}: {0}".format(msg, self.incsv.line_num)
@@ -562,6 +567,35 @@ class FTMLBuilder(object):
                     feats.update(self._charFromUID[uid].feats)
         l = [self.features[tag].tvlist for tag in sorted(feats)]
         return product(*l)
+
+    @staticmethod
+    def checkGlyph(obj, gname, font, apRE):
+        # glean info from UFO if glyph is present
+        if gname in font.deflayer:
+            obj.notInUFO = False
+            for a in font.deflayer[gname]['anchor']:
+                name = a.element.get('name')
+                if apRE.match(name) is None:
+                    continue
+                obj.aps.add(name)
+                if name.startswith("_"):
+                    obj.isMark = True
+                else:
+                    obj.takesMarks = True
+            obj.isBase = obj.takesMarks and not obj.isMark
+        else:
+            obj.notInUFO = True
+
+    @staticmethod
+    def matchMarkBase(c_mark, c_base):
+        """ test whether an _AP on c_mark matches an AP on c_base """
+        for apM in c_mark.aps:
+            if apM.startswith("_"):
+                ap = apM[1:]
+                for apB in c_base.aps:
+                    if apB == ap:
+                        return True
+        return False
 
     def render(self, uids, ftml, keyUID = 0, addBreaks = True, rtl = None, dualJoinMode = 3, label = None, comment = None):
         """ general purpose (but not required) function to generate ftml for a character sequence """
