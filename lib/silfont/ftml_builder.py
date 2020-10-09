@@ -367,7 +367,7 @@ class FTMLBuilder(object):
         return self._charFromUID.keys()
 
     def char(self, x):
-        return self._charFromUID[x] if isinstance(x, int) else self._charFromBasename[x]
+        return self._charFromBasename[x] if isinstance(x, str) else self._charFromUID[x]
 
     def addSpecial(self, uids, basename):
         # Add an FSpecial:
