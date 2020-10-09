@@ -46,14 +46,14 @@ def doit(args) :
             felem = ffi[field][1]
             ftag = felem.tag
             ftext = felem.text
-            if ftag is 'real' : ftext = processnum(ftext,precision)
+            if ftag == 'real' : ftext = processnum(ftext,precision)
             message = field + updatemessage
 
             if field in tfi : # Need to compare values to see if update is needed
                 telem = tfi[field][1]
                 ttag = telem.tag
                 ttext = telem.text
-                if ttag is 'real' : ttext = processnum(ttext,precision)
+                if ttag == 'real' : ttext = processnum(ttext,precision)
 
                 if ftag in ("real", "integer", "string") :
                     if ftext != ttext :

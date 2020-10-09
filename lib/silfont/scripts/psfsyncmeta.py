@@ -181,7 +181,7 @@ def doit(args) :
                 mtag = melem.tag
                 mtext = melem.text
                 if mtext is None : mtext = ""
-                if mtag is 'real' : mtext = processnum(mtext,precision)
+                if mtag == 'real' : mtext = processnum(mtext,precision)
                 if tag in ("real", "integer", "string") :
                     if mtext != text :
                         issue = "does not match " + mastertext + " value"

@@ -43,13 +43,13 @@ def doit(args) :
     # Process output file name - execute() will not have processed file/dir name at all
     output = "" if args.output is None else args.output
     outdir,outfile = os.path.split(output)
-    if outfile is not "" and os.path.splitext(outfile)[1] == "" : # if no extension on outfile, assume a dir was meant
+    if outfile != "" and os.path.splitext(outfile)[1] == "" : # if no extension on outfile, assume a dir was meant
         outdir = os.path.join(outdir,outfile)
         outfile = None
     if outfile == "" : outfile = None
     if outfile and inputisdir : logger.log("Can't specify an output file when input is a directory", "S")
     outappend = None
-    if outdir is "" :
+    if outdir == "" :
         if outfile is None :
             outappend = "_out"
         else :

@@ -32,7 +32,7 @@ def doit(args) :
             glyph = font.deflayer[glyphn]
             if glyph["lib"] is None : glyph.add("lib")
             glyph["lib"].setval("org.sil.assocFeature","string",feature)
-            if value is not "" :
+            if value != "" :
                 glyph["lib"].setval("org.sil.assocFeatureValue","integer",value)
             else :
                 if "org.sil.assocFeatureValue" in glyph["lib"] : glyph["lib"].remove("org.sil.assocFeatureValue")
