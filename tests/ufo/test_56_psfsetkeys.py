@@ -15,7 +15,7 @@ cl = "psfsetkeys tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo -k org.
 outfont = "local/testresults/ufo/psfsetkeys.ufo" # Set to None for commands which don't output a font
 diffexts = [".ufo", ".log"] # List of extensions of all output files
 exp_errors = 0   # These may need updating if the test ufo is updated
-exp_warnings = 5 # The test ufo should have some errors/warnings to test the code!
+exp_warnings = 6 # The test ufo should have some errors/warnings to test the code!
 
 # Code after this can be the same for most/all tests; if needed to be different for a test remove this comment!
 

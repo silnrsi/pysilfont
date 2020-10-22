@@ -6,8 +6,6 @@
   <dict/>
   <key>com.schriftgestaltung.appVersion</key>
   <string>1165</string>
-  <key>com.schriftgestaltung.customParameter.GSFont.DisplayStrings</key>
-  <string/>
   <key>com.schriftgestaltung.customParameter.GSFont.disablesAutomaticAlignment</key>
   <true/>
   <key>com.schriftgestaltung.customParameter.GSFont.disablesLastChange</key>

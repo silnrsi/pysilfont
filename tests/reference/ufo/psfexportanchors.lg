@@ -1,15 +1,16 @@
-2020-07-28 14:36:07 Progress: Running:  psfexportanchors tests/input/font-psf-test/source/PsfTest-Italic.ufo local/testresults/ufo/psfexportanchors.xml -l local/testresults/ufo/psfexportanchors.log
-2020-07-28 14:36:07 Progress: Opening file for output: @cwd@/local/testresults/ufo/psfexportanchors.xml
-2020-07-28 14:36:07 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
-2020-07-28 14:36:07 Progress: Checking fontinfo.plist metadata
-2020-07-28 14:36:07 Warning:  openTypeNameSampleText is missing from fontinfo.plist
-2020-07-28 14:36:07 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
-2020-07-28 14:36:07 Warning:  year would be removed from fontinfo  Old value: 2020
-2020-07-28 14:36:07 Warning:  capHeight would be updated  Old value: 1485.3, new value: 1485
-2020-07-28 14:36:07 Warning:  styleMapFamilyName would be uppdated  Old value: Psf test, new value: Psf Test
-2020-07-28 14:36:07 Warning:  openTypeOS2TypoLineGap would be updated  Old value: 1, new value: 0
-2020-07-28 14:36:07 Warning:  openTypeNamePreferredFamilyName would be updated  Old value: Psf Testing, new value: Psf Test
-2020-07-28 14:36:07 Progress: Checking lib.plist metadata
-2020-07-28 14:36:07 Progress: Check & fix results:- Errors: 0, Changes to make: 6, Other warnings: 1
-2020-07-28 14:36:07 Progress: See log file for details
-2020-07-28 14:36:07 Warning:  LtnCapA.alt in public.glyphOrder list but absent from UFO
+2020-10-22 11:30:50 Progress: Running:  psfexportanchors tests/input/font-psf-test/source/PsfTest-Italic.ufo local/testresults/ufo/psfexportanchors.xml -l local/testresults/ufo/psfexportanchors.log
+2020-10-22 11:30:50 Progress: Opening file for output: @cwd@/local/testresults/ufo/psfexportanchors.xml
+2020-10-22 11:30:50 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
+2020-10-22 11:30:50 Progress: Checking fontinfo.plist metadata
+2020-10-22 11:30:50 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
+2020-10-22 11:30:50 Warning:  year would be removed from fontinfo  Old value: 2020
+2020-10-22 11:30:50 Warning:  capHeight would be updated  Old value: 1485.3, new value: 1485
+2020-10-22 11:30:50 Warning:  styleMapFamilyName would be uppdated  Old value: Psf test, new value: Psf Test
+2020-10-22 11:30:50 Warning:  openTypeOS2TypoLineGap would be updated  Old value: 1, new value: 0
+2020-10-22 11:30:50 Warning:  openTypeNamePreferredFamilyName would be updated  Old value: Psf Testing, new value: Psf Test
+2020-10-22 11:30:50 Progress: Checking lib.plist metadata
+2020-10-22 11:30:50 Warning:  com.schriftgestaltung.disablesAutomaticAlignment would be deleted - obsolete key Old value: True
+2020-10-22 11:30:50 Warning:  com.schriftgestaltung.disablesLastChange would be deleted - obsolete key Old value: True
+2020-10-22 11:30:50 Progress: Check & fix results:- Errors: 0, Changes to make: 8, Other warnings: 0
+2020-10-22 11:30:50 Progress: See log file for details
+2020-10-22 11:30:50 Warning:  LtnCapA.alt in public.glyphOrder list but absent from UFO

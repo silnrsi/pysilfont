@@ -18,7 +18,7 @@ def test_run():
     sys.argv = cl.split(" ")
     (args, font) = execute("UFO", psfglyphs2ufo.doit, psfglyphs2ufo.argspec, chain="first")
     args.logger.logfile.close()
-    exp_counts = (0, 0)
+    exp_counts = (1, 0)
     actual_counts = (args.logger.errorcount, args.logger.warningcount)
     # Now normalize the output ufos
     for weight in ("Regular", "Bold"):
@@ -56,13 +56,6 @@ def test_diffs(): # Do a diff on all output files
     if diff.returncode:
         diff.print_text()
         result = False
-
-    if ufodiff:
-        ## Warn that test fails with glyphsLib prior to 3
-        import glyphsLib
-        if glyphsLib.__version__[0:1] != "3":
-            print ("**** Note this test always fails on UFO diffs with glyphsLib prior to 3 ****")
-
 
     assert result
 

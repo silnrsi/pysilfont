@@ -1,18 +1,22 @@
-2020-07-28 14:36:07 Progress: Running:  psfdeleteglyphs tests/input/font-psf-test/source/PsfTest-Regular.ufo -i tests/input/psfdeleteglyphs.txt -l local/testresults/ufo/psfdeleteglyphs.log -p loglevel=i -p scrlevel=w
-2020-07-28 14:36:07 Progress: Opening file for input: tests/input/psfdeleteglyphs.txt
-2020-07-28 14:36:07 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Regular.ufo
-2020-07-28 14:36:07 Info:     Processing Glyph Layer 0: public.defaultglyphs
-2020-07-28 14:36:07 Progress: Checking fontinfo.plist metadata
-2020-07-28 14:36:07 Warning:  openTypeNameSampleText is missing from fontinfo.plist
-2020-07-28 14:36:07 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
-2020-07-28 14:36:07 Info:     Types: Old - list, New - NoneType
-2020-07-28 14:36:07 Progress: Checking lib.plist metadata
-2020-07-28 14:36:07 Progress: Check & fix results:- Errors: 0, Changes to make: 1, Other warnings: 1
-2020-07-28 14:36:07 Warning:  Deleted glyphs:
-2020-07-28 14:36:07 Warning:  Apos
-2020-07-28 14:36:07 Warning:  Comma
-2020-07-28 14:36:07 Warning:  Total deleted glyphs: 2
-2020-07-28 14:36:07 Progress: Processing font for output
-2020-07-28 14:36:07 Progress: Output UFO already exists - reading for comparison
-2020-07-28 14:36:07 Progress: Writing font to local/testresults/ufo/psfdeleteglyphs.ufo
-2020-07-28 14:36:07 Info:     Processing glyphs directory
+2020-10-22 11:30:50 Progress: Running:  psfdeleteglyphs tests/input/font-psf-test/source/PsfTest-Regular.ufo -i tests/input/psfdeleteglyphs.txt -l local/testresults/ufo/psfdeleteglyphs.log -p loglevel=i -p scrlevel=w
+2020-10-22 11:30:50 Progress: Opening file for input: tests/input/psfdeleteglyphs.txt
+2020-10-22 11:30:50 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Regular.ufo
+2020-10-22 11:30:50 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2020-10-22 11:30:50 Progress: Checking fontinfo.plist metadata
+2020-10-22 11:30:50 Warning:  note is present - it's use is discouraged
+2020-10-22 11:30:50 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
+2020-10-22 11:30:50 Info:     Types: Old - list, New - NoneType
+2020-10-22 11:30:50 Progress: Checking lib.plist metadata
+2020-10-22 11:30:50 Warning:  com.schriftgestaltung.disablesAutomaticAlignment would be deleted - obsolete key Old value: True
+2020-10-22 11:30:50 Info:     Types: Old - bool, New - NoneType
+2020-10-22 11:30:50 Warning:  com.schriftgestaltung.disablesLastChange would be deleted - obsolete key Old value: True
+2020-10-22 11:30:50 Info:     Types: Old - bool, New - NoneType
+2020-10-22 11:30:50 Progress: Check & fix results:- Errors: 0, Changes to make: 3, Other warnings: 1
+2020-10-22 11:30:50 Warning:  Deleted glyphs:
+2020-10-22 11:30:50 Warning:  Apos
+2020-10-22 11:30:50 Warning:  Comma
+2020-10-22 11:30:50 Warning:  Total deleted glyphs: 2
+2020-10-22 11:30:50 Progress: Processing font for output
+2020-10-22 11:30:50 Progress: Output UFO already exists - reading for comparison
+2020-10-22 11:30:50 Progress: Writing font to local/testresults/ufo/psfdeleteglyphs.ufo
+2020-10-22 11:30:50 Info:     Processing glyphs directory
