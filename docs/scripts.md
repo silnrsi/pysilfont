@@ -1119,14 +1119,16 @@ Glyph orders and psname mappings, if present in the font, are likewise subsetted
 
 ---
 ####  psfsyncmasters
-Usage: **`psfsyncmasters primaryds [secondds] [-n]`**
+Usage: **`psfsyncmasters primaryds [secondds] [--complex][-n]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-Synchronises some fontinfo.plist and lib.plist metadata across a family of fonts based
+Synchronises/validates some fontinfo.plist and lib.plist metadata across a family of fonts based
 on a designspace file. It looks in the designspace file for a master with `info copy="1"` set then syncs the values from that master to other masters defined in the file.
 
-If a second designspace file is supplied, it also syncs to masters found in there (not yet tested!)
+If a second designspace file is supplied, it also syncs to masters found in there.  
+
+Some validation is different for complex families (ie not RIBBI families) - use `--complex` to inicate that a family is complex.
 
 Example usage:
 
@@ -1137,6 +1139,9 @@ psfsyncmasters CharisSIL.designspace
 Note that only fontinfo.plist and lib.plist files are updated, so fonts are not normalized and Pysilfont's backup mechanism for fonts is not used.
 
 -n (--new) appends \_new to ufo and file names for testing purposes
+
+Note that currently the code also assumes a family is complex if the ufo names include 'master', though this check will
+removed in the future, so `--complex` should be used instead of relying on this.
 
 ---
 ####  psfsyncmeta

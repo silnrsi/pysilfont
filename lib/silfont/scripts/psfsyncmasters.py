@@ -13,9 +13,10 @@ import fontTools.designspaceLib as DSD
 from xml.etree import ElementTree as ET
 
 argspec = [
-    ('primaryds',{'help': 'Primary design space file'}, {'type': 'filename'}),
+    ('primaryds', {'help': 'Primary design space file'}, {'type': 'filename'}),
     ('secondds', {'help': 'Second design space file', 'nargs': '?', 'default': None}, {'type': 'filename', 'def': None}),
-    ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_sync.log'}),
+    ('--complex', {'help': 'Indicates complex set of fonts rather than RIBBI', 'action': 'store_true', 'default': False},{}),
+    ('-l','--log', {'help': 'Log file'}, {'type': 'outfile', 'def': '_sync.log'}),
     ('-n','--new', {'help': 'append "_new" to file names', 'action': 'store_true', 'default': False},{}) # For testing/debugging
     ]
 
@@ -28,14 +29,14 @@ def doit(args) :
                   "openTypeOS2TypoDescender", "openTypeOS2TypoLineGap", "openTypeOS2UnicodeRanges",
                   "openTypeOS2VendorID", "openTypeOS2WinAscent", "openTypeOS2WinDescent", "versionMajor",
                   "versionMinor")
-    ficopyopt = ("openTypeNameSampleText", "postscriptFamilyBlues", "postscriptFamilyOtherBlues", "trademark",
-                  "woffMetadataCredits", "woffMetadataDescription")
+    ficopyopt = ("openTypeNameSampleText", "postscriptFamilyBlues", "postscriptFamilyOtherBlues", "trademark")
     fispecial = ("italicAngle", "openTypeOS2WeightClass", "styleMapFamilyName", "styleMapStyleName", "styleName",
                  "unitsPerEm")
     fiall = sorted(set(ficopyreq) | set(ficopyopt) | set(fispecial))
     required = ficopyreq + ("openTypeOS2WeightClass", "styleName", "unitsPerEm")
     libcopy = ("com.schriftgestaltung.glyphOrder", "public.glyphOrder", "public.postscriptNames")
     logger = args.logger
+    complex = args.complex
 
     pds = DSD.DesignSpaceDocument()
     pds.read(args.primaryds)
@@ -58,9 +59,10 @@ def doit(args) :
         for source in sds.sources:
             dsources.append(Dsource(sds, source, logger, frompds=False,  psource = False, args=args))
 
-    # Process values in psource
-    complex = True if "master" in psource.source.filename.lower() else False
+    # Kept for backwards compatibility from before --complex was added.  To be removed in future version
+    if "master" in psource.source.filename.lower(): complex = True
 
+    # Process values in psource
     fipval = {}
     libpval = {}
     changes = False

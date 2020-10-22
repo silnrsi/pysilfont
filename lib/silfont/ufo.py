@@ -23,6 +23,21 @@ for i in range(0, 32): _illegalChars += chr(i)
 _illegalChars = list(_illegalChars)
 _reservedNames = "CON PRN AUX CLOCK$ NUL COM1 COM2 COM3 COM4 PT1 LPT2 LPT3".lower().split(" ")
 
+obsoleteLibKeys = [ # Used by "check and fix" + some scripts
+    "com.schriftgestaltung.blueFuzz",
+    "com.schriftgestaltung.blueScale",
+    "com.schriftgestaltung.blueShift",
+    "com.schriftgestaltung.customValue",
+    "com.schriftgestaltung.Disable Last Change",
+    "com.schriftgestaltung.disablesAutomaticAlignment",
+    "com.schriftgestaltung.disablesLastChange",
+    "com.schriftgestaltung.DisplayStrings",
+    "com.schriftgestaltung.font.Disable Last Change",
+    "com.schriftgestaltung.font.glyphOrder",
+    "com.schriftgestaltung.font.license",
+    "com.schriftgestaltung.useNiceNames",
+    "org.sil.glyphsappversion",
+    "UFOFormat"]
 
 class _Ucontainer(object):
     # Parent class for other objects (eg Ulayer)
@@ -323,17 +338,16 @@ class Ufont(object):
             initwarnings = logger.warningcount
             initerrors = logger.errorcount
 
-            #fontinfo.plist checks
-            logger.log("Checking fontinfo.plist metadata", "P")
             fireq = ("ascender", "copyright", "descender", "familyName", "openTypeNameManufacturer",
                         "styleName", "unitsPerEm", "versionMajor", "versionMinor")
             fiwarnifmiss = ("capHeight", "copyright", "openTypeNameDescription", "openTypeNameDesigner",
                         "openTypeNameDesignerURL", "openTypeNameLicense", "openTypeNameLicenseURL",
-                        "openTypeNameManufacturerURL", "openTypeNameSampleText", "openTypeOS2CodePageRanges",
+                        "openTypeNameManufacturerURL", "openTypeOS2CodePageRanges",
                         "openTypeOS2UnicodeRanges", "openTypeOS2VendorID","styleMapFamilyName", "styleMapStyleName",
                         "openTypeOS2WeightClass")
             fiwarnifnot = {"unitsPerEm": (1000, 2048),
-                           "styleMapStyleName": ("regular", "bold", "italic", "bold italic")}
+                           "styleMapStyleName": ("regular", "bold", "italic", "bold italic")},
+            fiwarnifpresent = ("note",)
             fidel = ("macintoshFONDFamilyID", "macintoshFONDName", "postscriptWeightName",
                      "openTypeNameCompatibleFullName", "openTypeOS2FamilyClass", "year")
             fidelifempty = ("guidelines", "postscriptBlueValues", "postscriptFamilyBlues", "postscriptFamilyOtherBlues",
@@ -349,6 +363,13 @@ class Ufont(object):
             fisetto = {"openTypeHheaLineGap": 0, "openTypeOS2TypoLineGap": 0, "openTypeOS2WidthClass": 5,
                        "openTypeOS2Type": []} # Other values are added below
 
+            libsetto = {"com.schriftgestaltung.customParameter.GSFont.disablesAutomaticAlignment": True,
+                            "com.schriftgestaltung.customParameter.GSFont.disablesLastChange": True}
+            libwarnifnot = {"com.schriftgestaltung.customParameter.GSFont.useNiceNames": False}
+            libwarnifmissing = ("public.glyphOrder",)
+
+            # fontinfo.plist checks
+            logger.log("Checking fontinfo.plist metadata", "P")
 
             # Check required fields, some of which are needed for remaining checks
             missing = []
@@ -423,6 +444,10 @@ class Ufont(object):
                     value = self.fontinfo.getval(key)
                     if value not in fiwarnifnot[key]:
                         logger.log(key + " should be one of " + str(fiwarnifnot[key]), "W")
+            # Warn about keys where use of discouraged
+            for key in fiwarnifpresent:
+                if key in self.fontinfo:
+                    logger.log(key + " is present - it's use is discouraged")
 
             # Now do all remaining checks - which will lead to values being changed
             for key in fidel + fidelifempty:
@@ -507,15 +532,27 @@ class Ufont(object):
                 logger.log("lib.plist missing so not checked by check & fix routines", "E")
             else:
                 logger.log("Checking lib.plist metadata", "P")
-                libwarnifnot = {"com.schriftgestaltung.disablesAutomaticAlignment": True,
-                                "com.schriftgestaltung.disablesLastChange": True,
-                                "com.schriftgestaltung.customParameter.GSFont.useNiceNames": False}
-                libwarnifmissing = ("public.glyphOrder",)
-                libcheckinvalid = ("com.schriftgestaltung.Disable Last Change",
-                                   "com.schriftgestaltung.font.Disable Last Change", "UFO.lib", "UFOFormat")
 
+                for key in libsetto:
+                    if key in self.lib:
+                        old = self.lib.getval(key)
+                        logmess = " updated "
+                    else:
+                        old = None
+                        logmess = " added "
+                    new = libsetto[key]
+                    if new != old:
+                        if self.metafix:
+                            # Currently just supports True.  See fisetto for adding other types
+                            if new == True:
+                                self.lib.setelem(key, ET.fromstring("<true/>"))
+                            else:  # Does not cover real at present
+                                logger.log("Invalid value type for libsetto", "X")
+                        else:
+                            logmess = " would be" + logmess
+                        self.logchange(logmess, key, old, new)
+                        changes += 1
                 for key in libwarnifnot:
-
                     value = self.lib.getval(key) if key in self.lib else None
                     if value != libwarnifnot[key]:
                         addmess = "; currently missing" if value is None else "; currently set to " + str(value)
@@ -525,9 +562,13 @@ class Ufont(object):
                     if key not in self.lib:
                         logger.log(key + " is missing from lib.plist", "W")
 
-                for key in libcheckinvalid: # For invalid keys sometimes generated by other tools, mainly historic
+                logmess = " deleted - obsolete key" if self.metafix else " would be deleted - obsolete key"
+                for key in obsoleteLibKeys: # For obsolete keys that have been added historically by some tools
                     if key in self.lib:
-                        logger.log(key + " is not a valid key", "W")
+                        old = self.lib.getval(key)
+                        if self.metafix: self.lib.remove(key)
+                        self.logchange(logmess,key,old,None)
+                        changes += 1
 
             # Show check&fix summary
             warnings = logger.warningcount - initwarnings - changes

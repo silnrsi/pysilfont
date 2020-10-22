@@ -6,6 +6,7 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'Victor Gaultney'
 
 from silfont.core import execute
+from silfont.ufo import obsoleteLibKeys
 
 import glyphsLib
 import silfont.ufo
@@ -37,10 +38,9 @@ def doit(args):
         "librestorekeys": ["org.sil.pysilfontparams", "org.sil.altLineMetrics", "org.sil.lcg.toneLetters",
                    "org.sil.lcg.transforms", "public.glyphOrder", "public.postscriptNames",
                    "com.schriftgestaltung.disablesLastChange", "com.schriftgestaltung.disablesAutomaticAlignment"],
-        "libdeletekeys": ("UFOFormat", "com.schriftgestaltung.blueFuzz", "com.schriftgestaltung.blueScale",
-                     "com.schriftgestaltung.blueShift", "com.schriftgestaltung.customParameter.GSFont.note",
+        "libdeletekeys": ("com.schriftgestaltung.customParameter.GSFont.note",
                      "com.schriftgestaltung.customParameter.GSFont.Axes",
-                     "com.schriftgestaltung.customParameter.GSFontMaster.Master Name", "org.sil.glyphsappversion"),
+                     "com.schriftgestaltung.customParameter.GSFontMaster.Master Name"),
         "libdeleteempty": ("com.schriftgestaltung.DisplayStrings",),
         "inforestorekeys": ["openTypeHeadCreated", "openTypeNamePreferredFamilyName", "openTypeNamePreferredSubfamilyName",
                        "openTypeNameUniqueID", "openTypeOS2WeightClass", "openTypeOS2WidthClass", "postscriptFontName",
@@ -54,18 +54,28 @@ def doit(args):
         keylists["inforestorekeys"].append(keylist)
 
     loglists = []
+    obskeysfound={}
     for ufo in ufos:
-        loglists.append(process_ufo(ufo, keylists, glyphsdir, args))
+        loglists.append(process_ufo(ufo, keylists, glyphsdir, args, obskeysfound))
     for loglist in loglists:
         for logitem in loglist: logger.log(logitem[0], logitem[1])
+    if obskeysfound:
+        logmess = "The following obsolete keys were found. They may have been in the original UFO or you may have an old version of glyphsLib installed\n"
+        for fontname in obskeysfound:
+            keys = obskeysfound[fontname]
+            logmess += "                    " + fontname + ": "
+            for key in keys:
+                logmess += key + ", "
+            logmess += "\n"
+        logger.log(logmess, "E")
 
-def process_ufo(ufo, keylists, glyphsdir, args):
+def process_ufo(ufo, keylists, glyphsdir, args, obskeysfound):
     loglist=[]
-    sn = ufo.info.styleName  # )
-    sn = sn.replace("Italic Italic", "Italic")  # ) Temp fixes due to glyphLib incorrectly
-    sn = sn.replace("Italic Bold Italic", "Bold Italic")  # ) forming styleName
-    sn = sn.replace("Extra Italic Light Italic", "Extra Light Italic")  # )
-    ufo.info.styleName = sn  # )
+#    sn = ufo.info.styleName  # )
+#    sn = sn.replace("Italic Italic", "Italic")  # ) Temp fixes due to glyphLib incorrectly
+#    sn = sn.replace("Italic Bold Italic", "Bold Italic")  # ) forming styleName
+#    sn = sn.replace("Extra Italic Light Italic", "Extra Light Italic")  # )
+#    ufo.info.styleName = sn  # )
     fontname = ufo.info.familyName.replace(" ", "") + "-" + ufo.info.styleName.replace(" ", "")
 
     # Fixes to the data
@@ -74,37 +84,7 @@ def process_ufo(ufo, keylists, glyphsdir, args):
         # lib.plist processing
         loglist.append(("Checking lib.plist", "P"))
 
-        # Process UFO.lib if present
-        if "UFO.lib" in ufo.lib:
-            loglist.append(("UFO.lib field found in lib.plist for " + fontname + ". Values will be copied to root", "P"))
-            ul = ufo.lib["UFO.lib"]
-            # Copy fields from UFO.lib to root
-            for key in ul:
-                if key in keylists["librestorekeys"]:
-                    continue  # They will be restored later
-                if key in keylists["libdeleteempty"]:
-                    if ul[key] == "" or ul[key] == []:
-                        loglist.append(("Emtpy field ignored: " + key, "I"))
-                        continue
-                if key in keylists["libdeletekeys"]:
-                    loglist.append((key + " ignored", "I"))
-                    continue
-                if key in ufo.lib:
-                    current = ufo.lib[key]
-                    logmess = " updated from UFO.lib. "
-                else:
-                    current = None
-                    logmess = " copied from UFO.lib. "
-                new = ul[key]
-                if current == new:
-                    continue
-                else:
-                    ufo.lib[key] = new
-                    logchange(loglist, logmess, key, current, new)
-            del ufo.lib["UFO.lib"]
-            loglist.append(("UFO.lib field deleted", "I"))
-
-        # Restore values from original UFOs, assuming nameed as <fontname>.ufo in same directory as input .gylphs file
+        # Restore values from original UFOs, assuming named as <fontname>.ufo in same directory as input .gylphs file
 
         ufodir = os.path.join(glyphsdir, fontname + ".ufo")
         try:
@@ -114,6 +94,7 @@ def process_ufo(ufo, keylists, glyphsdir, args):
             origlibplist = None
 
         if origlibplist is not None:
+
             for key in keylists["librestorekeys"]:
                 if key in origlibplist:
                     new = origlibplist.getval(key)
@@ -137,6 +118,12 @@ def process_ufo(ufo, keylists, glyphsdir, args):
                 current = ufo.lib[key]
                 del ufo.lib[key]
                 logchange(loglist, " empty field deleted. ", key, current, None)
+
+        # Check for obsolete keys
+        for key in obsoleteLibKeys:
+            if key in ufo.lib:
+                if fontname not in obskeysfound: obskeysfound[fontname] = []
+                obskeysfound[fontname].append(key)
 
         # fontinfo.plist processing
 
