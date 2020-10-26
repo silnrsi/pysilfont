@@ -140,6 +140,7 @@ def all_checks_dict(): # An ordered dict of all checks designed for exporting th
 
 psfcheck_list = {}
 psfcheck_list['com.adobe.fonts/check/cff_call_depth']                             = {'exclude': True}
+psfcheck_list['com.adobe.fonts/check/cff_deprecated_operators']                   = {'exclude': True}
 psfcheck_list['com.adobe.fonts/check/cff2_call_depth']                            = {'exclude': True}
 psfcheck_list['com.adobe.fonts/check/family/bold_italic_unique_for_nameid1']      = {}
 psfcheck_list['com.adobe.fonts/check/family/consistent_upm']                      = {}
@@ -149,6 +150,8 @@ psfcheck_list['com.adobe.fonts/check/fsselection_matches_macstyle']             
 psfcheck_list['com.adobe.fonts/check/name/empty_records']                         = {}
 psfcheck_list['com.adobe.fonts/check/name/postscript_name_consistency']           = {}
 psfcheck_list['com.adobe.fonts/check/name/postscript_vs_cff']                     = {'exclude': True}
+psfcheck_list['com.google.fonts/check/STAT/axis_order']                           = {}
+psfcheck_list['com.google.fonts/check/STAT/gf-axisregistry']                      = {}
 psfcheck_list['com.google.fonts/check/STAT_strings']                              = {}
 psfcheck_list['com.google.fonts/check/aat']                                       = {}
 psfcheck_list['com.google.fonts/check/all_glyphs_have_codepoints']                = {'exclude': True}
@@ -217,12 +220,16 @@ psfcheck_list['com.google.fonts/check/metadata/broken_links']                   
 psfcheck_list['com.google.fonts/check/metadata/canonical_style_names']            = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/canonical_weight_value']           = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/category']                         = {'exclude': True}
+psfcheck_list['com.google.fonts/check/metadata/consistent_axis_enumeration']      = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/copyright']                        = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/copyright_max_length']             = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/designer_values']                  = {'exclude': True}
+psfcheck_list['com.google.fonts/check/metadata/escaped_strings']                  = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/familyname']                       = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/filenames']                        = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/fontname_not_camel_cased']         = {'exclude': True}
+psfcheck_list['com.google.fonts/check/metadata/gf-axisregistry_bounds']           = {'exclude': True}
+psfcheck_list['com.google.fonts/check/metadata/gf-axisregistry_valid_tags']       = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/has_regular']                      = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/includes_production_subsets']      = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/italic_style']                     = {'exclude': True}
