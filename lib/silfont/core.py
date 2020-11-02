@@ -47,7 +47,7 @@ class loggerobj(object):
 
     def log(self, logmessage, msglevel="W"):
         levelval = self.loglevels[msglevel]
-        message = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S ") + self.leveltext[levelval] + logmessage
+        message = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S ") + self.leveltext[levelval] + str(logmessage)
         #message = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[0:22] +" "+ self.leveltext[levelval] + logmessage  ## added milliseconds for timing tests
         if levelval <= self.loglevels[self.scrlevel]: print(message)
         if self.logfile and levelval <= self.loglevels[self.loglevel]: self.logfile.write(message + "\n")

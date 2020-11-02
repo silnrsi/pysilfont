@@ -1,39 +1,50 @@
-2020-10-22 11:30:50 Progress: Running:  psfbuildcomp tests/input/font-psf-test/source/PsfTest-Regular.ufo -i tests/input/psfbuildcomp.txt -l local/testresults/ufo/psfbuildcomp.log -p loglevel=i
-2020-10-22 11:30:50 Progress: Opening file for input: tests/input/psfbuildcomp.txt
-2020-10-22 11:30:50 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Regular.ufo
-2020-10-22 11:30:50 Info:     Processing Glyph Layer 0: public.defaultglyphs
-2020-10-22 11:30:50 Progress: Checking fontinfo.plist metadata
-2020-10-22 11:30:50 Warning:  note is present - it's use is discouraged
-2020-10-22 11:30:50 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
-2020-10-22 11:30:50 Info:     Types: Old - list, New - NoneType
-2020-10-22 11:30:50 Progress: Checking lib.plist metadata
-2020-10-22 11:30:50 Warning:  com.schriftgestaltung.disablesAutomaticAlignment would be deleted - obsolete key Old value: True
-2020-10-22 11:30:50 Info:     Types: Old - bool, New - NoneType
-2020-10-22 11:30:50 Warning:  com.schriftgestaltung.disablesLastChange would be deleted - obsolete key Old value: True
-2020-10-22 11:30:50 Info:     Types: Old - bool, New - NoneType
-2020-10-22 11:30:50 Progress: Check & fix results:- Errors: 0, Changes to make: 3, Other warnings: 1
-2020-10-22 11:30:50 Progress: See log file for details
-2020-10-22 11:30:50 Info:     Processing line 10: LtnCapIJ = LtnCapI & LtnCapJ |0132
-2020-10-22 11:30:50 Info:     Processing line 11: LtnSmIJ = LtnSmI & LtnSmJ |0133
-2020-10-22 11:30:50 Info:     Processing line 14: LtnCapCAcute = LtnSmC + CombAcute@U |0106
-2020-10-22 11:30:50 Info:     Processing line 15: LtnSmCAcute = LtnCapC + CombAcute@U |0107
-2020-10-22 11:30:50 Info:     Processing line 16: LtnCapCCircum = LtnCapC + CombCircum@U |0108
-2020-10-22 11:30:50 Info:     Processing line 17: LtnSmCCircum = LtnSmC + CombCircum@U |0109
-2020-10-22 11:30:50 Info:     Processing line 20: LtnSmITildeGrave = LtnSmDotlessI + CombTilde@U + CombGrave@U | E000
-2020-10-22 11:30:50 Error:    LtnSmDotlessI not found in font
-2020-10-22 11:30:50 Error:    The AP 'U' does not exist on base glyph when building LtnSmITildeGrave
-2020-10-22 11:30:50 Info:     Processing line 23: LtnCapCAcuteCedilla = LtnCapC + CombCedilla@H + CombAcute@LtnCapC:U | 1E08
-2020-10-22 11:30:50 Error:    CombCedilla not found in font
-2020-10-22 11:30:50 Info:     Processing line 24: LtnSmCAcuteCedilla = LtnSmC + CombCedilla@H + CombAcute@LtnSmC:U | 1E09
-2020-10-22 11:30:50 Error:    CombCedilla not found in font
-2020-10-22 11:30:50 Info:     Processing line 27: LtnSmITilde = LtnSmDotlessI + CombTilde@U ^200,200 | 0129
-2020-10-22 11:30:50 Error:    LtnSmDotlessI not found in font
-2020-10-22 11:30:50 Error:    The AP 'U' does not exist on base glyph when building LtnSmITilde
-2020-10-22 11:30:50 Info:     Processing line 30: LtnSmITildeGraveCedilla = LtnSmDotlessI + CombCedilla@H + CombTilde@LtnSmDotlessI:U + CombGrave@U ^200,200 | E010 # i cedilla tilde grave
-2020-10-22 11:30:50 Error:    LtnSmDotlessI not found in font
-2020-10-22 11:30:50 Error:    CombCedilla not found in font
-2020-10-22 11:30:50 Error:    The AP 'U' does not exist on base glyph when building LtnSmITildeGraveCedilla
-2020-10-22 11:30:50 Progress: Processing font for output
-2020-10-22 11:30:50 Progress: Output UFO already exists - reading for comparison
-2020-10-22 11:30:50 Progress: Writing font to local/testresults/ufo/psfbuildcomp.ufo
-2020-10-22 11:30:50 Info:     Processing glyphs directory
+2020-11-02 15:27:29 Progress: Running:  psfbuildcomp tests/input/font-psf-test/source/PsfTest-Regular.ufo -i tests/input/psfbuildcomp.txt -l local/testresults/ufo/psfbuildcomp.log -p loglevel=i
+2020-11-02 15:27:29 Progress: Opening file for input: tests/input/psfbuildcomp.txt
+2020-11-02 15:27:29 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Regular.ufo
+2020-11-02 15:27:29 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2020-11-02 15:27:29 Progress: Checking fontinfo.plist metadata
+2020-11-02 15:27:29 Warning:  note is present - it's use is discouraged
+2020-11-02 15:27:29 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
+2020-11-02 15:27:29 Info:     Types: Old - list, New - NoneType
+2020-11-02 15:27:29 Progress: Checking lib.plist metadata
+2020-11-02 15:27:29 Warning:  com.schriftgestaltung.disablesAutomaticAlignment would be deleted - obsolete key Old value: True
+2020-11-02 15:27:29 Info:     Types: Old - bool, New - NoneType
+2020-11-02 15:27:29 Warning:  com.schriftgestaltung.disablesLastChange would be deleted - obsolete key Old value: True
+2020-11-02 15:27:29 Info:     Types: Old - bool, New - NoneType
+2020-11-02 15:27:29 Progress: Check & fix results:- Errors: 0, Changes to make: 3, Other warnings: 1
+2020-11-02 15:27:29 Progress: See log file for details
+2020-11-02 15:27:29 Info:     Processing line 10: LtnCapIJ = LtnCapI & LtnCapJ |0132
+2020-11-02 15:27:29 Info:     Adding new glyph, LtnCapIJ
+2020-11-02 15:27:29 Info:     Processing line 11: LtnSmIJ = LtnSmI & LtnSmJ |0133
+2020-11-02 15:27:29 Info:     Adding new glyph, LtnSmIJ
+2020-11-02 15:27:29 Info:     Processing line 14: LtnCapCAcute = LtnSmC + CombAcute@U |0106
+2020-11-02 15:27:29 Info:     Adding new glyph, LtnCapCAcute
+2020-11-02 15:27:29 Info:     Processing line 15: LtnSmCAcute = LtnCapC + CombAcute@U |0107
+2020-11-02 15:27:29 Info:     Adding new glyph, LtnSmCAcute
+2020-11-02 15:27:29 Info:     Processing line 16: LtnCapCCircum = LtnCapC + CombCircum@U |0108
+2020-11-02 15:27:29 Info:     Adding new glyph, LtnCapCCircum
+2020-11-02 15:27:29 Info:     Processing line 17: LtnSmCCircum = LtnSmC + CombCircum@U |0109
+2020-11-02 15:27:29 Info:     Adding new glyph, LtnSmCCircum
+2020-11-02 15:27:29 Info:     Processing line 20: LtnSmITildeGrave = LtnSmDotlessI + CombTilde@U + CombGrave@U | E000
+2020-11-02 15:27:29 Error:    LtnSmDotlessI not found in font
+2020-11-02 15:27:29 Error:    The AP 'U' does not exist on base glyph when building LtnSmITildeGrave
+2020-11-02 15:27:29 Info:     Adding new glyph, LtnSmITildeGrave
+2020-11-02 15:27:29 Info:     Processing line 23: LtnCapCAcuteCedilla = LtnCapC + CombCedilla@H + CombAcute@LtnCapC:U | 1E08
+2020-11-02 15:27:29 Error:    CombCedilla not found in font
+2020-11-02 15:27:29 Info:     Adding new glyph, LtnCapCAcuteCedilla
+2020-11-02 15:27:29 Info:     Processing line 24: LtnSmCAcuteCedilla = LtnSmC + CombCedilla@H + CombAcute@LtnSmC:U | 1E09
+2020-11-02 15:27:29 Error:    CombCedilla not found in font
+2020-11-02 15:27:29 Info:     Adding new glyph, LtnSmCAcuteCedilla
+2020-11-02 15:27:29 Info:     Processing line 27: LtnSmITilde = LtnSmDotlessI + CombTilde@U ^200,200 | 0129
+2020-11-02 15:27:29 Error:    LtnSmDotlessI not found in font
+2020-11-02 15:27:29 Error:    The AP 'U' does not exist on base glyph when building LtnSmITilde
+2020-11-02 15:27:29 Info:     Adding new glyph, LtnSmITilde
+2020-11-02 15:27:29 Info:     Processing line 30: LtnSmITildeGraveCedilla = LtnSmDotlessI + CombCedilla@H + CombTilde@LtnSmDotlessI:U + CombGrave@U ^200,200 | E010 # i cedilla tilde grave
+2020-11-02 15:27:29 Error:    LtnSmDotlessI not found in font
+2020-11-02 15:27:29 Error:    CombCedilla not found in font
+2020-11-02 15:27:29 Error:    The AP 'U' does not exist on base glyph when building LtnSmITildeGraveCedilla
+2020-11-02 15:27:29 Info:     Adding new glyph, LtnSmITildeGraveCedilla
+2020-11-02 15:27:29 Progress: Processing font for output
+2020-11-02 15:27:29 Progress: Output UFO already exists - reading for comparison
+2020-11-02 15:27:29 Progress: Writing font to local/testresults/ufo/psfbuildcomp.ufo
+2020-11-02 15:27:29 Info:     Processing glyphs directory

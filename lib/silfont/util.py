@@ -289,6 +289,64 @@ def colortoname(color, default=None):
     else:
         return colorstonameslist.get(color)
 
+def parsecolors(colors): # Process a list of colors  - designed for handling command-line input
+    # Colors can be in RBGA format (eg (0.25,0.25,0.25,1)) or text name (eg g_dark_grey), spearated by commas.
+    # Function returns a list of tuples, one per color, (RGBA, name, logcolor, original color)
+    # If the color can't be parsed, RGBA will be None and logocolor contain an error message
+    # Also allow for special values of 'none' and 'leave'
+
+    # First tidy up the input string
+    cols = colors.lower().replace(" ", "")
+    # Since RGBA colors which have parentheses and then commas within them, so can't just split on commas so add @ signs for first split
+    cols = cols.replace(",(", "@(").replace("),", ")@").split("@")
+    cols2 = []
+    for color in cols:
+        if color[0] == "(":
+            cols2.append(color)
+        else:
+            cols2 = cols2 + color.split(',')
+    parsed = []
+    for color in cols2:
+        if color in ("none", "leave"):
+            RGBA = ""
+            name = color
+            logcolor = color
+        else:
+            errormess = ""
+            name = ""
+            RGBA = ""
+            if color[0] == '(':
+                values = color[1:-1].split(',') # Remove parentheses then split on commas
+                if len(values) != 4:
+                    errormess = "RGBA colours must have 4 values"
+                else:
+                    for i in (0, 1, 2, 3):
+                        values[i] = float(values[i])
+                        if values[i] < 0 or values[i] > 1: errormess = "RGBA values must be between 0 and 1"
+                    if values[0] + values[1] + values[2] == 0: errormess = "At lease one RGB value must be non-zero"
+                    if values[3] == 0: errormess = "With RGBA, A must not be zero"
+                if errormess == "":
+                    for i in (0, 1, 2, 3):
+                        v = values[i]
+                        if v == int(v): v = int(v)  # Convert integers to int type for correct formatting with str()
+                        RGBA += str(v) + ","
+                    RGBA = RGBA[0:-1]  # Strip trialing comma
+                    name = colortoname(RGBA, "")
+            else:
+                name = color
+                RGBA = nametocolor(name)
+                if RGBA is None: errormess = "Invalid color name"
+            if errormess:
+                logcolor = "Invalid color: " + color + " - " + errormess
+                RGBA = None
+                name = None
+            else:
+                logcolor = RGBA
+                if name: logcolor += " (" + name + ")"
+        parsed.append((RGBA, name, logcolor,color))
+
+    return parsed
+
 # Provide dict of required characters which match the supplied list of sets - sets can be basic, rtl or sil
 def required_chars(sets="basic"):
     if type(sets) == str: sets = (sets,) # Convert single string to a tuple

@@ -116,7 +116,7 @@ CommaAlternates,GSUB,48
 ---
 
 ####  psfbuildcomp
-Usage: **`psfbuildcomp [-i CDFILE] [-a] [-c] [-f] [-r {X,S,E,P,W,I,V}] ifont [ofont]`**
+Usage: **`psfbuildcomp [-i CDFILE] [-a] [-c] [--colors] [-f] [-n] [--remove] [--preserve] ifont [ofont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
@@ -148,16 +148,28 @@ optional arguments:
   -i CDFILE, --cdfile CDFILE
                         Composite Definitions input file
   -a, --analysis        Analysis only; no output font generated
-  -c, --color           Mark cells of generated glyphs (dark green)
+  -c, --color           Set the markColor of of generated glyphs dark green
+  --colors              Set the markColor of the generated glyphs based on color(s) supplied
+                        (more details below)
   -f, --force           Force overwrite of glyphs having outlines
   -n, --noflatten       Do not flatten component references
   --remove REMOVE       a regex matching anchor names that should always be
                         removed from generated composite glyphs
   --preserve PRESERVE   a regex matching anchor names that, if present in
                         glyphs about to be replaced, should not be overwritten
-  -r {X,S,E,P,W,I,V}, --report {X,S,E,P,W,I,V}
-                        Set reporting level for log
 ```
+
+Using --colors, three colors can be supplied:
+
+- The first for glyphs already in the font which are unchanged in this run of the script
+- The second for glyphs already in the font which are updated
+- The third for new glyphs added
+
+If just one color is supplied, this is used for all three uses above
+
+If two colors are supplied, the second is also used for new glyphs
+
+Colors can be specified as described in [Specifying colors on the command line](#specifying-colors-on-the-command-line)
 
 ---
 ####  psfbuildcompgc
@@ -1232,6 +1244,31 @@ _This section is Work In Progress!_
 
 
 ---
+
+### Specifying colors on the command line
+
+A color can be specified as a name (eg g_dark_green) or in RBGA format (eg (0,0.67,0.91,1)).
+
+Where multiple colors are supplied they should be separated by commas.
+
+Two special cases are also allowed (if releveant for the script):
+
+- "none" where the color should be removed
+- "leave" where any existing color should be left unchanged
+
+All values are case-insensitive
+
+Examples:
+
+```
+--colors="g_light_blue,g_dark_blue"
+--colors="g_dark_green, leave, (0,0.67,0.91,1)"
+--color=g_dark_red
+```
+Color names can be one of the 12 cell colors definable in the GlyphsApp UI: g_red, g_orange, g_brown, g_yellow,
+ g_light_green, g_dark_green, g_light_blue, g_dark_blue, g_purple, g_pink, g_light_grey, g_dark_grey.
+
+
 
 ## Example Scripts
 
