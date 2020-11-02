@@ -201,7 +201,7 @@ class feaplus_parser(Parser) :
             if self.next_token_ == "<":
                 anchor = self.parse_anchor_()
             else:
-                anchor = self.parse_class_name_()
+                anchor = self.parse_glyphclass_(accept_glyphname=False)
             if anchor is not None:
                 self.expect_keyword_("mark")
                 markClass = self.expect_markClass_reference_()
