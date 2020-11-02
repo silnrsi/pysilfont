@@ -1263,7 +1263,7 @@ Examples:
 ```
 --colors="g_light_blue,g_dark_blue"
 --colors="g_dark_green, leave, (0,0.67,0.91,1)"
---color=g_dark_red
+--color=g_red
 ```
 Color names can be one of the 12 cell colors definable in the GlyphsApp UI: g_red, g_orange, g_brown, g_yellow,
  g_light_green, g_dark_green, g_light_blue, g_dark_blue, g_purple, g_pink, g_light_grey, g_dark_grey.
