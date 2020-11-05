@@ -94,8 +94,7 @@ def doit(args):
         logger.log(str(glyphlist),"V")
 
         # find each component glyph and compute x,y position
-        xbase = xadvance = lsb
-        ybase = 0
+        xadvance = lsb
         componentlist = []
         targetglyphanchors = {} # dictionary of {name: (xOffset,yOffset)}
         for currglyph, prevglyph, baseAP, diacAP, shiftx, shifty in glyphlist:
@@ -108,8 +107,7 @@ def doit(args):
             diacAPx = diacAPy = 0
             baseAPx = baseAPy = 0
             if prevglyph is None:   # this is new 'base'
-                xbase = xadvance
-                xOffset = xbase
+                xOffset = xadvance
                 yOffset = 0
                 # Find advance width of currglyph and add to xadvance
                 if 'advance' in cg:
@@ -227,7 +225,7 @@ def doit(args):
             # actually add the glyph to the font
             infont.deflayer.addGlyph(targetglyph)
 
-        targetglyph.add('advance',{'width': str(xadvance)} )
+        if xadvance != 0: targetglyph.add('advance',{'width': str(xadvance)} )
         if targetglyphunicode: # remove any existing unicode value(s) before adding unicode value
             for i in xrange(len(targetglyph['unicode'])-1,-1,-1):
                 targetglyph.remove('unicode',index=i)
@@ -249,6 +247,7 @@ def doit(args):
             # Need to see if the target glyph has changed.
             if glyphstatus == "Replace":
                 # Need to recreate the xml element then normalize it for comparison with original
+                targetglyph["anchor"].sort(key=lambda anchor: anchor.element.get("name"))
                 targetglyph.rebuildET()
                 attribOrder = params['attribOrders']['glif'] if 'glif' in params['attribOrders'] else {}
                 if params["sortDicts"] or params["precision"] is not None: ufo.normETdata(targetglyph.etree, params, 'glif')
