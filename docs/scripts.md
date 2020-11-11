@@ -18,6 +18,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfchangettfglyphnames](#psfchangettfglyphnames) | Change glyph names in a ttf from working names to production names |
 | [psfcheckbasicchars](#psfcheckbasicchars) | Check UFO for glyphs that represent recommended basic characters |
 | [psfcheckclassorders](#psfcheckclassorders) | Verify classes defined in xml have correct ordering where needed |
+| [psfcheckglyphinventory](#psfcheckglyphinventory) | Warn for differences in glyph inventory and encoding between UFO and input file (e.g., glyph_data.csv) |
 | [psfcompdef2xml](#psfcompdef2xml) | Convert composite definition file to XML format |
 | [psfcompressgr](#psfcompressgr) | Compress Graphite tables in a ttf font |
 | [psfcopyglyphs](#psfcopyglyphs) | Copy glyphs from one UFO to another with optional scale and rename |
@@ -299,6 +300,30 @@ Note that the Graphite workflow extracts glyph order from the ttf file, but `psf
 
 `psfcheckclassorders` will also issue warning a warning message if there are glyphs named in the `classes` file which are not included in the `glyphdata` file. While this is [intentionally] not an error for either Graphite or OpenType (relavent tools simply ignore such missing glyphs), it may be helpful in catching typos that result in class miss-alignment and therefore bugs.  By default warning messages are sent to the log file;
 use `-p scrlevel=W` to also route them to the terminal.
+
+---
+#### psfcheckglyphinventory
+Usage: **`psfcheckglyphinventory [--indent n] [-i input] ifont`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+`psfcheckglyphinventory` compares and warns for differences in glyph inventory and encoding between UFO and input file (e.g., glyph_data.csv).
+input file can be:
+- simple text file with one glyph name per line
+- csv file with headers, using headers `glyph_name` and, if present, `USV`
+
+required arguments:
+
+```
+  ifont       input UFO
+```
+
+optional arguments:
+```
+  -i INPUT, --input INPUT
+              input file, default is glyph_data.csv in current directory
+  -indent n   number of spaces to indent output lists (default 10)
+```
 
 ---
 #### psfcompdef2xml
