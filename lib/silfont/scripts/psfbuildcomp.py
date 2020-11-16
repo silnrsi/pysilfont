@@ -44,7 +44,7 @@ def doit(args):
 
     colors = None
     if args.color or args.colors:
-        colors = args.colors if args.colors else "(0.04,0.57,0.04,1')"
+        colors = args.colors if args.colors else "(0.04,0.57,0.04,1)"
         colors = parsecolors(colors)
         invalid = False
         for color in colors:

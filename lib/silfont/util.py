@@ -266,12 +266,12 @@ namestocolorslist = {
     'g_yellow': '0.97,1,0,1',
     'g_light_green': '0.67,0.95,0.38,1',
     'g_dark_green': '0.04,0.57,0.04,1',
-    'g_light_blue': '0,0.67,0.91,1',
-    'g_dark_blue': '0.18,0.16,0.78,1',
+    'g_cyan': '0,0.67,0.91,1',
+    'g_blue': '0.18,0.16,0.78,1',
     'g_purple': '0.5,0.09,0.79,1',
     'g_pink': '0.98,0.36,0.67,1',
-    'g_light_grey': '0.75,0.75,0.75,1',
-    'g_dark_grey': '0.25,0.25,0.25,1'
+    'g_light_gray': '0.75,0.75,0.75,1',
+    'g_dark_gray': '0.25,0.25,0.25,1'
 }
 colorstonameslist = {v: k for k, v in namestocolorslist.items()}
 

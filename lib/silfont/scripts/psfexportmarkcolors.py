@@ -7,7 +7,7 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'Victor Gaultney'
 
 from silfont.core import execute
-from silfont.util import nametocolor, colortoname
+from silfont.util import parsecolors, colortoname
 import datetime
 
 suffix = "_colormap"
@@ -23,17 +23,17 @@ def doit(args) :
     font = args.ifont
     outfile = args.output
     logger = args.logger
+    color = args.color
 
     # Add initial comments to outfile
     if not args.nocomments :
         outfile.write("# " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S ") + args.cmdlineargs[0] + "\n")
         outfile.write("# "+" ".join(args.cmdlineargs[1:])+"\n\n")
 
-    if args.color :
-        colorfilter = args.color
-        if not((args.color[0] == "0") or (args.color[0] == "1")) :
-            colorfilter = nametocolor(args.color, "Error")
-            if colorfilter == "Error" : logger.log("Color name not recognized", "E")
+    if color :
+        if color[0] in ("0", "1"): color = "(" + color + ")"
+        (colorfilter, colorname, logcolor, originalcolor) = parsecolors(color)[0]
+        if colorfilter is None : logger.log(logcolor, "E")
 
     glyphlist = font.deflayer.keys()
 
@@ -47,9 +47,9 @@ def doit(args) :
                 colordefraw = lib["public.markColor"][1].text
                 colordef = '"' + colordefraw + '"'
                 if args.names : colordef = colortoname(colordefraw, colordef)
-            if args.color :
+            if color :
                 if colorfilter == colordefraw : outfile.write(glyphn + "\n")
-        if not args.color : outfile.write(glyphn + "," + colordef + "\n")
+        if not color : outfile.write(glyphn + "," + colordef + "\n")
     return
 
 def cmd() : execute("UFO",doit,argspec) 

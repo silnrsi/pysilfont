@@ -553,17 +553,18 @@ Usage: **`psfexportmarkcolors [-c COLOR] [-n] [-o OUTPUT] [--nocomments] ifont`*
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-This exports a mapping of glyph name to cell mark color to a csv file, format "glyphname,colordef". Colordef is exported as a double-quoted string according to the [color definition standard](http://unifiedfontobject.org/versions/ufo3/conventions/#colors). It includes comments at the start saying when it was run etc unless --nocomments is specified. The csv produced will include all glyphs, whether or not they have a color definition.
+This exports a mapping of glyph name to cell mark color to a csv file, format "glyphname,colordef". 
+Colordef is exported as a double-quoted string according to the [color definition standard](http://unifiedfontobject.org/versions/ufo3/conventions/#colors). It includes comments at the start saying when it was run etc unless --nocomments is specified. The csv produced will include all glyphs, whether or not they have a color definition.
 
-In some cases (see options below) colors can be reported or referred to by text names as in "g_purple". The script understands text color definitions for the 12 cell colors definable in the GlyphsApp UI: *g_red, g_orange, g_brown, g_yellow, g_light_green, g_dark_green, g_light_blue, g_dark_blue, g_purple, g_pink, g_light_grey, g_dark_grey*.
-
+In some cases (see options below) colors can be reported or referred to by text names as in "g_purple". See [Specifying colors on the command line](#specifying-colors-on-the-command-line)
 
 If the command line includes
 
-- -c COLOR, then the script will instead produce a list of glyph names, one per line, of glyphs that match that single color. COLOR may be defined as either a numerical color definition, or using one of the color names listed above.
-- -n, then the csv file will report colors as named above rather than using numerical definitions. If there is no name that matches a particular color definition then it will be exported numerically.
+- -c COLOR, then the script will instead produce a list of glyph names, one per line, of glyphs that match that single color.
+- -n, then the csv file will report colors using text names (see above) rather than using numerical definitions. 
+If there is no name that matches a particular color definition then it will be exported numerically.
 
-Example that exports a csv file (glyphname, colordef) listing every glyph and its color as in `LtnSmA,”0.5,0.09,0.79,1”`:
+Example that exports a csv file (glyphname, colordef) listing every glyph and its color as in `LtnSmA,"0.5,0.09,0.79,1"`:
 
 ```
 psfexportmarkcolors Andika-Regular.ufo -o markcolors.csv
@@ -572,7 +573,7 @@ psfexportmarkcolors Andika-Regular.ufo -o markcolors.csv
 Example that exports a list of glyphs that are colored purple:
 
 ```
-psfexportmarkcolors Andika-Regular.ufo -o glyphlist.txt -c “g_purple”
+psfexportmarkcolors Andika-Regular.ufo -o glyphlist.txt -c "g_purple"
 ```
 
 ---
@@ -1044,7 +1045,9 @@ psfsetkeys --plist lib -k com.schriftgestaltung.width -v Regular font.ufo
 ---
 #### psfsetmarkcolors
 Usage: **`psfsetmarkcolors [-c COLOR] [-i INPUT] [-u] [-x]  ifont [ofont]`**
+
 _([Standard options](docs.md#standard-command-line-options) also apply)_
+
 This sets the cell mark color of a glyph according to the [color definition standard](http://unifiedfontobject.org/versions/ufo3/conventions/#colors) based on a list of glyph names in INPUT, one glyph name per line.
 COLOR may be defined as either a numerical color definition or by text names as in "g_purple". The script understands text color definitions for the 12 cell colors definable in the GlyphsApp UI: *g_red, g_orange, g_brown, g_yellow, g_light_green, g_dark_green, g_light_blue, g_dark_blue, g_purple, g_pink, g_light_grey, g_dark_grey*.
 If the command line includes:
@@ -1053,15 +1056,15 @@ If the command line includes:
 
 Example that sets the cell mark color of all glyphs listed in glyphlist.txt to purple (0.5,0.09,0.79,1):
 ```
-psfsetmarkcolors Andika-Regular.ufo -i glyphlist.txt -c “0.5,0.09,0.79,1”
+psfsetmarkcolors Andika-Regular.ufo -i glyphlist.txt -c "0.5,0.09,0.79,1"
 ```
 Example that sets the cell mark color of all glyphs that have the unicode values listed in unicode.txt to purple (0.5,0.09,0.79,1):
 ```
-psfsetmarkcolorss Andika-Regular.ufo -u -i unicode.txt -c “g_purple”
+psfsetmarkcolorss Andika-Regular.ufo -u -i unicode.txt -c "g_purple"
 ```
 Example that sets the cell mark color of all glyphs that have the unicode values listed in unicode.txt to purple (0.5,0.09,0.79,1):
 ```
-psfsetmarkcolors Andika-Regular.ufo -u -i unicode.txt -c “g_purple”
+psfsetmarkcolors Andika-Regular.ufo -u -i unicode.txt -c "g_purple"
 ```
 Example that removes all color definitions from all glyphs: (this is effectively equivalent to `psfremovegliflibkeys Andika-Regular.ufo public.markColor`)
 ```
@@ -1109,7 +1112,7 @@ _([Standard options](docs.md#standard-command-line-options) also apply)_
 
 This updates the various font version fields based on 'newversion' supplied which may be:
 
-- Full openTypeNameVersion string, except for the opening “Version “ text, eg “1.234 beta2”
+- Full openTypeNameVersion string, except for the opening "Version " text, eg "1.234 beta2"
 - +1 to increment to the patch version number - see below
 - not supplied, in which case the current values will be validated and existing openTypeNameVersion string displayed
 
@@ -1276,7 +1279,7 @@ A color can be specified as a name (eg g_dark_green) or in RBGA format (eg (0,0.
 
 Where multiple colors are supplied they should be separated by commas.
 
-Two special cases are also allowed (if releveant for the script):
+Two special cases are also allowed (if applicable for the script):
 
 - "none" where the color should be removed
 - "leave" where any existing color should be left unchanged
@@ -1286,12 +1289,12 @@ All values are case-insensitive
 Examples:
 
 ```
---colors="g_light_blue,g_dark_blue"
+--colors="g_cyan,g_blue"
 --colors="g_dark_green, leave, (0,0.67,0.91,1)"
 --color=g_red
 ```
 Color names can be one of the 12 cell colors definable in the GlyphsApp UI: g_red, g_orange, g_brown, g_yellow,
- g_light_green, g_dark_green, g_light_blue, g_dark_blue, g_purple, g_pink, g_light_grey, g_dark_grey.
+ g_light_green, g_dark_green, g_cyan, g_blue, g_purple, g_pink, g_light_gray, g_dark_gray.
 
 
 

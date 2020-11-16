@@ -9,7 +9,7 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'David Raymond'
 
 from silfont.core import execute, splitfn
-from silfont.util import nametocolor, colortoname
+from silfont.util import parsecolors
 import io
 
 argspec = [
@@ -32,9 +32,9 @@ def doit(args) :
     if not ((color is not None) ^ deletecolors): logger.log("Must specify one and only one of -c and -x", "S")
 
     if color is not None:
-        if color[0] not in ("0", "1"):
-            color = nametocolor(color, "")
-            if color == "" : logger.log("Invalid color name", "S")
+        if color[0] in ("0", "1"): color = "(" + color + ")"
+        (color, colorname, logcolor, originalcolor) = parsecolors(color)[0]
+        if color is None: logger.log(logcolor, "S") # If color not parsed, parsecolors() puts error in logcolor
 
     # Process the input file.  It needs to be done in script rather than by execute() since, if -x is used, there might not be one
     (ibase, iname, iext) = splitfn(infile)
@@ -79,18 +79,22 @@ def doit(args) :
         if lib:
             if "public.markColor" in lib: oldcolor = str(glyph["lib"].getval("public.markColor"))
         if oldcolor != color:
+            if oldcolor is not None:
+                (temp, oldname, oldlogcolor, originalcolor) = parsecolors("(" + oldcolor + ")")[0]
+                if temp is None: oldlogcolor = oldcolor # Failed to parse old color, so just report what is was
+
             changecnt += 1
             if deletecolors:
                 glyph["lib"].remove("public.markColor")
-                logger.log(glyphn + ": " + logcolor(oldcolor) + " removed", "I")
+                logger.log(glyphn + ": " + oldlogcolor + " removed", "I")
             else:
                 if oldcolor is None:
                     if lib is None: glyph.add("lib")
                     glyph["lib"].setval("public.markColor","string",color)
-                    logger.log(glyphn+ ": " + logcolor(color) + " added", "I")
+                    logger.log(glyphn+ ": " + logcolor + " added", "I")
                 else:
                     glyph["lib"].setval("public.markColor", "string", color)
-                    logger.log(glyphn + ": " + logcolor(oldcolor) + " changed to " + logcolor(color), "I")
+                    logger.log(glyphn + ": " + oldlogcolor + " changed to " + logcolor, "I")
 
     if deletecolors:
         logger.log(str(changecnt) + " colors removed", "P")
@@ -98,12 +102,6 @@ def doit(args) :
         logger.log(str(changecnt) + " colors changed or added", "P")
 
     return font
-
-def logcolor(color): # Add color name, if there is one, to color for logging
-    colorname = colortoname(color)
-    if colorname is not None: color = color + " (" + colorname + ")"
-    return color
-
 
 def cmd() : execute("UFO",doit,argspec) 
 if __name__ == "__main__": cmd()
