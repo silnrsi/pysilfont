@@ -38,9 +38,12 @@ def doit(args):
         "librestorekeys": ["org.sil.pysilfontparams", "org.sil.altLineMetrics", "org.sil.lcg.toneLetters",
                    "org.sil.lcg.transforms", "public.glyphOrder", "public.postscriptNames",
                    "com.schriftgestaltung.disablesLastChange", "com.schriftgestaltung.disablesAutomaticAlignment"],
-        "libdeletekeys": ("com.schriftgestaltung.customParameter.GSFont.note",
-                     "com.schriftgestaltung.customParameter.GSFont.Axes",
-                     "com.schriftgestaltung.customParameter.GSFontMaster.Master Name"),
+        "libdeletekeys": ("com.schriftgestaltung.customParameter.GSFont.copyright",
+                          "com.schriftgestaltung.customParameter.GSFont.designer",
+                          "com.schriftgestaltung.customParameter.GSFont.manufacturer",
+                          "com.schriftgestaltung.customParameter.GSFont.note",
+                          "com.schriftgestaltung.customParameter.GSFont.Axes",
+                          "com.schriftgestaltung.customParameter.GSFontMaster.Master Name"),
         "libdeleteempty": ("com.schriftgestaltung.DisplayStrings",),
         "inforestorekeys": ["openTypeHeadCreated", "openTypeNamePreferredFamilyName", "openTypeNamePreferredSubfamilyName",
                        "openTypeNameUniqueID", "openTypeOS2WeightClass", "openTypeOS2WidthClass", "postscriptFontName",
@@ -124,6 +127,19 @@ def process_ufo(ufo, keylists, glyphsdir, args, obskeysfound):
             if key in ufo.lib:
                 if fontname not in obskeysfound: obskeysfound[fontname] = []
                 obskeysfound[fontname].append(key)
+
+        # Special processing for Axis Mappings
+        key = "com.schriftgestaltung.customParameter.GSFont.Axis Mappings"
+        if key in ufo.lib:
+            current =ufo.lib[key]
+            new = dict(current)
+            for x in current:
+                val = current[x]
+                k = list(val.keys())[0]
+                if k[-2:] == ".0": new[x] = {k[0:-2]: val[k]}
+            if current != new:
+                ufo.lib[key] = new
+                logchange(loglist, " key names set to integers. ", key, current, new)
 
         # fontinfo.plist processing
 
