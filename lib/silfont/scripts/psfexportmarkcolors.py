@@ -32,7 +32,7 @@ def doit(args) :
 
     if color :
         (colorfilter, colorname, logcolor, splitcolor) = parsecolors(color, single=True)
-        if colorfilter is None : logger.log(logcolor, "E")
+        if colorfilter is None : logger.log(logcolor, "S") # If color not parsed, parsecolors() puts error in logcolor
 
     glyphlist = font.deflayer.keys()
 

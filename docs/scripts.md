@@ -769,7 +769,7 @@ optional arguments:
 
 ---
 ####  psfmakescaledshifted
-Usage: **`psfmakescaledshifted [-c] -i INPUT -t TRANSFORM infont [outfont]`**
+Usage: **`psfmakescaledshifted [-c] [--color COLOR] -i INPUT -t TRANSFORM infont [outfont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
@@ -829,6 +829,8 @@ psfmakescaledshifted -i newglyphs.csv DoulosSIL-Regular.ufo -t superscript
 
 This will take the definitions in newglyphs.csv and create the new glyphs using the *superscript* transformation defined in the UFO lib.plist *org.sil.lcg.transforms* key.
 
+`-c` or `--color COLOR` can be used to set the mark color for the generated glpyhs.  `-c` sets the color to blue, and with
+`--color` the color specified as described in [Specifying colors on the command line](#specifying-colors-on-the-command-line)
 
 ---
 #### psfmakewoffmetadata
@@ -1049,7 +1051,8 @@ Usage: **`psfsetmarkcolors [-c COLOR] [-i INPUT] [-u] [-x]  ifont [ofont]`**
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
 This sets the cell mark color of a glyph according to the [color definition standard](http://unifiedfontobject.org/versions/ufo3/conventions/#colors) based on a list of glyph names in INPUT, one glyph name per line.
-COLOR may be defined as either a numerical color definition or by text names as in "g_purple". The script understands text color definitions for the 12 cell colors definable in the GlyphsApp UI: *g_red, g_orange, g_brown, g_yellow, g_light_green, g_dark_green, g_light_blue, g_dark_blue, g_purple, g_pink, g_light_grey, g_dark_grey*.
+COLOR may be defined as described in [Specifying colors on the command line](#specifying-colors-on-the-command-line)
+
 If the command line includes:
 - -u, then the INPUT file will be treated as a list of unicode values rather than glyph names, and the color set on any glyph that is encoded with those unicode values.
 - -x, then the color definition will be removed altogether. If no INPUT is given all color definitions will be removed from all glyphs.
