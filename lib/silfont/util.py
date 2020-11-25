@@ -289,34 +289,39 @@ def colortoname(color, default=None):
     else:
         return colorstonameslist.get(color)
 
-def parsecolors(colors): # Process a list of colors  - designed for handling command-line input
+def parsecolors(colors, single = False, allowspecial = False): # Process a list of colors - designed for handling command-line input
     # Colors can be in RBGA format (eg (0.25,0.25,0.25,1)) or text name (eg g_dark_grey), spearated by commas.
-    # Function returns a list of tuples, one per color, (RGBA, name, logcolor, original color)
+    # Function returns a list of tuples, one per color, (RGBA, name, logcolor, original color after splitting)
     # If the color can't be parsed, RGBA will be None and logocolor contain an error message
-    # Also allow for special values of 'none' and 'leave'
+    # If single is set, just return one tuple rather than a list of tuples
+    # Also can allow for special values of 'none' and 'leave' if allowspecial set
 
     # First tidy up the input string
     cols = colors.lower().replace(" ", "")
-    # Since RGBA colors which have parentheses and then commas within them, so can't just split on commas so add @ signs for first split
-    cols = cols.replace(",(", "@(").replace("),", ")@").split("@")
-    cols2 = []
-    for color in cols:
-        if color[0] == "(":
-            cols2.append(color)
-        else:
-            cols2 = cols2 + color.split(',')
+
+    if single: # If just one color, don't need to split the string and can allow for RGBA without brackets
+        splitcols = ["(" + cols + ")"] if cols[0] in ("0", "1") else [cols]
+    else:
+        # Since RGBA colors which have parentheses and then commas within them, so can't just split on commas so add @ signs for first split
+        cols = cols.replace(",(", "@(").replace("),", ")@").split("@")
+        splitcols = []
+        for color in cols:
+            if color[0] == "(":
+                splitcols.append(color)
+            else:
+                splitcols = splitcols + color.split(',')
     parsed = []
-    for color in cols2:
-        if color in ("none", "leave"):
+    for splitcol in splitcols:
+        if allowspecial and splitcol in ("none", "leave"):
             RGBA = ""
-            name = color
-            logcolor = color
+            name = splitcol
+            logcolor = splitcol
         else:
             errormess = ""
             name = ""
             RGBA = ""
-            if color[0] == '(':
-                values = color[1:-1].split(',') # Remove parentheses then split on commas
+            if splitcol[0] == '(':
+                values = splitcol[1:-1].split(',') # Remove parentheses then split on commas
                 if len(values) != 4:
                     errormess = "RGBA colours must have 4 values"
                 else:
@@ -333,17 +338,18 @@ def parsecolors(colors): # Process a list of colors  - designed for handling com
                     RGBA = RGBA[0:-1]  # Strip trialing comma
                     name = colortoname(RGBA, "")
             else:
-                name = color
+                name = splitcol
                 RGBA = nametocolor(name)
                 if RGBA is None: errormess = "Invalid color name"
             if errormess:
-                logcolor = "Invalid color: " + color + " - " + errormess
+                logcolor = "Invalid color: " + splitcol + " - " + errormess
                 RGBA = None
                 name = None
             else:
                 logcolor = RGBA
                 if name: logcolor += " (" + name + ")"
-        parsed.append((RGBA, name, logcolor,color))
+        parsed.append((RGBA, name, logcolor,splitcol))
+    if single: parsed = parsed[0]
 
     return parsed
 

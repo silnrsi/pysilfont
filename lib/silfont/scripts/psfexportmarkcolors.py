@@ -31,8 +31,7 @@ def doit(args) :
         outfile.write("# "+" ".join(args.cmdlineargs[1:])+"\n\n")
 
     if color :
-        if color[0] in ("0", "1"): color = "(" + color + ")"
-        (colorfilter, colorname, logcolor, originalcolor) = parsecolors(color)[0]
+        (colorfilter, colorname, logcolor, splitcolor) = parsecolors(color, single=True)
         if colorfilter is None : logger.log(logcolor, "E")
 
     glyphlist = font.deflayer.keys()

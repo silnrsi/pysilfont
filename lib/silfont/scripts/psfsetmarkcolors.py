@@ -32,8 +32,7 @@ def doit(args) :
     if not ((color is not None) ^ deletecolors): logger.log("Must specify one and only one of -c and -x", "S")
 
     if color is not None:
-        if color[0] in ("0", "1"): color = "(" + color + ")"
-        (color, colorname, logcolor, originalcolor) = parsecolors(color)[0]
+        (color, colorname, logcolor, splitcolor) = parsecolors(color, single=True)
         if color is None: logger.log(logcolor, "S") # If color not parsed, parsecolors() puts error in logcolor
 
     # Process the input file.  It needs to be done in script rather than by execute() since, if -x is used, there might not be one
@@ -80,7 +79,7 @@ def doit(args) :
             if "public.markColor" in lib: oldcolor = str(glyph["lib"].getval("public.markColor"))
         if oldcolor != color:
             if oldcolor is not None:
-                (temp, oldname, oldlogcolor, originalcolor) = parsecolors("(" + oldcolor + ")")[0]
+                (temp, oldname, oldlogcolor, splitcolor) = parsecolors(oldcolor, single=True)
                 if temp is None: oldlogcolor = oldcolor # Failed to parse old color, so just report what is was
 
             changecnt += 1
