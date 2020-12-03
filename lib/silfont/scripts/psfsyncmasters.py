@@ -59,9 +59,6 @@ def doit(args) :
         for source in sds.sources:
             dsources.append(Dsource(sds, source, logger, frompds=False,  psource = False, args=args))
 
-    # Kept for backwards compatibility from before --complex was added.  To be removed in future version
-    if "master" in psource.source.filename.lower(): complex = True
-
     # Process values in psource
     fipval = {}
     libpval = {}
