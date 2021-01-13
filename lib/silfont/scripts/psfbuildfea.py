@@ -10,6 +10,7 @@ from fontTools.feaLib.builder import Builder
 from fontTools import configLogger
 from fontTools.ttLib import TTFont
 from fontTools.ttLib.tables.otTables import lookupTypes
+from fontTools.feaLib.lookupDebugInfo import LookupDebugInfo
 
 from silfont.core import execute
 
@@ -46,6 +47,11 @@ class MyBuilder(Builder):
         for i, l in enumerate(latelookups):
             l.lookup_index = numl + i
             l.map_index = l.lookup_index
+        for l in lookups + latelookups:
+            self.lookup_locations[tag][str(l.lookup_index)] = LookupDebugInfo(
+                    location=str(l.location),
+                    name=self.get_lookup_name_(l),
+                    feature=None)
         return [b.build() for b in lookups + latelookups]
 
     def add_lookup_to_feature_(self, lookup, feature_name):
