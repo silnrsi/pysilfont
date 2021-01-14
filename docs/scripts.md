@@ -271,7 +271,7 @@ same glyph alignment when glyph names are sorted by TTF order.
 optional arguments:
   classes           Class definition file in XML format (default `classes.xml`)
   glyphdata         Glyph info csv file (default `glyph_data.csv`)
-  --gname GNAME     Column header for glyph name (default `psfname`)
+  --gname GNAME     Column header for glyph name (default `glyph_name`)
   --sort HEADER     Column header for sort order (default `sort_final`)
 ```
 #### Notes

@@ -182,7 +182,7 @@ def cache_font(feats, lang, norebuild):
                     logger.log('Tunable font doesn\'t contain a feature "{}"'.format(f), 'E')
                     fatal_errors = True
                 elif v not in feat_all[f].values:
-                    logger.log('Tunable font doesn\'t feature "{}" doesn\'t have a value {}'.format(f, v), 'E')
+                    logger.log('Tunable font feature "{}" doesn\'t have a value {}'.format(f, v), 'E')
                     fatal_errors = True
                 else:
                     ttsettings[f] = v  # Save TT setting name and value in case we need to build the font

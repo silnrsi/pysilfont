@@ -44,7 +44,7 @@ def doit(args):
     if args.sort in fl:
         sortpos = fl.index(args.sort)
     else:
-        logger.log('No "' + args.header + '" heading in csv headers"', "S")
+        logger.log('No "' + args.sort + '" heading in csv headers"', "S")
     next(incsv.reader, None)  # Skip first line with containing headers
     for line in incsv:
         glyphn = line[glyphnpos]
