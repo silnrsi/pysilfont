@@ -33,7 +33,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfexportpsnames](#psfexportpsnames) | Export a map of glyph name to PS name to a csv file |
 | [psfexportunicodes](#psfexportunicodes) | Export a map of glyph name to unicode value to a csv file |
 | [psffixffglifs](#psffixffglifs) | Make changes needed to a UFO following processing by FontForge |
-| [psfftml2TThtml](#psfftml2TThtml) | Convert FTML document to html and fonts for testing TypeTuner |
+| [psfftml2TThtml](#psfftml2tthtml) | Convert FTML document to html and fonts for testing TypeTuner |
 | [psfftml2odt](#psfftml2odt) | Create a LibreOffice Writer file from an FTML test description |
 | [psfgetglyphnames](#psfgetglyphnames) | Create a file of glyphs to import from a list of characters to import |
 | [psfglyphs2ufo](#psfglyphs2ufo) | Export all the masters in a .glyphs file to UFOs |
@@ -47,6 +47,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfrunfbchecks](#psfrunfbchecks) | Run Font Bakery checks using a standard profile with option to specify an alternative profile |
 | [psfsetassocfeat](#psfsetassocfeat) | Add associate feature info to glif lib based on a csv file |
 | [psfsetassocuids](#psfsetassocuids) | Add associate UID info to glif lib based on a csv file |
+| [psfsetdummydsig](#psfsetdummydsig) | Add a dummy DSIG table into a TTF font |
 | [psfsetglyphorder](#psfsetglyphorder) | Load glyph order data into public.glyphOrder based on a text file |
 | [psfsetkeys](#psfsetkeys) | Set key(s) with given value(s) in a UFO p-list file |
 | [psfsetmarkcolors](#psfsetmarkcolors) | Set mark colors based on csv file |
