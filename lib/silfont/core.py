@@ -1,17 +1,13 @@
 #!/usr/bin/env python
 'General classes and functions for use in pysilfont scripts'
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2014-2020 SIL International (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2014-2021 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
 from glob import glob
 from collections import OrderedDict
-import sys, os, argparse, datetime, shutil, csv, codecs, io
-try:
-    import configparser
-except ImportError:
-    import ConfigParser as configparser
+import sys, os, argparse, datetime, shutil, csv, io, configparser
 
 import silfont
 
@@ -238,8 +234,10 @@ class _paramset(dict):
                     val = str2bool(val)
                     if val is None: self.params.logger.log (self.sourcedesc+" parameter "+origparn+" must contain boolean values: " + origvalue, "S")
                     value[i] = val
-                if type(val) != listtype: valuesOK = False
-            if not valuesOK: self.params.logger.log("Invalid "+paramsource+" parameter type for "+origparn+": "+self.params.types[parn], "S")
+                if type(val) != listtype:
+                    valuesOK = False
+                    badtype = str(type(val))
+            if not valuesOK: self.params.logger.log("Invalid "+badtype+" parameter type for "+origparn+": "+self.params.types[parn], "S")
         if parn in ("loglevel", "scrlevel"):  # Need to check log level is valid before setting it since otherwise logging will fail
             value = value.upper()
             if value not in self.params.logger.loglevels: self.params.logger.log (self.sourcedesc+" parameter "+parn+" invalid", "S")
