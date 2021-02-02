@@ -241,7 +241,7 @@ class Fstyle(ETU.ETelement) :
             if m:
                 dict[m.group(2)] = m.group(3)
             else:
-                self.logger.log(f'Invalid feature detail "{f}"', 'X')
+                self.logger.log(f'Invalid feature syntax "{f}"', 'E')
         return dict
 
     def dict_to_string(self, dict) :
