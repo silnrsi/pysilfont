@@ -13,7 +13,7 @@ __license__ = 'Released under the MIT License (http://opensource.org/licenses/MI
 __author__ = 'Bob Hallissy'
 
 import glob
-from silfont.ftml import Fxml
+from silfont.ftml import Fxml, Ftest
 from silfont.core import execute
 
 argspec = [
@@ -28,15 +28,38 @@ def doit(args):
     for fname in glob.glob(args.inftml):
         logger.log(f'checking {fname}', 'P')
         unknownStyles = set()
+        usedStyles = set()
+
+        # recursively find and check all <test> elements in a <testsgroup>
+        def checktestgroup(testgroup):
+            for test in testgroup.tests:
+                # Not sure why, but sub-testgroups are also included in tests, so filter those out for now
+                if isinstance(test, Ftest) and test.stylename:
+                    sname = test.stylename
+                    usedStyles.add(sname)
+                    if sname is not None and sname not in unknownStyles and \
+                            not (hasStyles and sname in ftml.head.styles):
+                        logger.log(f'  stylename "{sname}" not defined in head/styles', 'E')
+                        unknownStyles.add(sname)
+            # recurse to nested testgroups if any:
+            if testgroup.testgroups is not None:
+               for subgroup in testgroup.testgroups:
+                   checktestgroup(subgroup)
+
         with open(fname,encoding='utf8') as f:
+            # Attempt to parse the ftml file
             ftml = Fxml(f)
+            hasStyles = ftml.head.styles is not None  # Whether or not any styles are defined in head element
+
+            # Look through all tests for undefined styles:
             for testgroup in ftml.testgroups:
-                for test in testgroup.tests:
-                    if test.stylename:
-                        sname = test.stylename
-                        if sname is not None and sname not in ftml.head.styles and sname not in unknownStyles:
-                            logger.log(f'    stylename "{test.stylename}" not found in head/styles', 'E')
-                            unknownStyles.add(sname)
+                checktestgroup(testgroup)
+
+            if hasStyles:
+                # look for unused styles:
+                for style in ftml.head.styles:
+                    if style not in usedStyles:
+                        logger.log(f'  defined style "{style}" not used in any test', 'W')
 
 def cmd() : execute(None,doit, argspec)
 if __name__ == "__main__": cmd()
