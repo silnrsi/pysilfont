@@ -18,6 +18,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfchangettfglyphnames](#psfchangettfglyphnames) | Change glyph names in a ttf from working names to production names |
 | [psfcheckbasicchars](#psfcheckbasicchars) | Check UFO for glyphs that represent recommended basic characters |
 | [psfcheckclassorders](#psfcheckclassorders) | Verify classes defined in xml have correct ordering where needed |
+| [psfcheckftml](#psfcheckftml) | Check ftml files for structural integrity |
 | [psfcheckglyphinventory](#psfcheckglyphinventory) | Warn for differences in glyph inventory and encoding between UFO and input file (e.g., glyph_data.csv) |
 | [psfcompdef2xml](#psfcompdef2xml) | Convert composite definition file to XML format |
 | [psfcompressgr](#psfcompressgr) | Compress Graphite tables in a ttf font |
@@ -301,6 +302,34 @@ Note that the Graphite workflow extracts glyph order from the ttf file, but `psf
 
 `psfcheckclassorders` will also issue warning a warning message if there are glyphs named in the `classes` file which are not included in the `glyphdata` file. While this is [intentionally] not an error for either Graphite or OpenType (relavent tools simply ignore such missing glyphs), it may be helpful in catching typos that result in class miss-alignment and therefore bugs.  By default warning messages are sent to the log file;
 use `-p scrlevel=W` to also route them to the terminal.
+
+---
+#### psfcheckftml
+usage: **`psfcheckftml [inftml]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Test structural integrity of one or more ftml files
+
+Assumes ftml files have already validated against [`FTML.dtd`](https://github.com/silnrsi/ftml/blob/master/FTML.dtd), for example by using:
+
+```   xmllint --noout --dtdvalid FTML.dtd inftml.ftml```
+
+`psfcheckftml` verifies that:
+  - `silfont.ftml` can parse the file
+  - every `stylename` is defined the `<styles>` list 
+
+```
+positional arguments:
+  inftml                Input ftml filename pattern (default: *.ftml)
+
+other arguments:
+  -h, --help            show this help message and exit
+  -l LOG, --log LOG     Log file
+  -p PARAMS, --params PARAMS
+                        Other parameters - see parameters.md for details
+  -q, --quiet           Quiet mode - only display severe errors
+```
 
 ---
 #### psfcheckglyphinventory
