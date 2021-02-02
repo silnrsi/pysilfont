@@ -316,6 +316,10 @@ class FTMLBuilder(object):
         # Default diacritic base:
         self.diacBase = 0x25CC
 
+        # Default joinBefore and joinAfter sequence
+        self.joinBefore = '\u200D'  # put before a sequence to force joining shape; def = zwj
+        self.joinAfter = '\u200D'   # put after a sequence to force joining shape; def = zwj
+
         # Dict mapping tag to Feature
         self.features = {}
 
@@ -426,7 +430,7 @@ class FTMLBuilder(object):
         featCol = fl.index('Feat') if 'Feat' in fl else None
         bcp47Col = fl.index('bcp47tags') if 'bcp47tags' in fl else None
 
-        next(incsv.reader, None)  # Skip first line with headers in
+        next(incsv.reader, None)  # Skip first line with headers
 
         # RE that matches names of glyphs we don't care about
         namesToSkipRE = re.compile('^(?:[._].*|null|cr|nonmarkingreturn|tab|glyph_name)$',re.IGNORECASE)
@@ -651,14 +655,14 @@ class FTMLBuilder(object):
                 # For sequences that show dual-joining behavior, what we show depends on dualJoinMode:
                 if dualJoinMode & 1:
                     # show initial, medial, final separated by space:
-                    t += u'{0}\u200D \u200D{0}\u200D \u200D{0} '.format(s)
+                    t += u'{0}{2} {1}{0}{2} {1}{0} '.format(s, self.joinBefore, self.joinAfter)
                 if dualJoinMode & 2:
                     # show 3 joined forms in sequence:
                     t += u'{0}{0}{0} '.format(s)
             elif zwjAfter:
-                t += u'{0}\u200D '.format(s)
+                t += u'{0}{1} '.format(s, self.joinAfter)
             elif zwjBefore:
-                t += u'\u200D{0} '.format(s)
+                t += u'{1}{0} '.format(s, self.joinBefore)
             if addBreaks: ftml.closeTest()
             ftml.addToTest(keyUID, t, label = label, comment = comment, rtl = rtl)
             if addBreaks: ftml.closeTest()
