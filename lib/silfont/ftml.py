@@ -98,7 +98,7 @@ class Fhead(ETU.ETelement) :
         self.process_subelements((
             ("comment",    "comment",    None,          False, False),
             ("fontscale",  "fontscale",  None,          False, False),
-            ("fontsrc",    "fontsrc",    Ffontsrc,      False, False),
+            ("fontsrc",    "fontsrc",    Ffontsrc,      False, True),
             ("styles",     "styles",     ETU.ETelement, False, False ), # Initially just basic elements; Fstyles created below
             ("title",      "title",      None,          False, False),
             ("widths",     "widths",     _Fwidth,       False, False)),
@@ -235,7 +235,13 @@ class Fstyle(ETU.ETelement) :
 
     def string_to_dict(self, string) : # Split string on ',', then add to dict splitting on " " and removing quotes
         dict={}
-        for name,value in [x.strip().split(" ") for x in string.split(",")] : dict[name[1:-1]] = value
+        for f in string.split(','):
+            f = f.strip()
+            m = re.match(r'''(?P<quote>['"])(\w{4})(?P=quote)\s+(\d+|on|off)$''', f)
+            if m:
+                dict[m.group(2)] = m.group(3)
+            else:
+                self.logger.log(f'Invalid feature detail "{f}"', 'X')
         return dict
 
     def dict_to_string(self, dict) :
