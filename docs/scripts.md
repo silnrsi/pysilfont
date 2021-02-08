@@ -62,6 +62,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfufo2glyphs](#psfufo2glyphs) | Generate a glyphs files from a designspace file and UFO(s) |
 | [psfufo2ttf](#psfufo2ttf) | Generate a ttf file without OpenType tables from a UFO |
 | [psfversion](#psfversion) | Display version info for pysilfont and dependencies |
+| [psfwoffit](#psfwoffit) | Convert between ttf, woff, and woff2 |
 | [psfxml2compdef](#psfxml2compdef) | Convert composite definition file from XML format |
 
 ---
@@ -1289,6 +1290,67 @@ To be documented
 Usage: **`psfversion`**
 
 This displays version info for pysilfont and some of its dependencies.  It is inteneded for troubleshooting purposes - eg send the output in if reporting a problem - and includes which version of Python is being used and where the code is being executed from.
+
+---
+#### psfwoffit
+Usage: **`usage: psfwoffit[-m METADATA] [--privatedata PRIVATEDATA] [-v VERSION]
+                 [--ttf [TTF] [--woff [WOFF]] [--woff2 [WOFF2]] infont`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Converts between ttf, woff, and woff2
+
+required arguments:
+
+```
+  infont      an input font; can be ttf, woff, or woff2
+```
+
+optional arguments:
+```
+  -m METADATA, --metadata METADATA
+                        file containing XML WOFF metadata
+  --privatedata PRIVATEDATA
+                        file containing WOFF privatedata
+  -v VERSION, --version VERSION
+                        woff font version number in major.minor
+  --ttf [TTF]           name of ttf file to be written
+  --woff [WOFF]         name of woff file to be written
+  --woff2 [WOFF2]       name of woff2 file to be written
+```
+The `--version`, `--metatadata` and `--privatedata` provide data to be added to the WOFF file. 
+Each of these is optional and if absent the following rules apply
+
+* if the input file is woff or woff2:
+  * the missing values are copied from the input file
+* if the input file is a ttf:
+  * missing `metadata` or `privatedata` will be empty in the output fonts
+  * the version will be taken from the `fontRevison` field of the `head` table of the input ttf file.  
+ 
+The output filenames can be omitted (as long as another option follows) or `-`; in either case
+the output filename are calculated from the `infont` parameter.
+
+Examples:
+
+```
+psfwoffit --woff2 output.woff2 input.woff
+```
+creates an output woff2 font file from an input woff font file, copying the version as well any metadata and privatedata from the input woff.
+
+```
+psfwoffit -m woffmetadata.xml -v 1.3 --woff output.woff --woff2 output.woff2 input.ttf
+```
+creates explicitly named woff and woff2 font files from an input ttf, setting woff metadata and version from the command line.
+ 
+```
+psfwoffit --woff --woff2 -m woffmetadata.xml -v 1.3 path/font.ttf
+```
+creates implicitly named `path/font.woff` and `path/font.woff2`, setting woff metadata and version from the command line.
+
+```
+psfwoffit --woff - --woff2 - -m woffmetadata.xml path/to/font.ttf
+```
+same as above but uses font version from the ttf.
 
 ---
 #### psfxml2compdef
