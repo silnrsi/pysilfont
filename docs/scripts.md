@@ -974,8 +974,7 @@ Run Font Bakery tests using a standard profile and report results in a table on 
 including using wildcards, but all should be in the same directory.  
 For ttf files, the profile will be Pysilfont's ttfchecks.py.  UFO files are not yet supported.
 
-An alternative profile can be specified with `--profile`. 
-See examples/fbttfchecks.py for an example of a profile that amends the behaviour of ttfchecks.py.  This includes options to change which checks are run and to override the status reported by checks.
+An alternative profile can be specified with `--profile`.  This profile needs to be specifically designed to work with this script - see examples/fbttfchecks.py.  This profile amends the behaviour of ttfchecks.py and includes options to change which checks are run and to override the status reported by checks.  Project-specific checks can also be added.
 
 Example use with a project-specific profile:
 
