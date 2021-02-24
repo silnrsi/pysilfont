@@ -200,6 +200,8 @@ psfcheck_list['com.google.fonts/check/gdef_mark_chars']                         
 psfcheck_list['com.google.fonts/check/gdef_non_mark_chars']                       = {}
 psfcheck_list['com.google.fonts/check/gdef_spacing_marks']                        = {}
 psfcheck_list['com.google.fonts/check/glyf_non_transformed_duplicate_components'] = {}
+psfcheck_list['com.google.fonts/check/gf-axisregistry/fvar_axis_defaults']        = {}
+psfcheck_list['com.google.fonts/check/glyf_nested_components']                    = {}
 psfcheck_list['com.google.fonts/check/glyf_unused_data']                          = {}
 psfcheck_list['com.google.fonts/check/glyph_coverage']                            = {'exclude': True}
 psfcheck_list['com.google.fonts/check/gpos_kerning_info']                         = {}
@@ -214,6 +216,7 @@ psfcheck_list['com.google.fonts/check/linegaps']                                
 psfcheck_list['com.google.fonts/check/license/OFL_copyright']                     = {'exclude': True}
 psfcheck_list['com.google.fonts/check/loca/maxp_num_glyphs']                      = {}
 psfcheck_list['com.google.fonts/check/mac_style']                                 = {}
+psfcheck_list['com.google.fonts/check/mandatory_avar_table']                      = {}
 psfcheck_list['com.google.fonts/check/mandatory_glyphs']                          = {}
 psfcheck_list['com.google.fonts/check/maxadvancewidth']                           = {}
 psfcheck_list['com.google.fonts/check/metadata/broken_links']                     = {'exclude': True}
@@ -223,6 +226,7 @@ psfcheck_list['com.google.fonts/check/metadata/category']                       
 psfcheck_list['com.google.fonts/check/metadata/consistent_axis_enumeration']      = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/copyright']                        = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/copyright_max_length']             = {'exclude': True}
+psfcheck_list['com.google.fonts/check/metadata/designer_profiles']                = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/designer_values']                  = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/escaped_strings']                  = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/familyname']                       = {'exclude': True}
@@ -288,6 +292,11 @@ psfcheck_list['com.google.fonts/check/name/version_format']                     
 psfcheck_list['com.google.fonts/check/old_ttfautohint']                           = {'exclude': True}
 psfcheck_list['com.google.fonts/check/os2_metrics_match_hhea']                    = {}
 psfcheck_list['com.google.fonts/check/ots']                                       = {}
+psfcheck_list['com.google.fonts/check/outline_alignment_miss']                    = {}
+psfcheck_list['com.google.fonts/check/outline_colinear_vectors']                  = {}
+psfcheck_list['com.google.fonts/check/outline_jaggy_segments']                    = {}
+psfcheck_list['com.google.fonts/check/outline_semi_vertical']                     = {}
+psfcheck_list['com.google.fonts/check/outline_short_segments']                    = {}
 psfcheck_list['com.google.fonts/check/points_out_of_bounds']                      = {'exclude': True}
 psfcheck_list['com.google.fonts/check/post_table_version']                        = {}
 #psfcheck_list['com.google.fonts/check/production_encoded_glyphs']                 = {} # Currently disabled by FB
