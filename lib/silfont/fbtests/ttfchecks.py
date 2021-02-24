@@ -292,11 +292,11 @@ psfcheck_list['com.google.fonts/check/name/version_format']                     
 psfcheck_list['com.google.fonts/check/old_ttfautohint']                           = {'exclude': True}
 psfcheck_list['com.google.fonts/check/os2_metrics_match_hhea']                    = {}
 psfcheck_list['com.google.fonts/check/ots']                                       = {}
-psfcheck_list['com.google.fonts/check/outline_alignment_miss']                    = {}
-psfcheck_list['com.google.fonts/check/outline_colinear_vectors']                  = {}
-psfcheck_list['com.google.fonts/check/outline_jaggy_segments']                    = {}
-psfcheck_list['com.google.fonts/check/outline_semi_vertical']                     = {}
-psfcheck_list['com.google.fonts/check/outline_short_segments']                    = {}
+psfcheck_list['com.google.fonts/check/outline_alignment_miss']                    = {'exclude': True}
+psfcheck_list['com.google.fonts/check/outline_colinear_vectors']                  = {'exclude': True}
+psfcheck_list['com.google.fonts/check/outline_jaggy_segments']                    = {'exclude': True}
+psfcheck_list['com.google.fonts/check/outline_semi_vertical']                     = {'exclude': True}
+psfcheck_list['com.google.fonts/check/outline_short_segments']                    = {'exclude': True}
 psfcheck_list['com.google.fonts/check/points_out_of_bounds']                      = {'exclude': True}
 psfcheck_list['com.google.fonts/check/post_table_version']                        = {}
 #psfcheck_list['com.google.fonts/check/production_encoded_glyphs']                 = {} # Currently disabled by FB
