@@ -13,7 +13,7 @@ argspec = [
 
 from silfont.core import execute
 from fontTools.ttLib.tables.DefaultTable import DefaultTable
-import lz4
+import lz4.block
 import sys, struct
 
 class lz4tuple(object) :
