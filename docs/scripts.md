@@ -951,15 +951,13 @@ glyph2,glyph1
 ```
 Unless default value for `renameGlyphs` [parameter](parameters.md) is overridden, the .glif filenames in the UFO will also be adjusted.
 
-This program modifies the glyphs themselves and, if present in lib.plist, the `public.glyphOrder`, `public.postscriptNames`, `com.schriftgestaltung.glyphOrder` 
-and `com.schriftgestaltung.customParameter.GSFont.DisplayStrings` definitions. Any composite glyphs that reference renamed glyphs are adjusted accordingly.
+This program modifies the glyphs themselves and, if present in lib.plist, the `public.glyphOrder`, `public.postscriptNames`, `com.schriftgestaltung.glyphOrder` and `com.schriftgestaltung.customParameter.GSFont.DisplayStrings` definitions. Any composite glyphs that reference renamed glyphs are adjusted accordingly.
 
-If groups.plist is present, glyph names are renamed in there.  In addition, groups named public.kern1.<glyphname> or public.kern1.<glyphname> will also be handled, 
-but other group names are not changed.
+If groups.plist is present, glyph names in groups are renamed. In addition, groups named public.kern1._glyphname_ or public.kern2._glyphname_ will also be renamed, but group names not matching that pattern are left unchanged.
 
-If kerning.plist is present, glyph names are renamed and kern groups names described above are also renamed
+If kerning.plist is present, glyph names in kern pairs are changed and kern group names that match the pattern described above are also changed.
 
-If -c specified, the changes are also made to a classes definition file.  
+If -c specified, the changes are also made to the named classes definition file.  
 
 When there are multiple layers in the UFO, glyphs will be renamed in all layers providing the glyph is in the default layer.  If the glyph is only in non-default layers the glyph will need renaming manually.
 
