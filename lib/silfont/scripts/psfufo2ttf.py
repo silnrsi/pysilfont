@@ -9,7 +9,7 @@ __author__ = 'Alan Ward'
 # and curve conversion seems to happen in a different way.
 
 from silfont.core import execute
-import defcon, ufo2ft.outlineCompiler, ufo2ft.preProcessor
+import defcon, ufo2ft.outlineCompiler, ufo2ft.preProcessor, ufo2ft.filters
 
 argspec = [
     ('iufo', {'help': 'Input UFO folder'}, {}),
@@ -18,28 +18,6 @@ argspec = [
     ('-l', '--log', {'help': 'Optional log file'}, {'type': 'outfile', 'def': '_ufo2ttf.log', 'optlog': True})]
 
 PUBLIC_PREFIX = 'public.'
-
-def getuvss(ufo):
-    uvsdict = {}
-    uvs = ufo.lib.get('org.sil.variationSequences', None)
-    if uvs is not None:
-        for usv, dat in uvs.items():
-            usvc = int(usv, 16)
-            pairs = []
-            uvsdict[usvc] = pairs
-            for k, v in dat.items():
-                pairs.append((int(k, 16), v))
-        return uvsdict
-    for g in ufo:
-        uvs = getattr(g, 'lib', {}).get("org.sil.uvs", None)
-        if uvs is None:
-            continue
-        codes = [int(x, 16) for x in uvs.split()]
-        if codes[1] not in uvsdict:
-            uvsdict[codes[1]] = []
-        uvsdict[codes[1]].append((codes[0], (g.name if codes[0] not in g.unicodes else None)))
-    return uvsdict
-        
 
 def doit(args):
     ufo = defcon.Font(args.iufo)
@@ -61,7 +39,20 @@ def doit(args):
     args.logger.log('Converting UFO to ttf without OT', 'P')
 
     # default arg value for TTFPreProcessor class: removeOverlaps = False, convertCubics = True
-    preProcessor = ufo2ft.preProcessor.TTFPreProcessor(ufo, removeOverlaps = args.removeOverlap, convertCubics=True)
+    preProcessor = ufo2ft.preProcessor.TTFPreProcessor(ufo, removeOverlaps = args.removeOverlap, convertCubics=True, flattenComponents = True)
+
+    # Need to handle cases if decomposeTransformedComponents and/or flattenComponents are set in com.github.googlei18n.ufo2ft.filters with lib.plist
+    dtc = ftpos = None
+    for (i,filter) in enumerate(preProcessor.preFilters):
+        if isinstance(filter, ufo2ft.filters.decomposeTransformedComponents.DecomposeTransformedComponentsFilter):
+            dtc = True
+        if isinstance(filter, ufo2ft.filters.flattenComponents.FlattenComponentsFilter):
+            ftpos = i
+    # Add decomposeTransformedComponents if not already set via lib.plist
+    if not dtc: preProcessor.preFilters.append(ufo2ft.filters.decomposeTransformedComponents.DecomposeTransformedComponentsFilter())
+    # Remove flattenComponents if set via lib.plist since we set it via flattenComponents = True when setting up the preprocessor
+    if ftpos: preProcessor.preFilters.pop(ftpos)
+
     glyphSet = preProcessor.process()
     outlineCompiler = ufo2ft.outlineCompiler.OutlineTTFCompiler(ufo,
         glyphSet=glyphSet,
@@ -83,6 +74,27 @@ def doit(args):
     font.save(args.ottf)
 
     args.logger.log('Done', 'P')
+
+def getuvss(ufo):
+    uvsdict = {}
+    uvs = ufo.lib.get('org.sil.variationSequences', None)
+    if uvs is not None:
+        for usv, dat in uvs.items():
+            usvc = int(usv, 16)
+            pairs = []
+            uvsdict[usvc] = pairs
+            for k, v in dat.items():
+                pairs.append((int(k, 16), v))
+        return uvsdict
+    for g in ufo:
+        uvs = getattr(g, 'lib', {}).get("org.sil.uvs", None)
+        if uvs is None:
+            continue
+        codes = [int(x, 16) for x in uvs.split()]
+        if codes[1] not in uvsdict:
+            uvsdict[codes[1]] = []
+        uvsdict[codes[1]].append((codes[0], (g.name if codes[0] not in g.unicodes else None)))
+    return uvsdict
 
 def cmd(): execute(None, doit, argspec)
 if __name__ == '__main__': cmd()
