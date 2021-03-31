@@ -13,6 +13,7 @@ from textwrap import TextWrapper
 from fontbakery.reporters.serialize import SerializeReporter
 from fontbakery.reporters.html import HTMLReporter
 from fontbakery.checkrunner import distribute_generator, CheckRunner, get_module_profile, SKIP
+from fontbakery.configuration import Configuration
 from fontbakery.commands.check_profile import get_module
 
 from silfont.core import execute
@@ -85,7 +86,8 @@ def doit(args):
     psfcheck_list = module.psfcheck_list
 
     # Create the runner and reporter objetcs, then run the tests
-    runner = CheckRunner(profile, values={"fonts": fonts})
+    configuration = Configuration()
+    runner = CheckRunner(profile, values={"fonts": fonts}, config=configuration)
 
     sr = SerializeReporter(runner=runner) # This produces results from all the tests in sr.getdoc for later analysis
     reporters = [sr.receive]
