@@ -1290,15 +1290,21 @@ Note: This is just bare-bones code at present so does the same as glyphsLib's uf
 
 ---
 #### psfufo2ttf
-Usage: **`psfufo2ttffont ...`**
+Usage: **`psfufo2ttf [--removeOverlap] iufo ottf`**
 
-To be documented
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+This generates a ttf file without OpenType tables from a UFO.
+
+It is based on ufo2ft and uses ufo2ft's decomposeTransformedComponents and flattenComponents filters.
+
+If `--removeOverlap` is used it merges overlapping contours
 
 ---
 #### psfversion
 Usage: **`psfversion`**
 
-This displays version info for pysilfont and some of its dependencies.  It is inteneded for troubleshooting purposes - eg send the output in if reporting a problem - and includes which version of Python is being used and where the code is being executed from.
+This displays version info for pysilfont and many of its dependencies.  It is inteneded for troubleshooting purposes - eg send the output in if reporting a problem - and includes which version of Python is being used and where the code is being executed from.
 
 ---
 #### psfwoffit
