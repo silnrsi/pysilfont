@@ -536,7 +536,13 @@ Usage: **`psfdeleteglyphs [-i DELETELIST] [--reverse] infont [outfont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-This deletes glyphs in a UFO based on an external file with one glyphname per line. The `--reverse` option will instead delete all glyphs in the UFO that are not in the list. it does not analyze composites, so be careful not to delete glyphs that are referenced as components in other glyphs.
+This deletes glyphs in a UFO based on an external file with one glyphname per line. 
+The `--reverse` option will instead delete all glyphs in the UFO that are not in the list.
+
+It only deletes glyphs that do exist in the default layer, but for such glyphs they are also deleted from other layers, as well as in groups.plist and kerning.plist.
+Kern groups based on the glyph name, ie public.kern1._glyphname_ or public.kern2._glyphname_ are also deleted.
+
+It does not analyze composites, so be careful not to delete glyphs that are referenced as components in other glyphs.
 
 The following example will delete all glyphs that are _not_ listed in `keepthese.txt`:
 

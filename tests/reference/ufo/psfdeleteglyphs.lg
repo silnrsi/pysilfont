@@ -1,22 +1,25 @@
-2020-10-22 11:30:50 Progress: Running:  psfdeleteglyphs tests/input/font-psf-test/source/PsfTest-Regular.ufo -i tests/input/psfdeleteglyphs.txt -l local/testresults/ufo/psfdeleteglyphs.log -p loglevel=i -p scrlevel=w
-2020-10-22 11:30:50 Progress: Opening file for input: tests/input/psfdeleteglyphs.txt
-2020-10-22 11:30:50 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Regular.ufo
-2020-10-22 11:30:50 Info:     Processing Glyph Layer 0: public.defaultglyphs
-2020-10-22 11:30:50 Progress: Checking fontinfo.plist metadata
-2020-10-22 11:30:50 Warning:  note is present - it's use is discouraged
-2020-10-22 11:30:50 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
-2020-10-22 11:30:50 Info:     Types: Old - list, New - NoneType
-2020-10-22 11:30:50 Progress: Checking lib.plist metadata
-2020-10-22 11:30:50 Warning:  com.schriftgestaltung.disablesAutomaticAlignment would be deleted - obsolete key Old value: True
-2020-10-22 11:30:50 Info:     Types: Old - bool, New - NoneType
-2020-10-22 11:30:50 Warning:  com.schriftgestaltung.disablesLastChange would be deleted - obsolete key Old value: True
-2020-10-22 11:30:50 Info:     Types: Old - bool, New - NoneType
-2020-10-22 11:30:50 Progress: Check & fix results:- Errors: 0, Changes to make: 3, Other warnings: 1
-2020-10-22 11:30:50 Warning:  Deleted glyphs:
-2020-10-22 11:30:50 Warning:  Apos
-2020-10-22 11:30:50 Warning:  Comma
-2020-10-22 11:30:50 Warning:  Total deleted glyphs: 2
-2020-10-22 11:30:50 Progress: Processing font for output
-2020-10-22 11:30:50 Progress: Output UFO already exists - reading for comparison
-2020-10-22 11:30:50 Progress: Writing font to local/testresults/ufo/psfdeleteglyphs.ufo
-2020-10-22 11:30:50 Info:     Processing glyphs directory
+2021-04-07 14:27:12 Progress: Running:  psfdeleteglyphs tests/input/font-psf-test/source/PsfTest-Regular.ufo -i tests/input/psfdeleteglyphs.txt -l local/testresults/ufo/psfdeleteglyphs.log -p loglevel=i -p scrlevel=w
+2021-04-07 14:27:12 Progress: Opening file for input: tests/input/psfdeleteglyphs.txt
+2021-04-07 14:27:12 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Regular.ufo
+2021-04-07 14:27:12 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2021-04-07 14:27:13 Progress: Checking fontinfo.plist metadata
+2021-04-07 14:27:13 Warning:  note is present - it's use is discouraged
+2021-04-07 14:27:13 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
+2021-04-07 14:27:13 Info:     Types: Old - list, New - NoneType
+2021-04-07 14:27:13 Progress: Checking lib.plist metadata
+2021-04-07 14:27:13 Warning:  com.schriftgestaltung.disablesAutomaticAlignment would be deleted - obsolete key Old value: True
+2021-04-07 14:27:13 Info:     Types: Old - bool, New - NoneType
+2021-04-07 14:27:13 Warning:  com.schriftgestaltung.disablesLastChange would be deleted - obsolete key Old value: True
+2021-04-07 14:27:13 Info:     Types: Old - bool, New - NoneType
+2021-04-07 14:27:13 Progress: Check & fix results:- Errors: 0, Changes to make: 3, Other warnings: 1
+2021-04-07 14:27:13 Info:     Deleted glyphs:
+2021-04-07 14:27:13 Info:       Apos deleted from: Default layer
+2021-04-07 14:27:13 Info:       Apos is still in public.glyphOrder, public.postscriptNames, com.schriftgestaltung.glyphOrder
+2021-04-07 14:27:13 Info:       Comma deleted from: Default layer
+2021-04-07 14:27:13 Info:       Comma is still in public.glyphOrder, public.postscriptNames, com.schriftgestaltung.glyphOrder
+2021-04-07 14:27:13 Progress: 2 glyphs deleted. Set logging to I to see details
+2021-04-07 14:27:13 Warning:  2 of the deleted glyphs are still in some lib.plist entries.
+2021-04-07 14:27:13 Progress: Processing font for output
+2021-04-07 14:27:13 Progress: Output UFO already exists - reading for comparison
+2021-04-07 14:27:13 Progress: Writing font to local/testresults/ufo/psfdeleteglyphs.ufo
+2021-04-07 14:27:13 Info:     Processing glyphs directory
