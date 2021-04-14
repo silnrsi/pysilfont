@@ -50,6 +50,8 @@ def decode_element(e):
         return e.text
     elif e.tag == 'integer':
         return int(e.text)
+    elif e.tag== 'real':
+        return float(e.text)
     elif e.tag == 'array':
         res = [decode_element(x) for x in e]
     elif e.tag == 'dict':

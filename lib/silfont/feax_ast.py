@@ -416,5 +416,5 @@ class ast_KernPairsStatement(ast.Statement):
         self.kerninfo = kerninfo
 
     def asFea(self, indent=""):
-        return ("\n"+indent).join("pos {} {} {};".format(k1, v, k2) \
+        return ("\n"+indent).join("pos {} {} {};".format(k1, round(v), k2) \
                     for k1, x in self.kerninfo.items() for k2, v in x.items())
