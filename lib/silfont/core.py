@@ -272,9 +272,18 @@ class csvreader(object):    # Iterator for csv files, skipping comments and chec
             print(e)
             sys.exit(1)
         self.reader = csv.reader(file)
-        # Read first line then reset; this is so scripts can analyse first line before starting iterating
-        self.firstline = next(self.reader, None)
-        file.seek(0)
+        # Find the first non-comment line then reset so __iter__ still returns the first line
+        # This is so scripts can analyse first line (eg to look for headers) before starting iterating
+        self.firstline = None
+        self._commentsbeforefirstline = -1
+        while not self.firstline:
+            row = next(self.reader, None)
+            self._commentsbeforefirstline += 1
+            if row == []: continue  # Skip blank lines
+            if row[0].lstrip().startswith("#"): continue  # Skip comments - ie lines starting with  #
+            self.firstline = row
+        file.seek(0) # Reset the csv and skip comments
+        for i in range(self._commentsbeforefirstline): next(self.reader, None)
 
     def __setattr__(self, name, value):
         if name == "numfields" and value is not None:  # If numfields is changed, reset min and max fields
@@ -284,7 +293,7 @@ class csvreader(object):    # Iterator for csv files, skipping comments and chec
 
     def __iter__(self):
         for row in self.reader:
-            self.line_num = self.reader.line_num-1 # Count is out by 1 due to reading first lin in __init__
+            self.line_num = self.reader.line_num - 1 - self._commentsbeforefirstline # Count is out due to reading first line in __init__
             if row == []: continue  # Skip blank lines
             if row[0].lstrip().startswith("#"): continue  # Skip comments - ie lines starting with  #
             if len(row) < self.minfields or len(row) > self.maxfields:
