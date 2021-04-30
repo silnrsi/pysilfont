@@ -348,8 +348,11 @@ class Ufont(object):
             fiwarnifnot = {"unitsPerEm": (1000, 2048),
                            "styleMapStyleName": ("regular", "bold", "italic", "bold italic")},
             fiwarnifpresent = ("note",)
-            fidel = ("macintoshFONDFamilyID", "macintoshFONDName", "postscriptWeightName",
-                     "openTypeNameCompatibleFullName", "openTypeOS2FamilyClass", "year")
+            fidel = ("macintoshFONDFamilyID", "macintoshFONDName", "openTypeNameCompatibleFullName",
+                     "openTypeGaspRangeRecords", "openTypeHeadFlags", "openTypeHheaCaretOffset",
+                     "openTypeOS2FamilyClass", "openTypeOS2Selection", "postscriptForceBold", "postscriptIsFixedPitch",
+                     "postscriptBlueFuzz", "postscriptBlueScale", "postscriptBlueShift", "postscriptWeightName",
+                     "year")
             fidelifempty = ("guidelines", "postscriptBlueValues", "postscriptFamilyBlues", "postscriptFamilyOtherBlues",
                             "postscriptOtherBlues")
             fiint = ("ascender", "capHeight", "descender", "postscriptUnderlinePosition",
@@ -363,6 +366,7 @@ class Ufont(object):
             fisetto = {"openTypeHheaLineGap": 0, "openTypeOS2TypoLineGap": 0, "openTypeOS2WidthClass": 5,
                        "openTypeOS2Type": []} # Other values are added below
 
+            libdel = ("com.fontlab.v2.tth", "com.typemytype.robofont.italicSlantOffset")
             libsetto = {"com.schriftgestaltung.customParameter.GSFont.disablesAutomaticAlignment": True,
                             "com.schriftgestaltung.customParameter.GSFont.disablesLastChange": True}
             libwarnifnot = {"com.schriftgestaltung.customParameter.GSFont.useNiceNames": False}
@@ -532,6 +536,17 @@ class Ufont(object):
                 logger.log("lib.plist missing so not checked by check & fix routines", "E")
             else:
                 logger.log("Checking lib.plist metadata", "P")
+
+                for key in libdel:
+                    if key in self.lib:
+                        old = self.lib.getval(key)
+                        if self.metafix:
+                            self.lib.remove(key)
+                            logmess = " removed from lib.plist. "
+                        else:
+                            logmess = " would be removed from lib.plist "
+                        self.logchange(logmess, key, old, None)
+                        changes += 1
 
                 for key in libsetto:
                     if key in self.lib:
@@ -1045,9 +1060,9 @@ class Uoutline(Uelement):
         # Bug is that index for super... should be different than other lines.
         # need to think through logic to sort this out...
 
-        super(Uoutline, self).insert(index, obj.element)
-        if typ == "component": self.components.insert(index, obj)
-        if typ == "contour": self.contours.insert(index, obj)
+        #super(Uoutline, self).insert(index, obj.element)
+        #if typ == "component": self.components.insert(index, obj)
+        #if typ == "contour": self.contours.insert(index, obj)
 
 
 class Ucomponent(Uelement):

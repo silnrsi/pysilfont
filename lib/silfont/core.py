@@ -551,10 +551,10 @@ def execute(tool, fn, scriptargspec, chain = None):
         else:  #Handle defaults for all but first positional parameter
             if adef is not None:
                 if not aval: aval = ""
-                if aval == "" and adef == "":  # Only valid for output font parameter
-                    if atype != "outfont":
-                        logger.log("No value suppiled for " + ainfo['name'], "S")
-                        ## Not sure why this needs to fail - we need to cope with other optional file or filename parameters
+#                if aval == "" and adef == "":  # Only valid for output font parameter
+#                    if atype != "outfont":
+#                        logger.log("No value suppiled for " + ainfo['name'], "S")
+#                        ## Not sure why this needs to fail - we need to cope with other optional file or filename parameters
                 (apath, abase, aext) = splitfn(aval)
                 (dpath, dbase, dext) = splitfn(adef)  # dpath should be None
                 if not apath:

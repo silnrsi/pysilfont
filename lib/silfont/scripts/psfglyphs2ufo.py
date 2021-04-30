@@ -51,7 +51,7 @@ def doit(args):
         "integerkeys": ("openTypeOS2WeightClass", "openTypeOS2WidthClass"),
         "infodeleteempty": ("openTypeOS2Selection",)}
 
-    if args.restore: # Extra kesys to restore.  Add to both lists, since should never be duplicated names
+    if args.restore: # Extra keys to restore.  Add to both lists, since should never be duplicated names
         keylist = args.restore.split(",")
         keylists["librestorekeys"] += keylist
         keylists["inforestorekeys"].append(keylist)
