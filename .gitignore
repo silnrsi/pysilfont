@@ -11,6 +11,7 @@ pysilfont.cfg
 /dist
 /local
 /dev
+/venv
 
 /lib/pysilfont.egg-info
 /pysilfont.egg-info
