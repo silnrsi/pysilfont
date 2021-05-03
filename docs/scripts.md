@@ -34,6 +34,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfexportpsnames](#psfexportpsnames) | Export a map of glyph name to PS name to a csv file |
 | [psfexportunicodes](#psfexportunicodes) | Export a map of glyph name to unicode value to a csv file |
 | [psffixffglifs](#psffixffglifs) | Make changes needed to a UFO following processing by FontForge |
+| [psffixfontlab](#psffixfontlab) | Make changes needed to a UFO following processing by FontLab |
 | [psfftml2TThtml](#psfftml2tthtml) | Convert FTML document to html and fonts for testing TypeTuner |
 | [psfftml2odt](#psfftml2odt) | Create a LibreOffice Writer file from an FTML test description |
 | [psfgetglyphnames](#psfgetglyphnames) | Create a file of glyphs to import from a list of characters to import |
@@ -648,6 +649,28 @@ Note that other changes are reversed by standard [normalization](docs.md#Normali
 ```
 psffixffglifs font.ufo -p checkfix=y
 ```
+
+####  psffixfontlab
+Usage: **`psffixfontlab ifont [-b BACKEDUPUFO]` **
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Make changes needed to a UFO following processing by FontLab, including restoring information from a backup of the ufo.
+
+By default, it reads the backup from fontlabtemp/_fontname_.backup.  An alternative backup ufo can be specified with -b
+
+The changes made by `psffixfontlab` include:
+- Restoring groups.plist, kerning.plist and any layerinfo.plist files from the backups
+- Deleting various keys from fontinfo.list and lib.plist
+- Restoring guidelines in fontinfo.plist and plublic.glyphOrder from lib.plist
+
+Sample usage
+```
+psffixfontlab font.ufo -p checkfix=None
+```
+Notes
+- The above example has checkfix=None, since otherwise it will report errors and warnings prior to the script fixing them
+- Pysilfont's normal backup mechanism for fonts is not used. 
 
 ---
 #### psfftml2TThtml
