@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 __doc__ = '''Make changes needed to a UFO following processing by FontLab 7.
+Various items are reset using the backup of the original font that Fontlab creates
 '''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2021 SIL International (http://www.sil.org)'
@@ -12,7 +13,6 @@ import os, shutil, glob
 
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'filename'}),
-    ('-b', '--backedupufo', {'help': 'Location of backup of original UFO for restore purposes \nDefaults to fontlabtemp\\<ufoname>.backup'}, {}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_fixfontlab.log'})]
 
 def doit(args) :
@@ -20,10 +20,15 @@ def doit(args) :
     fontname = args.ifont
     logger = args.logger
     params = args.paramsobj
-    backupname= args.backedupufo
-    if backupname is None:
-        (path, base, ext) = splitfn(fontname)
-        backupname = os.path.join("fontlabtemp", base + ".backup")
+
+    # Locate the oldest backup
+    (path, base, ext) = splitfn(fontname)
+    backuppath = os.path.join(path, base + ".*-*" + ext) # Backup has date/time added in format .yymmdd-hhmm
+    backups = glob.glob(backuppath)
+    if len(backups) == 0:
+        logger.log("No backups found matching %s so no changes made to the font" % backuppath, "P")
+        return
+    backupname = sorted(backups)[0] # Choose the oldest backup - date/time format sorts alphabetically
 
     # Reset groups.plist, kerning.plist and any layerinfo.plist(s) from backup ufo
     lilist = []
@@ -101,7 +106,7 @@ def doit(args) :
         glyph = font.deflayer[gname]
         glines = glyph["guideline"]
         if glines:
-            for gl in glines: glines.remove(gl) # Remove any existing glines
+            for gl in list(glines): glines.remove(gl) # Remove any existing glines
             updates = True
         buglines = backupfont.deflayer[gname]["guideline"] if gname in backupfont.deflayer else []
         if buglines:

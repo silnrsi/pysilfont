@@ -651,13 +651,15 @@ psffixffglifs font.ufo -p checkfix=y
 ```
 
 ####  psffixfontlab
-Usage: **`psffixfontlab ifont [-b BACKEDUPUFO]` **
+Usage: **`psffixfontlab ifont` **
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-Make changes needed to a UFO following processing by FontLab, including restoring information from a backup of the ufo.
+Make changes needed to a UFO following processing by FontLab, including restoring information from the backup of the UFO.
 
-By default, it reads the backup from fontlabtemp/_fontname_.backup.  An alternative backup ufo can be specified with -b
+When exporting from Fontlab, the option _Existing Font Files:_ must be set to _rename_ in order to create the backup needed.
+If there are multiple backup files, the oldest will be used on the assumption that several exports have been run since psffixfontlab was last used.
+So it is important that any old backups are deleted before re-editing a font.
 
 The changes made by `psffixfontlab` include:
 - Restoring groups.plist, kerning.plist and any layerinfo.plist files from the backups
@@ -670,7 +672,7 @@ psffixfontlab font.ufo -p checkfix=None
 ```
 Notes
 - The above example has checkfix=None, since otherwise it will report errors and warnings prior to the script fixing them
-- Pysilfont's normal backup mechanism for fonts is not used. 
+- Pysilfont's normal backup mechanism for fonts is not used.
 
 ---
 #### psfftml2TThtml
