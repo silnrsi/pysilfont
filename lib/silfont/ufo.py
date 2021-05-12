@@ -1036,6 +1036,16 @@ class Uoutline(Uelement):
         if typ == "component": self.components.remove(obj)
         if typ == "contour": self.contours.remove(obj)
 
+    def replaceobject(self, oldobj, newobj, typ):
+        eindex = list(self.element).index(oldobj.element)
+        super(Uoutline, self).replace(eindex, newobj.element)
+        if typ == "component":
+            cindex = self.components.index(oldobj)
+            self.components[cindex]= newobj
+        if typ == "contour":
+            cindex = self.contours.index(oldobj)
+            self.contours[cindex]= newobj
+
     def appendobject(self, item, typ): # Item can be an contour/component object, element or attribute list
         if isinstance(item, (Ucontour, Ucomponent)):
             obj = item
@@ -1052,13 +1062,14 @@ class Uoutline(Uelement):
             else:
                 obj = Ucontour(self,elem)
         super(Uoutline, self).append(obj.element)
-        if type == "component": self.components.append(obj)
-        if type == "contour": self.contours.append(obj)
+        if typ == "component": self.components.append(obj)
+        if typ == "contour": self.contours.append(obj)
 
     def insertobject(self, index, item, typ): # Needs updating to match appendobject
         self.glif.logger.log("insertobject currently buggy so don't use!", "X")
-        # Bug is that index for super... should be different than other lines.
+        # Bug is that index for super... should be different than components/contours.
         # need to think through logic to sort this out...
+        # May need to take some logic from appendobject and some from replaceobj
 
         #super(Uoutline, self).insert(index, obj.element)
         #if typ == "component": self.components.insert(index, obj)
