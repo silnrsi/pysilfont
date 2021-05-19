@@ -193,7 +193,7 @@ def doit(args):
             mess += str(errorcnt) + " test(s) gave a status of ERROR which means they failed to execute properly." \
                                     "\n                              " \
                                     "   ERROR probably indicates a software issue rather than font issue"
-        logger.log(mess, "S")
+        logger.log(mess, "E")
 
 def audit(fonts, logger):
     if len(fonts) != 1: logger.log("For audit, specify output csv file instead of list of fonts", "S")
