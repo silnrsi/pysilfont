@@ -746,6 +746,16 @@ class Ulayer(_Ucontainer):
             if convertg2f1: glyph.convertToFormat1()
             if glyph["advance"] is not None:
                 if glyph["advance"].width is None and glyph["advance"].height is None: glyph.remove("advance")
+            # Normalize so that, when both exist, components come before contour
+            outline = glyph["outline"]
+            if len(outline.components) > 0 and list(outline)[0] == "contour":
+                # Need to move components to the front...
+                contours = outline.contours
+                components = outline.components
+                oldcontours = list(contours)  # Easiest way to 'move' components is to delete contours then append back at the end
+                for contour in oldcontours: outline.removeobject(contour, "contour")
+                for contour in oldcontours: outline.appendobject(contour, "contour")
+
             setFileForOutput(dtree, glyph.filen, glyph, "xml")
 
     def renameGlifs(self):
