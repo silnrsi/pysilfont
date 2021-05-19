@@ -31,15 +31,7 @@ def doit(args) :
     backupname = sorted(backups)[0] # Choose the oldest backup - date/time format sorts alphabetically
 
     # Reset groups.plist, kerning.plist and any layerinfo.plist(s) from backup ufo
-    lilist = []
-    for ufoname in (fontname, backupname): # Find any layerinfo files in either ufo
-        lis = glob.glob(os.path.join(ufoname, "*/layerinfo.plist"))
-        for li in lis:
-            (lifolder, dummy) = os.path.split(li) # Get full path name for folder
-            (dummy, lifolder) = os.path.split(lifolder) # Now take ufo name off the front
-            liname = os.path.join(lifolder, "layerinfo.plist") # This is now the relative path to the file from the ufo
-            if liname not in lilist: lilist.append(liname)     # so can be handled the same as groups and kerning
-    for filename in ["groups.plist", "kerning.plist"] + lilist:
+    for filename in ["groups.plist", "kerning.plist"]:
         bufullname = os.path.join(backupname, filename)
         ufofullname = os.path.join(fontname, filename)
         if os.path.exists(bufullname):
@@ -51,6 +43,27 @@ def doit(args) :
         elif os.path.exists(ufofullname):
             os.remove(ufofullname)
             logger.log(filename + " removed from ufo", "P")
+    lifolders = []
+    for ufoname in (fontname, backupname): # Find any layerinfo files in either ufo
+        lis = glob.glob(os.path.join(ufoname, "*/layerinfo.plist"))
+        for li in lis:
+            (lifolder, dummy) = os.path.split(li)       # Get full path name for folder
+            (dummy, lifolder) = os.path.split(lifolder) # Now take ufo name off the front
+            if lifolder not in lifolders: lifolders.append(lifolder)
+    for folder in lifolders:
+        filename = os.path.join(folder, "layerinfo.plist")
+        bufullname = os.path.join(backupname, filename)
+        ufofullname = os.path.join(fontname, filename)
+        if os.path.exists(bufullname):
+            try:
+                shutil.copy(bufullname, os.path.join(fontname, folder))
+                logger.log(filename + " restored from backup", "P")
+            except Exception as e:
+                logger.log("Failed to copy %s to %s: %s" % (bufullname, fontname, str(e)), "S")
+        elif os.path.exists(ufofullname):
+            os.remove(ufofullname)
+            logger.log(filename + " removed from ufo", "P")
+
     # Now open the fonts
     font = Ufont(fontname, params = params)
     backupfont = Ufont(backupname, params = params)
