@@ -156,12 +156,15 @@ psfcheck_list['com.google.fonts/check/STAT_strings']                            
 psfcheck_list['com.google.fonts/check/aat']                                       = {}
 psfcheck_list['com.google.fonts/check/all_glyphs_have_codepoints']                = {'exclude': True}
 psfcheck_list['com.google.fonts/check/canonical_filename']                        = {}
+psfcheck_list['com.google.fonts/check/cjk_not_enough_glyphs']                      = {'exclude': True}
 psfcheck_list['com.google.fonts/check/cjk_vertical_metrics']                      = {'exclude': True}
+psfcheck_list['com.google.fonts/check/cjk_vertical_metrics_regressions']          = {'exclude': True}
 psfcheck_list['com.google.fonts/check/cmap/unexpected_subtables']                 = {}
 psfcheck_list['com.google.fonts/check/code_pages']                                = {}
 psfcheck_list['com.google.fonts/check/contour_count']                             = {'exclude': True}
 psfcheck_list['com.google.fonts/check/description/broken_links']                  = {'exclude': True}
 psfcheck_list['com.google.fonts/check/description/eof_linebreak']                 = {'exclude': True}
+psfcheck_list['com.google.fonts/check/description/family_update']                 = {'exclude': True}
 psfcheck_list['com.google.fonts/check/description/git_url']                       = {'exclude': True}
 psfcheck_list['com.google.fonts/check/description/max_length']                    = {'exclude': True}
 psfcheck_list['com.google.fonts/check/description/min_length']                    = {'exclude': True}
@@ -267,6 +270,7 @@ psfcheck_list['com.google.fonts/check/metadata/valid_filename_values']          
 psfcheck_list['com.google.fonts/check/metadata/valid_full_name_values']           = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/valid_name_values']                = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/valid_post_script_name_values']    = {'exclude': True}
+psfcheck_list['com.google.fonts/check/missing_small_caps_glyphs']                 = {}
 psfcheck_list['com.google.fonts/check/monospace']                                 = {}
 psfcheck_list['com.google.fonts/check/name/ascii_only_entries']                   = {}
 psfcheck_list['com.google.fonts/check/name/copyright_length']                     = {}
@@ -307,7 +311,11 @@ psfcheck_list['com.google.fonts/check/repo/vf_has_static_fonts']                
 psfcheck_list['com.google.fonts/check/repo/zip_files']                            = {'exclude': True}
 psfcheck_list['com.google.fonts/check/required_tables']                           = {}
 psfcheck_list['com.google.fonts/check/rupee']                                     = {}
+psfcheck_list['com.google.fonts/check/shaping/collides']                          = {'exclude': True}
+psfcheck_list['com.google.fonts/check/shaping/forbidden']                         = {'exclude': True}
+psfcheck_list['com.google.fonts/check/shaping/regression']                        = {'exclude': True}
 psfcheck_list['com.google.fonts/check/smart_dropout']                             = {'exclude': True}
+psfcheck_list['com.google.fonts/check/stylisticset_description']                  = {}
 psfcheck_list['com.google.fonts/check/superfamily/list']                          = {'exclude': True}
 psfcheck_list['com.google.fonts/check/superfamily/vertical_metrics']              = {'exclude': True}
 psfcheck_list['com.google.fonts/check/ttx-roundtrip']                             = {}
