@@ -49,6 +49,7 @@ def doit(args):
                        "openTypeNameUniqueID", "openTypeOS2WeightClass", "openTypeOS2WidthClass", "postscriptFontName",
                        "postscriptFullName", "styleMapFamilyName", "styleMapStyleName", "note"],
         "integerkeys": ("openTypeOS2WeightClass", "openTypeOS2WidthClass"),
+        "infodeletekeys": ("openTypeVheaVertTypoAscender", "openTypeVheaVertTypoDescender", "openTypeVheaVertTypoLineGap"),
         "infodeleteempty": ("openTypeOS2Selection",)}
 
     if args.restore: # Extra keys to restore.  Add to both lists, since should never be duplicated names
@@ -168,17 +169,23 @@ def process_ufo(ufo, keylists, glyphsdir, args, obskeysfound):
 
         # Delete unneeded keys
 
-        # for key in infodeletekeys:
-        #     if hasattr(ufo.info, key):
-        #        current = getattr(ufo.info, key)
-        #        setattr(ufo.info, key, None)
-        #        logchange(loglist, " deleted. ", key, current, None)
+        for key in keylists["infodeletekeys"]:
+            if hasattr(ufo.info, key):
+               current = getattr(ufo.info, key)
+               setattr(ufo.info, key, None)
+               logchange(loglist, " deleted. ", key, current, None)
 
         for key in keylists["infodeleteempty"]:
             if hasattr(ufo.info, key) and getattr(ufo.info, key) == "":
                 setattr(ufo.info, key, None)
                 logchange(loglist, " empty field deleted. ", key, current, None)
     if args.nofea: ufo.features.text = ""  # Suppress output of features.fea
+
+    for layer in ufo.layers:
+        for glyph in layer:
+            lib = glyph.lib
+            if "public.verticalOrigin" in lib: del lib["public.verticalOrigin"]
+
 
     # Write ufo out
     ufopath = os.path.join(args.masterdir, fontname + ".ufo")
