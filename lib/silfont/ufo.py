@@ -646,7 +646,14 @@ class Ufont(object):
         dtree = self.dtree
         setFileForOutput(dtree, "metainfo.plist", self.metainfo, "xml")
         if "fontinfo" in self.__dict__: setFileForOutput(dtree, "fontinfo.plist", self.fontinfo, "xml")
-        if "groups" in self.__dict__: setFileForOutput(dtree, "groups.plist", self.groups, "xml")
+        if "groups" in self.__dict__: # With groups, sort by glyph name
+            for gname in list(self.groups):
+                group = self.groups.getval(gname)
+                elem = ET.Element("array")
+                for glyph in sorted(group):
+                    ET.SubElement(elem, "string").text = glyph
+                self.groups.setelem(gname, elem)
+            setFileForOutput(dtree, "groups.plist", self.groups, "xml")
         if "kerning" in self.__dict__: setFileForOutput(dtree, "kerning.plist", self.kerning, "xml")
         if "lib" in self.__dict__: setFileForOutput(dtree, "lib.plist", self.lib, "xml")
         if UFOversion == "3":
