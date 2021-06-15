@@ -294,6 +294,7 @@ psfcheck_list['com.google.fonts/check/name/typographicsubfamilyname']           
 psfcheck_list['com.google.fonts/check/name/unwanted_chars']                       = {}
 psfcheck_list['com.google.fonts/check/name/version_format']                       = {'exclude': True}
 psfcheck_list['com.google.fonts/check/old_ttfautohint']                           = {'exclude': True}
+psfcheck_list['com.google.fonts/check/os2/use_typo_metrics']                      = {'exclude': True}
 psfcheck_list['com.google.fonts/check/os2_metrics_match_hhea']                    = {}
 psfcheck_list['com.google.fonts/check/ots']                                       = {}
 psfcheck_list['com.google.fonts/check/outline_alignment_miss']                    = {'exclude': True}
@@ -307,6 +308,7 @@ psfcheck_list['com.google.fonts/check/post_table_version']                      
 psfcheck_list['com.google.fonts/check/production_glyphs_similarity']              = {}
 psfcheck_list['com.google.fonts/check/repo/dirname_matches_nameid_1']             = {'exclude': True}
 psfcheck_list['com.google.fonts/check/repo/fb_report']                            = {'exclude': True}
+psfcheck_list['com.google/fonts/check/repo/upstream_yaml_has_required_fields']    = {'exclude': True}
 psfcheck_list['com.google.fonts/check/repo/vf_has_static_fonts']                  = {}
 psfcheck_list['com.google.fonts/check/repo/zip_files']                            = {'exclude': True}
 psfcheck_list['com.google.fonts/check/required_tables']                           = {}
