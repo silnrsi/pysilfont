@@ -294,7 +294,8 @@ psfcheck_list['com.google.fonts/check/name/typographicsubfamilyname']           
 psfcheck_list['com.google.fonts/check/name/unwanted_chars']                       = {}
 psfcheck_list['com.google.fonts/check/name/version_format']                       = {'exclude': True}
 psfcheck_list['com.google.fonts/check/old_ttfautohint']                           = {'exclude': True}
-psfcheck_list['com.google.fonts/check/os2/use_typo_metrics']                      = {'exclude': True}
+psfcheck_list['com.google.fonts/check/os2/use_typo_metrics']                      = \
+    {'change_status': {'FAIL': 'WARN', 'reason': 'Under review'}}
 psfcheck_list['com.google.fonts/check/os2_metrics_match_hhea']                    = {}
 psfcheck_list['com.google.fonts/check/ots']                                       = {}
 psfcheck_list['com.google.fonts/check/outline_alignment_miss']                    = {'exclude': True}
