@@ -1,25 +1,27 @@
-2020-10-22 11:30:52 Progress: Running:  psfsetkeys tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo -k org.sil.newkey -v newvalue -l local/testresults/ufo/psfsetkeys.log -p loglevel=i -p checkfix=fix
-2020-10-22 11:30:52 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo
-2020-10-22 11:30:52 Info:     Processing Glyph Layer 0: public.defaultglyphs
-2020-10-22 11:30:52 Progress: Checking fontinfo.plist metadata
-2020-10-22 11:30:52 Warning:  macintoshFONDName removed from fontinfo.  Old value: My Test
-2020-10-22 11:30:52 Info:     Types: Old - string, New - NoneType
-2020-10-22 11:30:52 Warning:  openTypeOS2FamilyClass removed from fontinfo.  Old value: [0, 0]
-2020-10-22 11:30:52 Info:     Types: Old - list, New - NoneType
-2020-10-22 11:30:52 Warning:  postscriptFamilyBlues removed from fontinfo.  Old value: []
-2020-10-22 11:30:52 Info:     Types: Old - list, New - NoneType
-2020-10-22 11:30:52 Warning:  openTypeHheaAscender updated  Old value: 2200, new value: 2100
-2020-10-22 11:30:52 Info:     Types: Old - int, New - int
-2020-10-22 11:30:52 Progress: Checking lib.plist metadata
-2020-10-22 11:30:52 Warning:  com.schriftgestaltung.disablesAutomaticAlignment deleted - obsolete key Old value: True
-2020-10-22 11:30:52 Info:     Types: Old - bool, New - NoneType
-2020-10-22 11:30:52 Warning:  com.schriftgestaltung.disablesLastChange deleted - obsolete key Old value: True
-2020-10-22 11:30:52 Info:     Types: Old - bool, New - NoneType
-2020-10-22 11:30:52 Progress: Check & fix results:- Errors: 0, Changes made: 6, Other warnings: 0
-2020-10-22 11:30:52 Progress: See log file for details
-2020-10-22 11:30:52 Info:     Adding keys to fontinfo
-2020-10-22 11:30:52 Info:     org.sil.newkey added, value: newvalue
-2020-10-22 11:30:52 Progress: Processing font for output
-2020-10-22 11:30:52 Progress: Output UFO already exists - reading for comparison
-2020-10-22 11:30:52 Progress: Writing font to local/testresults/ufo/psfsetkeys.ufo
-2020-10-22 11:30:52 Info:     Processing glyphs directory
+2021-06-29 14:42:22 Progress: Running:  psfsetkeys tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo -k org.sil.newkey -v newvalue -l local/testresults/ufo/psfsetkeys.log -p loglevel=i -p checkfix=fix
+2021-06-29 14:42:22 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo
+2021-06-29 14:42:22 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2021-06-29 14:42:22 Progress: Checking fontinfo.plist metadata
+2021-06-29 14:42:22 Warning:  macintoshFONDName removed from fontinfo.  Old value: My Test
+2021-06-29 14:42:22 Info:     Types: Old - string, New - NoneType
+2021-06-29 14:42:22 Warning:  openTypeOS2FamilyClass removed from fontinfo.  Old value: [0, 0]
+2021-06-29 14:42:22 Info:     Types: Old - list, New - NoneType
+2021-06-29 14:42:22 Warning:  postscriptFamilyBlues removed from fontinfo.  Old value: []
+2021-06-29 14:42:22 Info:     Types: Old - list, New - NoneType
+2021-06-29 14:42:22 Warning:  openTypeOS2Selection added  New value: [7]
+2021-06-29 14:42:22 Info:     Types: Old - NoneType, New - list
+2021-06-29 14:42:22 Warning:  openTypeHheaAscender updated  Old value: 2200, new value: 2100
+2021-06-29 14:42:22 Info:     Types: Old - int, New - int
+2021-06-29 14:42:22 Progress: Checking lib.plist metadata
+2021-06-29 14:42:22 Warning:  com.schriftgestaltung.disablesAutomaticAlignment deleted - obsolete key Old value: True
+2021-06-29 14:42:22 Info:     Types: Old - bool, New - NoneType
+2021-06-29 14:42:22 Warning:  com.schriftgestaltung.disablesLastChange deleted - obsolete key Old value: True
+2021-06-29 14:42:22 Info:     Types: Old - bool, New - NoneType
+2021-06-29 14:42:22 Progress: Check & fix results:- Errors: 0, Changes made: 7, Other warnings: 0
+2021-06-29 14:42:22 Progress: See log file for details
+2021-06-29 14:42:22 Info:     Adding keys to fontinfo
+2021-06-29 14:42:22 Info:     org.sil.newkey added, value: newvalue
+2021-06-29 14:42:22 Progress: Processing font for output
+2021-06-29 14:42:22 Progress: Output UFO already exists - reading for comparison
+2021-06-29 14:42:22 Progress: Writing font to local/testresults/ufo/psfsetkeys.ufo
+2021-06-29 14:42:22 Info:     Processing glyphs directory

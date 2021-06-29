@@ -1,17 +1,18 @@
-2020-10-22 11:30:53 Progress: Running:  psfnormalize tests/input/font-psf-test/source/PsfTest-Italic.ufo -l local/testresults/ufo/psfnormalize.log -p checkfix=fix
-2020-10-22 11:30:53 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
-2020-10-22 11:30:53 Progress: Checking fontinfo.plist metadata
-2020-10-22 11:30:53 Warning:  openTypeOS2FamilyClass removed from fontinfo.  Old value: [0, 0]
-2020-10-22 11:30:53 Warning:  year removed from fontinfo.  Old value: 2020
-2020-10-22 11:30:53 Warning:  capHeight updated  Old value: 1485.3, new value: 1485
-2020-10-22 11:30:53 Warning:  styleMapFamilyName uppdated  Old value: Psf test, new value: Psf Test
-2020-10-22 11:30:53 Warning:  openTypeOS2TypoLineGap updated  Old value: 1, new value: 0
-2020-10-22 11:30:53 Warning:  openTypeNamePreferredFamilyName updated  Old value: Psf Testing, new value: Psf Test
-2020-10-22 11:30:53 Progress: Checking lib.plist metadata
-2020-10-22 11:30:53 Warning:  com.schriftgestaltung.disablesAutomaticAlignment deleted - obsolete key Old value: True
-2020-10-22 11:30:53 Warning:  com.schriftgestaltung.disablesLastChange deleted - obsolete key Old value: True
-2020-10-22 11:30:53 Progress: Check & fix results:- Errors: 0, Changes made: 8, Other warnings: 0
-2020-10-22 11:30:53 Progress: See log file for details
-2020-10-22 11:30:53 Progress: Processing font for output
-2020-10-22 11:30:53 Progress: Output UFO already exists - reading for comparison
-2020-10-22 11:30:53 Progress: Writing font to local/testresults/ufo/psfnormalize.ufo
+2021-06-29 14:42:23 Progress: Running:  psfnormalize tests/input/font-psf-test/source/PsfTest-Italic.ufo -l local/testresults/ufo/psfnormalize.log -p checkfix=fix
+2021-06-29 14:42:23 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
+2021-06-29 14:42:23 Progress: Checking fontinfo.plist metadata
+2021-06-29 14:42:23 Warning:  openTypeOS2FamilyClass removed from fontinfo.  Old value: [0, 0]
+2021-06-29 14:42:23 Warning:  year removed from fontinfo.  Old value: 2021
+2021-06-29 14:42:23 Warning:  capHeight updated  Old value: 1485.3, new value: 1485
+2021-06-29 14:42:23 Warning:  styleMapFamilyName uppdated  Old value: Psf test, new value: Psf Test
+2021-06-29 14:42:23 Warning:  openTypeOS2TypoLineGap updated  Old value: 1, new value: 0
+2021-06-29 14:42:23 Warning:  openTypeOS2Selection added  New value: [7]
+2021-06-29 14:42:23 Warning:  openTypeNamePreferredFamilyName updated  Old value: Psf Testing, new value: Psf Test
+2021-06-29 14:42:23 Progress: Checking lib.plist metadata
+2021-06-29 14:42:23 Warning:  com.schriftgestaltung.disablesAutomaticAlignment deleted - obsolete key Old value: True
+2021-06-29 14:42:23 Warning:  com.schriftgestaltung.disablesLastChange deleted - obsolete key Old value: True
+2021-06-29 14:42:23 Progress: Check & fix results:- Errors: 0, Changes made: 9, Other warnings: 0
+2021-06-29 14:42:23 Progress: See log file for details
+2021-06-29 14:42:23 Progress: Processing font for output
+2021-06-29 14:42:23 Progress: Output UFO already exists - reading for comparison
+2021-06-29 14:42:23 Progress: Writing font to local/testresults/ufo/psfnormalize.ufo

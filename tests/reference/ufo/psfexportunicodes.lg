@@ -1,13 +1,14 @@
-2020-10-22 11:30:50 Progress: Running:  psfexportunicodes tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo -o local/testresults/ufo/psfexportunicodes.csv -l local/testresults/ufo/psfexportunicodes.log
-2020-10-22 11:30:50 Progress: Opening file for output: @cwd@/local/testresults/ufo/psfexportunicodes.csv
-2020-10-22 11:30:50 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo
-2020-10-22 11:30:50 Progress: Checking fontinfo.plist metadata
-2020-10-22 11:30:50 Warning:  macintoshFONDName would be removed from fontinfo  Old value: My Test
-2020-10-22 11:30:50 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
-2020-10-22 11:30:50 Warning:  postscriptFamilyBlues would be removed from fontinfo  Old value: []
-2020-10-22 11:30:50 Warning:  openTypeHheaAscender would be updated  Old value: 2200, new value: 2100
-2020-10-22 11:30:50 Progress: Checking lib.plist metadata
-2020-10-22 11:30:50 Warning:  com.schriftgestaltung.disablesAutomaticAlignment would be deleted - obsolete key Old value: True
-2020-10-22 11:30:50 Warning:  com.schriftgestaltung.disablesLastChange would be deleted - obsolete key Old value: True
-2020-10-22 11:30:50 Progress: Check & fix results:- Errors: 0, Changes to make: 6, Other warnings: 0
-2020-10-22 11:30:50 Progress: See log file for details
+2021-06-29 14:42:20 Progress: Running:  psfexportunicodes tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo -o local/testresults/ufo/psfexportunicodes.csv -l local/testresults/ufo/psfexportunicodes.log
+2021-06-29 14:42:20 Progress: Opening file for output: @cwd@/local/testresults/ufo/psfexportunicodes.csv
+2021-06-29 14:42:20 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo
+2021-06-29 14:42:20 Progress: Checking fontinfo.plist metadata
+2021-06-29 14:42:20 Warning:  macintoshFONDName would be removed from fontinfo  Old value: My Test
+2021-06-29 14:42:20 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
+2021-06-29 14:42:20 Warning:  postscriptFamilyBlues would be removed from fontinfo  Old value: []
+2021-06-29 14:42:20 Warning:  openTypeOS2Selection would be added  New value: [7]
+2021-06-29 14:42:20 Warning:  openTypeHheaAscender would be updated  Old value: 2200, new value: 2100
+2021-06-29 14:42:20 Progress: Checking lib.plist metadata
+2021-06-29 14:42:20 Warning:  com.schriftgestaltung.disablesAutomaticAlignment would be deleted - obsolete key Old value: True
+2021-06-29 14:42:20 Warning:  com.schriftgestaltung.disablesLastChange would be deleted - obsolete key Old value: True
+2021-06-29 14:42:20 Progress: Check & fix results:- Errors: 0, Changes to make: 7, Other warnings: 0
+2021-06-29 14:42:20 Progress: See log file for details

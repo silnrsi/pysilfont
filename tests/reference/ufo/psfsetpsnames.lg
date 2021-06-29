@@ -1,153 +1,155 @@
-2020-10-22 11:30:52 Progress: Running:  psfsetpsnames tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo -i tests/input/glyph_data.csv -l local/testresults/ufo/psfsetpsnames.log -p loglevel=i
-2020-10-22 11:30:52 Progress: Opening file for input: tests/input/glyph_data.csv
-2020-10-22 11:30:52 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo
-2020-10-22 11:30:52 Info:     Processing Glyph Layer 0: public.defaultglyphs
-2020-10-22 11:30:52 Progress: Checking fontinfo.plist metadata
-2020-10-22 11:30:52 Warning:  macintoshFONDName would be removed from fontinfo  Old value: My Test
-2020-10-22 11:30:52 Info:     Types: Old - string, New - NoneType
-2020-10-22 11:30:52 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
-2020-10-22 11:30:52 Info:     Types: Old - list, New - NoneType
-2020-10-22 11:30:52 Warning:  postscriptFamilyBlues would be removed from fontinfo  Old value: []
-2020-10-22 11:30:52 Info:     Types: Old - list, New - NoneType
-2020-10-22 11:30:52 Warning:  openTypeHheaAscender would be updated  Old value: 2200, new value: 2100
-2020-10-22 11:30:52 Info:     Types: Old - int, New - int
-2020-10-22 11:30:52 Progress: Checking lib.plist metadata
-2020-10-22 11:30:52 Warning:  com.schriftgestaltung.disablesAutomaticAlignment would be deleted - obsolete key Old value: True
-2020-10-22 11:30:52 Info:     Types: Old - bool, New - NoneType
-2020-10-22 11:30:52 Warning:  com.schriftgestaltung.disablesLastChange would be deleted - obsolete key Old value: True
-2020-10-22 11:30:52 Info:     Types: Old - bool, New - NoneType
-2020-10-22 11:30:52 Progress: Check & fix results:- Errors: 0, Changes to make: 6, Other warnings: 0
-2020-10-22 11:30:52 Progress: See log file for details
-2020-10-22 11:30:52 Info:     No glyph in font for AcuteAccent on line 2
-2020-10-22 11:30:52 Info:     No glyph in font for Bullet on line 3
-2020-10-22 11:30:52 Info:     No glyph in font for BulletOperator on line 4
-2020-10-22 11:30:52 Info:     No glyph in font for DblAcuteAccent on line 7
-2020-10-22 11:30:52 Info:     No glyph in font for LtnCapAAcute on line 9
-2020-10-22 11:30:52 Info:     No glyph in font for LtnCapEAcute on line 10
-2020-10-22 11:30:52 Info:     No glyph in font for LtnCapIAcute on line 11
-2020-10-22 11:30:52 Info:     No glyph in font for LtnCapOAcute on line 12
-2020-10-22 11:30:52 Info:     No glyph in font for LtnCapUAcute on line 13
-2020-10-22 11:30:52 Info:     No glyph in font for LtnCapYAcute on line 14
-2020-10-22 11:30:52 Info:     No glyph in font for LtnSmEAcute on line 16
-2020-10-22 11:30:52 Info:     No glyph in font for LtnSmIAcute on line 17
-2020-10-22 11:30:52 Info:     No glyph in font for LtnSmOAcute on line 18
-2020-10-22 11:30:52 Info:     No glyph in font for LtnSmUAcute on line 19
-2020-10-22 11:30:52 Info:     No glyph in font for LtnSmYAcute on line 20
-2020-10-22 11:30:52 Info:     No glyph in font for ModCircumAccent on line 21
-2020-10-22 11:30:52 Info:     No glyph in font for SupOne on line 24
-2020-10-22 11:30:52 Info:     No glyph in font for SupThree on line 25
-2020-10-22 11:30:52 Info:     No glyph in font for VulgFracOneHalf on line 26
-2020-10-22 11:30:52 Info:     No glyph in font for VulgFracOneQuarter on line 27
-2020-10-22 11:30:52 Info:     No glyph in font for VulgFracThreeQuarters on line 28
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph .notdef
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph .null
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph Ampersand
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph Apos
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph Asterisk
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph AtSgn
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph Colon
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph CombCircum
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph CombDiaer
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph CombGrave
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph CombRingAbv
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph CombTilde
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph Comma
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph DigitEight
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph DigitFive
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph DigitFour
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph DigitNine
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph DigitOne
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph DigitSeven
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph DigitSix
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph DigitThree
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph DigitTwo
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph DigitZero
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph DollarSgn
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph DottedCirc
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph EqSgn
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph ExclamationMrk
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph FullStop
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph GTSgn
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph GraveAccent
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph Hyphen
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph Hyphen_Soft
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LTSgn
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LftCurlyBrac
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LftParen
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LftSqrBrac
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LowLine
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapA
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapADiaer
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapB
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapC
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapD
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapE
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapF
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapG
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapH
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapI
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapJ
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapK
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapL
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapM
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapN
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapO
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapP
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapQ
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapR
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapS
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapT
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapU
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapV
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapW
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapX
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnCapY
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmA
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmACircum
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmADiaer
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmAGrave
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmARingAbv
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmATilde
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmB
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmC
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmD
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmE
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmF
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmG
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmH
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmI
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmJ
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmK
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmL
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmM
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmN
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmO
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmP
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmQ
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmR
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmS
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmT
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmU
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmV
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmW
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmX
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph LtnSmY
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph NonBreakingHyphen
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph NumSgn
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph PercentSgn
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph PlusSgn
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph QstnMrk
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph QuotMrk
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph RtCurlyBrac
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph RtParen
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph RtSqrBrac
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph Semicolon
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph Solidus
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph Space
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph Tilde
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph VertLine
-2020-10-22 11:30:52 Info:     No PS name in input file for font glyph nonmarkingreturn
-2020-10-22 11:30:52 Progress: Processing font for output
-2020-10-22 11:30:52 Progress: Output UFO already exists - reading for comparison
-2020-10-22 11:30:52 Progress: Writing font to local/testresults/ufo/psfsetpsnames.ufo
-2020-10-22 11:30:52 Info:     Processing glyphs directory
+2021-06-29 14:42:22 Progress: Running:  psfsetpsnames tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo -i tests/input/glyph_data.csv -l local/testresults/ufo/psfsetpsnames.log -p loglevel=i
+2021-06-29 14:42:22 Progress: Opening file for input: tests/input/glyph_data.csv
+2021-06-29 14:42:22 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-BoldItalic.ufo
+2021-06-29 14:42:22 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2021-06-29 14:42:22 Progress: Checking fontinfo.plist metadata
+2021-06-29 14:42:22 Warning:  macintoshFONDName would be removed from fontinfo  Old value: My Test
+2021-06-29 14:42:22 Info:     Types: Old - string, New - NoneType
+2021-06-29 14:42:22 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
+2021-06-29 14:42:22 Info:     Types: Old - list, New - NoneType
+2021-06-29 14:42:22 Warning:  postscriptFamilyBlues would be removed from fontinfo  Old value: []
+2021-06-29 14:42:22 Info:     Types: Old - list, New - NoneType
+2021-06-29 14:42:22 Warning:  openTypeOS2Selection would be added  New value: [7]
+2021-06-29 14:42:22 Info:     Types: Old - NoneType, New - list
+2021-06-29 14:42:22 Warning:  openTypeHheaAscender would be updated  Old value: 2200, new value: 2100
+2021-06-29 14:42:22 Info:     Types: Old - int, New - int
+2021-06-29 14:42:22 Progress: Checking lib.plist metadata
+2021-06-29 14:42:22 Warning:  com.schriftgestaltung.disablesAutomaticAlignment would be deleted - obsolete key Old value: True
+2021-06-29 14:42:22 Info:     Types: Old - bool, New - NoneType
+2021-06-29 14:42:22 Warning:  com.schriftgestaltung.disablesLastChange would be deleted - obsolete key Old value: True
+2021-06-29 14:42:22 Info:     Types: Old - bool, New - NoneType
+2021-06-29 14:42:22 Progress: Check & fix results:- Errors: 0, Changes to make: 7, Other warnings: 0
+2021-06-29 14:42:22 Progress: See log file for details
+2021-06-29 14:42:22 Info:     No glyph in font for AcuteAccent on line 2
+2021-06-29 14:42:22 Info:     No glyph in font for Bullet on line 3
+2021-06-29 14:42:22 Info:     No glyph in font for BulletOperator on line 4
+2021-06-29 14:42:22 Info:     No glyph in font for DblAcuteAccent on line 7
+2021-06-29 14:42:22 Info:     No glyph in font for LtnCapAAcute on line 9
+2021-06-29 14:42:22 Info:     No glyph in font for LtnCapEAcute on line 10
+2021-06-29 14:42:22 Info:     No glyph in font for LtnCapIAcute on line 11
+2021-06-29 14:42:22 Info:     No glyph in font for LtnCapOAcute on line 12
+2021-06-29 14:42:22 Info:     No glyph in font for LtnCapUAcute on line 13
+2021-06-29 14:42:22 Info:     No glyph in font for LtnCapYAcute on line 14
+2021-06-29 14:42:22 Info:     No glyph in font for LtnSmEAcute on line 16
+2021-06-29 14:42:22 Info:     No glyph in font for LtnSmIAcute on line 17
+2021-06-29 14:42:22 Info:     No glyph in font for LtnSmOAcute on line 18
+2021-06-29 14:42:22 Info:     No glyph in font for LtnSmUAcute on line 19
+2021-06-29 14:42:22 Info:     No glyph in font for LtnSmYAcute on line 20
+2021-06-29 14:42:22 Info:     No glyph in font for ModCircumAccent on line 21
+2021-06-29 14:42:22 Info:     No glyph in font for SupOne on line 24
+2021-06-29 14:42:22 Info:     No glyph in font for SupThree on line 25
+2021-06-29 14:42:22 Info:     No glyph in font for VulgFracOneHalf on line 26
+2021-06-29 14:42:22 Info:     No glyph in font for VulgFracOneQuarter on line 27
+2021-06-29 14:42:22 Info:     No glyph in font for VulgFracThreeQuarters on line 28
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph .notdef
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph .null
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph Ampersand
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph Apos
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph Asterisk
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph AtSgn
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph Colon
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph CombCircum
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph CombDiaer
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph CombGrave
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph CombRingAbv
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph CombTilde
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph Comma
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph DigitEight
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph DigitFive
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph DigitFour
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph DigitNine
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph DigitOne
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph DigitSeven
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph DigitSix
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph DigitThree
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph DigitTwo
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph DigitZero
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph DollarSgn
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph DottedCirc
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph EqSgn
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph ExclamationMrk
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph FullStop
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph GTSgn
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph GraveAccent
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph Hyphen
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph Hyphen_Soft
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LTSgn
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LftCurlyBrac
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LftParen
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LftSqrBrac
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LowLine
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapA
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapADiaer
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapB
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapC
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapD
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapE
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapF
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapG
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapH
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapI
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapJ
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapK
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapL
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapM
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapN
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapO
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapP
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapQ
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapR
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapS
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapT
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapU
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapV
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapW
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapX
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnCapY
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmA
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmACircum
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmADiaer
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmAGrave
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmARingAbv
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmATilde
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmB
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmC
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmD
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmE
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmF
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmG
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmH
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmI
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmJ
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmK
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmL
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmM
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmN
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmO
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmP
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmQ
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmR
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmS
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmT
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmU
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmV
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmW
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmX
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph LtnSmY
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph NonBreakingHyphen
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph NumSgn
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph PercentSgn
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph PlusSgn
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph QstnMrk
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph QuotMrk
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph RtCurlyBrac
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph RtParen
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph RtSqrBrac
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph Semicolon
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph Solidus
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph Space
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph Tilde
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph VertLine
+2021-06-29 14:42:22 Info:     No PS name in input file for font glyph nonmarkingreturn
+2021-06-29 14:42:22 Progress: Processing font for output
+2021-06-29 14:42:22 Progress: Output UFO already exists - reading for comparison
+2021-06-29 14:42:22 Progress: Writing font to local/testresults/ufo/psfsetpsnames.ufo
+2021-06-29 14:42:22 Info:     Processing glyphs directory

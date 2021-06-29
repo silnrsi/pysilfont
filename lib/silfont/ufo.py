@@ -350,7 +350,7 @@ class Ufont(object):
             fiwarnifpresent = ("note",)
             fidel = ("macintoshFONDFamilyID", "macintoshFONDName", "openTypeNameCompatibleFullName",
                      "openTypeGaspRangeRecords", "openTypeHeadFlags", "openTypeHheaCaretOffset",
-                     "openTypeOS2FamilyClass", "openTypeOS2Selection", "postscriptForceBold", "postscriptIsFixedPitch",
+                     "openTypeOS2FamilyClass", "postscriptForceBold", "postscriptIsFixedPitch",
                      "postscriptBlueFuzz", "postscriptBlueScale", "postscriptBlueShift", "postscriptWeightName",
                      "year")
             fidelifempty = ("guidelines", "postscriptBlueValues", "postscriptFamilyBlues", "postscriptFamilyOtherBlues",
@@ -364,7 +364,7 @@ class Ufont(object):
                             "openTypeNamePreferredSubfamilyName": "styleName", "openTypeOS2TypoAscender": "ascender",
                             "openTypeOS2TypoDescender": "descender", "openTypeOS2WinAscent": "ascender"}
             fisetto = {"openTypeHheaLineGap": 0, "openTypeOS2TypoLineGap": 0, "openTypeOS2WidthClass": 5,
-                       "openTypeOS2Type": []} # Other values are added below
+                       "openTypeOS2Selection": [7], "openTypeOS2Type": []} # Other values are added below
 
             libdel = ("com.fontlab.v2.tth", "com.typemytype.robofont.italicSlantOffset")
             libsetto = {"com.schriftgestaltung.customParameter.GSFont.disablesAutomaticAlignment": True,
@@ -379,7 +379,7 @@ class Ufont(object):
             missing = []
             for key in fireq:
                 if key not in self.fontinfo or self.fontinfo.getval(key) is None: missing.append(key)
-            # Collect values for contructing other fields, setting dummy values when missing and in check-only mode
+            # Collect values for constructing other fields, setting dummy values when missing and in check-only mode
             dummies = False
             storedvals = {}
             for key in ("ascender", "copyright", "descender", "familyName", "styleName", "openTypeNameManufacturer", "versionMajor", "versionMinor"):
@@ -428,11 +428,12 @@ class Ufont(object):
                 if sn in sn2wc: fisetto["openTypeOS2WeightClass"] = sn2wc[sn]
             if "xHeight" not in self.fontinfo:
                 fisetto["xHeight"] = int(storedvals["ascender"] * 0.6)
+            if "openTypeOS2Selection" in self.fontinfo: # If already present, need to ensure bit 7 is set
+                fisetto["openTypeOS2Selection"] = list(set(self.fontinfo.getval("openTypeOS2Selection") + [7]))
 
             for key in fisetifmissing:
                 if key not in self.fontinfo:
                     fisetto[key] = fisetifmissing[key]
-
 
             changes = 0
             # Warn about missing fields
@@ -507,8 +508,11 @@ class Ufont(object):
                     new = storedvals[fisettoother[key]]
                 if new != old:
                     if self.metafix:
-                        if isinstance(new, list): # Currently only list handled is openTypeOS2Type, so assume is []
-                            self.fontinfo.setelem(key, ET.fromstring("<array/>"))
+                        if isinstance(new, list): # Currently only integer arrays
+                            array = ET.Element("array")
+                            for val in new: # Only covers integer at present for openTypeOS2Selection
+                                ET.SubElement(array, "integer").text = val
+                                self.fontinfo.setelem(key, array)
                         else: # Does not cover real at present
                             valtype = "integer" if isinstance(new, int) else "string"
                             self.fontinfo.setval(key, valtype, new)

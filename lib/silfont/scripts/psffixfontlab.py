@@ -68,7 +68,7 @@ def doit(args) :
     font = Ufont(fontname, params = params)
     backupfont = Ufont(backupname, params = params)
 
-    fidel = ("openTypeGaspRangeRecords", "openTypeHeadFlags", "openTypeHheaCaretOffset", "openTypeOS2Selection",
+    fidel = ("openTypeGaspRangeRecords", "openTypeHeadFlags", "openTypeHheaCaretOffset",
              "postscriptBlueFuzz", "postscriptBlueScale", "postscriptBlueShift", "postscriptForceBold",
              "postscriptIsFixedPitch", "postscriptWeightName")
     libdel = ("com.fontlab.v2.tth", "com.typemytype.robofont.italicSlantOffset")

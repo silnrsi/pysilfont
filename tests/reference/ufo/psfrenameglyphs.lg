@@ -1,32 +1,34 @@
-2020-10-22 11:30:52 Progress: Running:  psfrenameglyphs tests/input/font-psf-test/source/PsfTest-Bold.ufo -i tests/input/psfrenameglyphs.csv -l local/testresults/ufo/psfrenameglyphs.log -p loglevel=i -p checkfix=fix
-2020-10-22 11:30:52 Progress: Opening file for input: tests/input/psfrenameglyphs.csv
-2020-10-22 11:30:52 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Bold.ufo
-2020-10-22 11:30:52 Info:     Processing Glyph Layer 0: public.defaultglyphs
-2020-10-22 11:30:52 Progress: Checking fontinfo.plist metadata
-2020-10-22 11:30:52 Warning:  note is present - it's use is discouraged
-2020-10-22 11:30:52 Warning:  openTypeOS2FamilyClass removed from fontinfo.  Old value: [0, 0]
-2020-10-22 11:30:52 Info:     Types: Old - list, New - NoneType
-2020-10-22 11:30:52 Progress: Checking lib.plist metadata
-2020-10-22 11:30:52 Warning:  com.schriftgestaltung.disablesAutomaticAlignment deleted - obsolete key Old value: True
-2020-10-22 11:30:52 Info:     Types: Old - bool, New - NoneType
-2020-10-22 11:30:52 Warning:  com.schriftgestaltung.disablesLastChange deleted - obsolete key Old value: True
-2020-10-22 11:30:52 Info:     Types: Old - bool, New - NoneType
-2020-10-22 11:30:52 Progress: Check & fix results:- Errors: 0, Changes made: 3, Other warnings: 1
-2020-10-22 11:30:52 Progress: See log file for details
-2020-10-22 11:30:52 Info:     Pass 1 (Font): Renamed Apos to Bpos
-2020-10-22 11:30:52 Info:     Pass 1 (PGO): Renamed Apos to Bpos
-2020-10-22 11:30:52 Info:     Pass 1 (csGO): Renamed Apos to Bpos
-2020-10-22 11:30:52 Info:     Pass 1 (psn): Renamed Apos to Bpos
-2020-10-22 11:30:52 Info:     Pass 1 (Font): Renamed Asterisk to Star
-2020-10-22 11:30:52 Info:     Pass 1 (PGO): Renamed Asterisk to Star
-2020-10-22 11:30:52 Info:     Pass 1 (csGO): Renamed Asterisk to Star
-2020-10-22 11:30:52 Info:     Pass 1 (psn): Renamed Asterisk to Star
-2020-10-22 11:30:52 Info:     glyph name not in font: Commer
-2020-10-22 11:30:52 Info:     glyph name not in publicGlyphorder: Commer
-2020-10-22 11:30:52 Info:     glyph name not in csGlyphorder: Commer
-2020-10-22 11:30:52 Info:     glyph name not in psnames: Commer
-2020-10-22 11:30:52 Progress: 2 glyphs renamed in UFO
-2020-10-22 11:30:52 Progress: Processing font for output
-2020-10-22 11:30:52 Progress: Output UFO already exists - reading for comparison
-2020-10-22 11:30:52 Progress: Writing font to local/testresults/ufo/psfrenameglyphs.ufo
-2020-10-22 11:30:52 Info:     Processing glyphs directory
+2021-06-29 14:42:22 Progress: Running:  psfrenameglyphs tests/input/font-psf-test/source/PsfTest-Bold.ufo -i tests/input/psfrenameglyphs.csv -l local/testresults/ufo/psfrenameglyphs.log -p loglevel=i -p checkfix=fix
+2021-06-29 14:42:22 Progress: Opening file for input: tests/input/psfrenameglyphs.csv
+2021-06-29 14:42:22 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Bold.ufo
+2021-06-29 14:42:22 Info:     Processing Glyph Layer 0: public.defaultglyphs
+2021-06-29 14:42:22 Progress: Checking fontinfo.plist metadata
+2021-06-29 14:42:22 Warning:  note is present - it's use is discouraged
+2021-06-29 14:42:22 Warning:  openTypeOS2FamilyClass removed from fontinfo.  Old value: [0, 0]
+2021-06-29 14:42:22 Info:     Types: Old - list, New - NoneType
+2021-06-29 14:42:22 Warning:  openTypeOS2Selection added  New value: [7]
+2021-06-29 14:42:22 Info:     Types: Old - NoneType, New - list
+2021-06-29 14:42:22 Progress: Checking lib.plist metadata
+2021-06-29 14:42:22 Warning:  com.schriftgestaltung.disablesAutomaticAlignment deleted - obsolete key Old value: True
+2021-06-29 14:42:22 Info:     Types: Old - bool, New - NoneType
+2021-06-29 14:42:22 Warning:  com.schriftgestaltung.disablesLastChange deleted - obsolete key Old value: True
+2021-06-29 14:42:22 Info:     Types: Old - bool, New - NoneType
+2021-06-29 14:42:22 Progress: Check & fix results:- Errors: 0, Changes made: 4, Other warnings: 1
+2021-06-29 14:42:22 Progress: See log file for details
+2021-06-29 14:42:22 Info:     Pass 1 (Font): Renamed Apos to Bpos
+2021-06-29 14:42:22 Info:     Pass 1 (PGO): Renamed Apos to Bpos
+2021-06-29 14:42:22 Info:     Pass 1 (csGO): Renamed Apos to Bpos
+2021-06-29 14:42:22 Info:     Pass 1 (psn): Renamed Apos to Bpos
+2021-06-29 14:42:22 Info:     Pass 1 (Font): Renamed Asterisk to Star
+2021-06-29 14:42:22 Info:     Pass 1 (PGO): Renamed Asterisk to Star
+2021-06-29 14:42:22 Info:     Pass 1 (csGO): Renamed Asterisk to Star
+2021-06-29 14:42:22 Info:     Pass 1 (psn): Renamed Asterisk to Star
+2021-06-29 14:42:22 Info:     glyph name not in font: Commer
+2021-06-29 14:42:22 Info:     glyph name not in publicGlyphorder: Commer
+2021-06-29 14:42:22 Info:     glyph name not in csGlyphorder: Commer
+2021-06-29 14:42:22 Info:     glyph name not in psnames: Commer
+2021-06-29 14:42:22 Progress: 2 glyphs renamed in UFO
+2021-06-29 14:42:22 Progress: Processing font for output
+2021-06-29 14:42:22 Progress: Output UFO already exists - reading for comparison
+2021-06-29 14:42:22 Progress: Writing font to local/testresults/ufo/psfrenameglyphs.ufo
+2021-06-29 14:42:22 Info:     Processing glyphs directory

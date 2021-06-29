@@ -1,18 +1,19 @@
-2020-10-22 11:30:50 Progress: Running:  psfgenftml -i tests/input/psfgenftml.csv -l local/testresults/ufo/psfgenftml.log tests/input/font-psf-test/source/PsfTest-Italic.ufo local/testresults/ufo/psfgenftml.ftml
-2020-10-22 11:30:50 Progress: Opening file for output: @cwd@/local/testresults/ufo/psfgenftml.ftml
-2020-10-22 11:30:50 Progress: Opening file for input: tests/input/psfgenftml.csv
-2020-10-22 11:30:50 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
-2020-10-22 11:30:50 Progress: Checking fontinfo.plist metadata
-2020-10-22 11:30:50 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
-2020-10-22 11:30:50 Warning:  year would be removed from fontinfo  Old value: 2020
-2020-10-22 11:30:50 Warning:  capHeight would be updated  Old value: 1485.3, new value: 1485
-2020-10-22 11:30:50 Warning:  styleMapFamilyName would be uppdated  Old value: Psf test, new value: Psf Test
-2020-10-22 11:30:50 Warning:  openTypeOS2TypoLineGap would be updated  Old value: 1, new value: 0
-2020-10-22 11:30:50 Warning:  openTypeNamePreferredFamilyName would be updated  Old value: Psf Testing, new value: Psf Test
-2020-10-22 11:30:50 Progress: Checking lib.plist metadata
-2020-10-22 11:30:50 Warning:  com.schriftgestaltung.disablesAutomaticAlignment would be deleted - obsolete key Old value: True
-2020-10-22 11:30:50 Warning:  com.schriftgestaltung.disablesLastChange would be deleted - obsolete key Old value: True
-2020-10-22 11:30:50 Progress: Check & fix results:- Errors: 0, Changes to make: 8, Other warnings: 0
-2020-10-22 11:30:50 Progress: See log file for details
-2020-10-22 11:30:51 Warning:  glyph_data line 39: psname A previously seen; ignored
-2020-10-22 11:30:51 Warning:  glyph_data line 116: empty glyph name in glyph_data; ignored
+2021-06-29 14:42:20 Progress: Running:  psfgenftml -i tests/input/psfgenftml.csv -l local/testresults/ufo/psfgenftml.log tests/input/font-psf-test/source/PsfTest-Italic.ufo local/testresults/ufo/psfgenftml.ftml
+2021-06-29 14:42:20 Progress: Opening file for output: @cwd@/local/testresults/ufo/psfgenftml.ftml
+2021-06-29 14:42:20 Progress: Opening file for input: tests/input/psfgenftml.csv
+2021-06-29 14:42:20 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Italic.ufo
+2021-06-29 14:42:20 Progress: Checking fontinfo.plist metadata
+2021-06-29 14:42:20 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
+2021-06-29 14:42:20 Warning:  year would be removed from fontinfo  Old value: 2021
+2021-06-29 14:42:20 Warning:  capHeight would be updated  Old value: 1485.3, new value: 1485
+2021-06-29 14:42:20 Warning:  styleMapFamilyName would be uppdated  Old value: Psf test, new value: Psf Test
+2021-06-29 14:42:20 Warning:  openTypeOS2TypoLineGap would be updated  Old value: 1, new value: 0
+2021-06-29 14:42:20 Warning:  openTypeOS2Selection would be added  New value: [7]
+2021-06-29 14:42:20 Warning:  openTypeNamePreferredFamilyName would be updated  Old value: Psf Testing, new value: Psf Test
+2021-06-29 14:42:20 Progress: Checking lib.plist metadata
+2021-06-29 14:42:20 Warning:  com.schriftgestaltung.disablesAutomaticAlignment would be deleted - obsolete key Old value: True
+2021-06-29 14:42:20 Warning:  com.schriftgestaltung.disablesLastChange would be deleted - obsolete key Old value: True
+2021-06-29 14:42:20 Progress: Check & fix results:- Errors: 0, Changes to make: 9, Other warnings: 0
+2021-06-29 14:42:20 Progress: See log file for details
+2021-06-29 14:42:21 Warning:  glyph_data line 39: psname A previously seen; ignored
+2021-06-29 14:42:21 Warning:  glyph_data line 116: empty glyph name in glyph_data; ignored
