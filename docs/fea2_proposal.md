@@ -1,8 +1,8 @@
 # Proposed Extensions to FEA
 
-This document describes various extensions to FEA that will enable it to grow
+This document describes a macro extension to FEA that will enable it to grow
 and support more powerful OpenType descriptions. The proposal is presented as
-varoius syntax extensions to the core FEA syntax.
+various syntax extensions to the core FEA syntax.
 
 ## Functions
 
@@ -11,20 +11,22 @@ reserve these for later ues. Such parentheses lend themselves perfectly to the
 addition of macro functions to the FEA syntax:
 
 ```
-function = funcname '(' (parameter (',' parameter)*)? ')' ('{' tokens '}')?
-function_statement = function ';'
+function = funcname '(' (parameter (',' parameter)*)? ')'
 
 funcname = /[A-Za-z_.][A-Za-z_0-9.]*/
 parameter = glyph | glyphlist | classref | value_record | function
-            | ('"' string '"')
-tokens = ANY*
+            | ('"' string '"') | ("{" tokens "}")
+tokens = noncurlytoken* | ("{" tokens "}")
 glyphlist = '[' glyph* ']'
 classref = '@' classname
 value_record = number | '<' chars '>'
 ```
 
-A function call consists of a function name, a parenthesised parameter list,
-which may be empty and an optional following token list enclosed in braces. The
+A function call consists of a function name and a parenthesised parameter list,
+which may be empty.
+
+
+ and an optional following token list enclosed in braces. The
 token list is just that, an unparsed sequence of lexical tokens. The result of
 the function is also an unparsed sequence of lexical tokens that are then parsed
 and processed as if the function were replaced by a textual representation of
@@ -77,7 +79,7 @@ modulename, as described above.
 
 #### set
 
-This sets a variable to a token list. Variables are described in a later syntex
+This sets a variable to a token list. Variables are described in a later syntax
 extension. The first parameter is the name of a variable. The token list is then
 used for the variable expansion.
 
