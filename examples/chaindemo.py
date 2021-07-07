@@ -26,7 +26,7 @@ argspec = [
 
 def doit(args) :
 
-    argv = ['psfnormalize', 'dummy'] # 'dummy' replaces input font since font object is being passed.  Other paraeters could be added.
+    argv = ['psfnormalize', 'dummy'] # 'dummy' replaces input font since font object is being passed.  Other parameters could be added.
     font = chain(argv, psfnormalize.doit, psfnormalize.argspec, args.ifont, args.paramsobj, args.logger, args.quiet)
 
     argv = ['psfsetassocfeat', 'dummy', '-i', args.featfile]

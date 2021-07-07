@@ -27,7 +27,7 @@ def doit(args) :
     outf.close()
     print "done"
 
-def AP_cmp(a, b): # Comparision to sort first by number of attachment points) then by Glyph name
+def AP_cmp(a, b): # Comparison to sort first by number of attachment points) then by Glyph name
     c = cmp(a[1], b[1])
     if c != 0:
         return c
