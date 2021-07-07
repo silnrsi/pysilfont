@@ -127,7 +127,7 @@ class Fhead(ETU.ETelement) :
                     if name is None or name == style.name : return style # if name is supplied it must match
         return None
 
-    def addstyle(self, name, feats = None, lang = None) : # Return style if it exists otherwaise create new style with newname
+    def addstyle(self, name, feats = None, lang = None) : # Return style if it exists otherwise create new style with newname
         s = self.findstyle(name, feats, lang)
         if s is None :
             if self.styles is None:

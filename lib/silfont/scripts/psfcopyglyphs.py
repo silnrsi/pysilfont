@@ -24,7 +24,7 @@ argspec = [
 ]
 
 class Glyph:
-    """details about a glyph we have, or need to, copy; mostly just for syntatic sugar"""
+    """details about a glyph we have, or need to, copy; mostly just for syntactic sugar"""
 
     # Glyphs that are used *only* as component glyphs may have to be renamed if there already exists a glyph
     # by the same name in the target font. we compute a new name by appending .copy1, .copy2, etc until we get a
@@ -162,7 +162,7 @@ def doit(args) :
 
     # Get headings from csvfile:
     fl = incsv.firstline
-    if fl is None: logger.log("Empty imput file", "S")
+    if fl is None: logger.log("Empty input file", "S")
     numfields = len(fl)
     incsv.numfields = numfields
     # defaults for single column csv (no headers):

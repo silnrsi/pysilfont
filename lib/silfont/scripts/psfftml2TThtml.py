@@ -346,7 +346,7 @@ def doit(args) :
 
             # Two modifications to make in the html:
             # 1) add all @fontface specs to the <style> element
-            # 2) Fix up all occurences of <td> elements referencing font2
+            # 2) Fix up all occurrences of <td> elements referencing font2
 
             # Add @fontface to <style>
             style = html_doc.find('//style')

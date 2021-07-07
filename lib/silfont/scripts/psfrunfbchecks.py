@@ -85,7 +85,7 @@ def doit(args):
     profile = get_module_profile(module)
     psfcheck_list = module.psfcheck_list
 
-    # Create the runner and reporter objetcs, then run the tests
+    # Create the runner and reporter objects, then run the tests
     configuration = Configuration()
     runner = CheckRunner(profile, values={"fonts": fonts}, config=configuration)
 

@@ -412,7 +412,7 @@ class Ufont(object):
                 logger.log("Required fields missing from fontinfo.plist: " + str(missing), logtype)
             if dummies:
                 logger.log("Checking will continue with values of 'Dummy' or 999 for missing fields", "W")
-            # Contruct values for certain fields
+            # Construct values for certain fields
             value = storedvals["openTypeNameManufacturer"] + ": " + storedvals["familyName"] + " "
             value = value + storedvals["styleName"] + ": " + datetime.datetime.now().strftime("%Y")
             fisetto["openTypeNameUniqueID"] = value
@@ -851,7 +851,7 @@ class Uglif(ETU.xmlitem):
         if name == "name" and getattr(self, "name", None):  # Existing glyph name is being changed
             oname = self.name
             if value in self.layer._contents: self.layer.font.logger.log(name + " already in font", "X")
-            # Update the _contents disctionary
+            # Update the _contents dictionary
             del self.layer._contents[oname]
             self.layer._contents[value] = self
             # Set glif name

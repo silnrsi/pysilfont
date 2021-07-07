@@ -20,7 +20,7 @@ argspec = [
     ('--mergecomps',{'help': 'turn on component merge', 'action': 'store_true', 'default': False},{}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_renameglyphs.log'})]
 
-csvmap = "" # Varible used globally
+csvmap = "" # Variable used globally
 
 def doit(args) :
     global csvmap, ksetsbymember
@@ -272,7 +272,7 @@ def doit(args) :
             if name in layer: layer.delGlyph(name)
         logger.log("glyph %s removed" % name, "I")
 
-    # Other structures with glpyhs in are handled by looping round the structures replacing glyphs rather than
+    # Other structures with glyphs in are handled by looping round the structures replacing glyphs rather than
     # looping round incsv
 
     # Update Display Strings
@@ -304,7 +304,7 @@ def doit(args) :
         logger.log("Note - Kerning and group data not processed when using mergecomps", "P")
     elif groups or kerning:
 
-        kgroupsmap = ["", {}, {}]  # Dicts of kern1/kern2 group renames.  Ouside the groups if statement, since also used with kerning.plist
+        kgroupsmap = ["", {}, {}]  # Dicts of kern1/kern2 group renames.  Outside the groups if statement, since also used with kerning.plist
         if groups:
             # Analyse existing data, building dict from existing data and building some indexes
             gdict = {}
@@ -347,7 +347,7 @@ def doit(args) :
                         kgroupsmap[ktype][gname] = newgname
 
                 # Now rename glyphs within the group
-                # - This could lead to duplicate names, but that might be valid for arbitary groups so not checked
+                # - This could lead to duplicate names, but that might be valid for arbitrary groups so not checked
                 # - kern group validity will be checked after all renaming is done
 
                 for (i, glyph) in enumerate(group):
@@ -578,7 +578,7 @@ def gettempname(f):
         gettempname.counter += 1
         if f(name): return name
 
-def glyphsub(m): # Function pased to re.sub() when updating display strings
+def glyphsub(m): # Function passed to re.sub() when updating display strings
     global csvmap
     gname = m.group(1)
     return '/' + csvmap[gname] if gname in csvmap else m.group(0)

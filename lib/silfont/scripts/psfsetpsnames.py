@@ -30,7 +30,7 @@ def doit(args):
 
     # Identify file format from first line
     fl = incsv.firstline
-    if fl is None: logger.log("Empty imput file", "S")
+    if fl is None: logger.log("Empty input file", "S")
     numfields = len(fl)
     incsv.numfields = numfields
     if numfields == 2:

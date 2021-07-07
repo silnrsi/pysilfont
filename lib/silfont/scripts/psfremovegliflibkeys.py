@@ -10,7 +10,7 @@ from silfont.core import execute
 argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
     ('key',{'help': 'Key(s) to remove','nargs': '*' }, {}),
-    ('-b', '--begins', {'help': 'Remove keys begginning with','nargs': '*' }, {}),
+    ('-b', '--begins', {'help': 'Remove keys beginning with','nargs': '*' }, {}),
     ('-o', '--ofont',{'help': 'Output font file' }, {'type': 'outfont'}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_removegliflibkeys.log'})]
 

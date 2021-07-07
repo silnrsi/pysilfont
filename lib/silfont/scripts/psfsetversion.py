@@ -32,7 +32,7 @@ def doit(args) :
     vmaj = None if majelem is None else majelem.text
     vmin = None if minelem is None else minelem.text
 
-    if otnv is None or vmaj is None or vmin is None : logger.log("At least one of openTypeNameVersion, versionMajor or versionMinor missing fron fontinfo.plist", "S")
+    if otnv is None or vmaj is None or vmin is None : logger.log("At least one of openTypeNameVersion, versionMajor or versionMinor missing from fontinfo.plist", "S")
 
     if newversion is None:
         if otnvre.match(otnv) is None:

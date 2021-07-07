@@ -28,7 +28,7 @@ def doit(args) :
 
     # check for headers in the csv
     fl = incsv.firstline
-    if fl is None: logger.log("Empty imput file", "S")
+    if fl is None: logger.log("Empty input file", "S")
     numfields = len(fl)
     if numfields == 1 and args.header not in fl:
         dataCol = 0       # Default for plain csv

@@ -40,7 +40,7 @@ def doit(args) :
         logger.log("Advance removed from " + str(advances_removed) + " glyphs and unicode values(s) removed from "
                    + str(unicodes_removed) + " glyphs", "P")
     else:
-        logger.log("No advances or unicodes removed from glpyhs", "P")
+        logger.log("No advances or unicodes removed from glyphs", "P")
 
     return args.ifont
 

@@ -22,7 +22,7 @@ def doit(args) :
     
     # Identify file format from first line
     fl = incsv.firstline
-    if fl is None: logger.log("Empty imput file", "S")
+    if fl is None: logger.log("Empty input file", "S")
     numfields = len(fl)
     if numfields == 2 and 'glyph_name' not in fl:
         nameCol = 0       # Defaults for plain csv

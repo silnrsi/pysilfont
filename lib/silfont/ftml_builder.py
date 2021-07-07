@@ -410,7 +410,7 @@ class FTMLBuilder(object):
 
         # Get headings from csvfile:
         fl = incsv.firstline
-        if fl is None: self.logger.log("Empty imput file", "S")
+        if fl is None: self.logger.log("Empty input file", "S")
         # required columns:
         try:
             nameCol = fl.index('glyph_name');

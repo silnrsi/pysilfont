@@ -68,7 +68,7 @@ def doit(args):
         # Parse the fontlog file
         (section, match) = readuntil(fontlog, ("Basic Font Information",))  # Skip until start of "Basic Font Information" section
         if match is None: logger.log("No 'Basic Font Information' section in fontlog", "S")
-        (fldescription, match) = readuntil(fontlog, ("Information for C", "Acknowledgements"))  # Desciption ends when first of these sections is found
+        (fldescription, match) = readuntil(fontlog, ("Information for C", "Acknowledgements"))  # Description ends when first of these sections is found
         fldescription = [{"text": fldescription}]
         if match == "Information for C": (section, match) = readuntil(fontlog, ("Acknowledgements",))  # If Info... section present then skip on to Acknowledgements
         if match is None: logger.log("No 'Acknowledgements' section in fontlog", "S")
@@ -99,7 +99,7 @@ def doit(args):
                         credit[flog2woff[acktype]] = match.group(2)
         if flcredits == []: logger.log("No credits found in fontlog", "S")
         if args.populateufowoff:
-            ufofields["woffMetadataDescription"] = fldescription # Force fontlog values to be used writing metatdata.xml later
+            ufofields["woffMetadataDescription"] = fldescription # Force fontlog values to be used writing metadata.xml later
             ufofields["woffMetadataCredits"] = flcredits
             # Create xml strings and update fontinfo
             xmlstring = "<dict><key>text</key><array><dict><key>text</key><string>" + textprotect(fldescription[0]["text"]) \

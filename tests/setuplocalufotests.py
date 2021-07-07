@@ -46,7 +46,7 @@ for ufo,type in cfg:
     elif type == "insitu":
         sourcedir = ufo
     else:
-        print("Invlaid type '" + type + "' for " + ufo)
+        print("Invalid type '" + type + "' for " + ufo)
         continue
 
     sys.argv = ["psfnormalize", sourcedir, "-l", "local/ufotests/results/" + logname,  "-q", "-p", "checkfix=fix"]

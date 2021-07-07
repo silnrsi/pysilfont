@@ -25,7 +25,7 @@ if sys.argv[1] in ('develop', 'install') :
 
 long_description =  "A growing collection of font utilities mainly written in Python designed to help with various aspects of font design and production.\n"
 long_description += "Developed and maintained by SIL International's by SIL International's WSTech department (formerly NRSI).\n"
-long_description += "Some of these utilites make use of the FontForge Python module."
+long_description += "Some of these utilities make use of the FontForge Python module."
 
 
 # Create entry_points console scripts entry

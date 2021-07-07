@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-__doc__ = '''Sync metadata accross a family of fonts assuming standard UFO file naming'''
+__doc__ = '''Sync metadata across a family of fonts assuming standard UFO file naming'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2017 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
@@ -285,7 +285,7 @@ def doit(args) :
     return
 
 
-def openfont(params, path, family, style) : # Only try if directory esists
+def openfont(params, path, family, style) : # Only try if directory exists
     ufodir = os.path.join(path,family+"-"+style+".ufo")
     font = UFO.Ufont(ufodir, params=params) if os.path.isdir(ufodir) else None
     return font

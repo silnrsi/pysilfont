@@ -48,7 +48,7 @@ def doit(args):
 
     # Get headings from csvfile:
     fl = incsv.firstline
-    if fl is None: logger.log("Empty imput file", "S")
+    if fl is None: logger.log("Empty input file", "S")
     # required columns:
     try:
         nameCol = fl.index(args.gname)

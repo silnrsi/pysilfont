@@ -8,7 +8,7 @@ __author__ = 'David Rowe'
 import re
 from xml.etree import ElementTree as ET
 
-# REs to parse (from right to left) comment, SIL extention parameters, markinfo, UID, metrics,
+# REs to parse (from right to left) comment, SIL extension parameters, markinfo, UID, metrics,
 # and (from left) glyph name
 
 # Extract comment from end of line (NB: Doesn't use re.VERBOSE because it contains #.)
@@ -35,7 +35,7 @@ markinfo=re.compile(r"""^\s*
 uidinfo=re.compile(r"""^\s*
     (?P<remainder>[^|]*?)
     \s*
-    (?:\|\s*(?P<UID>[^^!]*)?)?                          # | follwed by nothing, or 4- to 6-digit UID 
+    (?:\|\s*(?P<UID>[^^!]*)?)?                          # | followed by nothing, or 4- to 6-digit UID 
     (?P<remainder2>[^|]*?)
     \s*$""",re.VERBOSE)
 
@@ -65,7 +65,7 @@ initialtokens=[ (inputline,   'commenttext', ""),
 # Parse base and diacritic information
 compdef=re.compile(r"""^\s*
     (?P<compname>[._A-Za-z][._A-Za-z0-9-]*)             # name of base or diacritic in composite definition
-        (?:@                                            # @ preceeds position information
+        (?:@                                            # @ precedes position information
         (?:(?:\s*(?P<base>[^: ]+)):)?                   # optional base glyph followed by :
         \s*
         (?P<position>(?:[^ +&[])+)                      # position information (delimited by space + & [ or end of line)

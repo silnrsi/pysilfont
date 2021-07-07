@@ -54,7 +54,7 @@ class loggerobj(object):
         if msglevel == "E": self.errorcount += 1
         if msglevel == "W": self.warningcount += 1
 
-    def raisescrlevel(self, level): # Temproarily increase screen logging
+    def raisescrlevel(self, level): # Temporarily increase screen logging
         if level not in self.loglevels or level == "X" : self.log("Invalid scrlevel: " + level, "X")
         if self.loglevels[level] > self.loglevels[self.scrlevel]:
             current = self.scrlevel
@@ -103,7 +103,7 @@ class parameters(object):
             "logging": "controls the level of log messages go to screen or log files.",
             "backups": "controls backup settings for scripts that output fonts - by default backups are made if the output font is overwriting the input font",
             "outparams": "Output options for UFOs - cover UFO version and normalization",
-            "ufometadata": "controls if UFO metatdata be checked, or checked and fixed"
+            "ufometadata": "controls if UFO metadata be checked, or checked and fixed"
         }
         self.paramshelp["paramsdesc"] = {
             "scrlevel": "Logging level for screen messages - one of S,E,P.W,I or V",
@@ -699,7 +699,7 @@ def execute(tool, fn, scriptargspec, chain = None):
     return (args, newfont)
 
 
-def chain(argv, function, argspec, font, params, logger, quiet):  # Chain multple command-line scripts using UFO module together without writing font to disk
+def chain(argv, function, argspec, font, params, logger, quiet):  # Chain multiple command-line scripts using UFO module together without writing font to disk
     ''' argv is a command-line call to a script in sys.argv format.  function and argspec are from the script being called.
     Although input font name must be supplied for the command line to be parsed correctly by execute() it is not used - instead the supplied
     font object is used. Similarly -params, logfile and quiet settings in argv are not used by execute() when chaining is used'''

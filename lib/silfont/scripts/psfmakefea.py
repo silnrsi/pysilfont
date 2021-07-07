@@ -243,7 +243,7 @@ class Font(object) :
                         for n in links[name]:
                             counts[n] -= 1
                     # It may now be possible to output some we skipped earlier,
-                    # so start over from the begining of the list
+                    # so start over from the beginning of the list
                     break
             if not foundone:
                 # all remaining classes include un-output classes and thus there is a loop somewhere
