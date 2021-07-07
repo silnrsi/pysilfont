@@ -142,6 +142,22 @@ def process_ufo(ufo, keylists, glyphsdir, args, obskeysfound):
                 ufo.lib[key] = new
                 logchange(loglist, " key names set to integers. ", key, current, new)
 
+        # Special processing for ufo2ft filters
+        key = "com.github.googlei18n.ufo2ft.filters"
+        if key in ufo.lib:
+            current = ufo.lib[key]
+            new = list(current)
+            for x in current:
+                if x["name"] == "eraseOpenCorners":
+                    new.remove(x)
+
+            if current != new:
+                if new == []:
+                    del ufo.lib[key]
+                else:
+                    ufo.lib[key] = new
+                logchange(loglist, " eraseOpenCorners filter removed ", key, current, new)
+
         # fontinfo.plist processing
 
         loglist.append(("Checking fontinfo.plist", "P"))

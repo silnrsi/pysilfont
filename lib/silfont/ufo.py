@@ -417,8 +417,6 @@ class Ufont(object):
             value = value + storedvals["styleName"] + ": " + datetime.datetime.now().strftime("%Y")
             fisetto["openTypeNameUniqueID"] = value
             fisetto["openTypeOS2WinDescent"] = -storedvals["descender"]
-            value = storedvals["familyName"] + "-" + storedvals["styleName"]
-            fisetto["postscriptFontName"] = value.replace(" ", "") # Strip spaces
             if "openTypeNameVersion" not in self.fontinfo:
                 fisetto["openTypeNameVersion"] = "Version " + str(storedvals["versionMajor"]) + "."\
                                                  + str(storedvals["versionMinor"])
