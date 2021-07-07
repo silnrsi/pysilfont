@@ -41,7 +41,7 @@ Nearly all scripts support these:
 
 The individual script documentation in scripts.md should indicate if some don't apply for a particular script
 
-(There is aslo a hidden option --nq which overrides -q for use with automated systems like [smith](https://github.com/silnrsi/smith) which run scripts using -q by default)
+(There is also a hidden option --nq which overrides -q for use with automated systems like [smith](https://github.com/silnrsi/smith) which run scripts using -q by default)
 
 # Parameters
 
@@ -169,10 +169,10 @@ The check & fix tests are based on [Font Development Best Practices](https://sil
  - Required fields
  - Fields to be deleted
  - Fields to constructed from other fields
- - Specific recomended values for some fields
+ - Specific recommended values for some fields
 - lib.plist
  - Required fields
- - Recomended values
+ - Recommended values
  - Fields that should not be present
 
 The check & fix behaviour can be controlled by [parameters](#parameters), currently just the checkfix parameter which defaults to 'check' (just report what is wrong), but can be set to  'fix' to fix what it can, or none for no checking.

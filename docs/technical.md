@@ -202,7 +202,7 @@ There would normally only be a single logger object used by a script.
 
 ### Changing reporting levels
 
-loglevel and scrlevel *can* be set by scripts, but care should be taken not to overide values set on the command line.  To increase screen logging temporarily, use logger.raisescrlevel(<new level>) then set to previous value with logger.resetscrlevel(), eg
+loglevel and scrlevel *can* be set by scripts, but care should be taken not to override values set on the command line.  To increase screen logging temporarily, use logger.raisescrlevel(<new level>) then set to previous value with logger.resetscrlevel(), eg
 
 ```
   if not(args.quiet or "scrlevel" in params.sets["command line"]) :
@@ -337,6 +337,6 @@ To be written
 
 # Developer's notes
 
-To cover items relevent to extending the library modules or adding new
+To cover items relevant to extending the library modules or adding new
 
 To be written

@@ -51,7 +51,7 @@ A **Ufont** object represents the font using the following objects:
   - created from layercontents.plist for UFO 3 fonts
   - synthesized based on the font's single layer for UFO 2 fonts
 - font.**layers**: List of [Ulayer](#ulayer) objects, where each layer contains:
-  - layer.**contents**: [Uplist](#uplist) oject created from contents.plist
+  - layer.**contents**: [Uplist](#uplist) object created from contents.plist
   - layer[**_glyph name_**]: A [Uglif](#uglif) object for each glyph in the font which contains:
     - glif['**advance**']: Uadvance object
     - glif['**unicode**']: List of Uunicode objects
@@ -91,7 +91,7 @@ In addition to the objects listed above, a Ufont object contains:
 
 When creating a new Ufont() object in a script, it is normal to pass args.paramsobj for params so that it has all the settings for parameters and logging.
 
-self.write(outputdir) will write the UFO to disk.  For basic scripts this will usually be done by the execute() funtion - see [writing scripts](technical.md#writing-scripts).
+self.write(outputdir) will write the UFO to disk.  For basic scripts this will usually be done by the execute() function - see [writing scripts](technical.md#writing-scripts).
 
 self.addfile(type) will add an empty entry for any of the optional plist files (fontinfo, groups, kerning or lib).
 

@@ -279,8 +279,8 @@ There are various python functions that are especially supported, along with the
 |-------------|----------------|----------------|
 | ADVx       | _glyphname_             | Returns the advanced width of the given glyph |
 | allglyphs  |                         | Returns a list of all the glyph names in the font |
-| APx        | _glyphname_, "_apname_" | Returns the x co-ordinate of the given attachment point on the given glyph |
-| APy        | _glyphname_, "_apname_" | Returns the y co-ordinate of the given attachment point on the given glyph |
+| APx        | _glyphname_, "_apname_" | Returns the x coordinate of the given attachment point on the given glyph |
+| APy        | _glyphname_, "_apname_" | Returns the y coordinate of the given attachment point on the given glyph |
 | feaclass   | _classname_             | Returns a list of the glyph names in a class as a python list |
 | info       | _finfoelement_          | Looks up the entry in the fontinfo plist and returns its value |
 | kerninfo |                           | Returns a list of tuples (left, right, kern_value) |
@@ -419,7 +419,7 @@ def <fn>(<param_list>) {
 The `fn` must conform to a FEA name (not starting with a digit, etc.) and is repeated at the end of the block to mark the end of the function. The parameter is a standard python parameter list and the python code is standard python code, indented as if under a `def` statement. 
 
 #### python support
-Here and in `let` substatements, the python that is allowed to executed is limited. Only a subset of functions from builtins is supported and the `__` may not occur in any attribute. This is to stop people escaping the sandbox in which python code is interpretted. The `math` and `re` modules are also included along with the functions available to a `let` substatement. The full list of builtins supported are:
+Here and in `let` substatements, the python that is allowed to executed is limited. Only a subset of functions from builtins is supported and the `__` may not occur in any attribute. This is to stop people escaping the sandbox in which python code is interpreted. The `math` and `re` modules are also included along with the functions available to a `let` substatement. The full list of builtins supported are:
 
 ```
 True, False, None, int, float, str, abs, bool, dict, enumerate, filter, hex, len, list,

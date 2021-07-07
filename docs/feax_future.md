@@ -37,11 +37,11 @@ setadvance(@glyphs, APName [, attachedGlyph[, APName, attachedGlyph [...]]])
 ```
 
 In effect there are two modes for this function. The first only has two parameters
-and shifts the advance from its default designed position to the x co-ordinate of
+and shifts the advance from its default designed position to the x coordinate of
 the given attachment point. The second mode adds extra glyphs. The advance is moved
 to the advance of the attachedGlyph assuming the base has the other glyphs chained
 attached at their given APs. An AP may be a number in which case that is the
-x co-ordinate of the AP that will be used.
+x coordinate of the AP that will be used.
 
 Typically there will be only one of these per lookup, unless the classes referenced
 are non overlapping.

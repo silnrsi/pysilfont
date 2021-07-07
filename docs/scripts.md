@@ -302,7 +302,7 @@ Based on the sort order information extracted from the `glyphdata` file, this to
 
 Note that the Graphite workflow extracts glyph order from the ttf file, but `psfcheckclassorders` gets it from `glyphdata` argument; there is, therefore, an assumption that the glyph order indicated in `glyphdata` actually matches that in the ttf file.
 
-`psfcheckclassorders` will also issue warning a warning message if there are glyphs named in the `classes` file which are not included in the `glyphdata` file. While this is [intentionally] not an error for either Graphite or OpenType (relavent tools simply ignore such missing glyphs), it may be helpful in catching typos that result in class miss-alignment and therefore bugs.  By default warning messages are sent to the log file;
+`psfcheckclassorders` will also issue warning a warning message if there are glyphs named in the `classes` file which are not included in the `glyphdata` file. While this is [intentionally] not an error for either Graphite or OpenType (relevant tools simply ignore such missing glyphs), it may be helpful in catching typos that result in class miss-alignment and therefore bugs.  By default warning messages are sent to the log file;
 use `-p scrlevel=W` to also route them to the terminal.
 
 ---
@@ -697,7 +697,7 @@ positional arguments:
 The `map` parameter must be a CSV that maps names of font feature tags, font feature values and language tags used in the FTML document(s) to the corresponding TypeTuner feature names and values. For example the following CSV file:
 
 ```
-# Langage tag mappings:
+# Language tag mappings:
 # lang=langtag,TT feat,value
 lang=sd,Language,Sindhi
 lang=ur,Language,Urdu
@@ -776,7 +776,7 @@ In a round-trip ufo -> glyphs -> ufo there is currently there is some data loss 
 
 Additional fields to restore can be added using `-r, --restore`. This will restore the fields listed if found in either fontinfo.plist or lib.plist
 
-Currently features.fea does not round-trip sucessfully, so `--nofea` can be used to suppress the production of a features.fea file.
+Currently features.fea does not round-trip successfully, so `--nofea` can be used to suppress the production of a features.fea file.
 
 Example usage:
 
@@ -867,7 +867,7 @@ Transform takes two types of input:
 
 Note that this second type of input allows for two other parameters:
 
-- _adjustMetrics_ indicates how much additional space in units should be added to _both_ sides fo the glyph.
+- _adjustMetrics_ indicates how much additional space in units should be added to _both_ sides of the glyph.
 
 - _skew_ indicates how much the glyph should be skewed, with a skew of 1 indicating a 45° skew. The origin for the skew is (0,0).
 
@@ -891,7 +891,7 @@ psfmakescaledshifted -i newglyphs.csv DoulosSIL-Regular.ufo -t superscript
 
 This will take the definitions in newglyphs.csv and create the new glyphs using the *superscript* transformation defined in the UFO lib.plist *org.sil.lcg.transforms* key.
 
-`-c` or `--color COLOR` can be used to set the mark color for the generated glpyhs.  `-c` sets the color to blue, and with
+`-c` or `--color COLOR` can be used to set the mark color for the generated glyphs.  `-c` sets the color to blue, and with
 `--color` the color specified as described in [Specifying colors on the command line](#specifying-colors-on-the-command-line)
 
 ---
@@ -1335,7 +1335,7 @@ If `--removeOverlap` is used it merges overlapping contours
 #### psfversion
 Usage: **`psfversion`**
 
-This displays version info for pysilfont and many of its dependencies.  It is inteneded for troubleshooting purposes - eg send the output in if reporting a problem - and includes which version of Python is being used and where the code is being executed from.
+This displays version info for pysilfont and many of its dependencies.  It is intended for troubleshooting purposes - eg send the output in if reporting a problem - and includes which version of Python is being used and where the code is being executed from.
 
 ---
 #### psfwoffit

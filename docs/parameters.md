@@ -86,7 +86,7 @@ Currently only font output parameters can be changed via lib.plist
 | UFOversion | (existing) |  | Defaults to the version of the UFO when opened |
 | format1Glifs | False| Force output of format 1 glifs | Includes UFO2-style anchors; for use with FontForge |
 | floatAttribs | (list of attributes in the spec that hold numbers and are handled as float) | Used to know if precision needs setting. | May need items adding for lib data |
-| intAttribs | (list of attributes in the spec that hold numbers and handled as interger) |  | May need items adding for lib data |
+| intAttribs | (list of attributes in the spec that hold numbers and handled as integer) |  | May need items adding for lib data |
 | glifElemOrder | (list of elements in the order defined in spec) | Order for outputting elements in a glif |  |
 | attribOrders | (list of attribute orders defined in spec) | Order for outputting attributes in an element.  One list per element type | When setting this, the parameter name is `attribOrders.<element type>`.  Currently only used with attribOrders.glif |
 | **ufometadata** (ufo scripts only) |  |  |  |

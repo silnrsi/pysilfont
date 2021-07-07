@@ -17,7 +17,7 @@ where
     - at most one of the two following options:
         - `^x,y` (where `x` is the amount added to the left margin and `y` is the amount added to the right margin)
         - `^a` (where `a` is the advance width of the resulting glyph)
-    - `|usv` where `usv` is the 4-, 5- or 6-digit hex Unicode scalar value assigned to the resulting glpyh
+    - `|usv` where `usv` is the 4-, 5- or 6-digit hex Unicode scalar value assigned to the resulting glyph
     - `!colordef` (currently ignored by SIL tools)
     - `[key1=value1;key2=value2;...]` to add one or more `key=value` pairs (representing SIL-specific properties documented below) to the resulting glyph
 - `# comment` is an optional comment (everything from the `#` to the end of the line is ignored)
