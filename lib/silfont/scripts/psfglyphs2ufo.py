@@ -50,7 +50,8 @@ def doit(args):
                        "postscriptFullName", "styleMapFamilyName", "styleMapStyleName", "note"],
         "integerkeys": ("openTypeOS2WeightClass", "openTypeOS2WidthClass"),
         "infodeletekeys": ("openTypeVheaVertTypoAscender", "openTypeVheaVertTypoDescender", "openTypeVheaVertTypoLineGap"),
-        "infodeleteempty": ("openTypeOS2Selection",)}
+ #       "infodeleteempty": ("openTypeOS2Selection",)
+    }
 
     if args.restore: # Extra keys to restore.  Add to both lists, since should never be duplicated names
         keylist = args.restore.split(",")
@@ -191,10 +192,10 @@ def process_ufo(ufo, keylists, glyphsdir, args, obskeysfound):
                setattr(ufo.info, key, None)
                logchange(loglist, " deleted. ", key, current, None)
 
-        for key in keylists["infodeleteempty"]:
-            if hasattr(ufo.info, key) and getattr(ufo.info, key) == "":
-                setattr(ufo.info, key, None)
-                logchange(loglist, " empty field deleted. ", key, current, None)
+#        for key in keylists["infodeleteempty"]:
+#            if hasattr(ufo.info, key) and getattr(ufo.info, key) == "":
+#                setattr(ufo.info, key, None)
+#                logchange(loglist, " empty field deleted. ", key, current, None)
     if args.nofea: ufo.features.text = ""  # Suppress output of features.fea
 
     for layer in ufo.layers:
