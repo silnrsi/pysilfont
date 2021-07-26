@@ -9,16 +9,19 @@ from silfont.core import execute
 import silfont.ftml_builder as FB
 
 argspec = [
-    ('ifont',{'help': 'Input UFO'}, {'type': 'infont'}),
-    ('output',{'help': 'Output file ftml in XML format', 'nargs': '?'}, {'type': 'outfile', 'def': '_out.ftml'}),
-    ('-i','--input',{'help': 'Glyph info csv file'}, {'type': 'incsv', 'def': 'glyph_data.csv'}),
-    ('-f','--fontcode',{'help': 'letter to filter for glyph_data'},{}),
-    ('-l','--log',{'help': 'Set log file name'}, {'type': 'outfile', 'def': '_ftml.log'}),
+    ('ifont', {'help': 'Input UFO'}, {'type': 'infont'}),
+    ('output', {'help': 'Output file ftml in XML format', 'nargs': '?'}, {'type': 'outfile', 'def': '_out.ftml'}),
+    ('-i','--input', {'help': 'Glyph info csv file'}, {'type': 'incsv', 'def': 'glyph_data.csv'}),
+    ('-f','--fontcode', {'help': 'letter to filter for glyph_data'},{}),
+    ('-l','--log', {'help': 'Set log file name'}, {'type': 'outfile', 'def': '_ftml.log'}),
+    ('--langs', {'help':'List of bcp47 language tags', 'default': None}, {}),
     ('--rtl', {'help': 'enable right-to-left features', 'action': 'store_true'}, {}),
+    ('--norendercheck', {'help': 'do not include the RenderingUnknown check', 'action': 'store_true'}, {}),
     ('-t', '--test', {'help': 'name of the test to generate', 'default': None}, {}),
     ('-s','--fontsrc', {'help': 'font source: "url()" or "local()" optionally followed by "=label"', 'action': 'append'}, {}),
     ('--scale', {'help': 'percentage to scale rendered text (default 100)'}, {}),
     ('--ap', {'help': 'regular expression describing APs to examine', 'default': '.'}, {}),
+    ('-w', '--width', {'help': 'total width of all <string> column (default automatic)'}, {}),
     ('--xsl', {'help': 'XSL stylesheet to use'}, {}),
 
 ]
@@ -28,14 +31,39 @@ def doit(args):
     logger = args.logger
 
     # Read input csv
-    builder = FB.FTMLBuilder(logger, incsv = args.input, fontcode = args.fontcode, font = args.ifont, ap = args.ap, rtlenable = True)
+    builder = FB.FTMLBuilder(logger, incsv=args.input, fontcode=args.fontcode, font=args.ifont, ap=args.ap,
+                             rtlenable=True, langs=args.langs)
 
     # Override default base (25CC) for displaying combining marks:
     builder.diacBase = 0x0628   # beh
 
     # Initialize FTML document:
-    test = args.test or "AllChars (NG)"  # Default to "AllChars (NG)"
-    ftml = FB.FTML(test, logger, rendercheck = True, fontscale = args.scale, xslfn = args.xsl, fontsrc = args.fontsrc)
+    # Default name for test: AllChars or something based on the csvdata file:
+    test = args.test or ('AllChars (NG)' if args.csvdata is None else
+                         f'{os.path.splitext(os.path.basename(args.csvdata))[0]}.ftml')
+    widths = None
+    if args.width:
+        try:
+            width, units = re.match(r'(\d+)(.*)$', args.width).groups()
+            if len(args.fontsrc):
+                width = int(round(int(width)/len(args.fontsrc)))
+            widths = {'string': f'{width}{units}'}
+            logger.log(f'width: {args.width} --> {widths["string"]}', 'I')
+        except:
+            logger.log(f'Unable to parse width argument "{args.width}"', 'W')
+    # split labels from fontsource parameter
+    fontsrc = []
+    labels = []
+    for sl in args.fontsrc:
+        try:
+            s, l = sl.split('=',1)
+            fontsrc.append(s)
+            labels.append(l)
+        except ValueError:
+            fontsrc.append(sl)
+            labels.append(None)
+    ftml = FB.FTML(test, logger, comment=backgroundLegend, rendercheck=not args.norendercheck, fontscale=args.scale,
+                   widths=widths, xslfn=args.xsl, fontsrc=fontsrc, fontlabel=labels, defaultrtl=args.rtl)
 
     if test.lower().startswith("allchars"):
         # all chars that should be in the font:
