@@ -15,10 +15,10 @@ argspec = [
     ('-f','--fontcode',{'help': 'letter to filter for glyph_data'},{}),
     ('-l','--log',{'help': 'Set log file name'}, {'type': 'outfile', 'def': '_ftml.log'}),
     ('--rtl', {'help': 'enable right-to-left features', 'action': 'store_true'}, {}),
-    ('-t', '--test', {'help': 'which test to build', 'default': None, 'action': 'store'}, {}),
-    ('-s','--fontsrc',{'help': 'default font source', 'action': 'append'}, {}),
-    ('--scale', {'help': '% to scale rendered text'}, {}),
-    ('--ap', {'help': 'regular expression describing APs to examine', 'default': '.', 'action': 'store'}, {}),
+    ('-t', '--test', {'help': 'name of the test to generate', 'default': None}, {}),
+    ('-s','--fontsrc', {'help': 'font source: "url()" or "local()" optionally followed by "=label"', 'action': 'append'}, {}),
+    ('--scale', {'help': 'percentage to scale rendered text (default 100)'}, {}),
+    ('--ap', {'help': 'regular expression describing APs to examine', 'default': '.'}, {}),
     ('--xsl', {'help': 'XSL stylesheet to use'}, {}),
 
 ]
