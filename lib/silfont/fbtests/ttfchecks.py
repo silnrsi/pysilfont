@@ -345,9 +345,10 @@ psfcheck_list['com.google.fonts/check/italic_angle']                            
 psfcheck_list['com.google.fonts/check/kern_table']                                = {}
 psfcheck_list['com.google.fonts/check/kerning_for_non_ligated_sequences']         = {'exclude': True}
 psfcheck_list['com.google.fonts/check/layout_valid_feature_tags']                 = {}
-psfcheck_list['com.google.fonts/check/layout_valid_language_tags']                = {}
+psfcheck_list['com.google.fonts/check/layout_valid_language_tags']                = \
+    {'change_status': {'FAIL': 'WARN', 'reason': 'The "invalid" ones are used by Harfbuzz'}}
 psfcheck_list['com.google.fonts/check/layout_valid_script_tags']                  = {}
-psfcheck_list['com.google.fonts/check/license/OFL_body_text']                     = {}
+psfcheck_list['com.google.fonts/check/license/OFL_body_text']                     = {'exclude': True}
 psfcheck_list['com.google.fonts/check/ligature_carets']                           = {'exclude': True}
 psfcheck_list['com.google.fonts/check/linegaps']                                  = {}
 psfcheck_list['com.google.fonts/check/license/OFL_copyright']                     = {'exclude': True}
@@ -356,7 +357,7 @@ psfcheck_list['com.google.fonts/check/mac_style']                               
 psfcheck_list['com.google.fonts/check/mandatory_avar_table']                      = {}
 psfcheck_list['com.google.fonts/check/mandatory_glyphs']                          = {}
 psfcheck_list['com.google.fonts/check/maxadvancewidth']                           = {}
-psfcheck_list['com.google.fonts/check/meta/script_lang_tags']                     = {}
+psfcheck_list['com.google.fonts/check/meta/script_lang_tags']                     = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/broken_links']                     = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/canonical_style_names']            = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/canonical_weight_value']           = {'exclude': True}
