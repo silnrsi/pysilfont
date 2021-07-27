@@ -1,10 +1,38 @@
-#!/usr/bin/env python
-'generate ftml tests from glyph_data.csv and UFO'
+#!/usr/bin/python3
+'''
+Example script to generate ftml document from glyph_data.csv and UFO.
+
+To try this with the Harmattan font project:
+    1) clone and build Harmattan:
+        clone https://github.com/silnrsi/font-harmattan
+        cd font-harmattan
+        smith configure
+        smith build ftml
+    2) run psfgenftml as follows:
+        python3 psfgenftml.py \
+            -t "AllChars" \
+            --ap "_?dia[AB]$" \
+            --xsl ../tools/lib/ftml.xsl \
+            --scale 200 \
+            -i source/glyph_data.csv \
+            -s "url(../references/Harmattan-Regular-v1.ttf)=ver 1" \
+            -s "url(../results/Harmattan-Regular.ttf)=Reg-GR" \
+            -s "url(../results/tests/ftml/fonts/Harmattan-Regular_ot_arab.ttf)=Reg-OT" \
+            source/Harmattan-Regular.ufo tests/AllChars-dev.ftml
+    3) launch resulting output file, tests/AllChars-dev.ftml, in a browser.
+        (see http://silnrsi.github.io/FDBP/en-US/Browsers%20as%20a%20font%20test%20platform.html)
+        NB: Using Firefox will allow simultaneous display of both Graphite and OpenType rendering
+    4) As above but substitute:
+            -t "Diac Test"             for the -t parameter
+            tests/DiacTest-dev.ftml    for the final parameter
+       and launch tests/DiacTest-dev.ftml in a browser.
+'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2018,2021 SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Bob Hallissy'
 
+import re
 from silfont.core import execute
 import silfont.ftml_builder as FB
 
@@ -23,7 +51,6 @@ argspec = [
     ('--ap', {'help': 'regular expression describing APs to examine', 'default': '.'}, {}),
     ('-w', '--width', {'help': 'total width of all <string> column (default automatic)'}, {}),
     ('--xsl', {'help': 'XSL stylesheet to use'}, {}),
-
 ]
 
 
@@ -39,8 +66,7 @@ def doit(args):
 
     # Initialize FTML document:
     # Default name for test: AllChars or something based on the csvdata file:
-    test = args.test or ('AllChars (NG)' if args.csvdata is None else
-                         f'{os.path.splitext(os.path.basename(args.csvdata))[0]}.ftml')
+    test = args.test or 'AllChars (NG)'
     widths = None
     if args.width:
         try:
@@ -62,7 +88,7 @@ def doit(args):
         except ValueError:
             fontsrc.append(sl)
             labels.append(None)
-    ftml = FB.FTML(test, logger, comment=backgroundLegend, rendercheck=not args.norendercheck, fontscale=args.scale,
+    ftml = FB.FTML(test, logger, rendercheck=not args.norendercheck, fontscale=args.scale,
                    widths=widths, xslfn=args.xsl, fontsrc=fontsrc, fontlabel=labels, defaultrtl=args.rtl)
 
     if test.lower().startswith("allchars"):
@@ -103,8 +129,8 @@ def doit(args):
         # Add Lam-Alef data manually
         ftml.startTestGroup('Lam-Alef')
         # generate list of lam and alef characters that should be in the font:
-        lamlist = filter(lambda x: x in builder.uids(), (0x0644, 0x06B5, 0x06B6, 0x06B7, 0x06B8, 0x076A, 0x08A6))
-        aleflist = filter(lambda x: x in builder.uids(), (0x0627, 0x0622, 0x0623, 0x0625, 0x0671, 0x0672, 0x0673, 0x0675, 0x0773, 0x0774))
+        lamlist = list(filter(lambda x: x in builder.uids(), (0x0644, 0x06B5, 0x06B6, 0x06B7, 0x06B8, 0x076A, 0x08A6)))
+        aleflist = list(filter(lambda x: x in builder.uids(), (0x0627, 0x0622, 0x0623, 0x0625, 0x0671, 0x0672, 0x0673, 0x0675, 0x0773, 0x0774)))
         # iterate over all combinations:
         for lam in lamlist:
             for alef in aleflist:
@@ -119,8 +145,8 @@ def doit(args):
         # Diac attachment:
 
         # Representative base and diac chars:
-        repDiac = filter(lambda x: x in builder.uids(), (0x064E, 0x0650, 0x065E, 0x0670, 0x0616, 0x06E3, 0x08F0, 0x08F2))
-        repBase = filter(lambda x: x in builder.uids(), (0x0627, 0x0628, 0x062B, 0x0647, 0x064A, 0x77F, 0x08AC))
+        repDiac = list(filter(lambda x: x in builder.uids(), (0x064E, 0x0650, 0x065E, 0x0670, 0x0616, 0x06E3, 0x08F0, 0x08F2)))
+        repBase = list(filter(lambda x: x in builder.uids(), (0x0627, 0x0628, 0x062B, 0x0647, 0x064A, 0x77F, 0x08AC)))
 
         ftml.startTestGroup('Representative diacritics on all bases that take diacritics')
         for uid in sorted(builder.uids()):
@@ -151,8 +177,8 @@ def doit(args):
                 ftml.closeTest()
 
         ftml.startTestGroup('Special cases')
-        builder.render((0x064A, 0x065E), ftml)   # Yeh + Fatha should keep dots
-        builder.render((0x064A, 0x0654), ftml)   # Yeh + Hamza should loose dots
+        builder.render((0x064A, 0x065E), ftml, comment="Yeh + Fatha should keep dots")
+        builder.render((0x064A, 0x0654), ftml, comment="Yeh + Hamza should loose dots")
         ftml.closeTest()
 
     # Write the output ftml file
