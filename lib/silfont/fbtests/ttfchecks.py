@@ -71,6 +71,136 @@ def org_sil_software_version_format(ttFont):
   if not failed and not warned:
     yield PASS, "Version format in NAME table entries is correct."
 
+@check(
+    id = 'org.sil.software/check/whitespace_widths'
+)
+def org_sil_software_whitespace_widths(ttFont):
+    """Checks with widths of space characters in the font against best practice"""
+    from fontbakery.utils import get_glyph_name
+
+    allok = True
+    space_data = {
+        0x0020: ['Space'],
+        0x00A0: ['No-break space'],
+#        0x2007: ['Figure space'], # Figure space to be handled by a tabular numerals width check
+        0x2008: ['Punctuation space'],
+        0x2003: ['Em space'],
+        0x2002: ['En space'],
+        0x2000: ['En quad'],
+        0x2001: ['Em quad'],
+        0x2004: ['Three-per-em space'],
+        0x2005: ['Four-per-em space'],
+        0x2006: ['Six-per-em space'],
+        0x2009: ['Thin space'],
+        0x200A: ['Hair space'],
+        0x202F: ['Narrow no-break space'],
+        0x002E: ['Full stop'], # Non-space character where the width is needed for comparison
+    }
+    for sp in space_data:
+        spname = get_glyph_name(ttFont, sp)
+        if spname is None:
+            spwidth = None
+        else:
+            spwidth = ttFont['hmtx'][spname][0]
+        space_data[sp].append(spname)
+        space_data[sp].append(spwidth)
+
+    # Other width info needed from the font
+    upm = ttFont['head'].unitsPerEm
+    fullstopw = space_data[46][2]
+
+    # Widths used for comparisons
+    spw = space_data[32][2]
+    if spw is None:
+        allok = False
+        yield WARN, "No space in the font so No-break space (if present) can't be checked"
+    emw = space_data[0x2003][2]
+    if emw is None:
+        allok = False
+        yield WARN, f'No em space in the font. Will be assumed to be units per em ({upm}) for other checking'
+        emw = upm
+    enw = space_data[0x2002][2]
+    if enw is None:
+        allok = False
+        yield WARN, f'No en space in the font. Will be assumed to be 1/2 em space width ({emw/2}) for checking en quad (if present)'
+        enw = emw/2
+
+    # Now check all the specific space widths.  Only check if the space exists in the font
+    def checkspace(spacechar, minwidth, maxwidth=None):
+        sdata = space_data[spacechar]
+        if sdata[1]: # Name is set to None if not in font
+            # Allow for width(s) not being integer (eg em/6) so test against rounding up or down
+            minw = int(minwidth)
+            if maxwidth:
+                maxw = int(maxwidth)
+                if maxwidth > maxw: maxw += 1 # Had been rounded down, so round up
+            else:
+                maxw = minw if minw == minwidth else minw +1 # Had been rounded down, so allow rounded up as well
+            charw = sdata[2]
+            if not(minw <= charw <= maxw):
+                return (f'Width of {sdata[0]} ({spacechar:#04x}) is {str(charw)}: ', minw, maxw)
+        return (None,0,0)
+
+    # No-break space
+    (message, minw, maxw) = checkspace(0x00A0, spw)
+    if message: allok = False; yield FAIL, message + f"Should match width of space ({spw})"
+    # Punctuation space
+    (message, minw, maxw) = checkspace(0x2008, fullstopw)
+    if message: allok = False; yield FAIL, message + f"Should match width of full stop ({fullstopw})"
+    # Em space
+    (message, minw, maxw) = checkspace(0x2003, upm)
+    if message: allok = False; yield WARN, message + f"Should match units per em ({upm})"
+    # En space
+    (message, minw, maxw) = checkspace(0x2002, emw/2)
+    if message:
+        allok = False
+        widths = f'{minw}' if minw == maxw else f'{minw} or {maxw}'
+        yield WARN, message + f"Should be half the width of em ({widths})"
+    # En quad
+    (message, minw, maxw) = checkspace(0x2000, enw)
+    if message: allok = False; yield WARN, message + f"Should be the same width as en ({enw})"
+    # Em quad
+    (message, minw, maxw) = checkspace(0x2001, emw)
+    if message: allok = False; yield WARN, message + f"Should be the same width as em ({emw})"
+    # Three-per-em space
+    (message, minw, maxw) = checkspace(0x2004, emw/3)
+    if message:
+        allok = False
+        widths = f'{minw}' if minw == maxw else f'{minw} or {maxw}'
+        yield WARN, message + f"Should be 1/3 the width of em ({widths})"
+    # Four-per-em space
+    (message, minw, maxw) = checkspace(0x2005, emw/4)
+    if message:
+        allok = False
+        widths = f'{minw}' if minw == maxw else f'{minw} or {maxw}'
+        yield WARN, message + f"Should be 1/4 the width of em ({widths})",
+    # Six-per-em space
+    (message, minw, maxw) = checkspace(0x2006, emw/6)
+    if message:
+        allok = False
+        widths = f'{minw}' if minw == maxw else f'{minw} or {maxw}'
+        yield WARN, message + f"Should be 1/6 the width of em ({widths})",
+    # Thin space
+    (message, minw, maxw) = checkspace(0x2009, emw/6, emw/5)
+    if message:
+        allok = False
+        yield WARN, message + f"Should be between 1/6 and 1/5 the width of em ({minw} and {maxw})"
+    # Hair space
+    (message, minw, maxw) = checkspace(0x200A,
+                         emw/16, emw/10)
+    if message:
+        allok = False
+        yield WARN, message + f"Should be between 1/16 and 1/10 the width of em ({minw} and {maxw})"
+    # Narrow no-break space
+    (message, minw, maxw) = checkspace(0x202F,
+                         emw/6, emw/5)
+    if message:
+        allok = False
+        yield WARN, message + f"Should be between 1/6 and 1/5 the width of em ({minw} and {maxw})"
+
+    if allok:
+        yield PASS, "Space widths all match expected values"
+
 def make_profile(check_list, variable_font=False):
     profile = profile_factory(default_section=Section("SIL Fonts"))
     profile.auto_register(globals())
@@ -179,7 +309,7 @@ psfcheck_list['com.google.fonts/check/family/equal_font_versions']              
 #psfcheck_list['com.google.fonts/check/family/equal_numbers_of_glyphs']            = {}  # Currently disabled by FB
 psfcheck_list['com.google.fonts/check/family/equal_unicode_encodings']            = {}
 psfcheck_list['com.google.fonts/check/family/has_license']                        = {'exclude': True}
-psfcheck_list['com.google.fonts/check/family_naming_recommendations']             = {}
+psfcheck_list['com.google.fonts/check/family/italics_have_roman_counterparts']    = {}
 psfcheck_list['com.google.fonts/check/family/panose_familytype']                  = {}
 psfcheck_list['com.google.fonts/check/family/panose_proportion']                  = {}
 psfcheck_list['com.google.fonts/check/family/single_directory']                   = {}
@@ -214,6 +344,10 @@ psfcheck_list['com.google.fonts/check/integer_ppem_if_hinted']                  
 psfcheck_list['com.google.fonts/check/italic_angle']                              = {}
 psfcheck_list['com.google.fonts/check/kern_table']                                = {}
 psfcheck_list['com.google.fonts/check/kerning_for_non_ligated_sequences']         = {'exclude': True}
+psfcheck_list['com.google.fonts/check/layout_valid_feature_tags']                 = {}
+psfcheck_list['com.google.fonts/check/layout_valid_language_tags']                = {}
+psfcheck_list['com.google.fonts/check/layout_valid_script_tags']                  = {}
+psfcheck_list['com.google.fonts/check/license/OFL_body_text']                     = {}
 psfcheck_list['com.google.fonts/check/ligature_carets']                           = {'exclude': True}
 psfcheck_list['com.google.fonts/check/linegaps']                                  = {}
 psfcheck_list['com.google.fonts/check/license/OFL_copyright']                     = {'exclude': True}
@@ -222,6 +356,7 @@ psfcheck_list['com.google.fonts/check/mac_style']                               
 psfcheck_list['com.google.fonts/check/mandatory_avar_table']                      = {}
 psfcheck_list['com.google.fonts/check/mandatory_glyphs']                          = {}
 psfcheck_list['com.google.fonts/check/maxadvancewidth']                           = {}
+psfcheck_list['com.google.fonts/check/meta/script_lang_tags']                     = {}
 psfcheck_list['com.google.fonts/check/metadata/broken_links']                     = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/canonical_style_names']            = {'exclude': True}
 psfcheck_list['com.google.fonts/check/metadata/canonical_weight_value']           = {'exclude': True}
@@ -293,9 +428,11 @@ psfcheck_list['com.google.fonts/check/name/typographicfamilyname']              
 psfcheck_list['com.google.fonts/check/name/typographicsubfamilyname']             = {}
 psfcheck_list['com.google.fonts/check/name/unwanted_chars']                       = {}
 psfcheck_list['com.google.fonts/check/name/version_format']                       = {'exclude': True}
+psfcheck_list['com.google.fonts/check/no_debugging_tables']                       = {}
 psfcheck_list['com.google.fonts/check/old_ttfautohint']                           = {'exclude': True}
-psfcheck_list['com.google.fonts/check/os2/use_typo_metrics']                      = \
-    {'change_status': {'FAIL': 'WARN', 'reason': 'Under review'}}
+psfcheck_list['com.google.fonts/check/os2/use_typo_metrics']                      = {}
+#psfcheck_list['com.google.fonts/check/os2/use_typo_metrics']                      = \  (Left commented out as an
+#    {'change_status': {'FAIL': 'WARN', 'reason': 'Under review'}}                      example of an override!)
 psfcheck_list['com.google.fonts/check/os2_metrics_match_hhea']                    = {}
 psfcheck_list['com.google.fonts/check/ots']                                       = {}
 psfcheck_list['com.google.fonts/check/outline_alignment_miss']                    = {'exclude': True}
@@ -363,5 +500,6 @@ psfcheck_list['com.google.fonts/check/whitespace_ink']                          
 psfcheck_list['com.google.fonts/check/whitespace_widths']                         = {}
 psfcheck_list['com.google.fonts/check/xavgcharwidth']                             = {}
 psfcheck_list['org.sil.software/check/name/version_format']                       = {}
+psfcheck_list['org.sil.software/check/whitespace_widths']                         = {}
 
 profile = make_profile(check_list=psfcheck_list)
