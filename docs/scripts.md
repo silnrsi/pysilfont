@@ -1172,11 +1172,11 @@ Usage: **`psfsetunicodes [-i INPUT] ifont [ofont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-Set the unicodes of glyphs in a font based on a csv file. With no header row, the csv format is assumed to be "glyphname,UID", otherwise column headers `glyph_name` and `USV` are used. Unicode values must be hex digits with no prefix.
+Set the unicodes of glyphs in a font based on a csv file with format "glyphname,UID [,UID2 [,UID3]]". Unicode values must be hex digits with no prefix.
 
-The input font may have any number of Unicode values associated with any glyph. In the case that there is exactly one for a specific glyph, then the first time that glyph appears in the csv, that Unicode value will be replaced. In subsequent mentions of that glyph, or if there are already more than one Unicode values associated with a glyph, new values are simply appended.
+Up to 3 UIDs can be specified per glyph.
 
-When replacing or adding a Unicode value, any other glyph that has that same Unicode value will have it removed.
+Any existing Unicode values for the glyph will be removed, and any other glyph that has that same Unicode value will have that Unicode value removed.
 
 ---
 ####  psfsetversion
