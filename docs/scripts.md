@@ -20,6 +20,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfcheckclassorders](#psfcheckclassorders) | Verify classes defined in xml have correct ordering where needed |
 | [psfcheckftml](#psfcheckftml) | Check ftml files for structural integrity |
 | [psfcheckglyphinventory](#psfcheckglyphinventory) | Warn for differences in glyph inventory and encoding between UFO and input file (e.g., glyph_data.csv) |
+| [psfcheckinterpolatable](#psfcheckinterpolatable) | Check UFOs in a designspace file are compatible with interpolation |
 | [psfcompdef2xml](#psfcompdef2xml) | Convert composite definition file to XML format |
 | [psfcompressgr](#psfcompressgr) | Compress Graphite tables in a ttf font |
 | [psfcopyglyphs](#psfcopyglyphs) | Copy glyphs from one UFO to another with optional scale and rename |
@@ -356,6 +357,17 @@ optional arguments:
               input file, default is glyph_data.csv in current directory
   -indent n   number of spaces to indent output lists (default 10)
 ```
+
+---
+#### psfcheckinterpolatable
+Usage: **`psfcheckinterpolatable designspace`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Check that the UFOs listed in the designspace file are interpolatable.
+When there are more than two UFOs in the designspace files they are checked in pairs.  For each pair:
+ - The glyph inventories of the UFOs are compared and any discrepancies reported.
+ - For each glyph that is in both UFOs, they are tested with fontParts isCompatible() function which checks various items - for example the number and direction of contours.
 
 ---
 #### psfcompdef2xml
