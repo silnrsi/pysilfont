@@ -278,6 +278,7 @@ class csvreader(object):    # Iterator for csv files, skipping comments and chec
         self._commentsbeforefirstline = -1
         while not self.firstline:
             row = next(self.reader, None)
+            if row is None: logger.log("Input csv is empty or all lines are comments or blank", "S")
             self._commentsbeforefirstline += 1
             if row == []: continue  # Skip blank lines
             if row[0].lstrip().startswith("#"): continue  # Skip comments - ie lines starting with  #
