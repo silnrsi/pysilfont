@@ -57,6 +57,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfsetpsnames](#psfsetpsnames) | Add public.postscriptname to glif lib based on a csv file |
 | [psfsetunicodes](#psfsetunicodes) | Set unicode values for a glif based on a csv file |
 | [psfsetversion](#psfsetversion) | Change all the version-related info in a UFO's fontinfo.plist |
+| [psfshownames](#psfshownames) | Display name fields and other bits for linking fonts into families |
 | [psfsubset](#psfsubset) | Create a subset of an existing UFO |
 | [psfsyncmasters](#psfsyncmasters) | Sync metadata in master UFO files based on a Designspace file |
 | [psfsyncmeta](#psfsyncmeta) | Copy basic metadata from one member of a font family to other family members |
@@ -1228,6 +1229,14 @@ will set:
 If values were originally as in the first example, openTypeNameVersion will be changed to "Version 1.424" and versionMinor to 424
 
 Note that only fontinfo.plist is updated, so the font is not normalized and Pysilfont's backup mechanism for fonts is not used.
+
+---
+#### psfshownames
+Usage: **`psfshownames ifont`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Show fields from the name table that control linking font styles into font families.
 
 ---
 #### psfsubset
