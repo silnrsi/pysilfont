@@ -29,16 +29,14 @@ argspec = [
 
 def doit(args):
     logger = args.logger
-    width = max([len(name_id_name) for name_id_name in FAMILY_RELATED_IDS.values()]) + 1
+    name_width = max([len(name_id_name) for name_id_name in FAMILY_RELATED_IDS.values()]) + 1
 
     fonts = []
-    maxwidth = 0
+    filename_width = 0
     for pattern in args.fonts:
         for fullpath in glob.glob(pattern):
             (path, base, ext) = splitfn(fullpath)
-            if ext != ".ttf":
-                logger.log("Fonts must ttf - " + fullpath + " invalid", "S")
-            maxwidth = max(maxwidth, len(base))
+            filename_width = max(filename_width, len(fullpath)+1)
             fonts.append((fullpath, path, base, ext))
     if fonts == []:
         logger.log("No files match the filespec provided for fonts: " + str(args.fonts), "S")
@@ -51,15 +49,18 @@ def doit(args):
             logger.log(f'Error opening {fullpath}: {e}', 'E')
             break
 
-        fontname = f'{base:{maxwidth}}'
-        records = names(width, font, fontname)
+        filename = ''
+        if len(fonts) > 1:
+            filename = fullpath + ':'
+            filename = f'{filename:{filename_width}} '
+        records = names(name_width, font, filename)
         if args.quiet:
             print(records[1:])
         else:
             logger.log("The following family-related values were found in the name table" + records, "P")
 
 
-def names(width, font, fontname):
+def names(name_width, font, filename):
     table = font['name']
     (platform_id, encoding_id, language_id) = WINDOWS_ENGLISH_IDS
 
@@ -73,7 +74,7 @@ def names(width, font, fontname):
             langID=language_id
         )
         if record:
-            records += f'\n{fontname} {name_id:2}: {name_id_name:{width}} {record}'
+            records += f'\n{filename}{name_id:2}: {name_id_name:{name_width}} {record}'
 
     return records
 
