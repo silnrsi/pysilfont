@@ -43,6 +43,7 @@ def doit(args):
                           "com.schriftgestaltung.customParameter.GSFont.manufacturer",
                           "com.schriftgestaltung.customParameter.GSFont.note",
                           "com.schriftgestaltung.customParameter.GSFont.Axes",
+                          "com.schriftgestaltung.customParameter.GSFont.Axis Mappings",
                           "com.schriftgestaltung.customParameter.GSFontMaster.Master Name"),
         "libdeleteempty": ("com.schriftgestaltung.DisplayStrings",),
         "inforestorekeys": ["openTypeHeadCreated", "openTypeNamePreferredFamilyName", "openTypeNamePreferredSubfamilyName",
@@ -131,17 +132,17 @@ def process_ufo(ufo, keylists, glyphsdir, args, obskeysfound):
                 obskeysfound[fontname].append(key)
 
         # Special processing for Axis Mappings
-        key = "com.schriftgestaltung.customParameter.GSFont.Axis Mappings"
-        if key in ufo.lib:
-            current =ufo.lib[key]
-            new = dict(current)
-            for x in current:
-                val = current[x]
-                k = list(val.keys())[0]
-                if k[-2:] == ".0": new[x] = {k[0:-2]: val[k]}
-            if current != new:
-                ufo.lib[key] = new
-                logchange(loglist, " key names set to integers. ", key, current, new)
+        #key = "com.schriftgestaltung.customParameter.GSFont.Axis Mappings"
+        #if key in ufo.lib:
+        #    current =ufo.lib[key]
+        #    new = dict(current)
+        #    for x in current:
+        #        val = current[x]
+        #        k = list(val.keys())[0]
+        #        if k[-2:] == ".0": new[x] = {k[0:-2]: val[k]}
+        #    if current != new:
+        #        ufo.lib[key] = new
+        #        logchange(loglist, " key names set to integers. ", key, current, new)
 
         # Special processing for ufo2ft filters
         key = "com.github.googlei18n.ufo2ft.filters"
