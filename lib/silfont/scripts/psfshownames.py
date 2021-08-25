@@ -23,7 +23,8 @@ FAMILY_RELATED_IDS = {
 }
 
 argspec = [
-    ('fonts', {'help': 'ttf font(s) to run report against; wildcards allowed', 'nargs': "+"}, {'type': 'filename'})
+    ('fonts', {'help': 'ttf font(s) to run report against; wildcards allowed', 'nargs': "+"}, {'type': 'filename'}),
+    ('-b', '--bits', {'help': 'Show bits', 'action': 'store_true'}, {}),
 ]
 
 
@@ -36,7 +37,7 @@ def doit(args):
     for pattern in args.fonts:
         for fullpath in glob.glob(pattern):
             (path, base, ext) = splitfn(fullpath)
-            filename_width = max(filename_width, len(fullpath)+1)
+            filename_width = max(filename_width, len(fullpath) + 1)
             fonts.append((fullpath, path, base, ext))
     if fonts == []:
         logger.log("No files match the filespec provided for fonts: " + str(args.fonts), "S")
@@ -54,10 +55,12 @@ def doit(args):
             filename = fullpath + ':'
             filename = f'{filename:{filename_width}} '
         records = names(name_width, font, filename)
+        if args.bits:
+            records += bits(name_width, font, filename)
         if args.quiet:
             print(records[1:])
         else:
-            logger.log("The following family-related values were found in the name table" + records, "P")
+            logger.log("The following family-related values were found in the name, head, and OS/2 tables" + records, "P")
 
 
 def names(name_width, font, filename):
@@ -77,6 +80,46 @@ def names(name_width, font, filename):
             records += f'\n{filename}{name_id:2}: {name_id_name:{name_width}} {record}'
 
     return records
+
+
+def bits(name_width, font, filename):
+    os2 = font['OS/2']
+    head = font['head']
+    records = list()
+
+    record = bit_record(filename, 'usWeightClass', name_width, os2.usWeightClass)
+    records.append(record)
+
+    codes = ''
+    codes += bit2code(os2.fsSelection, 5, 'B')
+    codes += bit2code(os2.fsSelection, 0, 'I')
+    codes += str(os2.usWidthClass)
+    codes += bit2code(os2.fsSelection, 6, 'R')
+    codes += bit2code(os2.fsSelection, 8, 'w')
+    record = bit_record(filename, 'fsSelection', name_width, codes)
+    records.append(record)
+
+    codes = ''
+    codes += bit2code(head.macStyle, 0, 'B')
+    codes += bit2code(head.macStyle, 1, 'I')
+    codes += bit2code(head.macStyle, 5, 'C')
+    record = bit_record(filename, 'macStyle', name_width, codes)
+    records.append(record)
+
+    return '\n' + '\n'.join(records)
+
+
+def bit2code(bit_field, bit, code_letter):
+    code = ' '
+    if bit_field & 1 << bit:
+        code = code_letter
+    return code
+
+
+def bit_record(filename, bit_field_name, name_width, codes):
+    bit_field_name += ':'
+    record = f'{filename}    {bit_field_name:{name_width}} {codes}'
+    return record
 
 
 def cmd(): execute('FT', doit, argspec)
