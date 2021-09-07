@@ -6,65 +6,33 @@ In addition, all scripts will output UFOs in a normalized form, designed to work
 
 Please read the main [documentation](docs/docs.md) is in the docs folder for more details.  Within there is a list of [scripts](docs/scripts.md).
 
-# NOTICE - Python 2 support withdrawn
-
-Pysilfont now requires Python 3.6 or higher.
-
 ## Installation
 
-Pysilfont requires Python 3.6+ and python-setuptools. Some scripts also need other libraries.
+Pysilfont requires Python 3.6+ and pip3. Some scripts also need other libraries.
 
-_Note: We are experiencing issues with upgrades to existing installations and with uninstalling, so these notes are under review._
-
-### macOS and Linux
-
-First clone this repository or download the files from [this github URL](https://github.com/silnrsi/pysilfont.git). Then navigate to the resulting pysilfont directory.
-
-To install the module and the scripts for the current user only run:
-
+### Simple install
+To just install the main scripts without cloning the github repository run:
 ```
-python3 setup.py install --user --record installed-files.txt
+sudo python3 -m pip install git+https://github.com/silnrsi/pysilfont
 ```
 
-or, if multiple users use your system and you want to install for all users, run:
+This will allow you to run the scripts listed in [scripts.md](docs/scripts.md), but won’t give access
+to the the example scripts or give you the code locally to look at
 
+### Full install
+
+First clone this repository or download the files from this [github URL](https://github.com/silnrsi/pysilfont). 
+Then navigate to the resulting pysilfont directory and run:
 ```
-sudo python3 setup.py install --record installed-files.txt
+sudo python3 -m pip install .
 ```
-
-If setup.py fails with a message that python-setuptools is missing, run the following to install it, then run setup.py again.
-
-```
-sudo apt-get install python3-setuptools
-```
-
-If upgrading an existing installation you may need to clean up from previous installations by running this before the commands above:
-
-```
-python3 setup.py clean --all
-```
-
-
-### Windows
-
-(to be added)
+in the pysilfont directory
 
 ### Uninstalling pysilfont
 
-
-
-To uninstall pysilfont run:
-
+pip3 can be used to uninstall pysilfont:
 ```
-sudo -H pip uninstall pysilfont
-```
-
-_This gives an error about an egg file missing, but does successfully complete. If you don't have pip installed, you will need to install it with ```sudo apt install python-pip```_.
-
-To get rid of all the files installed run:
-
-```
-cat installed-files.txt | xargs sudo rm -vr
+sudo pip3 uninstall pysilfont
 ```
 
 ## Contributing to the project
