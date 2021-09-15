@@ -51,6 +51,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfsetassocfeat](#psfsetassocfeat) | Add associate feature info to glif lib based on a csv file |
 | [psfsetassocuids](#psfsetassocuids) | Add associate UID info to glif lib based on a csv file |
 | [psfsetdummydsig](#psfsetdummydsig) | Add a dummy DSIG table into a TTF font |
+| [psfsetglyphdata](#psfsetglyphdata) | Update and/or sort glyph_data.csv based on input file(s) |
 | [psfsetglyphorder](#psfsetglyphorder) | Load glyph order data into public.glyphOrder based on a text file |
 | [psfsetkeys](#psfsetkeys) | Set key(s) with given value(s) in a UFO p-list file |
 | [psfsetmarkcolors](#psfsetmarkcolors) | Set mark colors based on csv file |
@@ -86,7 +87,7 @@ optional arguments:
                         XML file with anchor data
   -a, --analysis        Analysis only; no output font generated  
   -r {X,S,E,P,W,I,V}, --report {X,S,E,P,W,I,V}
-                        Set reporting level for log file
+                        Set reporting level for log fileUpdate and/or sort glyph_data.csv based on input file(s)
 ```
 
 ---
@@ -1072,6 +1073,42 @@ Put a dummy DSIG table into a font in TTF format (using fontTools)
 -i [--ifont] inputfont    (Input file in TTF format)
 -o [--ofont] outputfont   (Output file in TTF format)
 ```
+---
+####  psfsetglyphdata
+Usage: **`psfsetglyphdata [-a ADDCSV] [-d DELETIONS] [-s SORTHEADER] [--sortalpha] [-f] glyphdata [outglyphdata]`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Update a csv containing glyph data.  The updates can be:
+ - Additions, based on an input csv
+ - Deletions, based on a text file with a list of glyph names
+ - Sorting based on a column header
+
+Any combination of the above can be used.
+```
+  glyphdata           glyph_data csv file to update
+  outglyphdata        Alternative output file name
+  -a [--addcsv]       Records to add to glyphdata
+  -d [--deletions]    Records to delete from glyphdata
+  -s [--sortheader]   Column header to sort by
+  --sortalpha         Use with sortheader to sort alphabetically not numerically
+  -f, --force         When adding, if glyph exists, overwrite existing data
+```
+
+The input glyph data file must have column headers, and those must include a glyph_name column.
+
+Headers are optional for ADDCSV:
+ - If no headers, the rows must contain the same number of fields (and in the same order) as the glyph data file
+ - If headers are used, then there must be a glyph_name header.
+ - Headers can be in any order, and if glyph data headers are missing, then those fields will be left empty
+
+If `--sortheader` is supplied then the file will be sorted by that column; 
+otherwise the new records will be added to the end of the file.
+By default sorting is done numerically, but `--sortalpha` can be used for alphabetic sorting.
+
+If a glyph already exists, it won't be overwritten unless
+ - The glyph is in DELETIONS, since they are processed before additions
+ - `--force` is used to force overwriting of any existing glyphs
 
 ---
 ####  psfsetglyphorder

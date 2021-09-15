@@ -271,6 +271,7 @@ class csvreader(object):    # Iterator for csv files, skipping comments and chec
         except Exception as e:
             print(e)
             sys.exit(1)
+        self.file = file
         self.reader = csv.reader(file)
         # Find the first non-comment line then reset so __iter__ still returns the first line
         # This is so scripts can analyse first line (eg to look for headers) before starting iterating
