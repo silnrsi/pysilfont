@@ -23,7 +23,7 @@ FAMILY_RELATED_IDS = {
 }
 
 argspec = [
-    ('fonts', {'help': 'ttf font(s) to run report against; wildcards allowed', 'nargs': "+"}, {'type': 'filename'}),
+    ('font', {'help': 'ttf font(s) to run report against; wildcards allowed', 'nargs': "+"}, {'type': 'filename'}),
     ('-b', '--bits', {'help': 'Show bits', 'action': 'store_true'}, {}),
 ]
 
@@ -34,7 +34,7 @@ def doit(args):
 
     fonts = []
     filename_width = 0
-    for pattern in args.fonts:
+    for pattern in args.font:
         for fullpath in glob.glob(pattern):
             (path, base, ext) = splitfn(fullpath)
             filename_width = max(filename_width, len(fullpath) + 1)
@@ -91,26 +91,43 @@ def bits(name_width, font, filename):
     records.append(record)
 
     codes = ''
-    codes += bit2code(os2.fsSelection, 5, 'B')
-    codes += bit2code(os2.fsSelection, 0, 'I')
-    codes += str(os2.usWidthClass)
-    codes += bit2code(os2.fsSelection, 6, 'R')
-    codes += bit2code(os2.fsSelection, 8, 'w')
-    record = bit_record(filename, 'fsSelection', name_width, codes)
-    records.append(record)
+    codes += bit2code(os2.fsSelection, 6, 'W-')
+    if codes != '':
+        record = bit_record(filename, 'Regular', name_width, codes)
+        records.append(record)
 
     codes = ''
-    codes += bit2code(head.macStyle, 0, 'B')
-    codes += bit2code(head.macStyle, 1, 'I')
+    codes += bit2code(os2.fsSelection, 5, 'W')
+    codes += bit2code(head.macStyle, 0, 'M')
+    if codes != '':
+        record = bit_record(filename, 'Bold', name_width, codes)
+        records.append(record)
+
+    codes = ''
+    codes += bit2code(os2.fsSelection, 0, 'W')
+    codes += bit2code(head.macStyle, 1, 'M')
+    if codes != '':
+        record = bit_record(filename, 'Italic', name_width, codes)
+        records.append(record)
+
+    codes = ''
+    codes += str(os2.usWidthClass)
     codes += bit2code(head.macStyle, 5, 'C')
-    record = bit_record(filename, 'macStyle', name_width, codes)
-    records.append(record)
+    if codes != '':
+        record = bit_record(filename, 'Condensed', name_width, codes)
+        records.append(record)
+
+    codes = ''
+    codes += bit2code(os2.fsSelection, 8, '8')
+    if codes != '':
+        record = bit_record(filename, 'WWS', name_width, codes)
+        records.append(record)
 
     return '\n' + '\n'.join(records)
 
 
 def bit2code(bit_field, bit, code_letter):
-    code = ' '
+    code = ''
     if bit_field & 1 << bit:
         code = code_letter
     return code

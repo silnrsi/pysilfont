@@ -1269,11 +1269,18 @@ Note that only fontinfo.plist is updated, so the font is not normalized and Pysi
 
 ---
 #### psfshownames
-Usage: **`psfshownames ifont`**
+Usage: **`psfshownames [--bits] ifont [infont1 [ifont2]]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-Show fields from the name table that control linking font styles into font families.
+Show fields from the name table and optionally various bits
+that control linking font styles into font families.
+
+Example usage:
+
+```
+psfshownames --bits Padauk-Regular.ttf
+```
 
 ---
 #### psfsubset
