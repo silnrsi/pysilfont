@@ -26,6 +26,7 @@ def doit(args):
     if glyphsfile is None:
         (path,base,ext) = splitfn(args.designspace)
         glyphsfile = os.path.join(path, base + ".glyphs" )
+        backupname = os.path.join(path, base + "-backup.glyphs" )
     logger = args.logger
     logger.log("Opening designSpace file", "I")
     ds = DesignSpaceDocument()
@@ -33,8 +34,9 @@ def doit(args):
     logger.log("Now creating glyphs object", "I")
     glyphsfont = to_glyphs(ds, minimize_ufo_diffs=not(args.no_preserve_glyphsapp_metadata))
     if os.path.exists(glyphsfile): # Create a backup
-        logger.log("Renaming existing glyphs file to " + glyphsfile + ".backup", "I")
-        os.renames(glyphsfile, glyphsfile + ".backup")
+
+        logger.log("Renaming existing glyphs file to " + backupname, "I")
+        os.renames(glyphsfile, backupname)
     logger.log("Writing glyphs file: " + glyphsfile, "I")
     glyphsfont.save(glyphsfile)
 
