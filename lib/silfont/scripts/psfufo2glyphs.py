@@ -32,9 +32,9 @@ def doit(args):
     ds.read(args.designspace)
     logger.log("Now creating glyphs object", "I")
     glyphsfont = to_glyphs(ds, minimize_ufo_diffs=not(args.no_preserve_glyphsapp_metadata))
-    if os.path.exists(glyphsfile): # Delete file first so any xattr are not preserved - eg com.schriftgestalt.UIStore
-        logger.log("Deleting existing glyphs file: " + glyphsfile, "I")
-        os.remove(glyphsfile)
+    if os.path.exists(glyphsfile): # Create a backup
+        logger.log("Renaming existing glyphs file to " + glyphsfile + ".backup", "I")
+        os.renames(glyphsfile, glyphsfile + ".backup")
     logger.log("Writing glyphs file: " + glyphsfile, "I")
     glyphsfont.save(glyphsfile)
 
