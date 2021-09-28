@@ -26,7 +26,9 @@ def doit(args):
     if glyphsfile is None:
         (path,base,ext) = splitfn(args.designspace)
         glyphsfile = os.path.join(path, base + ".glyphs" )
-        backupname = os.path.join(path, base + "-backup.glyphs" )
+    else:
+        (path, base, ext) = splitfn(glyphsfile)
+    backupname = os.path.join(path, base + "-backup.glyphs" )
     logger = args.logger
     logger.log("Opening designSpace file", "I")
     ds = DesignSpaceDocument()
