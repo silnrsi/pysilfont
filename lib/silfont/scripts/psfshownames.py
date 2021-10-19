@@ -110,12 +110,23 @@ def bits(name_width, font, filename):
         record = bit_record(filename, 'Italic', name_width, codes)
         records.append(record)
 
+    us_width_class = os2.usWidthClass
     codes = ''
-    codes += str(os2.usWidthClass)
-    codes += bit2code(head.macStyle, 5, 'C')
-    if codes != '':
-        record = bit_record(filename, 'Condensed', name_width, codes)
-        records.append(record)
+    codes += str(us_width_class)
+    if us_width_class == 5:
+        if codes != '':
+            record = bit_record(filename, 'Width-Normal', name_width, codes)
+            records.append(record)
+    if us_width_class < 5:
+        codes += bit2code(head.macStyle, 5, 'M')
+        if codes != '':
+            record = bit_record(filename, 'Width-Condensed', name_width, codes)
+            records.append(record)
+    if us_width_class > 5:
+        codes += bit2code(head.macStyle, 6, 'M')
+        if codes != '':
+            record = bit_record(filename, 'Width-Extended', name_width, codes)
+            records.append(record)
 
     codes = ''
     codes += bit2code(os2.fsSelection, 8, '8')
