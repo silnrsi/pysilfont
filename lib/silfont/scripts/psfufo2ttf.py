@@ -14,7 +14,7 @@ import defcon, ufo2ft.outlineCompiler, ufo2ft.preProcessor, ufo2ft.filters
 argspec = [
     ('iufo', {'help': 'Input UFO folder'}, {}),
     ('ottf', {'help': 'Output ttf file name'}, {}),
-    ('--removeOverlap', {'help': 'Merge overlapping contours', 'action': 'store_true'}, {}),
+    ('--removeOverlaps', {'help': 'Merge overlapping contours', 'action': 'store_true'}, {}),
     ('-l', '--log', {'help': 'Optional log file'}, {'type': 'outfile', 'def': '_ufo2ttf.log', 'optlog': True})]
 
 PUBLIC_PREFIX = 'public.'
@@ -39,7 +39,7 @@ def doit(args):
     args.logger.log('Converting UFO to ttf without OT', 'P')
 
     # default arg value for TTFPreProcessor class: removeOverlaps = False, convertCubics = True
-    preProcessor = ufo2ft.preProcessor.TTFPreProcessor(ufo, removeOverlaps = args.removeOverlap, convertCubics=True, flattenComponents = True)
+    preProcessor = ufo2ft.preProcessor.TTFPreProcessor(ufo, removeOverlaps = args.removeOverlaps, convertCubics=True, flattenComponents = True)
 
     # Need to handle cases if decomposeTransformedComponents and/or flattenComponents are set in com.github.googlei18n.ufo2ft.filters with lib.plist
     dtc = ftpos = None
