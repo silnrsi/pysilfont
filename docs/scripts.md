@@ -1368,13 +1368,16 @@ As per prior technology, the OpenType feature alias names do not distinguish bet
 
 ---
 ####  psfufo2glyphs
-Usage: **`psfufo2glyphs designspace [glyphsfile]`**
+Usage: **`psfufo2glyphs [--glyphsformat GLYPHSFORMAT] designspace [glyphsfile]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
 This generate a glyphs files from a designspace file and associated UFO(s).
 
 If no glyphsfile is specified, one will be created in the same directory as the designspace file and based on the name of the designspace file.
+
+By default it creates the glyphs file in glyphs v2 file format, but this can be changed using `--glyphsformat 3`.
+Note that round-tripping using v3 format has not yet been tested.
 
 Example usage:
 
@@ -1386,15 +1389,19 @@ Note: This is just bare-bones code at present so does the same as glyphsLib's uf
 
 ---
 #### psfufo2ttf
-Usage: **`psfufo2ttf [--removeOverlaps] iufo ottf`**
+Usage: **`psfufo2ttf [--removeOverlaps] [--decomposeComponenets] iufo ottf`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-This generates a ttf file without OpenType tables from a UFO.
-
-It is based on ufo2ft and uses ufo2ft's decomposeTransformedComponents and flattenComponents filters.
+This is based on ufo2ft and generates a ttf file without OpenType tables from a UFO.
 
 If `--removeOverlaps` is used it merges overlapping contours
+
+ufo2ft filters
+
+- The decomposeTransformedComponents and flattenComponents filters are always used
+- decomposeComponentes is used if `--decomposeComponenets` is set (or the filter is set in lib.plist)
+- Other ufo2ft filters can also be set in lib-plist - see ufo2ft documentation for details
 
 ---
 #### psfversion
