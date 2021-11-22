@@ -15,7 +15,9 @@ argspec = [
     ('designspace', {'help': 'Input designSpace file'}, {'type': 'filename'}),
     ('glyphsfile', {'help': 'Output glyphs file name', 'nargs': '?' }, {'type': 'filename', 'def': None}),
     ('--no_preserve_glyphsapp_metadata', {'help': "Don't store some glyphs data in lib.plist" , 'action': 'store_true', 'default': False}, {}),
-#    ('--nofixes', {'help': 'Bypass code fixing data', 'action': 'store_true', 'default': False}, {}),
+    ('--glyphsformat', {'help': "Format for glyphs file (2 or 3)", 'default': "2"}, {}),
+
+    #    ('--nofixes', {'help': 'Bypass code fixing data', 'action': 'store_true', 'default': False}, {}),
     ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': '_ufo2glyphs.log'})]
 
 # This is just bare-bones code at present so does the same as glyphsLib's ufo2glyphs!
@@ -23,20 +25,26 @@ argspec = [
 
 def doit(args):
     glyphsfile = args.glyphsfile
+    logger = args.logger
+    gformat = args.glyphsformat
+    if gformat in ("2","3"):
+        gformat = int(gformat)
+    else:
+        logger.log("--glyphsformat must be 2 or 3", 'S')
     if glyphsfile is None:
         (path,base,ext) = splitfn(args.designspace)
         glyphsfile = os.path.join(path, base + ".glyphs" )
     else:
         (path, base, ext) = splitfn(glyphsfile)
     backupname = os.path.join(path, base + "-backup.glyphs" )
-    logger = args.logger
     logger.log("Opening designSpace file", "I")
     ds = DesignSpaceDocument()
     ds.read(args.designspace)
     logger.log("Now creating glyphs object", "I")
     glyphsfont = to_glyphs(ds, minimize_ufo_diffs=not(args.no_preserve_glyphsapp_metadata))
-    if os.path.exists(glyphsfile): # Create a backup
+    glyphsfont.format_version = gformat
 
+    if os.path.exists(glyphsfile): # Create a backup
         logger.log("Renaming existing glyphs file to " + backupname, "I")
         os.renames(glyphsfile, backupname)
     logger.log("Writing glyphs file: " + glyphsfile, "I")

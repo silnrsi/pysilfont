@@ -15,6 +15,7 @@ argspec = [
     ('iufo', {'help': 'Input UFO folder'}, {}),
     ('ottf', {'help': 'Output ttf file name'}, {}),
     ('--removeOverlaps', {'help': 'Merge overlapping contours', 'action': 'store_true'}, {}),
+    ('--decomposeComponents', {'help': 'Decompose componenets', 'action': 'store_true'}, {}),
     ('-l', '--log', {'help': 'Optional log file'}, {'type': 'outfile', 'def': '_ufo2ttf.log', 'optlog': True})]
 
 PUBLIC_PREFIX = 'public.'
@@ -41,13 +42,18 @@ def doit(args):
     # default arg value for TTFPreProcessor class: removeOverlaps = False, convertCubics = True
     preProcessor = ufo2ft.preProcessor.TTFPreProcessor(ufo, removeOverlaps = args.removeOverlaps, convertCubics=True, flattenComponents = True)
 
-    # Need to handle cases if decomposeTransformedComponents and/or flattenComponents are set in com.github.googlei18n.ufo2ft.filters with lib.plist
-    dtc = ftpos = None
+    # Need to handle cases if filters that are used are set in com.github.googlei18n.ufo2ft.filters with lib.plist
+    dc = dtc = ftpos = None
     for (i,filter) in enumerate(preProcessor.preFilters):
+        if isinstance(filter, ufo2ft.filters.decomposeComponents.DecomposeComponentsFilter):
+            dc = True
         if isinstance(filter, ufo2ft.filters.decomposeTransformedComponents.DecomposeTransformedComponentsFilter):
             dtc = True
         if isinstance(filter, ufo2ft.filters.flattenComponents.FlattenComponentsFilter):
             ftpos = i
+    # Add decomposeComponents if --decomposeComponents is used
+    if args.decomposeComponents and not dc: preProcessor.preFilters.append(
+        ufo2ft.filters.decomposeComponents.DecomposeComponentsFilter())
     # Add decomposeTransformedComponents if not already set via lib.plist
     if not dtc: preProcessor.preFilters.append(ufo2ft.filters.decomposeTransformedComponents.DecomposeTransformedComponentsFilter())
     # Remove flattenComponents if set via lib.plist since we set it via flattenComponents = True when setting up the preprocessor
