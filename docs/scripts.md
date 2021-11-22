@@ -1389,7 +1389,7 @@ Note: This is just bare-bones code at present so does the same as glyphsLib's uf
 
 ---
 #### psfufo2ttf
-Usage: **`psfufo2ttf [--removeOverlaps] [--decomposeComponenets] iufo ottf`**
+Usage: **`psfufo2ttf [--removeOverlaps] [--decomposeComponents] iufo ottf`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
@@ -1400,8 +1400,8 @@ If `--removeOverlaps` is used it merges overlapping contours
 ufo2ft filters
 
 - The decomposeTransformedComponents and flattenComponents filters are always used
-- decomposeComponentes is used if `--decomposeComponenets` is set (or the filter is set in lib.plist)
-- Other ufo2ft filters can also be set in lib-plist - see ufo2ft documentation for details
+- decomposeComponents is used if `--decomposeComponents` is set (or the filter is set in lib.plist)
+- Other ufo2ft filters can also be set in lib.plist - see ufo2ft documentation for details
 
 ---
 #### psfversion

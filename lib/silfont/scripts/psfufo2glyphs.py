@@ -14,7 +14,6 @@ import os
 argspec = [
     ('designspace', {'help': 'Input designSpace file'}, {'type': 'filename'}),
     ('glyphsfile', {'help': 'Output glyphs file name', 'nargs': '?' }, {'type': 'filename', 'def': None}),
-    ('--no_preserve_glyphsapp_metadata', {'help': "Don't store some glyphs data in lib.plist" , 'action': 'store_true', 'default': False}, {}),
     ('--glyphsformat', {'help': "Format for glyphs file (2 or 3)", 'default': "2"}, {}),
 
     #    ('--nofixes', {'help': 'Bypass code fixing data', 'action': 'store_true', 'default': False}, {}),
@@ -41,7 +40,7 @@ def doit(args):
     ds = DesignSpaceDocument()
     ds.read(args.designspace)
     logger.log("Now creating glyphs object", "I")
-    glyphsfont = to_glyphs(ds, minimize_ufo_diffs=not(args.no_preserve_glyphsapp_metadata))
+    glyphsfont = to_glyphs(ds)
     glyphsfont.format_version = gformat
 
     if os.path.exists(glyphsfile): # Create a backup
