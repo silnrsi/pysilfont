@@ -45,33 +45,30 @@ argspec = [
 
 def doit(args):
     logger = args.logger
-    name_width = max([len(name_id_name) for name_id_name in FAMILY_RELATED_IDS.values()]) + 1
 
-    fonts = []
     font_infos = []
     filename_width = 0
     for pattern in args.font:
         for fullpath in glob.glob(pattern):
-            (path, base, ext) = splitfn(fullpath)
+            logger.log(f'Processing {fullpath}', 'P')
+            try:
+                font = TTFont(fullpath)
+            except Exception as e:
+                logger.log(f'Error opening {fullpath}: {e}', 'E')
+                break
+
+            font_info = FontInfo()
+            font_info.filename = fullpath
+            names(font, font_info)
+            bits(font, font_info)
+            font_infos.append(font_info)
+
             filename_width = max(filename_width, len(fullpath) + 1)
-            fonts.append((fullpath, path, base, ext))
-    if fonts == []:
+
+    if not font_infos:
         logger.log("No files match the filespec provided for fonts: " + str(args.fonts), "S")
 
-    for (fullpath, path, base, ext) in fonts:
-        logger.log(f'Processing {fullpath}', 'P')
-        try:
-            font = TTFont(fullpath)
-        except Exception as e:
-            logger.log(f'Error opening {fullpath}: {e}', 'E')
-            break
-
-        font_info = FontInfo()
-        font_info.filename = fullpath
-        names(font, font_info)
-        bits(font, font_info)
-        font_infos.append(font_info)
-
+    name_width = max([len(name_id_name) for name_id_name in FAMILY_RELATED_IDS.values()]) + 1
     for font_info in font_infos:
         filename = ''
         if len(font_infos) > 1:
@@ -123,6 +120,13 @@ def bits(font, font_info):
     font_info.wws = bit2code(os2.fsSelection, 8, '8')
 
 
+def bit2code(bit_field, bit, code_letter):
+    code = ''
+    if bit_field & 1 << bit:
+        code = code_letter
+    return code
+
+
 def multiline_names(name_width, font_info, filename):
     records = ''
     for name_id in sorted(font_info.name_table):
@@ -141,13 +145,6 @@ def multiline_bits(name_width, font_info, filename):
     records += bit_record(filename, font_info.width_name, name_width, font_info.width)
     records += bit_record(filename, 'WWS', name_width, font_info.wws)
     return records
-
-
-def bit2code(bit_field, bit, code_letter):
-    code = ''
-    if bit_field & 1 << bit:
-        code = code_letter
-    return code
 
 
 def bit_record(filename, bit_field_name, name_width, codes):
