@@ -1269,12 +1269,13 @@ Note that only fontinfo.plist is updated, so the font is not normalized and Pysi
 
 ---
 #### psfshownames
-Usage: **`psfshownames [--bits] ifont [infont1 [ifont2]]`**
+Usage: **`psfshownames [--bits] [--multiline] ifont [infont1 [ifont2]]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
 Show fields from the name table and optionally various bits
 that control linking font styles into font families.
+The default output is a table, use the `--multiline` option to produce a line oriented output.
 
 Example usage:
 

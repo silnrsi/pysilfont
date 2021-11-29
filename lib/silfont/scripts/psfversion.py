@@ -23,6 +23,7 @@ def cmd() :
         ('mutatorMath', '?', ''),
         ('odf', '?', ''),
         ('palaso', '?', ''),
+        ('tabulate', '?', ''),
         ('ufo2ft', '?', ''),
         ('ufoLib2', '?', ''),
         )

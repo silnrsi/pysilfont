@@ -8,6 +8,7 @@ __author__ = 'Bobby de Vos'
 from silfont.core import execute, splitfn
 from fontTools.ttLib import TTFont
 import glob
+import tabulate
 
 WINDOWS_ENGLISH_IDS = 3, 1, 0x409
 
@@ -40,6 +41,7 @@ class FontInfo:
 argspec = [
     ('font', {'help': 'ttf font(s) to run report against; wildcards allowed', 'nargs': "+"}, {'type': 'filename'}),
     ('-b', '--bits', {'help': 'Show bits', 'action': 'store_true'}, {}),
+    ('-m', '--multiline', {'help': 'Output multi-line key:values instead of a table', 'action': 'store_true'}, {}),
 ]
 
 
@@ -59,31 +61,67 @@ def doit(args):
 
             font_info = FontInfo()
             font_info.filename = fullpath
-            names(font, font_info)
-            bits(font, font_info)
+            get_names(font, font_info)
+            get_bits(font, font_info)
             font_infos.append(font_info)
 
+            # Only needed for multi-line mode
             filename_width = max(filename_width, len(fullpath) + 1)
 
     if not font_infos:
         logger.log("No files match the filespec provided for fonts: " + str(args.fonts), "S")
 
-    name_width = max([len(name_id_name) for name_id_name in FAMILY_RELATED_IDS.values()]) + 1
-    for font_info in font_infos:
-        filename = ''
-        if len(font_infos) > 1:
-            filename = font_info.filename + ':'
-            filename = f'{filename:{filename_width}} '
-        records = multiline_names(name_width, font_info, filename)
-        if args.bits:
-            records += multiline_bits(name_width, font_info, filename)
-        if args.quiet:
-            print(records[1:])
-        else:
-            logger.log("The following family-related values were found in the name, head, and OS/2 tables" + records, "P")
+    if args.multiline:
+        # Multi-line mode
+        name_width = max([len(name_id_name) for name_id_name in FAMILY_RELATED_IDS.values()]) + 1
+        for font_info in font_infos:
+            filename = ''
+
+            if len(font_infos) > 1:
+                filename = font_info.filename + ':'
+                filename = f'{filename:{filename_width}} '
+
+            records = multiline_names(name_width, font_info, filename)
+            if args.bits:
+                records += multiline_bits(name_width, font_info, filename)
+            if args.quiet:
+                print(records[1:])
+            else:
+                logger.log("The following family-related values were found in the name, head, and OS/2 tables" + records, "P")
+    else:
+        # Table mode
+
+        # Record information for headers
+        headers = table_headers(args.bits)
+
+        # Record information for each instance.
+        records = list()
+        for font_info in font_infos:
+            record = table_records(font_info, args.bits)
+            records.append(record)
+
+        # Not all fonts in a family with have the same name ids present,
+        # for instance 16: Typographic/Preferred family is only needed in
+        # non-RIBBI familes, and even then only for the non-RIBBI instances.
+        # Also, not all the bit fields are present in each instance.
+        # Therefore, columns with no data in any instance are removed.
+        indices = list(range(len(headers)))
+        indices.reverse()
+        for index in indices:
+            empty = True
+            for record in records:
+                data = record[index]
+                if data:
+                    empty = False
+            if empty:
+                for record in records + [headers]:
+                    del record[index]
+
+        # Format 'pipe' is nicer for GitHub, but is wider on a command line
+        print(tabulate.tabulate(records, headers, tablefmt='simple'))
 
 
-def names(font, font_info):
+def get_names(font, font_info):
     table = font['name']
     (platform_id, encoding_id, language_id) = WINDOWS_ENGLISH_IDS
 
@@ -98,7 +136,7 @@ def names(font, font_info):
             font_info.name_table[name_id] = str(record)
 
 
-def bits(font, font_info):
+def get_bits(font, font_info):
     os2 = font['OS/2']
     head = font['head']
     font_info.weight_class = os2.usWeightClass
@@ -153,6 +191,35 @@ def bit_record(filename, bit_field_name, name_width, codes):
         record = f'\n{filename}    {bit_field_name:{name_width}} {codes}'
         return record
     return ''
+
+
+def table_headers(bits):
+    headers = ['filename']
+    for name_id in sorted(FAMILY_RELATED_IDS):
+        name_id_key = FAMILY_RELATED_IDS[name_id]
+        header = f'{name_id}: {name_id_key}'
+        if len(header) > 20:
+            header = header.replace(' ', '\n')
+            header = header.replace('/', '\n')
+        headers.append(header)
+    if bits:
+        headers.extend(['wght', 'R', 'B', 'I', 'wdth', 'WWS'])
+    return headers
+
+
+def table_records(font_info, bits):
+    record = [font_info.filename]
+    for name_id in sorted(FAMILY_RELATED_IDS):
+        name_id_value = font_info.name_table.get(name_id, '')
+        record.append(name_id_value)
+    if bits:
+        record.append(font_info.weight_class)
+        record.append(font_info.regular)
+        record.append(font_info.bold)
+        record.append(font_info.italic)
+        record.append(font_info.width)
+        record.append(font_info.wws)
+    return record
 
 
 def cmd(): execute('FT', doit, argspec)
