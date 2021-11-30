@@ -8,6 +8,7 @@ __author__ = 'Bobby de Vos'
 from silfont.core import execute, splitfn
 from fontTools.ttLib import TTFont
 import glob
+from operator import attrgetter, methodcaller
 import tabulate
 
 WINDOWS_ENGLISH_IDS = 3, 1, 0x409
@@ -21,6 +22,7 @@ FAMILY_RELATED_IDS = {
     17: 'Typographic/Preferred subfamily',
     21: 'WWS family',
     22: 'WWS subfamily',
+    25: 'Variations PostScript Name Prefix',
 }
 
 
@@ -36,6 +38,9 @@ class FontInfo:
         self.width_name = ''
         self.width_class = 0
         self.wws = ''
+
+    def sort_fullname(self):
+        return self.name_table[4]
 
 
 argspec = [
@@ -70,6 +75,10 @@ def doit(args):
 
     if not font_infos:
         logger.log("No files match the filespec provided for fonts: " + str(args.fonts), "S")
+
+    font_infos.sort(key=methodcaller('sort_fullname'))
+    font_infos.sort(key=attrgetter('width_class'), reverse=True)
+    font_infos.sort(key=attrgetter('weight_class'))
 
     if args.multiline:
         # Multi-line mode
