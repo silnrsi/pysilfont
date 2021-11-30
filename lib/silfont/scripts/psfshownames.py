@@ -54,7 +54,6 @@ def doit(args):
     logger = args.logger
 
     font_infos = []
-    filename_width = 0
     for pattern in args.font:
         for fullpath in glob.glob(pattern):
             logger.log(f'Processing {fullpath}', 'P')
@@ -70,9 +69,6 @@ def doit(args):
             get_bits(font, font_info)
             font_infos.append(font_info)
 
-            # Only needed for multi-line mode
-            filename_width = max(filename_width, len(fullpath) + 1)
-
     if not font_infos:
         logger.log("No files match the filespec provided for fonts: " + str(args.fonts), "S")
 
@@ -80,23 +76,23 @@ def doit(args):
     font_infos.sort(key=attrgetter('width_class'), reverse=True)
     font_infos.sort(key=attrgetter('weight_class'))
 
+    rows = list()
     if args.multiline:
         # Multi-line mode
-        name_width = max([len(name_id_name) for name_id_name in FAMILY_RELATED_IDS.values()]) + 1
         for font_info in font_infos:
-            filename = ''
-
-            if len(font_infos) > 1:
-                filename = font_info.filename + ':'
-                filename = f'{filename:{filename_width}} '
-
-            records = multiline_names(name_width, font_info, filename)
+            for line in multiline_names(font_info):
+                rows.append(line)
             if args.bits:
-                records += multiline_bits(name_width, font_info, filename)
-            if args.quiet:
-                print(records[1:])
-            else:
-                logger.log("The following family-related values were found in the name, head, and OS/2 tables" + records, "P")
+                for line in multiline_bits(font_info):
+                    rows.append(line)
+        align = ['left', 'right']
+        if len(font_infos) == 1:
+            del align[0]
+            for row in rows:
+                del row[0]
+        output = tabulate.tabulate(rows, tablefmt='plain', colalign=align)
+        output = output.replace(': ', ':')
+        output = output.replace('#', '')
     else:
         # Table mode
 
@@ -104,10 +100,9 @@ def doit(args):
         headers = table_headers(args.bits)
 
         # Record information for each instance.
-        records = list()
         for font_info in font_infos:
             record = table_records(font_info, args.bits)
-            records.append(record)
+            rows.append(record)
 
         # Not all fonts in a family with have the same name ids present,
         # for instance 16: Typographic/Preferred family is only needed in
@@ -118,16 +113,22 @@ def doit(args):
         indices.reverse()
         for index in indices:
             empty = True
-            for record in records:
-                data = record[index]
+            for row in rows:
+                data = row[index]
                 if data:
                     empty = False
             if empty:
-                for record in records + [headers]:
-                    del record[index]
+                for row in rows + [headers]:
+                    del row[index]
 
         # Format 'pipe' is nicer for GitHub, but is wider on a command line
-        print(tabulate.tabulate(records, headers, tablefmt='simple'))
+        output = tabulate.tabulate(rows, headers, tablefmt='simple')
+
+    # Print output from either mode
+    if args.quiet:
+        print(output)
+    else:
+        logger.log('The following family-related values were found in the name, head, and OS/2 tables\n' + output, 'P')
 
 
 def get_names(font, font_info):
@@ -174,32 +175,28 @@ def bit2code(bit_field, bit, code_letter):
     return code
 
 
-def multiline_names(name_width, font_info, filename):
-    records = ''
+def multiline_names(font_info):
     for name_id in sorted(font_info.name_table):
-        name_id_name = FAMILY_RELATED_IDS[name_id] + ':'
-        record = font_info.name_table[name_id]
-        records += f'\n{filename}{name_id:2}: {name_id_name:{name_width}} {record}'
-    return records
+        line = [font_info.filename + ':',
+                str(name_id) + ':',
+                FAMILY_RELATED_IDS[name_id] + ':',
+                font_info.name_table[name_id]
+                ]
+        yield line
 
 
-def multiline_bits(name_width, font_info, filename):
-    records = ''
-    records += bit_record(filename, 'usWeightClass', name_width, font_info.weight_class)
-    records += bit_record(filename, 'Regular', name_width, font_info.regular)
-    records += bit_record(filename, 'Bold', name_width, font_info.bold)
-    records += bit_record(filename, 'Italic', name_width, font_info.italic)
-    records += bit_record(filename, font_info.width_name, name_width, font_info.width)
-    records += bit_record(filename, 'WWS', name_width, font_info.wws)
-    return records
-
-
-def bit_record(filename, bit_field_name, name_width, codes):
-    if codes:
-        bit_field_name += ':'
-        record = f'\n{filename}    {bit_field_name:{name_width}} {codes}'
-        return record
-    return ''
+def multiline_bits(font_info):
+    labels = ('usWeightClass', 'Regular', 'Bold', 'Italic', font_info.width_name, 'WWS')
+    values = (font_info.weight_class, font_info.regular, font_info.bold, font_info.italic, font_info.width, font_info.wws)
+    for label, value in zip(labels, values):
+        if not value:
+            continue
+        line = [font_info.filename + ':',
+                '#',
+                str(label) + ':',
+                value
+                ]
+        yield line
 
 
 def table_headers(bits):

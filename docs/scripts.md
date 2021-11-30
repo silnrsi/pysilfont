@@ -1277,6 +1277,19 @@ Show fields from the name table and optionally various bits
 that control linking font styles into font families.
 The default output is a table, use the `--multiline` option to produce a line oriented output.
 
+Fonts have bits to indicate if they are a Regular (R), Bold (B), and or Italic (I) style.
+There are two groups of bits, one for Microsoft Windows (W), one for Apple macOS (M).
+If a bit for a particular style is set a W and/or M is shown to indicate which platform's
+set of bits is set. For Regular, there is not a corresponding bit for macOS.
+Therefore, if the Regular bit is set for Windows, then W- is displayed.
+The dash (-) indicates that macOS does not have that particular bit, not that the bit is 0.
+
+Similarly, there are bits for macOS to indicate if a font is normal, condensed, or extended width.
+Windows uses a number to indicate the width.
+As with the Regular style, there is no bit on macOS for normal width.
+
+More details are at the [Name String Example](https://docs.microsoft.com/en-us/typography/opentype/spec/namesmp) from Microsoft.
+
 Example usage:
 
 ```
