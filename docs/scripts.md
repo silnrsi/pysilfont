@@ -780,17 +780,20 @@ except that the delimiter is a comma, not a semi-colon.
 
 ---
 ####  psfglyphs2ufo
-Usage: **`psfglyphs2ufo [--nofixes] [--nofea] [--restore] fontfile.glyphs masterdir`**
+Usage: **`psfglyphs2ufo [--nofixes] [--nofea] [--restorefea] [--restore] fontfile.glyphs masterdir`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
 Exports one UFO file per master found in the fontfile.glyphs file, and places it in the directory specified as masterdir.
 
-In a round-trip ufo -> glyphs -> ufo there is currently there is some data loss in the standard glyphs -> ufo conversion, so (unless `--nofixes` is set) the script fixes some data and restores some fields from the original ufos if they are present in the masterdir.
+In a round-trip ufo -> glyphs -> ufo there is currently there is some data loss in the standard glyphs
+-> ufo conversion, so (unless `--nofixes` is set) the script fixes some data and restores some fields from the original ufos if they are present in the masterdir.
 
 Additional fields to restore can be added using `-r, --restore`. This will restore the fields listed if found in either fontinfo.plist or lib.plist
 
 Currently features.fea does not round-trip successfully, so `--nofea` can be used to suppress the production of a features.fea file.
+
+To leave any features.fea files in existing UFOs untouched use `--restorefea` 
 
 Example usage:
 
@@ -1382,7 +1385,7 @@ As per prior technology, the OpenType feature alias names do not distinguish bet
 
 ---
 ####  psfufo2glyphs
-Usage: **`psfufo2glyphs [--glyphsformat GLYPHSFORMAT] designspace [glyphsfile]`**
+Usage: **`psfufo2glyphs [--glyphsformat GLYPHSFORMAT] [--nofea] designspace [glyphsfile]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
@@ -1392,6 +1395,8 @@ If no glyphsfile is specified, one will be created in the same directory as the 
 
 By default it creates the glyphs file in glyphs v2 file format, but this can be changed using `--glyphsformat 3`.
 Note that round-tripping using v3 format has not yet been tested.
+
+Use `--nofea` to suppress processing of any features.fea files present in the UFOs.
 
 Example usage:
 

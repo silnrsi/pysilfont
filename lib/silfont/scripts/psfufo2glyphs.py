@@ -15,7 +15,7 @@ argspec = [
     ('designspace', {'help': 'Input designSpace file'}, {'type': 'filename'}),
     ('glyphsfile', {'help': 'Output glyphs file name', 'nargs': '?' }, {'type': 'filename', 'def': None}),
     ('--glyphsformat', {'help': "Format for glyphs file (2 or 3)", 'default': "2"}, {}),
-
+    ('--nofea', {'help': 'Do not process features.fea', 'action': 'store_true', 'default': False}, {}),
     #    ('--nofixes', {'help': 'Bypass code fixing data', 'action': 'store_true', 'default': False}, {}),
     ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': '_ufo2glyphs.log'})]
 
@@ -39,8 +39,26 @@ def doit(args):
     logger.log("Opening designSpace file", "I")
     ds = DesignSpaceDocument()
     ds.read(args.designspace)
+    if args.nofea: # Need to rename the features.fea files so they are not processed
+        origfeas = []; hiddenfeas = []
+        for source in ds.sources:
+            origfea = os.path.join(source.path, "features.fea")
+            hiddenfea = os.path.join(source.path, "features.hidden")
+            if os.path.exists(origfea):
+                logger.log(f'Renaming {origfea} to {hiddenfea}', "I")
+                os.rename(origfea, hiddenfea)
+                origfeas.append(origfea)
+                hiddenfeas.append(hiddenfea)
+            else:
+                logger.log(f'No features.fea found in {source.path}')
     logger.log("Now creating glyphs object", "I")
     glyphsfont = to_glyphs(ds)
+    if args.nofea: # Now need to reverse renamimg of features.fea files
+        print(origfeas)
+        print(hiddenfeas)
+        for i, origfea in enumerate(origfeas):
+            logger.log(f'Renaming {hiddenfeas[i]} back to {origfea}', "I")
+            os.rename(hiddenfeas[i], origfea)
     glyphsfont.format_version = gformat
 
     if os.path.exists(glyphsfile): # Create a backup
