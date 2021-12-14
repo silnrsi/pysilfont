@@ -43,7 +43,7 @@ def doit(args):
         origfeas = []; hiddenfeas = []
         for source in ds.sources:
             origfea = os.path.join(source.path, "features.fea")
-            hiddenfea = os.path.join(source.path, "features.hidden")
+            hiddenfea = os.path.join(source.path, "features.tmp")
             if os.path.exists(origfea):
                 logger.log(f'Renaming {origfea} to {hiddenfea}', "I")
                 os.rename(origfea, hiddenfea)
@@ -54,8 +54,6 @@ def doit(args):
     logger.log("Now creating glyphs object", "I")
     glyphsfont = to_glyphs(ds)
     if args.nofea: # Now need to reverse renamimg of features.fea files
-        print(origfeas)
-        print(hiddenfeas)
         for i, origfea in enumerate(origfeas):
             logger.log(f'Renaming {hiddenfeas[i]} back to {origfea}', "I")
             os.rename(hiddenfeas[i], origfea)

@@ -780,7 +780,7 @@ except that the delimiter is a comma, not a semi-colon.
 
 ---
 ####  psfglyphs2ufo
-Usage: **`psfglyphs2ufo [--nofixes] [--nofea] [--restorefea] [--restore] fontfile.glyphs masterdir`**
+Usage: **`psfglyphs2ufo [--nofixes] [--nofea] [--preservefea] [--restore] fontfile.glyphs masterdir`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
@@ -793,7 +793,7 @@ Additional fields to restore can be added using `-r, --restore`. This will resto
 
 Currently features.fea does not round-trip successfully, so `--nofea` can be used to suppress the production of a features.fea file.
 
-To leave any features.fea files in existing UFOs untouched use `--restorefea` 
+To leave any features.fea files in existing UFOs untouched use `--preservefea` 
 
 Example usage:
 

@@ -19,7 +19,7 @@ argspec = [
     ('masterdir', {'help': 'Output directory for masters'}, {}),
     ('--nofixes', {'help': 'Bypass code fixing data', 'action': 'store_true', 'default': False}, {}),
     ('--nofea', {'help': "Don't output features.fea", 'action': 'store_true', 'default': False}, {}),
-    ('--restorefea', {'help': "Retain the original features.fea in the UFO", 'action': 'store_true', 'default': False}, {}),
+    ('--preservefea', {'help': "Retain the original features.fea in the UFO", 'action': 'store_true', 'default': False}, {}),
     ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': '_glyphs2ufo.log'}),
     ('-r', '--restore', {'help': 'List of extra keys to restore to fontinfo.plist or lib.plist'}, {})]
 
@@ -197,19 +197,18 @@ def process_ufo(ufo, keylists, glyphsdir, args, obskeysfound):
 #            if hasattr(ufo.info, key) and getattr(ufo.info, key) == "":
 #                setattr(ufo.info, key, None)
 #                logchange(loglist, " empty field deleted. ", key, current, None)
-    if args.nofea or args.restorefea: ufo.features.text = ""  # Suppress output of features.fea
+    if args.nofea or args.preservefea: ufo.features.text = ""  # Suppress output of features.fea
 
     for layer in ufo.layers:
         for glyph in layer:
             lib = glyph.lib
             if "public.verticalOrigin" in lib: del lib["public.verticalOrigin"]
 
-
     # Write ufo out
     ufopath = os.path.join(args.masterdir, fontname + ".ufo")
-    if args.restorefea:  # Move features.fea out of the ufo so that it can be restored afterward
+    if args.preservefea:  # Move features.fea out of the ufo so that it can be restored afterward
         origfea = os.path.join(ufopath, "features.fea")
-        hiddenfea = os.path.join(args.masterdir, fontname + "features.hidden")
+        hiddenfea = os.path.join(args.masterdir, fontname + "features.tmp")
         if os.path.exists(origfea):
             loglist.append((f'Renaming {origfea} to {hiddenfea}', "I"))
             os.rename(origfea, hiddenfea)
@@ -219,7 +218,7 @@ def process_ufo(ufo, keylists, glyphsdir, args, obskeysfound):
     loglist.append(("Writing out " + ufopath, "P"))
     if os.path.exists(ufopath): shutil.rmtree(ufopath)
     ufo.save(ufopath)
-    if args.restorefea and origfea:
+    if args.preservefea and origfea:
         loglist.append((f'Renaming {hiddenfea} back to {origfea}', "I"))
         os.rename(hiddenfea, origfea)
 
