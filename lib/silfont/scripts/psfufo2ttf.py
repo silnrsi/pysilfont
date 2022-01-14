@@ -40,7 +40,9 @@ def doit(args):
     args.logger.log('Converting UFO to ttf without OT', 'P')
 
     # default arg value for TTFPreProcessor class: removeOverlaps = False, convertCubics = True
-    preProcessor = ufo2ft.preProcessor.TTFPreProcessor(ufo, removeOverlaps = args.removeOverlaps, convertCubics=True, flattenComponents = True)
+    preProcessor = ufo2ft.preProcessor.TTFPreProcessor(ufo, removeOverlaps = args.removeOverlaps, convertCubics=True,
+                                                       flattenComponents = True,
+                                                       skipExportGlyphs = ufo.lib.get("public.skipExportGlyphs", []))
 
     # Need to handle cases if filters that are used are set in com.github.googlei18n.ufo2ft.filters with lib.plist
     dc = dtc = ftpos = None
