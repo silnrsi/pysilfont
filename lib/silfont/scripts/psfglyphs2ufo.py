@@ -37,7 +37,8 @@ def doit(args):
 
         "librestorekeys": ["org.sil.pysilfontparams", "org.sil.altLineMetrics", "org.sil.lcg.toneLetters",
                    "org.sil.lcg.transforms", "public.glyphOrder", "public.postscriptNames",
-                   "com.schriftgestaltung.disablesLastChange", "com.schriftgestaltung.disablesAutomaticAlignment"],
+                   "com.schriftgestaltung.disablesLastChange", "com.schriftgestaltung.disablesAutomaticAlignment",
+                   "public.skipExportGlyphs"],
         "libdeletekeys": ("com.schriftgestaltung.customParameter.GSFont.copyright",
                           "com.schriftgestaltung.customParameter.GSFont.designer",
                           "com.schriftgestaltung.customParameter.GSFont.manufacturer",
