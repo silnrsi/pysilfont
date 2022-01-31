@@ -83,11 +83,20 @@ def doit(args):
         logger.log("Failed to import profile: " + proname + "\n" + str(e), "S")
 
     profile = get_module_profile(module)
+    profile.configuration_defaults = {
+        "com.google.fonts/check/file_size": {
+            "WARN_SIZE": 1 * 1024 * 1024,
+            "FAIL_SIZE": 9 * 1024 * 1024
+        }
+    }
+
     psfcheck_list = module.psfcheck_list
 
     # Create the runner and reporter objects, then run the tests
-    configuration = Configuration()
-    runner = CheckRunner(profile, values={"fonts": fonts}, config=configuration)
+    configuration = Configuration(full_lists = False)
+    runner = CheckRunner(profile, values={
+        "fonts": fonts, 'ufos': [], 'designspaces': [], 'glyphs_files': [], 'readme_md': [], 'metadata_pb': []}
+                         , config=configuration)
 
     sr = SerializeReporter(runner=runner) # This produces results from all the tests in sr.getdoc for later analysis
     reporters = [sr.receive]
