@@ -91,9 +91,28 @@ def InstanceWriterCF(output_path_prefix, calc_glyphs, fix_weight):
         def _copyFontInfo(self, targetInfo, sourceInfo):
             super(LocalInstanceWriter, self)._copyFontInfo(targetInfo, sourceInfo)
             if getattr(self, 'fixWeight', False):
-                setattr(targetInfo, 'openTypeOS2WeightClass',
-                            (700 if self.font.info.styleMapStyleName.lower().startswith("bold")
-                                else 400))
+                # fixWeight is True since the --weightfix (or -W) option was specified
+
+                # This mode is used for RIBBI font builds,
+                # therefore the weight class can be determined
+                # by the style name
+                if self.font.info.styleMapStyleName.lower().startswith("bold"):
+                    weight_class = 700
+                else:
+                    weight_class = 400
+            else:
+                # fixWeight is False (or None)
+
+                # This mode is used for non-RIBBI font builds,
+                # therefore the weight class can be determined
+                # by the weight axis map in the Designspace file
+                for map_space in self.axes["weight"]["map"]:
+                    userspace = int(map_space[0])  # called input in the Designspace file
+                    designspace = int(map_space[1])  # called output in the Designspace file
+                    if designspace == int(self.locationObject["weight"]):
+                        weight_class = userspace
+            setattr(targetInfo, 'openTypeOS2WeightClass', weight_class)
+
             localinfo = {}
             for k in (('openTypeNameManufacturer', None),
                       ('styleMapFamilyName', 'familyName'),
