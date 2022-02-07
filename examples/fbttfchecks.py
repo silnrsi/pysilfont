@@ -43,15 +43,14 @@ profile = make_profile(psfcheck_list, variable_font = psfvariable_font)
 
 @profile.register_check
 @check(
-  id = 'org.sil.software/dummy',
+  id = 'org.sil/dummy',
   rationale = """
     There is no reason for this test!
     """
 )
-def org_sil_software_dummy():
+def org_sil_dummy():
   """Dummy test that always fails"""
   if True: yield FAIL, "Oops!"
-
 
 '''
 Run this using
