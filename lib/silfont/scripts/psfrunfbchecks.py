@@ -23,6 +23,7 @@ argspec = [
     ('--profile', {'help': 'profile to use instead of Pysilfont default'}, {}),
     ('--html', {'help': 'Write html report to htmlfile', 'metavar': "HTMLFILE"}, {}),
     ('--csv',{'help': 'Write results to csv file'}, {'type': 'filename', 'def': None}),
+    ('-F', '--full-lists',{'help': "Don't truncate lists of items" ,'action': 'store_true', 'default': False}, {}),
     ('--ttfaudit', {'help': 'Compare the list of ttf checks in pysilfont with those in Font Bakery and output a csv to "fonts". No checks are actually run',
      'action': 'store_true', 'default': False}, {}),
     ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': '_runfbchecks.log'})]
@@ -93,7 +94,7 @@ def doit(args):
     psfcheck_list = module.psfcheck_list
 
     # Create the runner and reporter objects, then run the tests
-    configuration = Configuration(full_lists = False)
+    configuration = Configuration(full_lists = args.full_lists)
     runner = CheckRunner(profile, values={
         "fonts": fonts, 'ufos': [], 'designspaces': [], 'glyphs_files': [], 'readme_md': [], 'metadata_pb': []}
                          , config=configuration)

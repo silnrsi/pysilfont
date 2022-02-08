@@ -396,7 +396,8 @@ def execute(tool, fn, scriptargspec, chain = None):
         parser.add_argument(*nonkwds, **kwds)
         # Create ainfo, a dict of framework keywords using argument name
         argn = nonkwds[-1]  # Find the argument name from first 1 or 2 tuple entries
-        if argn[0:2] == "--": argn = argn[2:]  # Will start with -- for options
+        if argn[0:2] == "--": # Will start with -- for options
+            argn = argn[2:].replace("-", "_") # Strip the -- and replace any - in name with _
         ainfo=dict(a[-1]) #Make a copy so original argspec is not changed
         for key in ainfo: # Check all keys are valid
             if key not in ("def", "type", "optlog") : logger.log("Invalid argspec framework key: " + key, "X")
