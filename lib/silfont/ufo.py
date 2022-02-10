@@ -91,11 +91,11 @@ class _plist(object):
 
     def getval(self, key, default=None):  # Returns a value for integer, real, string, true, false, dict or array keys or None for other keys
         elem = self._contents.get(key, [None, None])[1]
+        if elem is None:
+            return default
         return self._valelem(elem)
 
     def _valelem(self, elem):  # Used by getval to recursively process dict and array elements
-        if elem is None:
-            return None
         if elem.tag == "integer": return int(elem.text)
         elif elem.tag == "real": return float(elem.text)
         elif elem.tag == "string": return elem.text
