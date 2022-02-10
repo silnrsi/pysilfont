@@ -76,7 +76,10 @@ class Font(object) :
             self.fontinfo = {}
             for k, v in f.fontinfo._contents.items():
                 self.fontinfo[k] = decode_element(v[1])
+            skipglyphs = set(f.lib.getval('public.skipExportGlyphs', []))
             for g in f.deflayer :
+                if g in skipglyphs:
+                    continue
                 ufo_g = f.deflayer[g]
                 advb = ufo_g['advance']
                 adv = advb.width if advb is not None else 0

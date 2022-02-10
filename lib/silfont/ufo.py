@@ -55,6 +55,9 @@ class _Ucontainer(object):
     def __iter__(self):
         return iter(self._contents)
 
+    def get(self, key, default=None):
+        return self._contents.get(key, default=default)
+
     def keys(self):
         return self._contents.keys()
 
@@ -86,17 +89,19 @@ class _plist(object):
         else:
             self.addval(key, valuetype, value)
 
-    def getval(self, key):  # Returns a value for integer, real, string, true, false, dict or array keys or None for other keys
-        elem = self._contents[key][1]
+    def getval(self, key, default=None):  # Returns a value for integer, real, string, true, false, dict or array keys or None for other keys
+        elem = self._contents.get(key, [None, None])[1]
         return self._valelem(elem)
 
     def _valelem(self, elem):  # Used by getval to recursively process dict and array elements
+        if elem is None:
+            return None
         if elem.tag == "integer": return int(elem.text)
-        if elem.tag == "real": return float(elem.text)
-        if elem.tag == "string": return elem.text
-        if elem.tag == "true": return True
-        if elem.tag == "false": return False
-        if elem.tag == "array":
+        elif elem.tag == "real": return float(elem.text)
+        elif elem.tag == "string": return elem.text
+        elif elem.tag == "true": return True
+        elif elem.tag == "false": return False
+        elif elem.tag == "array":
             array = []
             for subelem in elem: array.append(self._valelem(subelem))
             return array
