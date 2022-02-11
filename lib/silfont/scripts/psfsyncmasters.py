@@ -30,8 +30,8 @@ def doit(args) :
                   "openTypeOS2VendorID", "openTypeOS2WinAscent", "openTypeOS2WinDescent", "versionMajor",
                   "versionMinor")
     ficopyopt = ("openTypeNameSampleText", "postscriptFamilyBlues", "postscriptFamilyOtherBlues", "trademark")
-    fispecial = ("italicAngle", "openTypeOS2WeightClass", "styleMapFamilyName", "styleMapStyleName", "styleName",
-                 "unitsPerEm")
+    fispecial = ("italicAngle", "openTypeOS2WeightClass", "openTypeNamePreferredSubfamilyName", "openTypeNameUniqueID",
+                 "styleMapFamilyName", "styleMapStyleName", "styleName", "unitsPerEm")
     fiall = sorted(set(ficopyreq) | set(ficopyopt) | set(fispecial))
     required = ficopyreq + ("openTypeOS2WeightClass", "styleName", "unitsPerEm")
     libcopy = ("com.schriftgestaltung.glyphOrder", "public.glyphOrder", "public.postscriptNames")
@@ -84,8 +84,13 @@ def doit(args) :
         elif field == "styleMapStyleName":
             if not complex and pval not in ('regular', 'bold', 'italic', 'bold italic'):
                 logger.log("styleMapStyleName must be 'regular', 'bold', 'italic', 'bold italic'", "E")
-        elif field == "styleName":
+        elif field in ("styleName", "openTypeNamePreferredSubfamilyName"):
             pval = psource.source.styleName
+        elif field == "openTypeNameUniqueID":
+            nm = str(fipval["openTypeNameManufacturer"]) # Need to wrap with str() just in case missing from
+            fn = str(fipval["familyName"]) # fontinfo so would have been set to None
+            sn = psource.source.styleName
+            pval = nm + ": " + fn + " " + sn + ": " + datetime.datetime.now().strftime("%Y")
         elif field == "unitsperem":
             if pval is None or pval <= 0: logger.log("unitsperem must be non-zero", "S")
         # After processing special cases, all required fields should have values
@@ -136,11 +141,14 @@ def doit(args) :
             elif field == "styleMapStyleName":
                 if not complex and sval not in ('regular', 'bold', 'italic', 'bold italic'):
                     logger.log(dsource.source.filename + ": styleMapStyleName must be 'regular', 'bold', 'italic', 'bold italic'", "E")
-            elif field == "styleName":
+            elif field in ("styleName", "openTypeNamePreferredSubfamilyName"):
                 sval = dsource.source.styleName
+            elif field == "openTypeNameUniqueID":
+                sn = dsource.source.styleName
+                sval = nm + ": " + fn + " " + sn + ": " + datetime.datetime.now().strftime("%Y")
+                print(sval)
             else:
                 sval = pval
-
             if oval != sval:
                 if field == "unitsPerEm": logger.log("unitsPerEm inconsistent across fonts", "S")
                 fchanges = True
@@ -149,9 +157,12 @@ def doit(args) :
                     logmess = " removed: "
                 else:
                     logmess = " added: " if oval is None else " updated: "
+                    # Copy value from primary.  This will add if missing.
                     dsource.fontinfo.setelem(field, ET.fromstring(ET.tostring(psource.fontinfo[field][1])))
-                    if field in ("italicAngle", "openTypeOS2WeightClass", "styleName"):
-                        dsource.fontinfo[field][1].text = str(sval) # Not a simple copy of pval
+                    # For fields where it is not a copy from primary...
+                    if field in ("italicAngle", "openTypeNamePreferredSubfamilyName", "openTypeNameUniqueID",
+                                 "openTypeOS2WeightClass", "styleName"):
+                        dsource.fontinfo[field][1].text = str(sval)
 
                 logchange(logger, dsource.source.filename + " " + field + logmess, oval, sval)
 
