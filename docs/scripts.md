@@ -1024,13 +1024,14 @@ Any `--mergecomps` run should be done in a separate run of `psfrenameglyphs` fro
 ---
 ####  psfrunfbchecks
 Usage: **`psfrunfbchecks [--profile PROFILE] [--html HTMLFILE] [--csv CSV]
-                      [--ttfaudit] fonts [fonts ...]`**
+                      [--full-lists] [--ttfaudit] fonts [fonts ...]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
 Run Font Bakery tests using a standard profile and report results in a table on screen.  Multiple fonts can be specified, 
-including using wildcards, but all should be in the same directory.  
-For ttf files, the profile will be Pysilfont's ttfchecks.py.  UFO files are not yet supported.
+including using wildcards, but all should be in the same directory.
+
+Currently this just works for ttf files, and the default profile used will be Pysilfont's ttfchecks.py.
 
 An alternative profile can be specified with `--profile`.  This profile needs to be specifically designed to work with this script - see examples/fbttfchecks.py.  This profile amends the behaviour of ttfchecks.py and includes options to change which checks are run and to override the status reported by checks.  Project-specific checks can also be added.
 
@@ -1044,6 +1045,8 @@ To see more details of results, use `--html HTMLFILE` to write an html file in t
 `--csv CSV` creates a csv file with one line per check that is run.  This can be used with diff tools to compare results from different runs (or following upgrades to Font Bakery.)
    
 Pysilfont's standard logging parameters (-p scrlevel and -p loglevel) also change the level of information `psfrunfbchecks` outputs.
+
+By default Font Bakery truncates long lists of items within check reports.  Use `--full-lists` to get full lists of items.
 
 A special option, `--ttfaudit` compares the list of checks within ttfchecks.py against those in Font Bakery and reports any descrepancies to screen.
 It also writes a csv file containing a list of all checks.  Usage `psfrunfbchecks --ttfaudit csvfile`

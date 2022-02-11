@@ -392,7 +392,7 @@ class Ufont(object):
                     storedvals[key] = self.fontinfo.getval(key)
                     if key == "styleName":
                         sn = storedvals[key]
-                        sn = re.sub(r"(\w)([A-Z])", r"\1 \2", sn)  # Add any missing spaces before capital letters
+                        sn = re.sub(r"(\w)(Italic)", r"\1 \2", sn)  # Add a space before Italic if missing
                         # Capitalise first letter of words
                         sep = b' ' if type(sn) is bytes else ' '
                         sn = sep.join(s[:1].upper() + s[1:] for s in sn.split(sep))
