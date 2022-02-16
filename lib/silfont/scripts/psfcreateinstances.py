@@ -90,6 +90,7 @@ def InstanceWriterCF(output_path_prefix, calc_glyphs, fix_weight):
 
         def _copyFontInfo(self, targetInfo, sourceInfo):
             super(LocalInstanceWriter, self)._copyFontInfo(targetInfo, sourceInfo)
+            weight_class = 400
             if getattr(self, 'fixWeight', False):
                 # fixWeight is True since the --weightfix (or -W) option was specified
 
@@ -98,8 +99,6 @@ def InstanceWriterCF(output_path_prefix, calc_glyphs, fix_weight):
                 # by the style name
                 if self.font.info.styleMapStyleName.lower().startswith("bold"):
                     weight_class = 700
-                else:
-                    weight_class = 400
             else:
                 # fixWeight is False (or None)
 
