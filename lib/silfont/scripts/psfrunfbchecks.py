@@ -12,9 +12,10 @@ from textwrap import TextWrapper
 
 from fontbakery.reporters.serialize import SerializeReporter
 from fontbakery.reporters.html import HTMLReporter
-from fontbakery.checkrunner import distribute_generator, CheckRunner, get_module_profile, SKIP
+from fontbakery.checkrunner import distribute_generator, CheckRunner, get_module_profile, SKIP, INFO
 from fontbakery.configuration import Configuration
 from fontbakery.commands.check_profile import get_module
+from fontbakery import __version__ as version
 
 from silfont.core import execute
 
@@ -29,6 +30,9 @@ argspec = [
     ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': '_runfbchecks.log'})]
 
 def doit(args):
+    global version
+    v = version.split(".")
+    version = f'{v[0]}.{v[1]}.{v[2]}' # Set version to just the number part - ie without .dev...
 
     logger = args.logger
     htmlfile = args.html
@@ -99,7 +103,10 @@ def doit(args):
         "fonts": fonts, 'ufos': [], 'designspaces': [], 'glyphs_files': [], 'readme_md': [], 'metadata_pb': []}
                          , config=configuration)
 
-    sr = SerializeReporter(runner=runner) # This produces results from all the tests in sr.getdoc for later analysis
+    if version == "0.8.6":
+        sr = SerializeReporter(runner=runner) # This produces results from all the tests in sr.getdoc for later analysis
+    else:
+        sr = SerializeReporter(runner=runner, loglevels = [INFO]) # loglevels was added with 0.8.7
     reporters = [sr.receive]
 
     if htmlfile:
