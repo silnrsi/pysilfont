@@ -115,7 +115,7 @@ def copyglyph(sfont, tfont, g, args):
 
     # Scale glyph if desired
     if args.scale:
-        for e in glyph.etree.getiterator():
+        for e in glyph.etree.iter():
             for attr in ('width', 'height', 'x', 'y', 'xOffset', 'yOffset'):
                 if attr in e.attrib: e.set(attr, str(int(float(e.get(attr))* args.scale)))
 
