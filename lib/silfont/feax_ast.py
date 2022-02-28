@@ -434,7 +434,7 @@ class ast_KernPairsStatement(ast.Statement):
 
         # Now assemble lines in order and convert gc rules to gg where possible:
         res = []
-        for ruleType in ('gg', 'gc', 'cg', 'cc'):
+        for ruleType in filter(lambda x: x in rules, ('gg', 'gc', 'cg', 'cc')):
             if ruleType != 'gc':
                 res.extend(['pos {} {} {};'.format(k1, v, k2) for k1,v,k2 in rules[ruleType]])
             else:
