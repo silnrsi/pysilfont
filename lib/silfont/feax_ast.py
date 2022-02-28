@@ -416,5 +416,30 @@ class ast_KernPairsStatement(ast.Statement):
         self.kerninfo = kerninfo
 
     def asFea(self, indent=""):
-        return ("\n"+indent).join("pos {} {} {};".format(k1, round(v), k2) \
-                    for k1, x in self.kerninfo.items() for k2, v in x.items())
+        # return ("\n"+indent).join("pos {} {} {};".format(k1, round(v), k2) \
+        #           for k1, x in self.kerninfo.items() for k2, v in x.items())
+        coverage = set()
+        rules = dict()
+
+        # first sort into lists by type of rule
+        for k1, x in self.kerninfo.items():
+            for k2, v in x.items():
+                # Determine pair kern type, where:
+                #   'gg' = glyph-glyph, 'gc' = glyph-class', 'cg' = class-glyph, 'cc' = class-class
+                ruleType = 'gc'[k1[0]=='@'] + 'gc'[k2[0]=='@']
+                rules.setdefault(ruleType, list()).append([k1, round(v), k2])
+                # for glyph-glyph rules, make list of first glyphs:
+                if ruleType == 'gg':
+                    coverage.add(k1)
+
+        # Now assemble lines in order and convert gc rules to gg where possible:
+        res = []
+        for ruleType in ('gg', 'gc', 'cg', 'cc'):
+            if ruleType != 'gc':
+                res.extend(['pos {} {} {};'.format(k1, v, k2) for k1,v,k2 in rules[ruleType]])
+            else:
+                res.extend(['enum pos {} {} {};'.format(k1, v, k2) for k1, v, k2 in rules[ruleType] if k1 not in coverage])
+                res.extend(['pos {} {} {};'.format(k1, v, k2) for k1, v, k2 in rules[ruleType] if k1 in coverage])
+
+        return ("\n"+indent).join(res)
+
