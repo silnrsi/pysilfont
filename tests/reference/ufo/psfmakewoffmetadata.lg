@@ -1,13 +1,13 @@
-2021-06-29 14:42:22 Progress: Running:  psfmakewoffmetadata tests/input/font-psf-test/source/PsfTest-Regular.ufo -n Test -i SIL -f tests/input/psfmakewoffmetadata.txt -o local/testresults/ufo/psfmakewoffmetadata.xml -l local/testresults/ufo/psfmakewoffmetadata.log
-2021-06-29 14:42:22 Progress: Opening file for input: tests/input/psfmakewoffmetadata.txt
-2021-06-29 14:42:22 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Regular.ufo
-2021-06-29 14:42:22 Progress: Checking fontinfo.plist metadata
-2021-06-29 14:42:22 Warning:  note is present - it's use is discouraged
-2021-06-29 14:42:22 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
-2021-06-29 14:42:22 Warning:  openTypeOS2Selection would be added  New value: [7]
-2021-06-29 14:42:22 Progress: Checking lib.plist metadata
-2021-06-29 14:42:22 Warning:  com.schriftgestaltung.disablesAutomaticAlignment would be deleted - obsolete key Old value: True
-2021-06-29 14:42:22 Warning:  com.schriftgestaltung.disablesLastChange would be deleted - obsolete key Old value: True
-2021-06-29 14:42:22 Progress: Check & fix results:- Errors: 0, Changes to make: 4, Other warnings: 1
-2021-06-29 14:42:22 Progress: See log file for details
-2021-06-29 14:42:22 Progress: Writing to : local/testresults/ufo/psfmakewoffmetadata.xml
+2022-03-07 14:44:21 Progress: Running:  psfmakewoffmetadata tests/input/font-psf-test/source/PsfTest-Regular.ufo -n Test -i SIL -f tests/input/psfmakewoffmetadata.txt -o local/testresults/ufo/psfmakewoffmetadata.xml -l local/testresults/ufo/psfmakewoffmetadata.log
+2022-03-07 14:44:21 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Regular.ufo
+2022-03-07 14:44:21 Progress: Checking fontinfo.plist metadata
+2022-03-07 14:44:21 Warning:  note is present - it's use is discouraged
+2022-03-07 14:44:21 Warning:  openTypeOS2FamilyClass would be removed from fontinfo  Old value: [0, 0]
+2022-03-07 14:44:21 Warning:  openTypeOS2Selection would be added  New value: [7]
+2022-03-07 14:44:21 Progress: Checking lib.plist metadata
+2022-03-07 14:44:21 Warning:  com.schriftgestaltung.disablesAutomaticAlignment would be deleted - obsolete key Old value: True
+2022-03-07 14:44:21 Warning:  com.schriftgestaltung.disablesLastChange would be deleted - obsolete key Old value: True
+2022-03-07 14:44:21 Progress: Check & fix results:- Errors: 0, Changes to make: 4, Other warnings: 1
+2022-03-07 14:44:21 Progress: See log file for details
+2022-03-07 14:44:21 Warning:  WOFF field(s) missing from fontinfo.plist will be generated from FONTLOG.txt: woffMetadataCredits, woffMetadataDescription
+2022-03-07 14:44:21 Progress: Writing to : local/testresults/ufo/psfmakewoffmetadata.xml

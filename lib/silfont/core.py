@@ -7,7 +7,7 @@ __author__ = 'David Raymond'
 
 from glob import glob
 from collections import OrderedDict
-import sys, os, argparse, datetime, shutil, csv, io, configparser
+import sys, os, argparse, datetime, shutil, csv, configparser
 
 import silfont
 
@@ -159,7 +159,7 @@ class parameters(object):
         dict = {}
         if configfile:
             config = configparser.ConfigParser()
-            config.readfp(io.open(configfile, encoding="utf-8"))
+            config.read_file(open(configfile, encoding="utf-8"))
             if sourcedesc is None: sourcedesc = configfile
             for classn in config.sections():
                 for item in config.items(classn):
@@ -267,7 +267,7 @@ class csvreader(object):    # Iterator for csv files, skipping comments and chec
         self.logger = logger if logger else loggerobj()   # If no logger supplied, will just log to screen
         # Open the file and create reader
         try:
-            file = io.open(filename, "rt", encoding="utf-8")
+            file = open(filename, "rt", encoding="utf-8")
         except Exception as e:
             print(e)
             sys.exit(1)
@@ -516,7 +516,7 @@ def execute(tool, fn, scriptargspec, chain = None):
                         logger.log("Directory " + parent + " does not exist", "S")
                 logger.log('Opening log file for output: ' + logname, "P")
                 try:
-                    logfile = io.open(logname, "w", encoding="utf-8")
+                    logfile = open(logname, "w", encoding="utf-8")
                 except Exception as e:
                     print(e)
                     sys.exit(1)
@@ -586,7 +586,7 @@ def execute(tool, fn, scriptargspec, chain = None):
         elif atype == 'infile':
             logger.log('Opening file for input: '+aval, "P")
             try:
-                aval = io.open(aval, "r", encoding="utf-8")
+                aval = open(aval, "r", encoding="utf-8")
             except Exception as e:
                 print(e)
                 sys.exit(1)
@@ -599,7 +599,7 @@ def execute(tool, fn, scriptargspec, chain = None):
                 logger.log("Output file directory " + path + " does not exist", "S")
             logger.log('Opening file for output: ' + aval, "P")
             try:
-                aval = io.open(aval, 'w', encoding="utf-8")
+                aval = open(aval, 'w', encoding="utf-8")
             except Exception as e:
                 print(e)
                 sys.exit(1)

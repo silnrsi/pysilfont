@@ -913,17 +913,11 @@ This will take the definitions in newglyphs.csv and create the new glyphs using 
 
 ---
 #### psfmakewoffmetadata
-Usage: **`psfmakewoffmetadata -n PRIMARYFONTNAME -i ORGID [-f FONTLOG]  [-o OUTPUT]  [--populateufowoff] [--force] fontfile.ufo`**
+Usage: **`psfmakewoffmetadata -n PRIMARYFONTNAME -i ORGID [-f FONTLOG]  [-o OUTPUT]  [--populateufowoff] fontfile.ufo`**
 
 
 Make the WOFF metadata xml file based on input UFO.  If woffMetadataCredits and/or woffMetadataDescription are missing
 from the UFO, they will be constructed from FONTLOG - see below
-
-Note: Currently fontTools, which several pysilfont scripts use, can't open UFO files with with woff fields in, so until it
-does it is recommended that:
-
-- FONTLOG is used as the source for the credits and description
-- `--populateufowoff` is not used.
 
 The primary font name and orgid need to be supplied on the command line. By default it outputs to *primaryfontname*-WOFF-metadata.xml.
 
@@ -938,14 +932,20 @@ It constructs the information needed from:
 - The supplied primary font name and orgid
 - Information within the primary font file
 
-If it needs to construct the credits and description fields from FONTLOG, that file needs to be formatted according to the pattern used for most SIL font packages. The description is created using the contents of the FONTLOG, starting after the "Basic Font Information" header and finishing before the "Information for Contributors" header (if present) or the "Acknowledgements" header otherwise. The credits are created from the N:, W:, D: and E: sets of values in the acknowledgements section, though E: is not used. One credit is created from each set of values and sets should be separated by blank lines. By default it reads FONTLOG.txt from the folder it is run in.
+If it needs to construct the credits and description fields from FONTLOG, that file needs to be formatted according to the 
+pattern used for most SIL font packages. 
+The description is created using the contents of the FONTLOG, starting after the "Basic Font Information" header
+and finishing before the "Information for Contributors" header (if present) or the "Acknowledgements" header otherwise. 
+The credits are created from the N:, W:, D: and E: sets of values in the acknowledgements section, though E: is not used. 
+One credit is created from each set of values and sets should be separated by blank lines. 
+By default it reads FONTLOG.txt from the folder it is run in.
 
-If woffMetadataCredits and woffMetadataDescription are missing from the UFO, there are options to update the UFO with the values constructed from FONTLOG:
-
+If woffMetadataCredits and woffMetadataDescription are missing from the UFO you can use `--populateufowoff` to update 
+these fields with the values constructed from FONTLOG:
 ```
   --populateufowoff  Add woffMetadataCredits and woffMetadataDescription to UFO if missing
-  --force            Update the above fields from FONTLOG even if already present in UFO  
 ```
+--popoulateufowoff also adds a place-holder url to woffMetadataDescription which should be hand-edited afterwards to a url appropirate to the project.  
 
 ---
 ####  psfnormalize

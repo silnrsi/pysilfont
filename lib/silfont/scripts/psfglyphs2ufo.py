@@ -49,7 +49,8 @@ def doit(args):
         "libdeleteempty": ("com.schriftgestaltung.DisplayStrings",),
         "inforestorekeys": ["openTypeHeadCreated", "openTypeNamePreferredFamilyName", "openTypeNamePreferredSubfamilyName",
                        "openTypeNameUniqueID", "openTypeOS2WeightClass", "openTypeOS2WidthClass", "postscriptFontName",
-                       "postscriptFullName", "styleMapFamilyName", "styleMapStyleName", "note"],
+                       "postscriptFullName", "styleMapFamilyName", "styleMapStyleName", "note",
+                       "woffMetadataCredits", "woffMetadataDescription"],
         "integerkeys": ("openTypeOS2WeightClass", "openTypeOS2WidthClass"),
         "infodeletekeys": ("openTypeVheaVertTypoAscender", "openTypeVheaVertTypoDescender", "openTypeVheaVertTypoLineGap"),
  #       "infodeleteempty": ("openTypeOS2Selection",)

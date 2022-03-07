@@ -15,17 +15,15 @@ argspec = [
     ('font', {'help': 'Source font file'}, {'type': 'infont'}),
     ('-n', '--primaryname', {'help': 'Primary Font Name', 'required': True}, {}),
     ('-i', '--orgid', {'help': 'orgId', 'required': True}, {}),
-    ('-f', '--fontlog', {'help': 'FONTLOG.txt file', 'default': 'FONTLOG.txt'}, {'type': 'infile'}),
+    ('-f', '--fontlog', {'help': 'FONTLOG.txt file', 'default': 'FONTLOG.txt'}, {'type': 'filename'}),
     ('-o', '--output', {'help': 'Override output file'}, {'type': 'filename', 'def': None}),
     ('--populateufowoff', {'help': 'Copy info from FONTLOG.txt to UFO', 'action': 'store_true', 'default': False},{}),
-    ('--force', {'help': 'Do --populateufowoff even if data exists in UFO', 'action': 'store_true', 'default': False},{}),
     ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': '_makewoff.log'})]
 
 def doit(args):
     font = args.font
     pfn = args.primaryname
     orgid = args.orgid
-    fontlog = args.fontlog
     logger = args.logger
     ofn = args.output
 
@@ -48,23 +46,30 @@ def doit(args):
     # Find & process WOFF fields if present in the UFO
 
     missing = None
+    ufofields["woffMetadataDescriptionurl"] =  None
     ufowoff = {"woffMetadataCredits": "credits", "woffMetadataDescription": "text"} # Field, dict name
     for field in ufowoff:
-        elem = fi[field][1] if field in fi else None
-        if elem is None:
+        fival = fi.getval(field) if field in fi else None
+        if fival is None:
             missing = field if missing is None else missing + ", " + field
             ufofields[field] = None
         else:
-            ufofields[field] = fi.getval(field)[ufowoff[field]]
+            ufofields[field] = fival[ufowoff[field]]
+            if field == "woffMetadataDescription" and "url" in fival:
+                ufofields["woffMetadataDescriptionurl"] = fival["url"]
 
     # Process --populateufowoff setting, if present
     if args.populateufowoff:
-        if missing != "woffMetadataCredits, woffMetadataDescription" and not args.force:
-            logger.log("Data exists in the UFO for woffMetadataCredits or woffMetadataDescription", "W")
-            logger.log("Use --force to force update of those fields, or rerun without --populateufowoff", "S")
+        if missing != "woffMetadataCredits, woffMetadataDescription":
+            logger.log("Data exists in the UFO for woffMetadata - remove manually to reuse --poputlatewoff", "S")
 
     if args.populateufowoff or missing is not None:
-        # if missing: logger.log("WOFF field(s) missing from fontinfo.plist will be generated from FONTLOG.txt: " + missing, "W")
+        if missing: logger.log("WOFF field(s) missing from fontinfo.plist will be generated from FONTLOG.txt: " + missing, "W")
+        # Open the fontlog file
+        try:
+            fontlog = open(args.fontlog)
+        except Exception as e:
+            logger.log(f"Unable to open {args.fontlog}: {str(e)}", "S")
         # Parse the fontlog file
         (section, match) = readuntil(fontlog, ("Basic Font Information",))  # Skip until start of "Basic Font Information" section
         if match is None: logger.log("No 'Basic Font Information' section in fontlog", "S")
@@ -102,8 +107,12 @@ def doit(args):
             ufofields["woffMetadataDescription"] = fldescription # Force fontlog values to be used writing metadata.xml later
             ufofields["woffMetadataCredits"] = flcredits
             # Create xml strings and update fontinfo
-            xmlstring = "<dict><key>text</key><array><dict><key>text</key><string>" + textprotect(fldescription[0]["text"]) \
-                  + "</string></dict></array></dict>"
+            xmlstring = "<dict>" + \
+                        "<key>text</key><array><dict>" + \
+                        "<key>text</key><string>" + textprotect(fldescription[0]["text"]) + "</string>" + \
+                        "</dict></array>" + \
+                        "<key>url</key><string>https://software.sil.org/project-specific/</string>"\
+                        "</dict>"
             fi.setelem("woffMetadataDescription", ET.fromstring(xmlstring))
 
             xmlstring = "<dict><key>credits</key><array>"
@@ -148,7 +157,10 @@ def doit(args):
         file.write('    />\n')
     file.write('  </credits>\n')
 
-    file.write('  <description>\n')
+    if ufofields["woffMetadataDescriptionurl"]:
+        file.write(f'  <description url="{ufofields["woffMetadataDescriptionurl"]}">\n')
+    else:
+        file.write('  <description>\n')
     file.write('    <text lang="en">\n')
     for entry in description:
         for line in entry["text"].splitlines():
