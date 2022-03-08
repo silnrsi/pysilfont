@@ -61,7 +61,7 @@ def doit(args):
     # Process --populateufowoff setting, if present
     if args.populateufowoff:
         if missing != "woffMetadataCredits, woffMetadataDescription":
-            logger.log("Data exists in the UFO for woffMetadata - remove manually to reuse --poputlatewoff", "S")
+            logger.log("Data exists in the UFO for woffMetadata - remove manually to reuse --populateufowoff", "S")
 
     if args.populateufowoff or missing is not None:
         if missing: logger.log("WOFF field(s) missing from fontinfo.plist will be generated from FONTLOG.txt: " + missing, "W")
@@ -111,7 +111,7 @@ def doit(args):
                         "<key>text</key><array><dict>" + \
                         "<key>text</key><string>" + textprotect(fldescription[0]["text"]) + "</string>" + \
                         "</dict></array>" + \
-                        "<key>url</key><string>https://software.sil.org/project-specific/</string>"\
+                        "<key>url</key><string>https://software.sil.org/</string>"\
                         "</dict>"
             fi.setelem("woffMetadataDescription", ET.fromstring(xmlstring))
 

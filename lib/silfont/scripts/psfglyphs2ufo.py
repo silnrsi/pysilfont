@@ -104,14 +104,17 @@ def process_ufo(ufo, keylists, glyphsdir, args, obskeysfound):
         if origlibplist is not None:
 
             for key in keylists["librestorekeys"]:
+                current = None if key not in ufo.lib else ufo.lib[key]
                 if key in origlibplist:
                     new = origlibplist.getval(key)
-                    current = None if key not in ufo.lib else ufo.lib[key]
                     if current == new:
                         continue
                     else:
                         ufo.lib[key] = new
                         logchange(loglist, " restored from backup ufo. ", key, current, new)
+                elif current:
+                    ufo.lib[key] = None
+                    logchange(loglist, " removed since not in backup ufo. ", key, current, None)
 
         # Delete unneeded keys
 
@@ -174,15 +177,19 @@ def process_ufo(ufo, keylists, glyphsdir, args, obskeysfound):
 
         if origfontinfo is not None:
             for key in keylists["inforestorekeys"]:
+                current = None if not hasattr(ufo.info, key) else getattr(ufo.info, key)
                 if key in origfontinfo:
                     new = origfontinfo.getval(key)
                     if key in keylists["integerkeys"]: new = int(new)
-                    current = None if not hasattr(ufo.info, key) else getattr(ufo.info, key)
                     if current == new:
                         continue
                     else:
                         setattr(ufo.info, key, new)
                         logchange(loglist, " restored from backup ufo. ", key, current, new)
+                elif current:
+                    setattr(ufo.info, key, None)
+                    logchange(loglist, " removed since not in backup ufo. ", key, current, None)
+
         if getattr(ufo.info, "italicAngle") == 0:  # Remove italicAngle if 0
             setattr(ufo.info, "italicAngle", None)
             logchange(loglist, " removed", "italicAngle", 0, None)

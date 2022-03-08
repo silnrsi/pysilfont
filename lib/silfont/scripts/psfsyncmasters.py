@@ -147,7 +147,6 @@ def doit(args) :
             elif field == "openTypeNameUniqueID":
                 sn = dsource.source.styleName
                 sval = nm + ": " + fn + " " + sn + ": " + datetime.datetime.now().strftime("%Y")
-                print(sval)
             else:
                 sval = pval
             if oval != sval:
