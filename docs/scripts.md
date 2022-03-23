@@ -504,7 +504,11 @@ Omitting the `-f` requires that the final parameter be a designspace file (not a
 
 Whenever interpolation is done, the calculations can result in non-integer values within the instance UFOs. The `--roundInstances` option will apply integer rounding to all such values.
 
-When `--weightfix` (or `-W`) is provided, instance weights are changed to either 700 (Bold) or 400 (Regular) based on whether or not the `stylemapstylename` instance attribute begins with `bold`.
+Instance weights are set based on the axes mapping in the designspace file. 
+If the weight is missing from the axes mapping a dummy value of 399 is set.
+
+When `--weightfix` (or `-W`) is provided, instance weights are set to either 700 (Bold) or 400 (Regular) based on 
+whether or not the `stylemapstylename` instance attribute begins with `bold`. 
 
 ---
 #### psfcsv2comp
