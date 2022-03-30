@@ -165,7 +165,8 @@ def doit(args):
     summarymess = "Check status summary:\n"
     summarymess += "{:{pad}}ERROR  FAIL  WARN  INFO  SKIP  PASS".format("", pad=maxname+4)
     if somedebug: summarymess += "  DEBUG"
-    fontlist = list(sorted(x for x in checks if x != "Family-wide")) + ["Family-wide"] # Sort with Family-wide last
+    fontlist = list(sorted(x for x in checks if x != "Family-wide")) # Alphabetic list of fonts
+    if "Family-wide" in checks: fontlist.append("Family-wide") # Add Family-wide last
     for fontname in fontlist:
         summarymess += "\n  {:{pad}}".format(fontname, pad=maxname)
         for i, status in enumerate(fbstats):
