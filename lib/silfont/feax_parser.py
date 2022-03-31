@@ -617,7 +617,12 @@ class feaplus_parser(Parser) :
                     self.advance_lexer_()
                     self.advance_lexer_()
                     try:
-                        self.parse_subblock_(res, False)
+                        import inspect  # oh this is so ugly!
+                        calledby = inspect.stack()[2][3]  # called through lambda since extension
+                        if calledby == 'parse_block_':
+                            self.parse_subblock_(res, False)
+                        else:
+                            self.parse_statements_block_(res)
                     except Exception as e:
                         logging.warning("In do context: " + str(s) + " lexer: " + repr(lex) + " at: " + str((self.cur_token_, self.next_token_)))
                         raise
