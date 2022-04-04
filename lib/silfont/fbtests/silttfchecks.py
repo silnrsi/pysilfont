@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 'Checks to be imported by ttfchecks.py'
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2020 SIL International (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2022 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
@@ -9,7 +9,6 @@ from fontbakery.checkrunner import Section, PASS, FAIL, WARN, ERROR, INFO, SKIP
 from fontbakery.callable import condition, check, disable
 from fontbakery.message import Message
 from fontbakery.constants import NameID, PlatformID, WindowsEncodingID
-from fontbakery.utils import pretty_print_list
 
 @check(
   id = 'org.sil/check/name/version_format',
@@ -70,7 +69,6 @@ def org_sil_whitespace_widths(ttFont):
     space_data = {
         0x0020: ['Space'],
         0x00A0: ['No-break space'],
-#        0x2007: ['Figure space'], # Figure space to be handled by a tabular numerals width check
         0x2008: ['Punctuation space'],
         0x2003: ['Em space'],
         0x2002: ['En space'],
@@ -188,3 +186,72 @@ def org_sil_whitespace_widths(ttFont):
 
     if allok:
         yield PASS, "Space widths all match expected values"
+
+@check(
+    id = 'org.sil/check/number_widths'
+)
+def org_sil_number_widths(ttFont, config):
+    """Check widths of latin digits 0-9 are equal and match that of figure space"""
+    from fontbakery.utils import get_glyph_name
+
+    num_data = {
+        0x0030: ['zero'],
+        0x0031: ['one'],
+        0x0032: ['two'],
+        0x0033: ['three'],
+        0x0034: ['four'],
+        0x0035: ['five'],
+        0x0036: ['six'],
+        0x0037: ['seven'],
+        0x0038: ['eight'],
+        0x0039: ['nine'],
+        0x2007: ['figurespace']  # Figure space should be the same as numerals
+    }
+
+    fontnames = []
+    for x in (ttFont['name'].names[1].string, ttFont['name'].names[2].string):
+        txt=""
+        for i in range(1,len(x),2): txt += x.decode()[i]
+        fontnames.append(txt)
+
+    for num in num_data:
+        name = get_glyph_name(ttFont, num)
+        if name is None:
+            width = -1 # So different from Zero!
+        else:
+            width = ttFont['hmtx'][name][0]
+        num_data[num].append(name)
+        num_data[num].append(width)
+
+    zerowidth = num_data[48][2]
+    if zerowidth ==-1:
+        yield FAIL, "No zero in font - remainder of check not run"
+        return
+
+    # Check non-zero digits are present and have same width as zero
+    digitsdiff = ""
+    digitsmissing = ""
+    for i in range(49,58):
+        ndata = num_data[i]
+        width = ndata[2]
+        if width != zerowidth:
+            if width == -1:
+                digitsmissing += ndata[1] + " "
+            else:
+                digitsdiff += ndata[1] + " "
+
+    # Check figure space
+    figuremess = ""
+    ndata = num_data[0x2007]
+    width = ndata[2]
+    if width != zerowidth:
+        if width == -1:
+            figuremess = "No figure space in font"
+        else:
+            figuremess = f'The width of figure space ({ndata[1]}) does not match the width of zero'
+    if digitsmissing or digitsdiff or figuremess:
+        if digitsmissing: yield FAIL, f"Digits missing: {digitsmissing}"
+        if digitsdiff: yield WARN, f"Digits with different width from Zero: {digitsdiff}"
+        if figuremess: yield WARN, figuremess
+    else:
+        yield PASS, "All number widths are OK"

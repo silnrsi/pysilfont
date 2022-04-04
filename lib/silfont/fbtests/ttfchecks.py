@@ -272,6 +272,7 @@ psfcheck_list['com.google.fonts/check/whitespace_ink']                          
 psfcheck_list['com.google.fonts/check/whitespace_widths']                         = {}
 psfcheck_list['com.google.fonts/check/xavgcharwidth']                             = {}
 psfcheck_list['org.sil/check/name/version_format']                                = {}
+psfcheck_list['org.sil/check/number_widths']                                      = {}
 psfcheck_list['org.sil/check/whitespace_widths']                                  = {}
 
 profile = make_profile(check_list=psfcheck_list)
