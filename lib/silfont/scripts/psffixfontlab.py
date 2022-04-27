@@ -105,12 +105,25 @@ def doit(args) :
             new = "%-4s" % (old,)
             fontinfo.setval("openTypeOS2VendorID", "string", new)
             logchange(logger, " padded to 4 characters ", "openTypeOS2VendorID", "'%s'" % (old,) , "'%s'" % (new,))
+    if "woffMetadataCredits" in backupfi:
+        fontinfo.setelem("woffMetadataCredits",backupfi["woffMetadataCredits"][1])
+        logger.log("fontinfo woffMetadataCredits copied from backup ufo", "I")
+    elif "woffMetadataCredits" in fontinfo:
+        fontinfo.remove("woffMetadataCredits")
+        logger.log("fontinfo woffMetadataCredits deleted - not in backup ufo", "I")
+    if "woffMetadataDescription" in backupfi:
+        fontinfo.setelem("woffMetadataDescription",backupfi["woffMetadataDescription"][1])
+        logger.log("fontinfo woffMetadataDescription copied from backup ufo", "I")
+    elif "woffMetadataDescription" in fontinfo:
+        fontinfo.remove("woffMetadataDescription")
+        logger.log("fontinfo woffMetadataDescription deleted - not in backup ufo", "I")
     if "public.glyphOrder" in backuplib:
         libplist.setelem("public.glyphOrder",backuplib["public.glyphOrder"][1])
         logger.log("lib.plist public.glyphOrder copied from backup ufo", "I")
     elif "public.glyphOrder" in libplist:
         libplist.remove("public.glyphOrder")
         logger.log("libplist public.glyphOrder deleted - not in backup ufo", "I")
+
 
 
     # Now process glif level data
