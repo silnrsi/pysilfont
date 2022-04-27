@@ -349,7 +349,7 @@ class Ufont(object):
                         "openTypeNameDesignerURL", "openTypeNameLicense", "openTypeNameLicenseURL",
                         "openTypeNameManufacturerURL", "openTypeOS2CodePageRanges",
                         "openTypeOS2UnicodeRanges", "openTypeOS2VendorID","styleMapFamilyName", "styleMapStyleName",
-                        "openTypeOS2WeightClass")
+                        "openTypeOS2WeightClass", "openTypeOS2WinAscent", "openTypeOS2WinDescent")
             fiwarnifnot = {"unitsPerEm": (1000, 2048),
                            "styleMapStyleName": ("regular", "bold", "italic", "bold italic")},
             fiwarnifpresent = ("note",)
@@ -367,7 +367,7 @@ class Ufont(object):
             fisettoother = {"openTypeHheaAscender": "ascender", "openTypeHheaDescender": "descender",
                             "openTypeNamePreferredFamilyName": "familyName",
                             "openTypeNamePreferredSubfamilyName": "styleName", "openTypeOS2TypoAscender": "ascender",
-                            "openTypeOS2TypoDescender": "descender", "openTypeOS2WinAscent": "ascender"}
+                            "openTypeOS2TypoDescender": "descender"}
             fisetto = {"openTypeHheaLineGap": 0, "openTypeOS2TypoLineGap": 0, "openTypeOS2WidthClass": 5,
                        "openTypeOS2Selection": [7], "openTypeOS2Type": []} # Other values are added below
 
@@ -421,7 +421,7 @@ class Ufont(object):
             value = storedvals["openTypeNameManufacturer"] + ": " + storedvals["familyName"] + " "
             value = value + storedvals["styleName"] + ": " + datetime.datetime.now().strftime("%Y")
             fisetto["openTypeNameUniqueID"] = value
-            fisetto["openTypeOS2WinDescent"] = -storedvals["descender"]
+#            fisetto["openTypeOS2WinDescent"] = -storedvals["descender"]
             if "openTypeNameVersion" not in self.fontinfo:
                 fisetto["openTypeNameVersion"] = "Version " + str(storedvals["versionMajor"]) + "."\
                                                  + str(storedvals["versionMinor"])

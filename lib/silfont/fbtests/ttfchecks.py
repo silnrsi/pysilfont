@@ -32,6 +32,7 @@ def make_base_profile():
     # Exclude groups of checks that check files other than ttfs
     for checkid in DESCRIPTION_CHECKS + DESIGNSPACE_CHECKS + METADATA_CHECKS + REPO_CHECKS + UFO_PROFILE_CHECKS:
         if checkid in profile._check_registry: profile.remove_check(checkid)
+
     return profile
 
 def make_profile(check_list, variable_font=False):
@@ -53,6 +54,7 @@ def make_profile(check_list, variable_font=False):
         exclude = False
         if variable_font and "not is_variable_font" in conditions: exclude = True
         if not variable_font and "is_variable_font" in conditions: exclude = True
+        if "noto" in checkid.lower(): exclude = True # These will be specific to Noto fonts
 
         if exclude: profile.remove_check(checkid)
     if not variable_font: # Remove this check manually since it does not have is_variable_font condition
@@ -65,6 +67,8 @@ def all_checks_dict(): # An ordered dict of all checks designed for exporting th
     check_dict=OrderedDict()
 
     for checkid in sorted(set(profile._check_registry.keys()), key=str.casefold):
+        if "noto" in checkid.lower(): continue # We wxclude these in make_profile()
+
         section = profile._check_registry[checkid]
         check = section.get_check(checkid)
 
@@ -106,10 +110,20 @@ psfcheck_list['com.adobe.fonts/check/family/bold_italic_unique_for_nameid1']    
 psfcheck_list['com.adobe.fonts/check/family/consistent_upm']                      = {}
 psfcheck_list['com.adobe.fonts/check/family/max_4_fonts_per_family_name']         = {}
 psfcheck_list['com.adobe.fonts/check/find_empty_letters']                         = {}
+psfcheck_list['com.adobe.fonts/check/freetype_rasterizer']                        = {'exclude': True}
 psfcheck_list['com.adobe.fonts/check/fsselection_matches_macstyle']               = {}
 psfcheck_list['com.adobe.fonts/check/name/empty_records']                         = {}
 psfcheck_list['com.adobe.fonts/check/name/postscript_name_consistency']           = {}
+psfcheck_list['com.adobe.fonts/check/nameid_1_win_english']                       = {}
 psfcheck_list['com.adobe.fonts/check/name/postscript_vs_cff']                     = {'exclude': True}
+psfcheck_list['com.adobe.fonts/check/varfont/distinct_instance_records']          = {}
+psfcheck_list['com.adobe.fonts/check/varfont/same_size_instance_records']         = {}
+psfcheck_list['com.adobe.fonts/check/varfont/valid_axis_nameid']                  = {}
+psfcheck_list['com.adobe.fonts/check/varfont/valid_default_instance_nameids']     = {}
+psfcheck_list['com.adobe.fonts/check/varfont/valid_postscript_nameid']            = {}
+psfcheck_list['com.adobe.fonts/check/varfont/valid_subfamily_nameid']             = {}
+psfcheck_list['com.fontwerk/check/inconsistencies_between_fvar_stat']             = {}
+psfcheck_list['com.fontwerk/check/weight_class_fvar']                             = {}
 psfcheck_list['com.google.fonts/check/aat']                                       = {}
 psfcheck_list['com.google.fonts/check/all_glyphs_have_codepoints']                = {'exclude': True}
 psfcheck_list['com.google.fonts/check/canonical_filename']                        = {}
@@ -117,19 +131,20 @@ psfcheck_list['com.google.fonts/check/cjk_chws_feature']                        
 psfcheck_list['com.google.fonts/check/cjk_not_enough_glyphs']                     = {'exclude': True}
 psfcheck_list['com.google.fonts/check/cjk_vertical_metrics']                      = {'exclude': True}
 psfcheck_list['com.google.fonts/check/cjk_vertical_metrics_regressions']          = {'exclude': True}
+psfcheck_list['com.google.fonts/check/cmap/alien_codepoints']                    = {'exclude': True}
+psfcheck_list['com.google.fonts/check/cmap/format_12']                            = {'exclude': True}
 psfcheck_list['com.google.fonts/check/cmap/unexpected_subtables']                 = {}
 psfcheck_list['com.google.fonts/check/code_pages']                                = {}
 psfcheck_list['com.google.fonts/check/contour_count']                             = {'exclude': True}
 psfcheck_list['com.google.fonts/check/dotted_circle']                             = {}
 psfcheck_list['com.google.fonts/check/dsig']                                      = {'exclude': True}
-# psfcheck_list['com.google.fonts/check/dsig:adobefonts']                           = {'exclude': True} #No longer in FB
 psfcheck_list['com.google.fonts/check/epar']                                      = {'exclude': True}
 psfcheck_list['com.google.fonts/check/family/control_chars']                      = {}
 psfcheck_list['com.google.fonts/check/family/equal_font_versions']                = {}
 #psfcheck_list['com.google.fonts/check/family/equal_glyph_names']                  = {} # Currently disabled by FB
 #psfcheck_list['com.google.fonts/check/family/equal_numbers_of_glyphs']            = {}  # Currently disabled by FB
 psfcheck_list['com.google.fonts/check/family/equal_unicode_encodings']            = {}
-psfcheck_list['com.google.fonts/check/gsub5_gpos7']                               = {}
+psfcheck_list['com.google.fonts/check/gpos7']                                     = {}
 psfcheck_list['com.google.fonts/check/family/has_license']                        = {'exclude': True}
 psfcheck_list['com.google.fonts/check/family/italics_have_roman_counterparts']    = {}
 psfcheck_list['com.google.fonts/check/family/panose_familytype']                  = {}
@@ -138,7 +153,8 @@ psfcheck_list['com.google.fonts/check/family/single_directory']                 
 psfcheck_list['com.google.fonts/check/family/tnum_horizontal_metrics']            = {}
 psfcheck_list['com.google.fonts/check/family/underline_thickness']                = {}
 psfcheck_list['com.google.fonts/check/family/vertical_metrics']                   = {}
-psfcheck_list['com.google.fonts/check/family/win_ascent_and_descent']             = {'exclude': True}
+psfcheck_list['com.google.fonts/check/family/win_ascent_and_descent']             = \
+    {'change_status': {'FAIL': 'WARN', 'reason': 'Under review'}}
 psfcheck_list['com.google.fonts/check/family_naming_recommendations']             = {}
 psfcheck_list['com.google.fonts/check/file_size']                                 = {}
 psfcheck_list['com.google.fonts/check/font_copyright']                            = {'exclude': True}
@@ -162,6 +178,9 @@ psfcheck_list['com.google.fonts/check/glyph_coverage']                          
 psfcheck_list['com.google.fonts/check/gpos_kerning_info']                         = {}
 psfcheck_list['com.google.fonts/check/has_ttfautohint_params']                    = {'exclude': True}
 psfcheck_list['com.google.fonts/check/hinting_impact']                            = {}
+psfcheck_list['com.google.fonts/check/hmtx/comma_period']                         = {'exclude': True}
+psfcheck_list['com.google.fonts/check/hmtx/encoded_latin_digits']                 = {'exclude': True}
+psfcheck_list['com.google.fonts/check/hmtx/whitespace_advances']                  = {'exclude': True}
 psfcheck_list['com.google.fonts/check/integer_ppem_if_hinted']                    = {}
 psfcheck_list['com.google.fonts/check/italic_angle']                              = {}
 psfcheck_list['com.google.fonts/check/kern_table']                                = {}
