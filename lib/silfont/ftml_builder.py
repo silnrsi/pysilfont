@@ -371,7 +371,17 @@ class FTMLBuilder(object):
         return self._charFromUID.keys()
 
     def char(self, x):
-        return self._charFromBasename[x] if isinstance(x, str) else self._charFromUID[x]
+        try:
+            return self._charFromBasename[x] if isinstance(x, str) else self._charFromUID[x]
+        except KeyError:
+            # Issue error message and create dummy Char object for this character
+            if isinstance(x, str):
+                self.logger.log(f'Glyph "{x}" isn\'t in glyph_data.csv - adding dummy', 'E')
+                c = self.addChar(-1, x)
+            else:
+                self.logger.log(f'Char U+{x:04x} isn\'t in glyph_data.csv - adding dummy', 'E')
+                c = self.addChar(x, f'U+{x:04x}')
+            return c
 
     def addSpecial(self, uids, basename):
         # Add an FSpecial:
