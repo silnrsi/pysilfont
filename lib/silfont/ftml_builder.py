@@ -9,6 +9,7 @@ from silfont.ftml import Fxml, Ftestgroup, Ftest, Ffontsrc
 from palaso.unicode.ucd import get_ucd
 from itertools import product
 import re
+import collections.abc
 
 # This module comprises two related functionalities:
 #  1. The FTML object which acts as a staging object for ftml test data. The methods of this class
@@ -246,16 +247,33 @@ class Feature(object):
 
 
 class FChar(object):
-    """abstraction of a character in the font"""
+    """abstraction of an encoded glyph in the font"""
 
-    def __init__(self, uid, basename, logger):
+    def __init__(self, uids, basename, logger):
         self.logger = logger
-        self.uid = uid
+        # uids can be a singleton integer or, for multiple-encoded glyphs, some kind of sequence of integers
+        if isinstance(uids,collections.abc.Sequence):
+            uids1 = uids
+        else:
+            uids1 = (uids,)
+        # test each uid to make sure valid; remove if not.
+        uids2=[]
+        self.general = "unknown"
+        for uid in uids1:
+            try:
+                gc = get_ucd(uid,'gc')
+                if self.general == "unknown":
+                    self.general = gc
+                uids2.append(uid)
+            except (TypeError, IndexError):
+                self.logger.log(f'Invalid USV "{uid}" -- ignored.', 'E')
+                continue
+            except KeyError:
+                self.logger.log('USV %04X not defined; no properties known' % uid, 'W')
+        # make sure there's at least one left
+        assert len(uids2) > 0, f'No valid USVs found in {repr(uids)}'
+        self._uids = tuple(uids2)
         self.basename = basename
-        try:
-            self.general = get_ucd(uid,'gc')
-        except KeyError:
-            self.logger.log('USV %04X not defined; no properties known' % uid, 'W')
         self.feats = set()  # feat tags that affect this char
         self.langs = set()  # lang tags that affect this char
         self.aps = set()
@@ -266,6 +284,16 @@ class FChar(object):
             # and returns a the glyphname for that alternate.
         # Additional info from UFO:
         self.takesMarks = self.isMark = self.isBase = self.notInUFO = False
+
+    # Most callers don't need to support or or care about multiple-encoded glyphs, so we
+    # support the old .uid attribute by returning the first (I guess we consider it primary) uid.
+    def __getattr__(self,name):
+        if name == 'uids':
+            return self._uids
+        elif name == 'uid':
+            return self._uids[0]
+        else:
+            raise AttributeError
 
     # the static method FTMLBuilder.checkGlyph is likely preferred
     #   but leave this instance method for backwards compatibility
@@ -353,18 +381,23 @@ class FTMLBuilder(object):
         if incsv is not None:
             self.readGlyphData(incsv, fontcode, font)
 
-    def addChar(self, uid, basename):
-        # add an FChar:
-        # fatal error if uid or basename has already been seen:
-        if uid in self._charFromUID:
-            self.logger.log('Attempt to add duplicate USV %04X' % uid, 'S')
+    def addChar(self, uids, basename):
+        # Add an FChar
+        # assume parameters are OK:
+        c = FChar(uids, basename, self.logger)
+        # fatal error if the basename or any of uids have already been seen
+        fatal = False
+        for uid in c.uids:
+            if uid in self._charFromUID:
+                self.logger.log('Attempt to add duplicate USV %04X' % uid, 'E')
+                fatal = True
+            self._charFromUID[uid] = c
         if basename in self._charFromBasename:
-            self.logger.log('Attempt to add duplicate basename %s' % basename, 'S')
-
-        c = FChar(uid, basename, self.logger)
-        # remember it:
-        self._charFromUID[uid] = c
+            self.logger.log('Attempt to add duplicate basename %s' % basename, 'E')
+            fatal = True
         self._charFromBasename[basename] = c
+        if fatal:
+            self.logger.log('Cannot continue due to previous errors', 'S')
         return c
 
     def uids(self):
@@ -376,11 +409,12 @@ class FTMLBuilder(object):
         except KeyError:
             # Issue error message and create dummy Char object for this character
             if isinstance(x, str):
-                self.logger.log(f'Glyph "{x}" isn\'t in glyph_data.csv - adding dummy', 'E')
+                self.logger.log(f'Glyph "{x}" isn\'t in glyph_data.csv - adding dummy with USV=-1', 'E')
                 c = self.addChar(-1, x)
             else:
-                self.logger.log(f'Char U+{x:04x} isn\'t in glyph_data.csv - adding dummy', 'E')
-                c = self.addChar(x, f'U+{x:04x}')
+                usv = f'U+{x:04x}'
+                self.logger.log(f'Char {usv} isn\'t in glyph_data.csv - adding dummy with gname "{usv}"', 'E')
+                c = self.addChar(x, usv)
             return c
 
     def addSpecial(self, uids, basename):
@@ -403,7 +437,7 @@ class FTMLBuilder(object):
     def _csvWarning(self, msg, exception = None):
         m = "glyph_data line {1}: {0}".format(msg, self.incsv.line_num)
         if exception is not None:
-            m += '; ' + exception.message
+            m += '; ' + str(exception)
         self.logger.log(m, 'W')
 
     def readGlyphData(self, incsv, fontcode = None, font = None):
@@ -426,9 +460,9 @@ class FTMLBuilder(object):
             nameCol = fl.index('glyph_name');
             usvCol = fl.index('USV')
         except ValueError as e:
-            self.logger.log('Missing csv input field: ' + e.message, 'S')
+            self.logger.log('Missing csv input field: ' + str(e), 'S')
         except Exception as e:
-            self.logger.log('Error reading csv input field: ' + e.message, 'S')
+            self.logger.log('Error reading csv input field: ' + str(e), 'S')
         # optional columns:
         # If -f specified, make sure we have the fonts column
         if whichfont is not None:
@@ -478,39 +512,36 @@ class FTMLBuilder(object):
             psnamesSeen.add(psname)
 
             # compute basename-- the glyph name without extensions:
-            i = gname.find('.',1)
-            basename = gname if i <= 0 else gname[:i]
+            basename = gname.split('.',1)[0]
 
-            # Process USV
-            # could be empty string, a single USV or space-separated list of USVs
-            try:
-                uidList = [int(x, 16) for x in line[usvCol].split()]
-            except Exception as e:
-                self._csvWarning("invalid USV '%s' (%s); ignored: " % (line[usvCol], e.message))
-                uidList = []
+            # Process USV(s)
+            # could be empty string, a single USV, space-separated list of USVs for multiple encoding,
+            # or underscore-connected USVs indicating ligatures.
 
-            if len(uidList) == 1:
-                # Handle simple encoded glyphs
-                uid = uidList[0]
-                if uid in self._charFromUID:
-                    self._csvWarning('USV %04X previously seen; ignored' % uid)
-                    uidList = []
+            usvs = line[usvCol].strip()
+            if len(usvs) == 0:
+                # Empty USV field, unencoded glyph
+                usvs = ()
+            else:
+                # test for space-separated hex values:
+                m = re.match(r'[0-9A-F]{4,6}(?:\s+[0-9A-F]{4,6})*$', usvs, flags=re.IGNORECASE)
+                if m:
+                    usvs = usvs.split()
+                    isLigature = False
                 else:
-                    # Create character object for this USV
-                    c = self.addChar(uid, basename)
-                if font is not None:
-                    # Examine APs to determine if this character takes marks:
-                    c.checkGlyph(gname, font, self.apRE)
-                    if c.notInUFO:
-                        self.uidsMissingFromUFO.add(uid)
-            elif len(uidList) > 1:
-                # Handle ligatures
-                c = self.addSpecial(uidList, basename)
-                uid = None
+                    # test for '_' separated hex values (ligatures)
+                    m = re.match(r'[0-9A-F]{4,6}(?:_[0-9A-F]{4,6})+$', usvs, flags=re.IGNORECASE)
+                    if m:
+                        usvs = usvs.split('_')
+                        isLigature = True
+                    else:
+                        self._csvWarning(f"invalid USV field '{usvs}'; ignored")
+                        usvs = ()
+            uids = [int(x, 16) for x in usvs]
 
-            if len(uidList) == 0:
+            if len(uids) == 0:
                 # Handle unencoded glyphs
-                uid = None
+                uids = None # Prevents using this record to set default feature values
                 if basename in self._charFromBasename:
                     c = self._charFromBasename[basename]
                     # Check for additional AP info
@@ -520,6 +551,19 @@ class FTMLBuilder(object):
                 else:
                     self._csvWarning('unencoded variant %s found before encoded glyph' % gname)
                     c = None
+            elif isLigature:
+                # Handle ligatures
+                c = self.addSpecial(uids, basename)
+                uids = None  # Prevents using this record to set default feature values  (TODO: Research this)
+            else:
+                # Handle simple encoded glyphs (could be multiple uids!)
+                # Create character object
+                c = self.addChar(uids, basename)
+                if font is not None:
+                    # Examine APs to determine if this character takes marks:
+                    c.checkGlyph(gname, font, self.apRE)
+                    if c.notInUFO:
+                        self.uidsMissingFromUFO.update(uids)
 
             if featCol is not None:
                 feats = line[featCol].strip()
@@ -541,9 +585,9 @@ class FTMLBuilder(object):
                             if m.group(2) is not None:
                                 vals = [int(i) for i in m.group(2).split(',')]
                                 if len(vals) > 0:
-                                    if uid is not None:
+                                    if uids is not None:
                                         feature.default = vals[0]
-                                    elif len(feats) == 1:
+                                    elif len(feats) == 1:  # TODO: This seems like wrong test.
                                         for v in vals:
                                             # remember the glyph name for this feature/value combination:
                                             feat = '{}={}'.format(tag,v)
