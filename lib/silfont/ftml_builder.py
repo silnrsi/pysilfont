@@ -370,6 +370,9 @@ class FTMLBuilder(object):
         # list of USVs that are in the CSV but whose glyphs are not in the UFO
         self.uidsMissingFromUFO = set()
 
+        # DummyUSV  (see charAuto())
+        self.curDummyUSV = 0x100000 # Supplemental Private Use Area B
+
         # Compile --ap parameter
         if ap is None:
             ap = "."
@@ -401,10 +404,29 @@ class FTMLBuilder(object):
         return c
 
     def uids(self):
+        """ returns list of uids in glyph_data """
         return self._charFromUID.keys()
 
     def char(self, x):
+        """ finds an FChar based either basename or uid;
+            generates KeyError if not found."""
         return self._charFromBasename[x] if isinstance(x, str) else self._charFromUID[x]
+
+    def charAuto(self, x):
+        """ Like char() but will issue a warning and add a dummy """
+        try:
+            return self._charFromBasename[x] if isinstance(x, str) else self._charFromUID[x]
+        except KeyError:
+            # Issue error message and create dummy Char object for this character
+            if isinstance(x, str):
+                self.logger.log(f'Glyph "{x}" isn\'t in glyph_data.csv - adding dummy', 'E')
+                while self.curDummyUSV in self._charFromUID:
+                    self.curDummyUSV += 1
+                c = self.addChar(self.curDummyUSV, x)
+            else:
+                self.logger.log(f'Char U+{x:04x} isn\'t in glyph_data.csv - adding dummy', 'E')
+                c = self.addChar(x, f'U+{x:04x}')
+            return c
 
     def addSpecial(self, uids, basename):
         # Add an FSpecial:
@@ -418,9 +440,12 @@ class FTMLBuilder(object):
         return c
 
     def specials(self):
+        """returns a list of the basenames of specials"""
         return self._specialFromBasename.keys()
 
     def special(self, x):
+        """ finds an FSpecial based either basename or uid sequence;
+            generates KeyError if not found."""
         return self._specialFromBasename[x] if isinstance(x, str) else self._specialFromUIDs[tuple(x)]
 
     def _csvWarning(self, msg, exception = None):
