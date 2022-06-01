@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-'classes and functions for building ftml tests from glyph_data.csv and UFO'
+"""classes and functions for building ftml tests from glyph_data.csv and UFO"""
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2018 SIL International  (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
@@ -496,6 +496,12 @@ class FTMLBuilder(object):
         # RE that matches things like 'cv23' or 'cv23=4' or 'cv23=2,3'
         featRE = re.compile('^(\w{2,4})(?:=([\d,]+))?$')
 
+        # RE that matches USV sequences for ligatures
+        ligatureRE = re.compile('^[0-9A-Fa-f]{4,6}(?:_[0-9A-Fa-f]{4,6})+$')
+        
+        # RE that matches space-separated USV sequences
+        USVsRE = re.compile('^[0-9A-Fa-f]{4,6}(?:\s+[0-9A-Fa-f]{4,6})*$')
+
         # keep track of glyph names we've seen to detect duplicates
         namesSeen = set()
         psnamesSeen = set()
@@ -536,21 +542,17 @@ class FTMLBuilder(object):
             if len(usvs) == 0:
                 # Empty USV field, unencoded glyph
                 usvs = ()
+            elif USVsRE.match(usvs):
+                # space-separated hex values:
+                usvs = usvs.split()
+                isLigature = False
+            elif ligatureRE.match(usvs):
+                # '_' separated hex values (ligatures)
+                usvs = usvs.split('_')
+                isLigature = True
             else:
-                # test for space-separated hex values:
-                m = re.match(r'[0-9A-F]{4,6}(?:\s+[0-9A-F]{4,6})*$', usvs, flags=re.IGNORECASE)
-                if m:
-                    usvs = usvs.split()
-                    isLigature = False
-                else:
-                    # test for '_' separated hex values (ligatures)
-                    m = re.match(r'[0-9A-F]{4,6}(?:_[0-9A-F]{4,6})+$', usvs, flags=re.IGNORECASE)
-                    if m:
-                        usvs = usvs.split('_')
-                        isLigature = True
-                    else:
-                        self._csvWarning(f"invalid USV field '{usvs}'; ignored")
-                        usvs = ()
+                self._csvWarning(f"invalid USV field '{usvs}'; ignored")
+                usvs = ()
             uids = [int(x, 16) for x in usvs]
 
             if len(uids) == 0:
