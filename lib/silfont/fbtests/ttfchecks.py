@@ -55,6 +55,7 @@ def make_profile(check_list, variable_font=False):
         if variable_font and "not is_variable_font" in conditions: exclude = True
         if not variable_font and "is_variable_font" in conditions: exclude = True
         if "noto" in checkid.lower(): exclude = True # These will be specific to Noto fonts
+        if ":adobefonts" in checkid.lower(): exclude = True # Copy of standard test with overridden results so no new info
 
         if exclude: profile.remove_check(checkid)
     if not variable_font: # Remove this check manually since it does not have is_variable_font condition
@@ -68,6 +69,7 @@ def all_checks_dict(): # An ordered dict of all checks designed for exporting th
 
     for checkid in sorted(set(profile._check_registry.keys()), key=str.casefold):
         if "noto" in checkid.lower(): continue # We wxclude these in make_profile()
+        if ":adobefonts" in checkid.lower(): continue # We wxclude these in make_profile()
 
         section = profile._check_registry[checkid]
         check = section.get_check(checkid)
@@ -116,6 +118,8 @@ psfcheck_list['com.adobe.fonts/check/name/empty_records']                       
 psfcheck_list['com.adobe.fonts/check/name/postscript_name_consistency']           = {}
 psfcheck_list['com.adobe.fonts/check/nameid_1_win_english']                       = {}
 psfcheck_list['com.adobe.fonts/check/name/postscript_vs_cff']                     = {'exclude': True}
+psfcheck_list['com.adobe.fonts/check/sfnt_version']                               = {}
+psfcheck_list['com.adobe.fonts/check/stat_has_axis_value_tables']                 = {}
 psfcheck_list['com.adobe.fonts/check/varfont/distinct_instance_records']          = {}
 psfcheck_list['com.adobe.fonts/check/varfont/same_size_instance_records']         = {}
 psfcheck_list['com.adobe.fonts/check/varfont/valid_axis_nameid']                  = {}
@@ -141,8 +145,6 @@ psfcheck_list['com.google.fonts/check/dsig']                                    
 psfcheck_list['com.google.fonts/check/epar']                                      = {'exclude': True}
 psfcheck_list['com.google.fonts/check/family/control_chars']                      = {}
 psfcheck_list['com.google.fonts/check/family/equal_font_versions']                = {}
-#psfcheck_list['com.google.fonts/check/family/equal_glyph_names']                  = {} # Currently disabled by FB
-#psfcheck_list['com.google.fonts/check/family/equal_numbers_of_glyphs']            = {}  # Currently disabled by FB
 psfcheck_list['com.google.fonts/check/family/equal_unicode_encodings']            = {}
 psfcheck_list['com.google.fonts/check/gpos7']                                     = {}
 psfcheck_list['com.google.fonts/check/family/has_license']                        = {'exclude': True}
@@ -223,7 +225,7 @@ psfcheck_list['com.google.fonts/check/name/version_format']                     
 psfcheck_list['com.google.fonts/check/no_debugging_tables']                       = {}
 psfcheck_list['com.google.fonts/check/old_ttfautohint']                           = {'exclude': True}
 psfcheck_list['com.google.fonts/check/os2/use_typo_metrics']                      = {}
-#psfcheck_list['com.google.fonts/check/os2/use_typo_metrics']                      = \  (Left  a copy commented out as an
+#psfcheck_list['com.google.fonts/check/os2/use_typo_metrics']                      = \  (Left a copy commented out as an
 #    {'change_status': {'FAIL': 'WARN', 'reason': 'Under review'}}                      example of an override!)
 psfcheck_list['com.google.fonts/check/os2_metrics_match_hhea']                    = {}
 psfcheck_list['com.google.fonts/check/ots']                                       = {}
@@ -234,7 +236,6 @@ psfcheck_list['com.google.fonts/check/outline_semi_vertical']                   
 psfcheck_list['com.google.fonts/check/outline_short_segments']                    = {'exclude': True}
 psfcheck_list['com.google.fonts/check/points_out_of_bounds']                      = {'exclude': True}
 psfcheck_list['com.google.fonts/check/post_table_version']                        = {}
-#psfcheck_list['com.google.fonts/check/production_encoded_glyphs']                 = {} # Currently disabled by FB
 psfcheck_list['com.google.fonts/check/production_glyphs_similarity']              = {}
 psfcheck_list['com.google.fonts/check/render_own_name']                                       = {}
 psfcheck_list['com.google.fonts/check/required_tables']                           = {}
@@ -259,7 +260,6 @@ psfcheck_list['com.google.fonts/check/unreachable_glyphs']                      
 psfcheck_list['com.google.fonts/check/unwanted_tables']                           = {}
 psfcheck_list['com.google.fonts/check/usweightclass']                             = {}
 psfcheck_list['com.google.fonts/check/valid_glyphnames']                          = {}
-psfcheck_list['com.google.fonts/check/valid_glyphnames:adobefonts']               = {}
 psfcheck_list['com.google.fonts/check/varfont_duplicate_instance_names']          = {}
 psfcheck_list['com.google.fonts/check/varfont_has_instances']                     = {}
 psfcheck_list['com.google.fonts/check/varfont_instance_coordinates']              = {}
@@ -282,11 +282,11 @@ psfcheck_list['com.google.fonts/check/varfont/wdth_valid_range']                
 psfcheck_list['com.google.fonts/check/varfont/wght_valid_range']                  = {}
 psfcheck_list['com.google.fonts/check/vendor_id']                                 = {}
 psfcheck_list['com.google.fonts/check/version_bump']                              = {}
+psfcheck_list['com.google.fonts/check/vertical_metrics']                          = {}
 psfcheck_list['com.google.fonts/check/vertical_metrics_regressions']              = {}
 psfcheck_list['com.google.fonts/check/vttclean']                                  = {}
 psfcheck_list['com.google.fonts/check/whitespace_glyphnames']                     = {}
 psfcheck_list['com.google.fonts/check/whitespace_glyphs']                         = {}
-psfcheck_list['com.google.fonts/check/whitespace_glyphs:adobefonts']              = {}
 psfcheck_list['com.google.fonts/check/whitespace_ink']                            = {}
 psfcheck_list['com.google.fonts/check/whitespace_widths']                         = {}
 psfcheck_list['com.google.fonts/check/xavgcharwidth']                             = {}
