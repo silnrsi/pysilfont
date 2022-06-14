@@ -432,7 +432,7 @@ class Ufont(object):
             if "xHeight" not in self.fontinfo:
                 fisetto["xHeight"] = int(storedvals["ascender"] * 0.6)
             if "openTypeOS2Selection" in self.fontinfo: # If already present, need to ensure bit 7 is set
-                fisetto["openTypeOS2Selection"] = list(set(self.fontinfo.getval("openTypeOS2Selection") + [7]))
+                fisetto["openTypeOS2Selection"] = sorted(list(set(self.fontinfo.getval("openTypeOS2Selection") + [7])))
 
             for key in fisetifmissing:
                 if key not in self.fontinfo:
