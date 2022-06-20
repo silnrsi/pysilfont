@@ -2,19 +2,26 @@
 
 ## [1.5.1.dev0] - Placeholder for next release
 
-
-
 ### Added
 
 | Command | Description |
 | ------- | ----------- |
-| Command | Purpose  |
+| [psfcheckclassorders](docs/scripts.md#psfcheckclassorders) | Verify classes defined in xml have correct ordering where needed |
+| [psfcheckftml](docs/scripts.md#psfcheckftml) | Check ftml files for structural integrity |
+| [psfcheckglyphinventory](docs/scripts.md#psfcheckglyphinventory) | Warn for differences in glyph inventory and encoding between UFO and input file (e.g., glyph_data.csv) |
+| [psfcheckinterpolatable](docs/scripts.md#psfcheckinterpolatable) | Check UFOs in a designspace file are compatible with interpolation |
+| [psffixfontlab](docs/scripts.md#psffixfontlab) | Make changes needed to a UFO following processing by FontLab |
+| [psfsetdummydsig](docs/scripts.md#psfsetdummydsig) | Add a dummy DSIG table into a TTF font |
+| [psfsetglyphdata](docs/scripts.md#psfsetglyphdata) | Update and/or sort glyph_data.csv based on input file(s) |
+| [psfshownames](docs/scripts.md#psfshownames) | Display name fields and other bits for linking fonts into families |
+| [psfwoffit](docs/scripts.md#psfwoffit) | Convert between ttf, woff, and woff2 |
 
 ### Changed
 
 
 ### Removed
 
+None
 
 ## [1.5.0] - 2020-05-20 - Maintenance Release; Python 2 support removed
 
@@ -29,7 +36,7 @@ Many other updates
 
 | Command | Description |
 | ------- | ----------- |
-| [psfftml2TThtml.py](docs/scripts.md#psfftml2TThtml.py) | Convert FTML document to html and fonts for testing TypeTuner |
+| [psfftml2TThtml](docs/scripts.md#psfftml2TThtml) | Convert FTML document to html and fonts for testing TypeTuner |
 | [psfmakescaledshifted](docs/scripts.md#psfmakescaledshifted) | Creates scaled and shifted versions of glyphs |
 | [psfrunfbchecks](docs/scripts.md#psfrunfbchecks) | Run Font Bakery checks using a standard profile with option to specify an alternative profile |
 | [psfsetdummydsig](docs/scripts.md#psfsetdummydsig) | Put a dummy DSIG table into a TTF font |
