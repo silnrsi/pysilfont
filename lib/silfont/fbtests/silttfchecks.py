@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-'Checks to be imported by ttfchecks.py'
+'''Checks to be imported by ttfchecks.py
+Some checks based on examples from Font Bakery, copyright 2017 The Font Bakery Authors, licensed under the Apache 2.0 license'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2022 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
@@ -14,8 +15,10 @@ from fontbakery.constants import NameID, PlatformID, WindowsEncodingID
   id = 'org.sil/check/name/version_format',
   rationale = """
         Based on com.google.fonts/check/name/version_format but:
-        - Checks for exactly 3 digits after decimal point
-        Only give WARN if valid dev version, ie
+        - Checks for  two valid formats:
+        - Production: exactly 3 digits after decimal point
+        
+        
         - Allows major version to be 0
         - Allows extra info after numbers, eg for beta or dev versions
   """
@@ -27,7 +30,6 @@ def org_sil_version_format(ttFont):
   import re
 
   failed = False
-  warned = False
   version_entries = get_name_entry_strings(ttFont, NameID.VERSION_STRING)
   if len(version_entries) == 0:
     failed = True
@@ -46,16 +48,7 @@ def org_sil_version_format(ttFont):
                     f' follow the pattern "Version X.nnn devstring" with X.nnn'
                     f' greater than or equal to 0.000.'
                     f' Current version string is: "{ventry}"')
-    elif not re.match(r'Version [1-9][0-9]*\.\d{3}$', ventry):
-        warned = True
-        yield WARN, \
-              Message("nonproduction-version-strings",
-                      f'For production fonts, the NameID.VERSION_STRING'
-                      f' (nameID={NameID.VERSION_STRING}) value must'
-                      f' follow the pattern "Version X.nnn" with X.nnn'
-                      f' greater than or equal to 1.000.'
-                      f' Current version string is: "{ventry}"')
-  if not failed and not warned:
+  if not failed:
     yield PASS, "Version format in NAME table entries is correct."
 
 @check(

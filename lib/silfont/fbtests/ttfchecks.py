@@ -14,6 +14,7 @@ from fontbakery.profiles.googlefonts import METADATA_CHECKS, REPO_CHECKS, DESCRI
 from fontbakery.profiles.ufo_sources import UFO_PROFILE_CHECKS
 from fontbakery.profiles.universal import DESIGNSPACE_CHECKS
 from silfont.fbtests.silttfchecks import *
+from silfont.fbtests.silnotcjk import *
 
 from collections import OrderedDict
 
@@ -46,7 +47,6 @@ def make_profile(check_list, variable_font=False):
             if exclude: profile.remove_check(checkid)
 
     # Exclude further sets of checks to reduce number of skips and so have less clutter in html results
-    # (Currently just working with variable font tests, but structured to cover more types of checks later)
     for checkid in sorted(set(profile._check_registry.keys())):
         section = profile._check_registry[checkid]
         check = section.get_check(checkid)
@@ -58,9 +58,13 @@ def make_profile(check_list, variable_font=False):
         if ":adobefonts" in checkid.lower(): exclude = True # Copy of standard test with overridden results so no new info
 
         if exclude: profile.remove_check(checkid)
-    if not variable_font: # Remove this check manually since it does not have is_variable_font condition
-        if "com.google.fonts/check/STAT_strings" in profile._check_registry.keys(): profile.remove_check("com.google.fonts/check/STAT_strings")
-
+    # Remove further checks that are only relevant for variable fonts but don't use the is_variable_font condition
+    if not variable_font:
+        for checkid in (
+            "com.adobe.fonts/check/stat_has_axis_value_tables",
+            "com.google.fonts/check/STAT_strings",
+            "com.google.fonts/check/STAT/axis_order"):
+            if checkid in profile._check_registry.keys(): profile.remove_check(checkid)
     return profile
 
 def all_checks_dict(): # An ordered dict of all checks designed for exporting the data
@@ -131,7 +135,7 @@ psfcheck_list['com.fontwerk/check/weight_class_fvar']                           
 psfcheck_list['com.google.fonts/check/aat']                                       = {}
 psfcheck_list['com.google.fonts/check/all_glyphs_have_codepoints']                = {'exclude': True}
 psfcheck_list['com.google.fonts/check/canonical_filename']                        = {}
-psfcheck_list['com.google.fonts/check/cjk_chws_feature']                          = {}
+psfcheck_list['com.google.fonts/check/cjk_chws_feature']                          = {'exclude': True}
 psfcheck_list['com.google.fonts/check/cjk_not_enough_glyphs']                     = {'exclude': True}
 psfcheck_list['com.google.fonts/check/cjk_vertical_metrics']                      = {'exclude': True}
 psfcheck_list['com.google.fonts/check/cjk_vertical_metrics_regressions']          = {'exclude': True}
@@ -155,8 +159,8 @@ psfcheck_list['com.google.fonts/check/family/single_directory']                 
 psfcheck_list['com.google.fonts/check/family/tnum_horizontal_metrics']            = {}
 psfcheck_list['com.google.fonts/check/family/underline_thickness']                = {}
 psfcheck_list['com.google.fonts/check/family/vertical_metrics']                   = {}
-psfcheck_list['com.google.fonts/check/family/win_ascent_and_descent']             = \
-    {'change_status': {'FAIL': 'WARN', 'reason': 'Under review'}}
+psfcheck_list['com.google.fonts/check/family/win_ascent_and_descent']             = {'exclude': True}
+#    {'change_status': {'FAIL': 'WARN', 'reason': 'Under review'}}
 psfcheck_list['com.google.fonts/check/family_naming_recommendations']             = {}
 psfcheck_list['com.google.fonts/check/file_size']                                 = {}
 psfcheck_list['com.google.fonts/check/font_copyright']                            = {'exclude': True}
@@ -224,10 +228,10 @@ psfcheck_list['com.google.fonts/check/name/unwanted_chars']                     
 psfcheck_list['com.google.fonts/check/name/version_format']                       = {'exclude': True}
 psfcheck_list['com.google.fonts/check/no_debugging_tables']                       = {}
 psfcheck_list['com.google.fonts/check/old_ttfautohint']                           = {'exclude': True}
-psfcheck_list['com.google.fonts/check/os2/use_typo_metrics']                      = {}
+psfcheck_list['com.google.fonts/check/os2/use_typo_metrics']                      = {'exclude': True}
 #psfcheck_list['com.google.fonts/check/os2/use_typo_metrics']                      = \  (Left a copy commented out as an
 #    {'change_status': {'FAIL': 'WARN', 'reason': 'Under review'}}                      example of an override!)
-psfcheck_list['com.google.fonts/check/os2_metrics_match_hhea']                    = {}
+psfcheck_list['com.google.fonts/check/os2_metrics_match_hhea']                    = {'exclude': True}
 psfcheck_list['com.google.fonts/check/ots']                                       = {}
 psfcheck_list['com.google.fonts/check/outline_alignment_miss']                    = {'exclude': True}
 psfcheck_list['com.google.fonts/check/outline_colinear_vectors']                  = {'exclude': True}
@@ -236,10 +240,10 @@ psfcheck_list['com.google.fonts/check/outline_semi_vertical']                   
 psfcheck_list['com.google.fonts/check/outline_short_segments']                    = {'exclude': True}
 psfcheck_list['com.google.fonts/check/points_out_of_bounds']                      = {'exclude': True}
 psfcheck_list['com.google.fonts/check/post_table_version']                        = {}
-psfcheck_list['com.google.fonts/check/production_glyphs_similarity']              = {}
-psfcheck_list['com.google.fonts/check/render_own_name']                                       = {}
+psfcheck_list['com.google.fonts/check/production_glyphs_similarity']              = {'exclude': True}
+psfcheck_list['com.google.fonts/check/render_own_name']                           = {}
 psfcheck_list['com.google.fonts/check/required_tables']                           = {}
-psfcheck_list['com.google.fonts/check/rupee']                                     = {}
+psfcheck_list['com.google.fonts/check/rupee']                                     = {'exclude': True}
 psfcheck_list['com.google.fonts/check/shaping/collides']                          = {'exclude': True}
 psfcheck_list['com.google.fonts/check/shaping/forbidden']                         = {'exclude': True}
 psfcheck_list['com.google.fonts/check/shaping/regression']                        = {'exclude': True}
@@ -281,17 +285,21 @@ psfcheck_list['com.google.fonts/check/varfont/unsupported_axes']                
 psfcheck_list['com.google.fonts/check/varfont/wdth_valid_range']                  = {}
 psfcheck_list['com.google.fonts/check/varfont/wght_valid_range']                  = {}
 psfcheck_list['com.google.fonts/check/vendor_id']                                 = {}
-psfcheck_list['com.google.fonts/check/version_bump']                              = {}
-psfcheck_list['com.google.fonts/check/vertical_metrics']                          = {}
-psfcheck_list['com.google.fonts/check/vertical_metrics_regressions']              = {}
+psfcheck_list['com.google.fonts/check/version_bump']                              = {'exclude': True}
+psfcheck_list['com.google.fonts/check/vertical_metrics']                          = {'exclude': True}
+psfcheck_list['com.google.fonts/check/vertical_metrics_regressions']              = {'exclude': True}
 psfcheck_list['com.google.fonts/check/vttclean']                                  = {}
 psfcheck_list['com.google.fonts/check/whitespace_glyphnames']                     = {}
 psfcheck_list['com.google.fonts/check/whitespace_glyphs']                         = {}
 psfcheck_list['com.google.fonts/check/whitespace_ink']                            = {}
 psfcheck_list['com.google.fonts/check/whitespace_widths']                         = {}
 psfcheck_list['com.google.fonts/check/xavgcharwidth']                             = {}
-psfcheck_list['org.sil/check/name/version_format']                                = {}
+psfcheck_list['org.sil/check/family/win_ascent_and_descent']                      = {}
+psfcheck_list['org.sil/check/os2/use_typo_metrics']                               = {}
+psfcheck_list['org.sil/check/os2_metrics_match_hhea']                             = {}
+psfcheck_list['org.sil/check/vertical_metrics']                                   = {}
 psfcheck_list['org.sil/check/number_widths']                                      = {}
+psfcheck_list['org.sil/check/name/version_format']                                = {}
 psfcheck_list['org.sil/check/whitespace_widths']                                  = {}
 
 profile = make_profile(check_list=psfcheck_list)
