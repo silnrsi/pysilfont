@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.6.1] - - Placeholder for next release
+
+
+### Added
+
+| Command | Description |
+| ------- | ----------- |
+
+### Changed
+
+
+### Removed
+
+None
+
 ## [1.6.0] - 2022-07-25 Maintenance Release - general updates
 
 General updates over the last two years, adding new scripts and updating existing in response to new
