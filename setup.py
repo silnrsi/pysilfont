@@ -4,7 +4,6 @@ from __future__ import print_function
 __url__ = 'http://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2014 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
-__version__ = '1.5.1.dev0'
 
 import sys, os, importlib
 
@@ -13,6 +12,15 @@ try:
 except ImportError :
     print("pysilfont requires setuptools - see installation notes in README.md")
     sys.exit(1)
+
+# Read version from __init__.py
+version = None
+here = os.path.abspath(os.path.dirname(__file__))
+init = open(os.path.join(here, "lib", "silfont", "__init__.py"), 'r')
+for line in init:
+   if line.startswith('__version__'):
+       version = line.split("'")[1]
+if version is None: sys.exit("Failed to read __version__ from init.py")
 
 if sys.version_info < (3,6): sys.exit('Sorry, Python < 3.6 is not supported')
 
@@ -24,9 +32,7 @@ if sys.argv[1] in ('develop', 'install') :
         except ImportError : warnings.append("- Some modules/scripts require the python %s package which is not currently installed" % m)
 
 long_description =  "A growing collection of font utilities mainly written in Python designed to help with various aspects of font design and production.\n"
-long_description += "Developed and maintained by SIL International's by SIL International's WSTech department (formerly NRSI).\n"
-long_description += "Some of these utilities make use of the FontForge Python module."
-
+long_description += "Developed and maintained by SIL International's by SIL International's WSTech department (formerly NRSI)."
 
 # Create entry_points console scripts entry
 cscripts = []
@@ -36,7 +42,7 @@ for file in os.listdir("lib/silfont/scripts/") :
 
 setup(
     name = 'pysilfont',
-    version = __version__,
+    version = version,
     description = 'Python-based font utilities collection',
     long_description = long_description,
     maintainer = 'SIL International',

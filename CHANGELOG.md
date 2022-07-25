@@ -1,6 +1,9 @@
 # Changelog
 
-## [1.5.1.dev0] - Placeholder for next release
+## [1.6.0] - 2022-07-25 Maintenance Release - general updates
+
+General updates over the last two years, adding new scripts and updating existing in response to new
+needs or to adjust for changes to third-party software.
 
 ### Added
 
@@ -18,6 +21,7 @@
 
 ### Changed
 
+Multiple changes!
 
 ### Removed
 
