@@ -348,7 +348,7 @@ class Ufont(object):
             fiwarnifmiss = ("capHeight", "copyright", "openTypeNameDescription", "openTypeNameDesigner",
                         "openTypeNameDesignerURL", "openTypeNameLicense", "openTypeNameLicenseURL",
                         "openTypeNameManufacturerURL", "openTypeOS2CodePageRanges",
-                        "openTypeOS2UnicodeRanges", "openTypeOS2VendorID","styleMapFamilyName", "styleMapStyleName",
+                        "openTypeOS2UnicodeRanges", "openTypeOS2VendorID",
                         "openTypeOS2WeightClass", "openTypeOS2WinAscent", "openTypeOS2WinDescent")
             fiwarnifnot = {"unitsPerEm": (1000, 2048),
                            "styleMapStyleName": ("regular", "bold", "italic", "bold italic")},
@@ -443,8 +443,6 @@ class Ufont(object):
             for key in fiwarnifmiss:
                 if key not in self.fontinfo:
                     logmess = key + " is missing from fontinfo.plist"
-                    if key in ("styleMapFamilyName", "styleMapStyleName") :
-                        logmess = logmess + " (not needed for complex masters)"
                     logger.log(logmess, "W")
             # Warn about bad values
             for key in fiwarnifnot:

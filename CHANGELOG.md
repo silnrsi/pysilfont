@@ -10,6 +10,7 @@
 
 ### Changed
 
+check&fix, used by most UFO commands, no longer warns if styleMapFamilyName or styleMapStyleName are missing in fontinfo (1.6.1.dev1)
 
 ### Removed
 
