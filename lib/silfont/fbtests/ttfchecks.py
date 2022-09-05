@@ -297,7 +297,7 @@ psfcheck_list['com.google.fonts/check/xavgcharwidth']                           
 psfcheck_list['org.sil/check/family/win_ascent_and_descent']                      = {}
 psfcheck_list['org.sil/check/os2/use_typo_metrics']                               = {}
 psfcheck_list['org.sil/check/os2_metrics_match_hhea']                             = {}
-psfcheck_list['org.sil/check/vertical_metrics']                                   = {}
+#psfcheck_list['org.sil/check/vertical_metrics']                                   = {}
 psfcheck_list['org.sil/check/number_widths']                                      = {}
 psfcheck_list['org.sil/check/name/version_format']                                = {}
 psfcheck_list['org.sil/check/whitespace_widths']                                  = {}

@@ -145,7 +145,7 @@ def corg_sil_check_os2_fsselectionbit7(ttFonts):
         yield PASS, "OK"
 
 
-@check(
+'''@check(
     id = 'org.sil/check/vertical_metrics',
 #    conditions = ['not remote_styles'],
     rationale="""
@@ -227,4 +227,5 @@ def org_sil_check_vertical_metrics(ttFont):
 
     if not failed and not warn:
         yield PASS, 'Vertical metrics are good'
+'''
 
