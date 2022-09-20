@@ -8,66 +8,67 @@ There are further example scripts supplied with Pysilfont, and some of these are
 
 ## Table of scripts
 
-| Command | Description |
-| ------- | ----------- |
-| [psfaddanchors](#psfaddanchors) | Read anchor data from XML file and apply to UFO |
-| [psfbuildcomp](#psfbuildcomp) | Add composite glyphs to UFO based on a Composite Definitions file |
-| [psfbuildcompgc](#psfbuildcompgc) | Add composite glyphs to UFO using glyphConstruction based on a CD file |
-| [psfbuildfea](#psfbuildfea) | Compile a feature (.fea) file against an existing input TTF |
-| [psfchangegdlnames](#psfchangegdlnames) | Change graphite names within GDL based on mappings files |
-| [psfchangettfglyphnames](#psfchangettfglyphnames) | Change glyph names in a ttf from working names to production names |
-| [psfcheckbasicchars](#psfcheckbasicchars) | Check UFO for glyphs that represent recommended basic characters |
-| [psfcheckclassorders](#psfcheckclassorders) | Verify classes defined in xml have correct ordering where needed |
-| [psfcheckftml](#psfcheckftml) | Check ftml files for structural integrity |
+| Command                                          | Description                                                                                            |
+|--------------------------------------------------|--------------------------------------------------------------------------------------------------------|
+| [psfaddanchors](#psfaddanchors)                  | Read anchor data from XML file and apply to UFO                                                        |
+| [psfbuildcomp](#psfbuildcomp)                    | Add composite glyphs to UFO based on a Composite Definitions file                                      |
+| [psfbuildcompgc](#psfbuildcompgc)                | Add composite glyphs to UFO using glyphConstruction based on a CD file                                 |
+| [psfbuildfea](#psfbuildfea)                      | Compile a feature (.fea) file against an existing input TTF                                            |
+| [psfchangegdlnames](#psfchangegdlnames)          | Change graphite names within GDL based on mappings files                                               |
+| [psfchangettfglyphnames](#psfchangettfglyphnames) | Change glyph names in a ttf from working names to production names                                     |
+| [psfcheckbasicchars](#psfcheckbasicchars)        | Check UFO for glyphs that represent recommended basic characters                                       |
+| [psfcheckclassorders](#psfcheckclassorders)      | Verify classes defined in xml have correct ordering where needed                                       |
+| [psfcheckftml](#psfcheckftml)                    | Check ftml files for structural integrity                                                              |
 | [psfcheckglyphinventory](#psfcheckglyphinventory) | Warn for differences in glyph inventory and encoding between UFO and input file (e.g., glyph_data.csv) |
-| [psfcheckinterpolatable](#psfcheckinterpolatable) | Check UFOs in a designspace file are compatible with interpolation |
-| [psfcompdef2xml](#psfcompdef2xml) | Convert composite definition file to XML format |
-| [psfcompressgr](#psfcompressgr) | Compress Graphite tables in a ttf font |
-| [psfcopyglyphs](#psfcopyglyphs) | Copy glyphs from one UFO to another with optional scale and rename |
-| [psfcopymeta](#psfcopymeta) | Copy basic metadata from one UFO to another, for fonts in related families |
-| [psfcreateinstances](#psfcreateinstances) | Create one or more instance UFOs from one or more designspace files |
-| [psfcsv2comp](#psfcsv2comp) | Create composite definition file from csv |
-| [psfdeflang](#psfdeflang) | Changes default language behaviour in a font |
-| [psfdeleteglyphs](#psfdeleteglyphs) | Deletes glyphs from a UFO based on a list |
-| [psfdupglyphs](#psfdupglyphs) | Duplicates glyphs in a UFO based on a csv definition |
-| [psfexportanchors](#psfexportanchors) | Export UFO anchor data to a separate XML file |
-| [psfexportmarkcolors](#psfexportmarkcolors) | Export csv of mark colors |
-| [psfexportpsnames](#psfexportpsnames) | Export a map of glyph name to PS name to a csv file |
-| [psfexportunicodes](#psfexportunicodes) | Export a map of glyph name to unicode value to a csv file |
-| [psffixffglifs](#psffixffglifs) | Make changes needed to a UFO following processing by FontForge |
-| [psffixfontlab](#psffixfontlab) | Make changes needed to a UFO following processing by FontLab |
-| [psfftml2TThtml](#psfftml2tthtml) | Convert FTML document to html and fonts for testing TypeTuner |
-| [psfftml2odt](#psfftml2odt) | Create a LibreOffice Writer file from an FTML test description |
-| [psfgetglyphnames](#psfgetglyphnames) | Create a file of glyphs to import from a list of characters to import |
-| [psfglyphs2ufo](#psfglyphs2ufo) | Export all the masters in a .glyphs file to UFOs |
-| [psfmakedeprecated](#psfmakedeprecated) | Creates deprecated versions of glyphs |
-| [psfmakefea](#psfmakefea) | Make a features file base on input UFO or AP database |
-| [psfmakescaledshifted](#psfmakescaledshifted) | Creates scaled and shifted versions of glyphs |
-| [psfmakewoffmetadata](#psfmakewoffmetadata) | Make the WOFF metadata xml file based on input UFO |
-| [psfnormalize](#psfnormalize) | Normalize a UFO and optionally converts it between UFO2 and UFO3 versions |
-| [psfremovegliflibkeys](#psfremovegliflibkeys) | Remove keys from glif lib entries |
-| [psfrenameglyphs](#psfrenameglyphs) | Within a UFO and class definition, assign new working names to glyphs based on csv input file |
-| [psfrunfbchecks](#psfrunfbchecks) | Run Font Bakery checks using a standard profile with option to specify an alternative profile |
-| [psfsetassocfeat](#psfsetassocfeat) | Add associate feature info to glif lib based on a csv file |
-| [psfsetassocuids](#psfsetassocuids) | Add associate UID info to glif lib based on a csv file |
-| [psfsetdummydsig](#psfsetdummydsig) | Add a dummy DSIG table into a TTF font |
-| [psfsetglyphdata](#psfsetglyphdata) | Update and/or sort glyph_data.csv based on input file(s) |
-| [psfsetglyphorder](#psfsetglyphorder) | Load glyph order data into public.glyphOrder based on a text file |
-| [psfsetkeys](#psfsetkeys) | Set key(s) with given value(s) in a UFO p-list file |
-| [psfsetmarkcolors](#psfsetmarkcolors) | Set mark colors based on csv file |
-| [psfsetpsnames](#psfsetpsnames) | Add public.postscriptname to glif lib based on a csv file |
-| [psfsetunicodes](#psfsetunicodes) | Set unicode values for a glif based on a csv file |
-| [psfsetversion](#psfsetversion) | Change all the version-related info in a UFO's fontinfo.plist |
-| [psfshownames](#psfshownames) | Display name fields and other bits for linking fonts into families |
-| [psfsubset](#psfsubset) | Create a subset of an existing UFO |
-| [psfsyncmasters](#psfsyncmasters) | Sync metadata in master UFO files based on a Designspace file |
-| [psfsyncmeta](#psfsyncmeta) | Copy basic metadata from one member of a font family to other family members |
-| [psftuneraliases](#psftuneraliases) | Merge alias information into TypeTuner feature xml file |
-| [psfufo2glyphs](#psfufo2glyphs) | Generate a glyphs files from a designspace file and UFO(s) |
-| [psfufo2ttf](#psfufo2ttf) | Generate a ttf file without OpenType tables from a UFO |
-| [psfversion](#psfversion) | Display version info for pysilfont and dependencies |
-| [psfwoffit](#psfwoffit) | Convert between ttf, woff, and woff2 |
-| [psfxml2compdef](#psfxml2compdef) | Convert composite definition file from XML format |
+| [psfcheckinterpolatable](#psfcheckinterpolatable) | Check UFOs in a designspace file are compatible with interpolation                                     |
+| [psfcheckproject](#psfcheckproject)              | Check UFOs in designspace files have consistent glyph inventory & unicode values                       |
+| [psfcompdef2xml](#psfcompdef2xml)                | Convert composite definition file to XML format                                                        |
+| [psfcompressgr](#psfcompressgr)                  | Compress Graphite tables in a ttf font                                                                 |
+| [psfcopyglyphs](#psfcopyglyphs)                  | Copy glyphs from one UFO to another with optional scale and rename                                     |
+| [psfcopymeta](#psfcopymeta)                      | Copy basic metadata from one UFO to another, for fonts in related families                             |
+| [psfcreateinstances](#psfcreateinstances)        | Create one or more instance UFOs from one or more designspace files                                    |
+| [psfcsv2comp](#psfcsv2comp)                      | Create composite definition file from csv                                                              |
+| [psfdeflang](#psfdeflang)                        | Changes default language behaviour in a font                                                           |
+| [psfdeleteglyphs](#psfdeleteglyphs)              | Deletes glyphs from a UFO based on a list                                                              |
+| [psfdupglyphs](#psfdupglyphs)                    | Duplicates glyphs in a UFO based on a csv definition                                                   |
+| [psfexportanchors](#psfexportanchors)            | Export UFO anchor data to a separate XML file                                                          |
+| [psfexportmarkcolors](#psfexportmarkcolors)      | Export csv of mark colors                                                                              |
+| [psfexportpsnames](#psfexportpsnames)            | Export a map of glyph name to PS name to a csv file                                                    |
+| [psfexportunicodes](#psfexportunicodes)          | Export a map of glyph name to unicode value to a csv file                                              |
+| [psffixffglifs](#psffixffglifs)                  | Make changes needed to a UFO following processing by FontForge                                         |
+| [psffixfontlab](#psffixfontlab)                  | Make changes needed to a UFO following processing by FontLab                                           |
+| [psfftml2TThtml](#psfftml2tthtml)                | Convert FTML document to html and fonts for testing TypeTuner                                          |
+| [psfftml2odt](#psfftml2odt)                      | Create a LibreOffice Writer file from an FTML test description                                         |
+| [psfgetglyphnames](#psfgetglyphnames)            | Create a file of glyphs to import from a list of characters to import                                  |
+| [psfglyphs2ufo](#psfglyphs2ufo)                  | Export all the masters in a .glyphs file to UFOs                                                       |
+| [psfmakedeprecated](#psfmakedeprecated)          | Creates deprecated versions of glyphs                                                                  |
+| [psfmakefea](#psfmakefea)                        | Make a features file base on input UFO or AP database                                                  |
+| [psfmakescaledshifted](#psfmakescaledshifted)    | Creates scaled and shifted versions of glyphs                                                          |
+| [psfmakewoffmetadata](#psfmakewoffmetadata)      | Make the WOFF metadata xml file based on input UFO                                                     |
+| [psfnormalize](#psfnormalize)                    | Normalize a UFO and optionally converts it between UFO2 and UFO3 versions                              |
+| [psfremovegliflibkeys](#psfremovegliflibkeys)    | Remove keys from glif lib entries                                                                      |
+| [psfrenameglyphs](#psfrenameglyphs)              | Within a UFO and class definition, assign new working names to glyphs based on csv input file          |
+| [psfrunfbchecks](#psfrunfbchecks)                | Run Font Bakery checks using a standard profile with option to specify an alternative profile          |
+| [psfsetassocfeat](#psfsetassocfeat)              | Add associate feature info to glif lib based on a csv file                                             |
+| [psfsetassocuids](#psfsetassocuids)              | Add associate UID info to glif lib based on a csv file                                                 |
+| [psfsetdummydsig](#psfsetdummydsig)              | Add a dummy DSIG table into a TTF font                                                                 |
+| [psfsetglyphdata](#psfsetglyphdata)              | Update and/or sort glyph_data.csv based on input file(s)                                               |
+| [psfsetglyphorder](#psfsetglyphorder)            | Load glyph order data into public.glyphOrder based on a text file                                      |
+| [psfsetkeys](#psfsetkeys)                        | Set key(s) with given value(s) in a UFO p-list file                                                    |
+| [psfsetmarkcolors](#psfsetmarkcolors)            | Set mark colors based on csv file                                                                      |
+| [psfsetpsnames](#psfsetpsnames)                  | Add public.postscriptname to glif lib based on a csv file                                              |
+| [psfsetunicodes](#psfsetunicodes)                | Set unicode values for a glif based on a csv file                                                      |
+| [psfsetversion](#psfsetversion)                  | Change all the version-related info in a UFO's fontinfo.plist                                          |
+| [psfshownames](#psfshownames)                    | Display name fields and other bits for linking fonts into families                                     |
+| [psfsubset](#psfsubset)                          | Create a subset of an existing UFO                                                                     |
+| [psfsyncmasters](#psfsyncmasters)                | Sync metadata in master UFO files based on a Designspace file                                          |
+| [psfsyncmeta](#psfsyncmeta)                      | Copy basic metadata from one member of a font family to other family members                           |
+| [psftuneraliases](#psftuneraliases)              | Merge alias information into TypeTuner feature xml file                                                |
+| [psfufo2glyphs](#psfufo2glyphs)                  | Generate a glyphs files from a designspace file and UFO(s)                                             |
+| [psfufo2ttf](#psfufo2ttf)                        | Generate a ttf file without OpenType tables from a UFO                                                 |
+| [psfversion](#psfversion)                        | Display version info for pysilfont and dependencies                                                    |
+| [psfwoffit](#psfwoffit)                          | Convert between ttf, woff, and woff2                                                                   |
+| [psfxml2compdef](#psfxml2compdef)                | Convert composite definition file from XML format                                                      |
 
 ---
 
@@ -372,6 +373,24 @@ When there are more than two UFOs in the designspace files they are checked in p
  - For each glyph that is in both UFOs, they are tested with fontParts isCompatible() function which checks various items - for example the number and direction of contours.
 
 ---
+#### psfcheckproject
+Usage: **`psfcheckproject designspace(s)`**
+
+_([Standard options](docs.md#standard-command-line-options) also apply)_
+
+Check that the UFOs listed in the designspace file(s) have consistent glyph inventories and glyph unicode values.
+
+Example usage:
+```
+psfcheckproject source/*.designspace
+```
+
+Multiple designspace files maybe supplied and wildcards can be used.
+
+Further project-wide checks may be added to this script at a later date.
+
+
+----
 #### psfcompdef2xml
 Usage: **`psfcompdef2xml [-p PARAMS] input output log`**
 
