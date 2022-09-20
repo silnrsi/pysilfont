@@ -159,7 +159,9 @@ class Uelement(_Ucontainer):
         self.element.insert(index, subelement)
 
     def replace(self, index, subelement):
-        self._contents[subelement.tag][index] = subelement
+        oldsubelement = self.element[index]
+        cindex = self._contents[subelement.tag].index(oldsubelement)
+        self._contents[subelement.tag][cindex] = subelement
         self.element[index] = subelement
 
 
