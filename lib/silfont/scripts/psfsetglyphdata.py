@@ -46,7 +46,7 @@ def doit(args):
     next(gdcsv.reader, None)  # Skip first line with headers in
 
     # Read the data in
-    logger.log("Reading in exisitng glyph data file", "P")
+    logger.log("Reading in existing glyph data file", "P")
     gddata = {}
     gdorder = []
     for line in gdcsv:

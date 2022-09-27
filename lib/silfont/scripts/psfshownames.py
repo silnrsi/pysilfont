@@ -106,7 +106,7 @@ def doit(args):
 
         # Not all fonts in a family with have the same name ids present,
         # for instance 16: Typographic/Preferred family is only needed in
-        # non-RIBBI familes, and even then only for the non-RIBBI instances.
+        # non-RIBBI families, and even then only for the non-RIBBI instances.
         # Also, not all the bit fields are present in each instance.
         # Therefore, columns with no data in any instance are removed.
         indices = list(range(len(headers)))
