@@ -124,6 +124,7 @@ psfcheck_list['com.adobe.fonts/check/nameid_1_win_english']                     
 psfcheck_list['com.adobe.fonts/check/name/postscript_vs_cff']                     = {'exclude': True}
 psfcheck_list['com.adobe.fonts/check/sfnt_version']                               = {}
 psfcheck_list['com.adobe.fonts/check/stat_has_axis_value_tables']                 = {}
+psfcheck_list['com.adobe.fonts/check/unsupported_tables']                         = {'exclude': True}
 psfcheck_list['com.adobe.fonts/check/varfont/distinct_instance_records']          = {}
 psfcheck_list['com.adobe.fonts/check/varfont/same_size_instance_records']         = {}
 psfcheck_list['com.adobe.fonts/check/varfont/valid_axis_nameid']                  = {}
