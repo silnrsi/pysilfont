@@ -5,9 +5,9 @@
 # Released under the MIT License (http://opensource.org/licenses/MIT)
 # maintained by Nicolas Spalinger
 
-# checking with have pyenv installed 
+# checking we have pyenv installed 
 if ! [ -x "$(command -v pyenv)" ]; then
-  echo 'Error: pyenv is not installed.' 
+  echo 'Error: pyenv is not installed. Try "brew install pyenv". ' 
 fi
 
 echo ""
