@@ -11,9 +11,9 @@
 
 ### Changed
 
-check&fix, used by most UFO commands, no longer warns if styleMapFamilyName or styleMapStyleName
-are missing in fontinfo (1.6.1.dev1)\
+check&fix, used by most UFO commands, no longer warns if styleMapFamilyName or styleMapStyleName are missing in fontinfo (1.6.1.dev1)
 Low-level bug fix to ufo.py found when running some temp code! Not previously found in live code. (1.6.1.dev1)
+Glyphs roundtrip now preserves openTypeHeadFlags key (1.6.1.dev2)
 
 ### Removed
 

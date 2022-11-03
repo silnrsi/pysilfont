@@ -47,7 +47,7 @@ def doit(args):
                           "com.schriftgestaltung.customParameter.GSFont.Axis Mappings",
                           "com.schriftgestaltung.customParameter.GSFontMaster.Master Name"),
         "libdeleteempty": ("com.schriftgestaltung.DisplayStrings",),
-        "inforestorekeys": ["openTypeHeadCreated", "openTypeNamePreferredFamilyName", "openTypeNamePreferredSubfamilyName",
+        "inforestorekeys": ["openTypeHeadCreated", "openTypeHeadFlags", "openTypeNamePreferredFamilyName", "openTypeNamePreferredSubfamilyName",
                        "openTypeNameUniqueID", "openTypeOS2WeightClass", "openTypeOS2WidthClass", "postscriptFontName",
                        "postscriptFullName", "styleMapFamilyName", "styleMapStyleName", "note",
                        "woffMetadataCredits", "woffMetadataDescription"],
