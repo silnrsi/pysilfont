@@ -356,7 +356,7 @@ class Ufont(object):
                            "styleMapStyleName": ("regular", "bold", "italic", "bold italic")},
             fiwarnifpresent = ("note",)
             fidel = ("macintoshFONDFamilyID", "macintoshFONDName", "openTypeNameCompatibleFullName",
-                     "openTypeGaspRangeRecords", "openTypeHeadFlags", "openTypeHheaCaretOffset",
+                     "openTypeGaspRangeRecords", "openTypeHheaCaretOffset",
                      "openTypeOS2FamilyClass", "postscriptForceBold", "postscriptIsFixedPitch",
                      "postscriptBlueFuzz", "postscriptBlueScale", "postscriptBlueShift", "postscriptWeightName",
                      "year")
