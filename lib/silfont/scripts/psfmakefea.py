@@ -82,7 +82,7 @@ class Font(object) :
                     continue
                 ufo_g = f.deflayer[g]
                 advb = ufo_g['advance']
-                adv = advb.width if advb is not None else 0
+                adv = advb.width if advb is not None and advb.width is not None else 0
                 bbox = getbbox(ufo_g)
                 glyph = Glyph(g, advance=adv, bbox=bbox)
                 self.glyphs[g] = glyph
