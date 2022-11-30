@@ -511,7 +511,7 @@ def execute(tool, fn, scriptargspec, chain = None):
                     (parent,subd) = os.path.split(logpath)
                     if subd == "logs" and os.path.isdir(parent): # Create directory if just logs subdir missing
                         logger.log("Creating logs subdirectory in " + parent, "P")
-                        os.mkdir(logpath)
+                        os.makedirs(logpath, exist_ok=True)
                     else: # Fails, since missing dir is probably a typo!
                         logger.log("Directory " + parent + " does not exist", "S")
                 logger.log('Opening log file for output: ' + logname, "P")
