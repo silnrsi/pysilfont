@@ -5,7 +5,7 @@ __copyright__ = 'Copyright (c) 2014 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
-import os, subprocess, difflib, sys, io
+import os, subprocess, difflib, sys, io, json
 from silfont.core import execute
 from pkg_resources import resource_filename
 from csv import reader as csvreader
@@ -371,4 +371,24 @@ def required_chars(sets="basic"):
         }
         if item["sil_set"] in sets: rcdict[unicode] = item
     return rcdict
+
+# Pretty print routine for json files.
+def prettyjson(data, oneliners=None, indent="", inkey=None, oneline=False):
+    # data - json data to format
+    # oneliners - lists of keys for which data should be output on a single line
+    # indent, inkey & oneline - used when prettyjson calls itself interatively for sub-values that are dicts
+    res = ["{"]
+    thisoneline = oneline and (oneliners is None or inkey not in oneliners)
+    for key, value in sorted(data.items()):
+        line = ("" if thisoneline else indent) + '"{}": '.format(key)
+        if isinstance(value, dict):
+            val = prettyjson(value, oneliners=oneliners,
+                             indent = indent + "    ", inkey = key,
+                             oneline=(oneline if oneliners is None or key not in oneliners else True))
+        else:
+            val = json.dumps(value, ensure_ascii=False)
+        res.append(line + val + ",")
+    res[-1] = res[-1][:-1]
+    res.append(("" if thisoneline else indent[:-4]) + "}")
+    return (" " if thisoneline else "\n").join(res)
 

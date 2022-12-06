@@ -208,10 +208,21 @@ def process_ufo(ufo, keylists, glyphsdir, args, obskeysfound):
 #                logchange(loglist, " empty field deleted. ", key, current, None)
     if args.nofea or args.preservefea: ufo.features.text = ""  # Suppress output of features.fea
 
+    # Now check for glyph level changes needed
+    heightchanges = 0
+    vertorichanges = 0
     for layer in ufo.layers:
         for glyph in layer:
+            if glyph.height != 0:
+                loglist.append((f'Advance height of {str(glyph.height)} removed for {glyph.name}', "V"))
+                glyph.height = 0
+                heightchanges += 1
             lib = glyph.lib
-            if "public.verticalOrigin" in lib: del lib["public.verticalOrigin"]
+            if "public.verticalOrigin" in lib:
+                del lib["public.verticalOrigin"]
+                vertorichanges += 1
+    if heightchanges: loglist.append((f"{str(heightchanges)} advance heights removed from glyphs", "I"))
+    if vertorichanges: loglist.append((f"{str(vertorichanges)} public.verticalOrigins removed from lib in glyphs", "I"))
 
     # Write ufo out
     ufopath = os.path.join(args.masterdir, fontname + ".ufo")

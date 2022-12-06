@@ -11,9 +11,12 @@
 
 ### Changed
 
-check&fix, used by most UFO commands, no longer warns if styleMapFamilyName or styleMapStyleName are missing in fontinfo (1.6.1.dev1)
-Low-level bug fix to ufo.py found when running some temp code! Not previously found in live code. (1.6.1.dev1)
-Glyphs roundtrip now preserves openTypeHeadFlags key (1.6.1.dev2)
+- check&fix, used by most UFO commands, no longer warns if styleMapFamilyName or styleMapStyleName are missing in fontinfo (1.6.1.dev1)
+- Low-level bug fix to ufo.py found when running some temp code! Not previously found in live code. (1.6.1.dev1)
+- Glyphs roundtrip now preserves openTypeHeadFlags key (1.6.1.dev2)
+- Bug fix for psfmakefea for cases where there is adavnce height but no advance width got a glyph  (1.6.1.dev3)
+- Update to core.py to avoid race condition creating logs folder (1.6.1.dev3)
+- psfglyphs2ufo now removes any advance heights in glyphs to counteract glyphslib changes (1.6.1.dev3)
 
 ### Removed
 
