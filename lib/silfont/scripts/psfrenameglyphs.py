@@ -26,6 +26,7 @@ def doit(args) :
     global csvmap, ksetsbymember
     font = args.ifont
     incsv = args.input
+    incsv.numfields = 2
     logger = args.logger
     mergemode = args.mergecomps
 
