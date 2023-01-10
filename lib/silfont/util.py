@@ -376,7 +376,7 @@ def required_chars(sets="basic"):
 def prettyjson(data, oneliners=None, indent="", inkey=None, oneline=False):
     # data - json data to format
     # oneliners - lists of keys for which data should be output on a single line
-    # indent, inkey & oneline - used when prettyjson calls itself interatively for sub-values that are dicts
+    # indent, inkey & oneline - used when prettyjson calls itself interactively for sub-values that are dicts
     res = ["{"]
     thisoneline = oneline and (oneliners is None or inkey not in oneliners)
     for key, value in sorted(data.items()):
