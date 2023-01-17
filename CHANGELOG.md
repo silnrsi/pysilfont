@@ -17,6 +17,8 @@
 - Bug fix for psfmakefea for cases where there is adavnce height but no advance width got a glyph  (1.6.1.dev3)
 - Update to core.py to avoid race condition creating logs folder (1.6.1.dev3)
 - psfglyphs2ufo now removes any advance heights in glyphs to counteract glyphslib changes (1.6.1.dev3)
+- psfsyncmasters now sets openTypeOS2WeightClass to be in the CSS coordinate space, 
+not the design coordinate space. (1.6.1.dev5)
 
 ### Removed
 

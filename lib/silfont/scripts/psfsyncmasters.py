@@ -46,6 +46,20 @@ def doit(args) :
         sds.read(args.secondds)
     else:
         sds = None
+    # Extract weight mappings from axes
+    pwmap = swmap = {}
+    for (ds, wmap, name) in ((pds, pwmap, "primary"),(sds, swmap, "secondary")):
+        if ds:
+            rawmap = None
+            for descriptor in ds.axes:
+                if descriptor.name == "weight":
+                    rawmap = descriptor.map
+                    break
+            if rawmap:
+                for (cssw, xvalue) in rawmap:
+                    wmap[int(xvalue)] = int(cssw)
+            else:
+                logger.log(f"No weight axes mapping in {name} design space", "W")
 
     # Process all the sources
     psource = None
@@ -73,13 +87,17 @@ def doit(args) :
         if field == "italicAngle":
             if "italic" in psource.source.filename.lower():
                 if pval is None or pval == 0 :
-                    logger.log("Primary font: Italic angle must be non-zero for italic fonts", "E")
+                    logger.log(f"{psource.source.filename}: Italic angle must be non-zero for italic fonts", "E")
             else:
                 if pval is not None and pval != 0 :
-                    logger.log("Primary font: Italic angle must be zero for non-italic fonts", "E")
+                    logger.log(f"{psource.source.filename}: Italic angle must be zero for non-italic fonts", "E")
                 pval = None
         elif field == "openTypeOS2WeightClass":
-            pval = int(psource.source.location["weight"])
+            desweight = int(psource.source.location["weight"])
+            if desweight in pwmap:
+                pval = pwmap[desweight]
+            else:
+                logger.log(f"Design weight {desweight} not in axes mapping so openTypeOS2WeightClass not updated", "I")
         elif field == "styleMapFamilyName":
             if not complex and pval is None: logger.log("styleMapFamilyName missing from primary font", "E")
         elif field == "styleMapStyleName":
@@ -104,7 +122,7 @@ def doit(args) :
                 if field in psource.fontinfo: psource.fontinfo.remove(field)
             else:
                 psource.fontinfo[field][1].text = str(pval)
-            logchange(logger, "Primary font: " + field + " updated:", oval, pval)
+            logchange(logger, f"{psource.source.filename}: {field} updated:", oval, pval)
         fipval[field] = pval
     if reqmissing: logger.log("Required fontinfo fields missing from " + psource.source.filename, "S")
     if changes:
@@ -138,7 +156,11 @@ def doit(args) :
                         logger.log(dsource.source.filename + ": Italic angle must be zero for non-italic fonts", "E")
                     sval = None
             elif field == "openTypeOS2WeightClass":
-                sval = int(dsource.source.location["weight"])
+                desweight = int(dsource.source.location["weight"])
+                if desweight in swmap:
+                    sval = swmap[desweight]
+                else:
+                    logger.log(f"Design weight {desweight} not in axes mapping so openTypeOS2WeightClass not updated", "I")
             elif field == "styleMapStyleName":
                 if not complex and sval not in ('regular', 'bold', 'italic', 'bold italic'):
                     logger.log(dsource.source.filename + ": styleMapStyleName must be 'regular', 'bold', 'italic', 'bold italic'", "E")
