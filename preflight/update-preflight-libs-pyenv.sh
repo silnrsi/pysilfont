@@ -24,12 +24,12 @@ echo "Populating/updating the preflight dependencies for the active pyenv interp
 
 python3 -m pip install -e git+https://github.com/silnrsi/pysilfont.git@master#egg=pysilfont
 
-python3 -m pip install git+https://github.com/googlefonts/GlyphsLib.git@main#egg=glyphsLib git+https://github.com/fonttools/ufoLib2.git@master#egg=ufoLib2 git+https://github.com/fonttools/fonttools.git@main#egg=fontTools git+https://github.com/typemytype/glyphConstruction.git@master#egg=glyphConstruction
+python3 -m pip install git+https://github.com/silnrsi/palaso-python.git@master#egg=palaso git+https://github.com/googlefonts/GlyphsLib.git@main#egg=glyphsLib git+https://github.com/fonttools/ufoLib2.git@master#egg=ufoLib2 git+https://github.com/fonttools/fonttools.git@main#egg=fontTools git+https://github.com/typemytype/glyphConstruction.git@master#egg=glyphConstruction git+https://github.com/robotools/fontParts.git@master#egg=fontParts
 
-python3 -m pip install fs mutatorMath defcon fontMath
+python3 -m pip install fs mutatorMath defcon fontMath lxml
 
 echo ""
-echo "Please check these dependencies have been installed correctly: defcon, fontMath, fontTools, glyphConstruction, glyphsLib, MutatorMath, pysilfont and ufoLib2. Only these are currently needed for preflight."
+echo "Please check these dependencies have been installed correctly: defcon, fontMath, fontTools, glyphConstruction, glyphsLib, MutatorMath, pysilfont, palaso, lxml, ufoLib2 and fontParts. Only these are currently needed for preflight."
 
 echo ""
 psfversion

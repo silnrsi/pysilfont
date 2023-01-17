@@ -38,7 +38,7 @@ def doit(args):
                 break
             dsinfos.append({'dspath': fullpath, 'ds': ds})
         if not cnt: logger.log(f'No files matched {pattern}', "S")
-    if failures: logger.log("Failed to open all the desighspace files", "S")
+    if failures: logger.log("Failed to open all the designspace files", "S")
 
     # Find the project root based on first ds assuming the project root is one level above a source directory containing the DS files
     path = dsinfos[0]['dspath']
