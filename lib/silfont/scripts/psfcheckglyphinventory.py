@@ -4,7 +4,7 @@ Input file can be:
     - simple text file with one glyph name per line
     - csv file with headers, using headers "glyph_name" and, if present, "USV"'''
 __url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2020 SIL International (http://www.sil.org)'
+__copyright__ = 'Copyright (c) 2020-2023 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'Bob Hallissy'
 
@@ -33,7 +33,7 @@ def doit(args):
 
     # Get glyph names and encoding from input file
     glyphFromCSVuid = {}
-    uidFromCSVglyph = {}
+    uidsFromCSVglyph = {}
 
     # Identify file format (plain text or csv) from first line
     # If csv file, it must have headers for "glyph_name" and "USV"
@@ -60,25 +60,32 @@ def doit(args):
             gname = line[nameCol]
             if len(gname) == 0 or line[0].strip().startswith('#'):
                 continue    # No need to include cases where name is blank or comment
+            if gname in glyphList:
+                csvWarning(f'glyph name {gname} previously seen; ignored')
+                continue
             glyphList.add(gname)
 
-            # Process USV
-            # could be empty string, a single USV or space-separated list of USVs
-            try:
-                uidList = [int(x, 16) for x in line[usvCol].split()]
-            except Exception as e:
-                csvWarning("invalid USV '%s' (%s); ignored: " % (line[usvCol], e.message))
-                uidList = []
-            if len(uidList) == 1:
-                # Handle simple encoded glyphs
-                uid = uidList[0]
-                if uid in glyphFromCSVuid:
-                    csvWarning('USV %04X previously seen; ignored' % uid)
-                    uidList = []
-                else:
-                    # Remember this glyph
-                    glyphFromCSVuid[uid] = gname
-                    uidFromCSVglyph[gname] = uid
+            if usvCol:
+                # Process USV field, which can be:
+                #   empty string -- unencoded glyph
+                #   single USV -- encoded glyph
+                #   USVs connected by '_' -- ligature (in glyph_data for test generation, not glyph encoding)
+                #   space-separated list of the above, where presence of multiple USVs indicates multiply-encoded glyph
+                for usv in line[usvCol].split():
+                    if '_' in usv:
+                        # ignore ligatures -- these are for test generation, not encoding
+                        continue
+                    try:
+                        uid = int(usv, 16)
+                    except Exception as e:
+                        csvWarning("invalid USV '%s' (%s); ignored: " % (usv, e.message))
+
+                    if uid in glyphFromCSVuid:
+                        csvWarning('USV %04X previously seen; ignored' % uid)
+                    else:
+                        # Remember this glyph encoding
+                        glyphFromCSVuid[uid] = gname
+                        uidsFromCSVglyph.setdefault(gname, set()).add(uid)
     elif numfields == 1:   # Simple text file.
         glyphList = set(line[0] for line in incsv)
     else:
@@ -100,10 +107,11 @@ def doit(args):
         logger.log('No glyph inventory differences found', 'P')
 
     if usvCol:
-        # We cam check USV inventory of glyphs in common
+        # We can check encoding of glyphs in common
         inBoth = glyphList & ufoList   # Glyphs we want to examine
-        csvEncodings = set(f'{gname}|{uidFromCSVglyph[gname]:04X}' for gname in filter(lambda x: x in uidFromCSVglyph, inBoth))
-        ufoEncodings = set(f'{gname}|{int(x.hex, 16):04X}' for gname in inBoth for x in font.deflayer[gname]['unicode'])
+
+        csvEncodings = set(f'{gname}|{uid:04X}' for gname in filter(lambda x: x in uidsFromCSVglyph, inBoth) for uid in uidsFromCSVglyph[gname] )
+        ufoEncodings = set(f'{gname}|{int(u.hex, 16):04X}' for gname in inBoth for u in font.deflayer[gname]['unicode'])
 
         notInUFO = csvEncodings - ufoEncodings
         notInGlyphData = ufoEncodings - csvEncodings
