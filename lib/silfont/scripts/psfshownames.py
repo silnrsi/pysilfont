@@ -70,7 +70,7 @@ def doit(args):
             font_infos.append(font_info)
 
     if not font_infos:
-        logger.log("No files match the filespec provided for fonts: " + str(args.fonts), "S")
+        logger.log("No files match the filespec provided for fonts: " + str(args.font), "S")
 
     font_infos.sort(key=methodcaller('sort_fullname'))
     font_infos.sort(key=attrgetter('width_class'), reverse=True)

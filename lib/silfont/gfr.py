@@ -9,6 +9,7 @@ import os, json
 from silfont.util import prettyjson
 from silfont.core import splitfn, loggerobj
 from collections import OrderedDict
+from fontTools.ttLib import TTFont
 
 familyfields = OrderedDict([
     ("familyid",      {"opt": True,  "manifest": False}), # req for families.json but not for base files; handled in code
@@ -240,3 +241,31 @@ def setpaths(logger): # Check that the script is being run from the root of the 
     basespath = os.path.join(repopath, "basefiles")
     if not os.path.isdir(basespath): os.makedirs(basespath)
     return repopath, silpath, otherpath, basespath
+
+def getttfdata(ttf, logger): # Extract data from a ttf
+
+    try:
+        font = TTFont(ttf)
+    except Exception as e:
+        logger.log(f'Error opening {ttf}: {e}', 'S')
+
+    name = font['name']
+    os2 = font['OS/2']
+    post = font['post']
+
+    values = {}
+
+    name16 = name.getName(nameID=16, platformID=3, platEncID=1, langID=0x409)
+
+    values["family"] = str(name16) if name16 else str(name.getName(nameID=1, platformID=3, platEncID=1, langID=0x409))
+    values["subfamily"] = str(name.getName(nameID=2, platformID=3, platEncID=1, langID=0x409))
+    values["version"] =   str(name.getName(nameID=5, platformID=3, platEncID=1, langID=0x409))[8:] # Remove "Version " from the front
+    values["wght"] = os2.usWeightClass
+    values["ital"] = 0 if getattr(post, "italicAngle") == 0 else 1
+
+    return values
+
+
+
+
+

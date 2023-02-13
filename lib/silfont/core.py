@@ -393,7 +393,13 @@ def execute(tool, fn, scriptargspec, chain = None):
         # Process all but last tuple entry as argparse arguments
         nonkwds = a[:-2]
         kwds = a[-2]
-        parser.add_argument(*nonkwds, **kwds)
+        try:
+            parser.add_argument(*nonkwds, **kwds)
+        except Exception as e:
+            print(f'nonkwds: {nonkwds}, kwds: {kwds}')
+            print(e)
+            sys.exit(1)
+
         # Create ainfo, a dict of framework keywords using argument name
         argn = nonkwds[-1]  # Find the argument name from first 1 or 2 tuple entries
         if argn[0:2] == "--": # Will start with -- for options
