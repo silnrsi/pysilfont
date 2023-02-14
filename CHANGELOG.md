@@ -8,6 +8,7 @@
 | Command                                            | Description                                                                                   |
 |----------------------------------------------------|-----------------------------------------------------------------------------------------------|
 | [psfcheckproject](docs/scripts.md#psfcheckproject) | Check UFOs in designspace files have consistent glyph inventory & unicode values (1.6.1.dev2) |
+| [update-preflight-libs-pyenv.sh](preflight/update-prefligh-libs-pyenv.sh)  | Preflight/preglyphs libs update shell script for macOS users               |
 
 ### Changed
 
