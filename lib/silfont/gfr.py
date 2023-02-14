@@ -118,7 +118,10 @@ class _familydata(object):
     def read(self, filename=None): # Read data from file (not for families.json)
         if filename: self.filename = filename
         with open(self.filename) as infile:
-            filedata = json.load(infile)
+            try:
+                filedata = json.load(infile)
+            except Exception as e:
+                self.logger.log(f'Error opening {infile}: {e}', 'S')
             if len(filedata) != 1:
                 self.logger.log(f'Files must contain just one record; {self.filename} has {len(filedata)}')
             self.id = list(filedata.keys())[0]
@@ -136,17 +139,16 @@ class gfr_manifest(_familydata):
     def __init__(self, id=None, data=None, filename = None, logger=None):
         super(gfr_manifest, self).__init__(id=id, data=data, filename=filename, type="m", logger=logger)
 
-    def validate(self, version=None, filename=None):
+    def validate(self, version=None, filename=None, checkfiles=True):
         # Validate the manifest.
         # If version is supplied, check that that matches the version in the manifest
         # If self.filename not already set, the filename of the manifest must be supplied
-
         (valid, logs) = super(gfr_manifest, self).validate() # Field name validation based on _familydata validation
 
         if filename is None: filename = self.filename
         data = self.data
 
-        if "files" in data:
+        if "files" in data and checkfiles:
             files = data["files"]
             mfilelist = {x: files[x]["packagepath"] for x in files}
 
