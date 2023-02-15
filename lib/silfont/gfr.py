@@ -18,6 +18,7 @@ familyfields = OrderedDict([
     ("altfamily",     {"opt": True,  "manifest": False}),
     ("siteurl",       {"opt": True,  "manifest": False}),
     ("packageurl",    {"opt": True,  "manifest": False}),
+    ("ziproot",       {"opt": True,  "manifest": False}),
     ("files",         {"opt": True,  "manifest": True}),
     ("defaults",      {"opt": True,  "manifest": True}),
     ("version",       {"opt": True,  "manifest": True}),
@@ -266,8 +267,4 @@ def getttfdata(ttf, logger): # Extract data from a ttf
     values["ital"] = 0 if getattr(post, "italicAngle") == 0 else 1
 
     return values
-
-
-
-
 
