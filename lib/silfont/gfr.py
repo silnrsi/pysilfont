@@ -35,6 +35,7 @@ filefields = OrderedDict([
     ("url",         {"opt": True,  "manifest": False}),
     ("flourl",      {"opt": True,  "manifest": False}),
     ("packagepath", {"opt": True,  "manifest": True}),
+    ("zippath",     {"opt": True,  "manifest": False}),
     ("axes",        {"opt": False, "manifest": True})
     ])
 
