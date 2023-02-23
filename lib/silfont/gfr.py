@@ -82,6 +82,11 @@ class _familydata(object):
         else:
             validfields = list(familyfields)
             reqfields = [key for key in familyfields if not familyfields[key]["opt"]]
+        if self.type == "f":
+            reqfields = reqfields + ["familyid"]
+        else:  # Must be b
+            validfields = validfields + ["hosturl", "filesroot"]
+
         (valid, logs) = self.fieldscheck(self.data, validfields, reqfields, "Main", valid, logs)
         # Now check sub-fields
         if "files" in self.data:
@@ -109,11 +114,6 @@ class _familydata(object):
             else:
                 validfields = list(defaultsfields)
                 reqfields = [key for key in defaultsfields if not defaultsfields[key]["opt"]]
-                if self.type == "f":
-                    reqfields = reqfields + ["familyid"]
-                else: # Must be b
-                    validfields = validfields + ["hosturl", "filesroot"]
-
             (valid, logs) = self.fieldscheck(ddata, validfields, reqfields, "Defaults:", valid, logs)
         return (valid, logs)
 
