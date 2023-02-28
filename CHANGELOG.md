@@ -5,10 +5,10 @@
 
 ### Added
 
-| Command                                            | Description                                                                                   |
-|----------------------------------------------------|-----------------------------------------------------------------------------------------------|
+| Command                                            | Description                                                                                |
+|----------------------------------------------------|--------------------------------------------------------------------------------------------|
 | [psfcheckproject](docs/scripts.md#psfcheckproject) | Check UFOs in designspace files have consistent glyph inventory & unicode values (1.6.1.dev2) |
-| [update-preflight-libs-pyenv.sh](preflight/update-prefligh-libs-pyenv.sh)  | Preflight/preglyphs libs update shell script for macOS users               |
+| [update-preflight-libs-pyenv.sh](preflight/update-prefligh-libs-pyenv.sh)  | Preflight/preglyphs libs update shell script for macOS users (1.6.1.dev6)             |
 
 ### Changed
 
@@ -20,6 +20,7 @@
 - psfglyphs2ufo now removes any advance heights in glyphs to counteract glyphslib changes (1.6.1.dev3)
 - psfsyncmasters now sets openTypeOS2WeightClass to be in the CSS coordinate space, 
 not the design coordinate space. (1.6.1.dev5)
+- Various updates to gfr.py to support the Find a Font service (1.6.1.dev6)
 
 ### Removed
 

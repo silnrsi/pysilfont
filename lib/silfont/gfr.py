@@ -5,7 +5,9 @@ __copyright__ = 'Copyright (c) 2022 SIL International (http://www.sil.org)'
 __license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
-import os, json
+import os, json, io
+import urllib.request as urllib2
+from zipfile import ZipFile
 from silfont.util import prettyjson
 from silfont.core import splitfn, loggerobj
 from collections import OrderedDict
@@ -268,4 +270,21 @@ def getttfdata(ttf, logger): # Extract data from a ttf
     values["ital"] = 0 if getattr(post, "italicAngle") == 0 else 1
 
     return values
-
+def getziproot(url, ttfpath):
+    req = urllib2.Request(url=url, headers={'User-Agent': 'Mozilla/4.0 (compatible; httpget)'})
+    try:
+        reqdat = urllib2.urlopen(req)
+    except Exception as e:
+        return (None, f'{url} not valid: {str(e)}')
+    zipdat = reqdat.read()
+    zipinfile = io.BytesIO(initial_bytes=zipdat)
+    try:
+        zipf = ZipFile(zipinfile)
+    except Exception as e:
+        return (None, f'{url} is not a valid zip file')
+    for zf in zipf.namelist():
+        if zf.endswith(ttfpath):  # found a font, assume we want it
+            ziproot = zf[:-len(ttfpath) - 1]  # strip trailing /
+            return (ziproot, "")
+    else:
+        return (None, f"Can't find {ttfpath} in {url}")
