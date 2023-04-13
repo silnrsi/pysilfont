@@ -22,3 +22,5 @@ pysilfont.cfg
 .idea
 
 .DS_Store
+
+src/silfont/_version.py
