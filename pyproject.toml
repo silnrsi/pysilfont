@@ -1,13 +1,13 @@
 [build-system]
-requires = ["flit_core >=3.2,<4"]
-build-backend = "flit_core.buildapi"
+requires = ["setuptools>=62.0", "setuptools_scm[toml]>=6.2", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "silfont"
 authors = [{name = "SIL International", email = "fonts@sil.org"}]
 readme = "README.md"
 license = {file = "LICENSE"}
-description = "A growing collection of font utilities mainly written in Python designed to help with various aspects of font design and production.\n Developed and maintained by SIL International's WSTech team (formerly NRSI)."
+description = "A growing collection of font utilities in Python to help with font design and production. Developed and maintained by SIL International's WSTech team (formerly NRSI)."
 classifiers = [
    "Environment :: Console",
    "Programming Language :: Python :: 3.8",
@@ -40,8 +40,17 @@ dependencies = [
 
 dynamic = ["version"]
 
+[tool.setuptools_scm]
+write_to = "src/silfont/_version.py"
+
 [project.urls]
-Home = "https://github.com/silnrsi/pysilfont"
+Home-Page = "https://github.com/silnrsi/pysilfont"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.bdist_wheel]
+universal = true
 
 [project.scripts]
 psfaddanchors = "silfont.scripts.psfaddanchors:cmd"
