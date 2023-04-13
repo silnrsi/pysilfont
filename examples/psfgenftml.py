@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 '''
 Example script to generate ftml document from glyph_data.csv and UFO.
 

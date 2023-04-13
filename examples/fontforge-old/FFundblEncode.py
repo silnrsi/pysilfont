@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 '''FontForge: Re-encode double-encoded glyphs based on double encoding data in a file
 Lines in file should look like: "LtnSmARetrHook",U+F236,U+1D8F'''
 __url__ = 'http://github.com/silnrsi/pysilfont'

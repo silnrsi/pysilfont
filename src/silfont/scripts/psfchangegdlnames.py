@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 __doc__ = '''Change graphite names within GDL based on a csv list in format
         old name, newname
     Logs any names not in list

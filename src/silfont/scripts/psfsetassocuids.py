@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 __doc__ = '''Add associate UID info to glif lib based on a csv file
 - Could be one value for variant UIDs and multiple for ligatures'''
 __url__ = 'http://github.com/silnrsi/pysilfont'

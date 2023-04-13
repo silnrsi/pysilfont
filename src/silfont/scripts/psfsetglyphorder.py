@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 __doc__ = '''Load glyph order data into public.glyphOrder in lib.plist based on based on a text file in one of two formats:
     - simple text file with one glyph name per line
     - csv file with headers, using headers "glyph_name" and "sort_final" where the latter contains

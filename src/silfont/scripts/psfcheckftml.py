@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 '''Test structural integrity of one or more ftml files
 
 Assumes ftml files have already validated against FTML.dtd, for example by using:

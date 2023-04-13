@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from __future__ import unicode_literals
 '''Creates Latin script tone letters (pitch contours)'''
 __url__ = 'http://github.com/silnrsi/pysilfont'

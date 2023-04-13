@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 __doc__ = '''Run project-wide checks.  Currently just checking glyph inventory and unicode values for ufo sources in 
 the designspace files supplied but maybe expanded to do more checks later'''
 __url__ = 'http://github.com/silnrsi/pysilfont'

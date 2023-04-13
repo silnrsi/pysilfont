@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 '''Example for making project-specific changes to the standard pysilfont set of Font Bakery ttf checks.
 It will start with all the checks normally run by pysilfont's ttfchecks profile then modify as described below'''
 __url__ = 'http://github.com/silnrsi/pysilfont'

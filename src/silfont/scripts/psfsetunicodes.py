@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 __doc__ = '''Set the unicodes of glyphs in a font based on an external csv file.
 - csv format glyphname,unicode, [unicode2, [,unicode3]]'''
 __url__ = 'http://github.com/silnrsi/pysilfont'

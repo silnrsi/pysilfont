@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 __doc__ = '''Make changes needed to a UFO following processing by FontLab 7.
 Various items are reset using the backup of the original font that Fontlab creates
 '''

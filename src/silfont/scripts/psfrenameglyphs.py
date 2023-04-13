@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 __doc__ = '''Assign new working names to glyphs based on csv input file
 - csv format oldname,newname'''
 __url__ = 'http://github.com/silnrsi/pysilfont'

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 __doc__ = '''Write mapping of glyph name to postscript name to a csv file
 - csv format glyphname,postscriptname'''
 __url__ = 'http://github.com/silnrsi/pysilfont'

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 __doc__ = '''Make changes to a backup UFO to match some changes made to another UFO by FontLab
 When a UFO is first round-tripped through Fontlab 7, many changes are made including adding 'smooth="yes"' to many points
 in glifs and removing it from others.  Also if components are after contours in a glif, then they get moved to before them.

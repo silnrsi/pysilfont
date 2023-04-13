@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 __doc__ = '''Write mapping of glyph name to cell mark color to a csv file
 - csv format glyphname,colordef'''
 __url__ = 'http://github.com/silnrsi/pysilfont'

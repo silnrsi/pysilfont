@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 __doc__ = '''Add public.postscriptNames to lib.plist based on a csv file in one of two formats:
     - simple glyphname, postscriptname with no headers
     - with headers, where the headers for glyph name and postscript name "glyph_name" and "ps_name"'''

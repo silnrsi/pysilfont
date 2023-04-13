@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 __doc__ = '''Checks a UFO for the presence of glyphs that represent the
 Recommended characters for Non-Roman fonts and warns if any are missing.
 http://scriptsource.org/entry/gg5wm9hhd3'''

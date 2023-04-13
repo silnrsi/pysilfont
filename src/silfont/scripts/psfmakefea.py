@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 __doc__ = 'Make features.fea file'
 # TODO: add conditional compilation, compare to fea, compile to ttf
 __url__ = 'http://github.com/silnrsi/pysilfont'

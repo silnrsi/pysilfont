@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 __doc__ = '''Subset an existing UFO based on a csv or text list of glyph names or USVs to keep.
 '''
 __url__ = 'http://github.com/silnrsi/pysilfont'

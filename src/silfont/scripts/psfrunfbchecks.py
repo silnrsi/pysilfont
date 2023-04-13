@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 '''Run Font Bakery tests using a standard profile with option to specify an alternative profile
 It defaults to ttfchecks.py - ufo checks are not supported yet'''
 __url__ = 'http://github.com/silnrsi/pysilfont'

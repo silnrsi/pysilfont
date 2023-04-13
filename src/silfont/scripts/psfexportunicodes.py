@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 __doc__ = '''Export the name and unicode of glyphs that have a defined unicode to a csv file. Does not support double-encoded glyphs.
 - csv format glyphname,unicode'''
 __url__ = 'http://github.com/silnrsi/pysilfont'

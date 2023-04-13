@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 __doc__ = 'Put a dummy DSIG table into a ttf font'
 __url__ = 'http://github.com/silnrsi/pysilfont'

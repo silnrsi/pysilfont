@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 __doc__ = '''Warn for differences in glyph inventory and encoding between UFO and input file (e.g., glyph_data.csv). 
 Input file can be: 
     - simple text file with one glyph name per line

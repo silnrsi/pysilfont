@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 __doc__ = 'Generate instance UFOs from a designspace document and master UFOs'
 
 # Python 2.7 script to build instance UFOs from a designspace document
