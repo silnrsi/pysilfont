@@ -11,6 +11,18 @@ __author__ = 'Alan Ward'
 from silfont.core import execute
 import defcon, ufo2ft.outlineCompiler, ufo2ft.preProcessor, ufo2ft.filters
 
+# ufo2ft v2.32.0b3 uses standard logging and the InstructionCompiler emits errors 
+#  when a composite glyph is flattened, so filter out that message 
+#  since it is expected in our workflow.
+#  The error is legitimate and results from trying to set the flags on components
+#   of composite glyphs from the UFO when it's unclear how to match the UFO components
+#   to the TTF components.
+import logging
+class FlattenErrFilter(logging.Filter):
+    def filter(self, record):
+        return not record.getMessage().startswith("Number of components differ between UFO and TTF")
+logging.getLogger('ufo2ft.instructionCompiler').addFilter(FlattenErrFilter())
+
 argspec = [
     ('iufo', {'help': 'Input UFO folder'}, {}),
     ('ottf', {'help': 'Output ttf file name'}, {}),
