@@ -249,7 +249,7 @@ psfcheck_list['com.google.fonts/check/name/version_format']                     
 psfcheck_list['com.google.fonts/check/no_debugging_tables']                       = {}
 psfcheck_list['com.google.fonts/check/old_ttfautohint']                           = {'exclude': True}
 psfcheck_list['com.google.fonts/check/os2/use_typo_metrics']                      = {'exclude': True}
-#psfcheck_list['com.google.fonts/check/os2/use_typo_metrics']                      = \  (Left a copy commented out as an
+# psfcheck_list['com.google.fonts/check/os2/use_typo_metrics']                      = \  (Left a copy commented out as an
 #    {'change_status': {'FAIL': 'WARN', 'reason': 'Under review'}}                      example of an override!)
 psfcheck_list['com.google.fonts/check/os2_metrics_match_hhea']                    = {'exclude': True}
 psfcheck_list['com.google.fonts/check/ots']                                       = {}
@@ -269,6 +269,7 @@ psfcheck_list['com.google.fonts/check/shaping/forbidden']                       
 psfcheck_list['com.google.fonts/check/shaping/regression']                        = {'exclude': True}
 psfcheck_list['com.google.fonts/check/smart_dropout']                             = {'exclude': True}
 psfcheck_list['com.google.fonts/check/slant_direction']                           = {}
+psfcheck_list['com.google.fonts/check/soft_dotted']                               = {}
 psfcheck_list['com.google.fonts/check/soft_hyphen']                               = {}
 psfcheck_list['com.google.fonts/check/STAT']                                      = {}
 psfcheck_list['com.google.fonts/check/STAT/axis_order']                           = {}
@@ -291,7 +292,7 @@ psfcheck_list['com.google.fonts/check/varfont_duplicate_instance_names']        
 # psfcheck_list['com.google.fonts/check/varfont_has_instances']                     = {} # No longer in Font Bakery
 # psfcheck_list['com.google.fonts/check/varfont_instance_coordinates']              = {} # No longer in Font Bakery
 # psfcheck_list['com.google.fonts/check/varfont_instance_names']                    = {} # No longer in Font Bakery
-#psfcheck_list['com.google.fonts/check/varfont_weight_instances']                  = {} # No longer in Font Bakery
+# psfcheck_list['com.google.fonts/check/varfont_weight_instances']                  = {} # No longer in Font Bakery
 psfcheck_list['com.google.fonts/check/varfont/bold_wght_coord']                   = {}
 psfcheck_list['com.google.fonts/check/varfont/consistent_axes']                   = {}
 psfcheck_list['com.google.fonts/check/varfont/generate_static']                   = {}
