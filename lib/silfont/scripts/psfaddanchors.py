@@ -14,6 +14,7 @@ argspec = [
     ('-i','--anchorinfo',{'help': 'XML file with anchor data'}, {'type': 'infile', 'def': '_anc.xml'}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_anc.log'}),
     ('-a','--analysis',{'help': 'Analysis only; no output font generated', 'action': 'store_true'},{}),
+    ('-d','--delete',{'help': 'Delete APs from a glyph before adding', 'action': 'store_true'}, {}),
     # 'choices' for -r should correspond to infont.logger.loglevels.keys()
     ('-r','--report',{'help': 'Set reporting level for log', 'type':str, 'choices':['X','S','E','P','W','I','V']},{})
     ]
@@ -32,7 +33,9 @@ def doit(args) :
                 continue
             # anchors currently in font for this glyph
             glyph = infont.deflayer[gname]
-            anchorsinfont = set([ ( a.element.get('name'),a.element.get('x'),a.element.get('y') ) for a in glyph['anchor']])
+            if args.delete:
+                glyph['anchor'].clear()
+            anchorsinfont = set([ ( a.element.get('name'), a.element.get('x'), a.element.get('y') ) for a in glyph['anchor']])
             # anchors in XML file to be added
             anchorstoadd = set()
             for p in g.findall('point'):
@@ -40,7 +43,7 @@ def doit(args) :
                 x = p[0].get('x')               # assume subelement location is first child
                 y = p[0].get('y')
                 if name and x and y:
-                    anchorstoadd.add( (name,x,y) )
+                    anchorstoadd.add( (name, x, y) )
                 else:
                     infont.logger.log("Incomplete information for anchor '" + name + "' for glyph " + gname, "E")
             # compare sets
