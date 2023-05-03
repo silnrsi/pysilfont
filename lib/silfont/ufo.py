@@ -1153,7 +1153,7 @@ def writeXMLobject(dtreeitem, params, dirn, filen, exists, fobject=False):
     if object.type in params['attribOrders']: attribOrder = params['attribOrders'][object.type]
     if object.type == "plist":
         indentFirst = params["plistIndentFirst"]
-        object.etree.attrib[".doctype"] = 'plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "https://www.apple.com/DTDs/PropertyList-1.0.dtd"'
+        object.etree.attrib[".doctype"] = 'plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"'
 
     # Format ET data if any data parameters are set
     if params["sortDicts"] or params["precision"] is not None: normETdata(object.etree, params, type=object.type)
