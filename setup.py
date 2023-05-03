@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 from __future__ import print_function
 'Setuptools installation file'
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2014 SIL International (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2014 SIL International (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 
 import sys, os, importlib
 
@@ -47,7 +47,7 @@ setup(
     long_description = long_description,
     maintainer = 'SIL International',
     maintainer_email = 'fonts@sil.org',
-    url = 'http://github.com/silnrsi/pysilfont',
+    url = 'https://github.com/silnrsi/pysilfont',
     packages = ["silfont", "silfont.scripts", "silfont.fbtests"],
     package_dir = {'':'lib'},
     package_data = {"silfont": ["data/*.*"]},

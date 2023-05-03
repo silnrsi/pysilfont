@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 __doc__ = '''Export the name and unicode of glyphs that have a defined unicode to a csv file. Does not support double-encoded glyphs.
 - csv format glyphname,unicode'''
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2016-2020 SIL International (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2016-2020 SIL International (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'Victor Gaultney, based on UFOexportPSname.py'
 
 from silfont.core import execute

@@ -3,9 +3,9 @@ __doc__ = '''Load glyph order data into public.glyphOrder in lib.plist based on 
     - simple text file with one glyph name per line
     - csv file with headers, using headers "glyph_name" and "sort_final" where the latter contains
       numeric values used to sort the glyph names by'''
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2015 SIL International (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
 from silfont.core import execute

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 '''Checks to be imported by ttfchecks.py
 Some checks based on examples from Font Bakery, copyright 2017 The Font Bakery Authors, licensed under the Apache 2.0 license'''
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2022 SIL International (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2022 SIL International (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
 from fontbakery.checkrunner import Section, PASS, FAIL, WARN, ERROR, INFO, SKIP

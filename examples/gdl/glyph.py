@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 'Corresponds to a glyph, for analysis purposes, for GDL generation'
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2012 SIL International (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2012 SIL International (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 
 import re, traceback
 from silfont.gdl.psnames import Name

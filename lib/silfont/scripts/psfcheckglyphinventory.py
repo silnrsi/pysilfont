@@ -3,9 +3,9 @@ __doc__ = '''Warn for differences in glyph inventory and encoding between UFO an
 Input file can be: 
     - simple text file with one glyph name per line
     - csv file with headers, using headers "glyph_name" and, if present, "USV"'''
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2020-2023 SIL International (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2020-2023 SIL International (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'Bob Hallissy'
 
 from silfont.core import execute

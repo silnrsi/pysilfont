@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 __doc__ = 'Generate a ttf file without OpenType tables from a UFO'
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2017 SIL International  (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2017 SIL International  (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'Alan Ward'
 
 # Compared to fontmake it does not decompose glyphs or remove overlaps 

@@ -20,16 +20,16 @@ To try this with the Harmattan font project:
             -s "url(../results/tests/ftml/fonts/Harmattan-Regular_ot_arab.ttf)=Reg-OT" \
             source/Harmattan-Regular.ufo tests/AllChars-dev.ftml
     3) launch resulting output file, tests/AllChars-dev.ftml, in a browser.
-        (see http://silnrsi.github.io/FDBP/en-US/Browsers%20as%20a%20font%20test%20platform.html)
+        (see https://silnrsi.github.io/FDBP/en-US/Browsers%20as%20a%20font%20test%20platform.html)
         NB: Using Firefox will allow simultaneous display of both Graphite and OpenType rendering
     4) As above but substitute:
             -t "Diac Test"             for the -t parameter
             tests/DiacTest-dev.ftml    for the final parameter
        and launch tests/DiacTest-dev.ftml in a browser.
 '''
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2018,2021 SIL International  (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2018,2021 SIL International  (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'Bob Hallissy'
 
 import re

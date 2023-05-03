@@ -40,7 +40,7 @@ class SVGPen(BasePen) :
 
 def _svgheader():
     return '''<?xml version="1.0"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+<svg xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink" version="1.1">
 '''
 
 def _bbox(f, gnames, points, scale=1):

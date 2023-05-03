@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 __doc__ = '''Checks a UFO for the presence of glyphs that represent the
 Recommended characters for Non-Roman fonts and warns if any are missing.
-http://scriptsource.org/entry/gg5wm9hhd3'''
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2018 SIL International (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+https://scriptsource.org/entry/gg5wm9hhd3'''
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2018 SIL International (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'Victor Gaultney'
 
 from silfont.core import execute

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 'Classes and functions for use handling Ufont UFO font objects in pysilfont scripts'
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2015 SIL International (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
 from xml.etree import ElementTree as ET
@@ -1153,7 +1153,7 @@ def writeXMLobject(dtreeitem, params, dirn, filen, exists, fobject=False):
     if object.type in params['attribOrders']: attribOrder = params['attribOrders'][object.type]
     if object.type == "plist":
         indentFirst = params["plistIndentFirst"]
-        object.etree.attrib[".doctype"] = 'plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"'
+        object.etree.attrib[".doctype"] = 'plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "https://www.apple.com/DTDs/PropertyList-1.0.dtd"'
 
     # Format ET data if any data parameters are set
     if params["sortDicts"] or params["precision"] is not None: normETdata(object.etree, params, type=object.type)

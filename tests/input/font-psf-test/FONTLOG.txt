@@ -130,37 +130,37 @@ be sure to add your name (N), email (E), web-address (W) and description (D).
 This list is sorted by last name in alphabetical order.)
 
 N: Don Collingsworth
-E: http://scripts.sil.org/support
-W: http://scripts.sil.org/
+E: https://scripts.sil.org/support
+W: https://scripts.sil.org/
 D: Contributed some extended Latin glyphs
 
 N: Victor Gaultney
-E: http://scripts.sil.org/support
-W: http://www.sil.org/~gaultney/
+E: https://scripts.sil.org/support
+W: https://www.sil.org/~gaultney/
 D: Original Designer
 
 N: Eric Hays
-E: http://scripts.sil.org/support
-W: http://scripts.sil.org/
+E: https://scripts.sil.org/support
+W: https://scripts.sil.org/
 D: Contributed some extended Latin glyphs
 
 N: Annie Olsen
-E: http://scripts.sil.org/support
-W: http://scripts.sil.org/
+E: https://scripts.sil.org/support
+W: https://scripts.sil.org/
 D: Lead Designer
 
 N: Julie Remington
-E: http://scripts.sil.org/support
-W: http://scripts.sil.org/
+E: https://scripts.sil.org/support
+W: https://scripts.sil.org/
 D: Contributed some extended Latin glyphs
 
 N: Pablo Ugerman
-W: http://www.ugrdesign.com.ar/
+W: https://www.ugrdesign.com.ar/
 D: Volunteer designer for much of Bold face
 
 N: SIL font engineers
-E: http://scripts.sil.org/support
-W: http://scripts.sil.org/
+E: https://scripts.sil.org/support
+W: https://scripts.sil.org/
 D: Graphite, OpenType, and TypeTuner code, and build support
 
 
@@ -169,6 +169,6 @@ SIL International.
 
 For more information please visit the Andika page on SIL
 International's Computers and Writing Systems website:
-http://scripts.sil.org/andika
+https://scripts.sil.org/andika
 
-Support through the website: http://scripts.sil.org/Support
+Support through the website: https://scripts.sil.org/Support

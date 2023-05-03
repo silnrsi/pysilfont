@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 __doc__ = '''Add associate UID info to glif lib based on a csv file
 - Could be one value for variant UIDs and multiple for ligatures'''
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2015 SIL International (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
 from silfont.core import execute

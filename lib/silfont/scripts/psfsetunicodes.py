@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 __doc__ = '''Set the unicodes of glyphs in a font based on an external csv file.
 - csv format glyphname,unicode, [unicode2, [,unicode3]]'''
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2016 SIL International (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2016 SIL International (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'Victor Gaultney, based on UFOsetPSnames.py'
 
 from silfont.core import execute
