@@ -168,7 +168,7 @@ def doit(args):
     file.write('    </text>\n')
     file.write('  </description>\n')
 
-    file.write('  <license url="http://scripts.sil.org/OFL" id="org.sil.ofl.1.1">\n')
+    file.write('  <license url="https://scripts.sil.org/OFL" id="org.sil.ofl.1.1">\n')
     file.write('    <text lang="en">\n')
     for line in ufofields["openTypeNameLicense"].splitlines(): file.write('      ' + textprotect(line) + '\n')
     file.write('    </text>\n')
