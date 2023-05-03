@@ -73,7 +73,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 ---
 
 ####  psfaddanchors
-Usage: **`psfaddanchors [-i ANCHORINFO]  [-a] [-r {X,S,E,P,W,I,V}] ifont [ofont]`**
+Usage: **`psfaddanchors [-i ANCHORINFO]  [-a] [-d] [-r {X,S,E,P,W,I,V}] ifont [ofont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
@@ -86,6 +86,7 @@ optional arguments:
 ```
   -i ANCHORINFO, --anchorinfo ANCHORINFO
                         XML file with anchor data
+  -d, --delete          Delete APs from a glyph before adding
   -a, --analysis        Analysis only; no output font generated  
   -r {X,S,E,P,W,I,V}, --report {X,S,E,P,W,I,V}
                         Set reporting level for log fileUpdate and/or sort glyph_data.csv based on input file(s)
