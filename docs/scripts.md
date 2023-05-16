@@ -1342,7 +1342,7 @@ Glyph orders and psname mappings, if present in the font, are likewise subsetted
 
 ---
 ####  psfsyncmasters
-Usage: **`psfsyncmasters primaryds [secondds] [--complex][-n]`**
+Usage: **`psfsyncmasters primaryds [secondds] [-n]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
@@ -1350,8 +1350,6 @@ Synchronises/validates some fontinfo.plist and lib.plist metadata across a famil
 on a designspace file. It looks in the designspace file for a master with `info copy="1"` set then syncs the values from that master to other masters defined in the file.
 
 If a second designspace file is supplied, it also syncs to masters found in there.  
-
-Some validation is different for complex families (ie not RIBBI families) - use `--complex` to inicate that a family is complex.
 
 Example usage:
 
