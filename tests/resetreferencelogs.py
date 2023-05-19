@@ -4,9 +4,9 @@ Works on one test group at a time.
 Copies the results logs to reference .lg files, replacing making file paths generic.
 setupTestdata.py then generates correct log files from .lg files
 '''
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2018 SIL International (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2018 SIL International (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
 import os, sys, shutil, glob, io

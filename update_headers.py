@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 'Checks for standard headers and update version and copyright info in python files'
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2016 SIL International (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2016 SIL International (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
 cyear = "2016" # Year to use if no other copyright year present
@@ -23,13 +23,13 @@ def doit(args) :
     varlist = ['url', 'copyright', 'license', 'author', 'version']
 
     copyrightpre = 'Copyright (c) '
-    copyrightpost =  ' SIL International (http://www.sil.org)'
+    copyrightpost =  ' SIL International (https://www.sil.org)'
 
     standards = {
         'copyright': copyrightpre + cyear + copyrightpost,
         'version': params.sets['default']['version'],
-        'url': 'http://github.com/silnrsi/pysilfont',
-        'license': 'Released under the MIT License (http://opensource.org/licenses/MIT)'}
+        'url': 'https://github.com/silnrsi/pysilfont',
+        'license': 'Released under the MIT License (https://opensource.org/licenses/MIT)'}
 
     pythonfiles = {}
     otherfiles = []

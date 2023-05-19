@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 'Glyph name analyser to create GDL names from AGL type names'
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2012 SIL International (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2012 SIL International (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 
 import re
 import traceback  # Debug
@@ -893,7 +893,7 @@ uniToAfiinameMap = {
 
 # Adobe Glyph List 2.0 (sans those in glyph list for *new* fonts) -- thus
 # these are all historic names that could occur in fonts
-# from http://partners.adobe.com/asn/tech/type/glyphlist.txt
+# from https://partners.adobe.com/asn/tech/type/glyphlist.txt
 
 aglToUniMap = {
 	'AEmacron' : u"\u01E2",

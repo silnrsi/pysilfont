@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 '''Run Font Bakery tests using a standard profile with option to specify an alternative profile
 It defaults to ttfchecks.py - ufo checks are not supported yet'''
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2020 SIL International (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2020 SIL International (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
 import glob, os, csv

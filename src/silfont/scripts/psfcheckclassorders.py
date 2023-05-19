@@ -7,9 +7,9 @@ where n is the number of upcoming class definitions that must result in the
 same glyph alignment when glyph names are sorted by TTF order (as described
 in the glyph_data.csv file).
 '''
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2019 SIL International  (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2019 SIL International  (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'Bob Hallissy'
 
 import re

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 __doc__ = 'Make the WOFF metadata xml file based on input UFO (and optionally FONTLOG.txt)'
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2017 SIL International (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2017 SIL International (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
 from silfont.core import execute
@@ -168,7 +168,7 @@ def doit(args):
     file.write('    </text>\n')
     file.write('  </description>\n')
 
-    file.write('  <license url="http://scripts.sil.org/OFL" id="org.sil.ofl.1.1">\n')
+    file.write('  <license url="https://scripts.sil.org/OFL" id="org.sil.ofl.1.1">\n')
     file.write('    <text lang="en">\n')
     for line in ufofields["openTypeNameLicense"].splitlines(): file.write('      ' + textprotect(line) + '\n')
     file.write('    </text>\n')

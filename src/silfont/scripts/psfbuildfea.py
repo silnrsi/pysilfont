@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 __doc__ = 'Build features.fea file into a ttf font'
 # TODO: add conditional compilation, compare to fea, compile to ttf
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2017 SIL International  (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2017 SIL International  (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'Martin Hosken'
 
 from fontTools.feaLib.builder import Builder

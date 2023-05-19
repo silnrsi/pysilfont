@@ -44,9 +44,9 @@ The following sections work through this, using psfnormalize, which normalizes a
 #!/usr/bin/env python    
 '''Normalize a UFO and optionally convert between UFO2 and UFO3.
 - If no options are chosen, the output font will simply be a normalized version of the font.'''
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2015 SIL International (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
 from silfont.core import execute
@@ -72,9 +72,9 @@ Sample headers:
 #!/usr/bin/env python    
 '''Normalize a UFO and optionally convert between UFO2 and UFO3.
 - If no options are chosen, the output font will simply be a normalized version of the font.'''
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2015 SIL International (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2015 SIL International (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 ```
 As well as providing the information for someone looking at the source file, the description comment (second line, which can be multi-line) is used by the framework when constructing the help text.

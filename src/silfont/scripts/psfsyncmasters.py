@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 __doc__ = '''Sync metadata across a family of fonts based on designspace files'''
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2018 SIL International (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2018 SIL International (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
 from silfont.core import execute
@@ -34,8 +34,10 @@ def doit(args) :
     fispecial = ("italicAngle", "openTypeOS2WeightClass", "openTypeNamePreferredSubfamilyName", "openTypeNameUniqueID",
                  "styleMapFamilyName", "styleMapStyleName", "styleName", "unitsPerEm")
     fiall = sorted(set(ficopyreq) | set(ficopyopt) | set(fispecial))
-    required = ficopyreq + ("openTypeOS2WeightClass", "styleName", "unitsPerEm")
-    libcopy = ("com.schriftgestaltung.glyphOrder", "public.glyphOrder", "public.postscriptNames")
+    firequired = ficopyreq + ("openTypeOS2WeightClass", "styleName", "unitsPerEm")
+    libcopyreq = ("com.schriftgestaltung.glyphOrder", "public.glyphOrder", "public.postscriptNames")
+    libcopyopt = ("public.skipExportGlyphs",)
+    liball = sorted(set(libcopyreq) | set(libcopyopt))
     logger = args.logger
     complex = args.complex
 
@@ -113,7 +115,7 @@ def doit(args) :
         elif field == "unitsperem":
             if pval is None or pval <= 0: logger.log("unitsperem must be non-zero", "S")
         # After processing special cases, all required fields should have values
-        if pval is None and field in required:
+        if pval is None and field in firequired:
             reqmissing = True
             logger.log("Required fontinfo field " + field + " missing from " + psource.source.filename, "E")
         elif oval != pval:
@@ -130,11 +132,12 @@ def doit(args) :
                              datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
         psource.write("fontinfo")
 
-    for field in libcopy:
+    for field in liball:
         pval = psource.lib.getval(field) if field in psource.lib else None
         if pval is None:
-            logtype = "W" if field[0:7] == "public." else "I"
-            logger.log("lib.plist field " + field + " missing from " + psource.source.filename, logtype)
+            if field in libcopyreq:
+                logtype = "W" if field[0:7] == "public." else "I"
+                logger.log("lib.plist field " + field + " missing from " + psource.source.filename, logtype)
         libpval[field] = pval
 
     # Now update values in other source fonts
@@ -189,7 +192,7 @@ def doit(args) :
                 logchange(logger, dsource.source.filename + " " + field + logmess, oval, sval)
 
         lchanges = False
-        for field in libcopy:
+        for field in liball:
             oval = dsource.lib.getval(field) if field in dsource.lib else None
             pval = libpval[field]
             if oval != pval:

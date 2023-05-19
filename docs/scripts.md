@@ -73,7 +73,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 ---
 
 ####  psfaddanchors
-Usage: **`psfaddanchors [-i ANCHORINFO]  [-a] [-r {X,S,E,P,W,I,V}] ifont [ofont]`**
+Usage: **`psfaddanchors [-i ANCHORINFO]  [-a] [-d] [-r {X,S,E,P,W,I,V}] ifont [ofont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
@@ -86,6 +86,7 @@ optional arguments:
 ```
   -i ANCHORINFO, --anchorinfo ANCHORINFO
                         XML file with anchor data
+  -d, --delete          Delete APs from a glyph before adding
   -a, --analysis        Analysis only; no output font generated  
   -r {X,S,E,P,W,I,V}, --report {X,S,E,P,W,I,V}
                         Set reporting level for log fileUpdate and/or sort glyph_data.csv based on input file(s)
@@ -629,7 +630,7 @@ Usage: **`psfexportmarkcolors [-c COLOR] [-n] [-o OUTPUT] [--nocomments] ifont`*
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
 This exports a mapping of glyph name to cell mark color to a csv file, format "glyphname,colordef". 
-Colordef is exported as a double-quoted string according to the [color definition standard](http://unifiedfontobject.org/versions/ufo3/conventions/#colors). It includes comments at the start saying when it was run etc unless --nocomments is specified. The csv produced will include all glyphs, whether or not they have a color definition.
+Colordef is exported as a double-quoted string according to the [color definition standard](https://unifiedfontobject.org/versions/ufo3/conventions/#colors). It includes comments at the start saying when it was run etc unless --nocomments is specified. The csv produced will include all glyphs, whether or not they have a color definition.
 
 In some cases (see options below) colors can be reported or referred to by text names as in "g_purple". See [Specifying colors on the command line](#specifying-colors-on-the-command-line)
 
@@ -1200,7 +1201,7 @@ Usage: **`psfsetmarkcolors [-c COLOR] [-i INPUT] [-u] [-x]  ifont [ofont]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-This sets the cell mark color of a glyph according to the [color definition standard](http://unifiedfontobject.org/versions/ufo3/conventions/#colors) based on a list of glyph names in INPUT, one glyph name per line.
+This sets the cell mark color of a glyph according to the [color definition standard](https://unifiedfontobject.org/versions/ufo3/conventions/#colors) based on a list of glyph names in INPUT, one glyph name per line.
 COLOR may be defined as described in [Specifying colors on the command line](#specifying-colors-on-the-command-line)
 
 If the command line includes:

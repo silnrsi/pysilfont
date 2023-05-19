@@ -29,12 +29,12 @@ Acknowledgements
 
 N: Victor Gaultney
 E: victor_gaultney@sil.org
-W: http://www.sil.org/~gaultney/
+W: https://www.sil.org/~gaultney/
 D: Original Designer
 
 N: SIL font engineers
-E: http://scripts.sil.org/support
-W: http://scripts.sil.org/
+E: https://scripts.sil.org/support
+W: https://scripts.sil.org/
 D: Graphite, OpenType, and TypeTuner code, and build support
 
 The Pysilfont test font is maintained by SIL International.

@@ -10,17 +10,17 @@ primarily for literacy use.
 
 Andika supports a wide range of Latin and Cyrillic characters.
 Documentation for the font is available on Andika website
-(http://scripts.sil.org/andika), including details on what ranges are
+(https://software.sil.org/andika), including details on what ranges are
 supported.
 
 Andika is released under the SIL Open Font License.
 
 See the OFL and OFL-FAQ for details of the SIL Open Font License.
 See the FONTLOG for information on this and previous releases.
-See the website (http://scripts.sil.org/andika) for further documentation.
-Andika FAQ (http://scripts.sil.org/Andika_FAQ-KI) for frequently
+See the website (https://software.sil.org/andika) for further documentation.
+Andika FAQ (https://software.sil.org/Andika_FAQ-KI) for frequently
 asked questions and their answers.
-See the SIL Unicode Roman FAQ (http://scripts.sil.org/ComplexRomanFontFAQ)
+See the SIL Unicode Roman FAQ (https://software.sil.org/fontguide)
 for frequently asked questions and their answers regarding SIL's Roman fonts.
 
 
@@ -37,7 +37,7 @@ on Graphite-supported platforms.
 If you do find a problem, please do report it to andika@sil.org.
 We can't guarantee any direct response, but will try to fix reported bugs in
 future versions. Make sure you read through the
-SIL Unicode Roman FAQ (http://scripts.sil.org/ComplexRomanFontFAQ).
+SIL Unicode Roman FAQ (https://scripts.sil.org/ComplexRomanFontFAQ).
 
 Many problems can be solved, or at least explained, through an understanding
 of the encoding and use of the fonts. Here are some basic hints:
@@ -55,9 +55,9 @@ appropriate keyboard and input method for the characters of the language you
 wish to use. If you want to enter characters that are not supported by any
 system keyboard, the Keyman program (www.tavultesoft.com) can be helpful
 on Windows systems. Also available for Windows is MSKLC
-(http://www.microsoft.com/globaldev/tools/msklc.mspx).
-For other platforms, KMFL (http://kmfl.sourceforge.net/),
-XKB (http://www.x.org/wiki/XKB) or Ukelele (http://scripts.sil.org/ukelele)
+(https://www.microsoft.com/globaldev/tools/msklc.mspx).
+For other platforms, KMFL (https://kmfl.sourceforge.net/),
+XKB (https://www.x.org/wiki/XKB) or Ukelele (https://scripts.sil.org/ukelele)
 can be helpful.
 
 If you want to enter characters that are not supported by any system
@@ -75,13 +75,13 @@ technologies. To take advantage of the advanced typographic
 capabilities of this font, you must be using applications that provide an
 adequate level of support for Graphite or OpenType. See "Applications
 that provide an adequate level of support for SIL Unicode Roman fonts"
-(http://scripts.sil.org/Complex_AdLvSup).
+(https://scripts.sil.org/Complex_AdLvSup).
 
 
 CONTACT
 ========
 For more information please visit the Andika page on SIL International's
 Computers and Writing systems website:
-http://scripts.sil.org/andika
+https://scripts.sil.org/andika
 
-Support through the website: http://scripts.sil.org/Support
+Support through the website: https://scripts.sil.org/Support

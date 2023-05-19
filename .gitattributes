@@ -7,7 +7,7 @@
 # The goal for eols is to have LF in the repo and platform-specific
 # endings, when appropriate, in the working copy on all platforms.
 # To tweak to your particular needs, 
-# see http://git-scm.com/book/en/Customizing-Git-Git-Attributes
+# see https://git-scm.com/book/en/Customizing-Git-Git-Attributes
 
 # The following causes git to auto detect text files which will have eol 
 # conversion applied according to core.autocrlf and core.eol 

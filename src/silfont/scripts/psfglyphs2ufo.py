@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 __doc__ = '''Export fonts in a GlyphsApp file to UFOs'''
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2017 SIL International (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2017 SIL International (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'Victor Gaultney'
 
 from silfont.core import execute
@@ -25,13 +25,11 @@ argspec = [
 
 def doit(args):
     logger = args.logger
+    masterdir = args.masterdir
     logger.log("Creating UFO objects from GlyphsApp file", "I")
     with open(args.glyphsfont, 'r', encoding='utf-8') as gfile:
         gfont = glyphsLib.parser.load(gfile)
     ufos = glyphsLib.to_ufos(gfont, include_instances=False, family_name=None, propagate_anchors=False, generate_GDEF=False)
-
-    # Extract directory name for use with restores
-    (glyphsdir, filen) = os.path.split(args.glyphsfont)
 
     keylists = {
 
@@ -64,7 +62,7 @@ def doit(args):
     loglists = []
     obskeysfound={}
     for ufo in ufos:
-        loglists.append(process_ufo(ufo, keylists, glyphsdir, args, obskeysfound))
+        loglists.append(process_ufo(ufo, keylists, masterdir, args, obskeysfound))
     for loglist in loglists:
         for logitem in loglist: logger.log(logitem[0], logitem[1])
     if obskeysfound:
@@ -77,7 +75,7 @@ def doit(args):
             logmess += "\n"
         logger.log(logmess, "E")
 
-def process_ufo(ufo, keylists, glyphsdir, args, obskeysfound):
+def process_ufo(ufo, keylists, masterdir, args, obskeysfound):
     loglist=[]
 #    sn = ufo.info.styleName  # )
 #    sn = sn.replace("Italic Italic", "Italic")  # ) Temp fixes due to glyphLib incorrectly
@@ -92,9 +90,9 @@ def process_ufo(ufo, keylists, glyphsdir, args, obskeysfound):
         # lib.plist processing
         loglist.append(("Checking lib.plist", "P"))
 
-        # Restore values from original UFOs, assuming named as <fontname>.ufo in same directory as input .gylphs file
+        # Restore values from original UFOs, assuming named as <fontname>.ufo in the masterdir
 
-        ufodir = os.path.join(glyphsdir, fontname + ".ufo")
+        ufodir = os.path.join(masterdir, fontname + ".ufo")
         try:
             origlibplist = silfont.ufo.Uplist(font=None, dirn=ufodir, filen="lib.plist")
         except Exception as e:
@@ -225,10 +223,10 @@ def process_ufo(ufo, keylists, glyphsdir, args, obskeysfound):
     if vertorichanges: loglist.append((f"{str(vertorichanges)} public.verticalOrigins removed from lib in glyphs", "I"))
 
     # Write ufo out
-    ufopath = os.path.join(args.masterdir, fontname + ".ufo")
+    ufopath = os.path.join(masterdir, fontname + ".ufo")
     if args.preservefea:  # Move features.fea out of the ufo so that it can be restored afterward
         origfea = os.path.join(ufopath, "features.fea")
-        hiddenfea = os.path.join(args.masterdir, fontname + "features.tmp")
+        hiddenfea = os.path.join(masterdir, fontname + "features.tmp")
         if os.path.exists(origfea):
             loglist.append((f'Renaming {origfea} to {hiddenfea}', "I"))
             os.rename(origfea, hiddenfea)

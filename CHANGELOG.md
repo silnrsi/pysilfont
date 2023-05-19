@@ -21,6 +21,10 @@
 - psfsyncmasters now sets openTypeOS2WeightClass to be in the CSS coordinate space, 
 not the design coordinate space. (1.6.1.dev5)
 - Various updates to gfr.py to support the Find a Font service (1.6.1.dev6)
+- psfsyncmasters now syncs public.skipExportGlyphs (1.6.1.dev7)
+- Add -d to psfaddanchors (1.6.1.dev7)
+- Global adjustments to use https: instead of http: (1.6.1.dev7)
+- Corrected ufo.py so plists still have http: in the DOCTYPE (1.6.1.dev8)
 
 ### Removed
 

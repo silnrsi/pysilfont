@@ -9,9 +9,9 @@ It should be run with stable pysilfont code prior to starting development and wi
 by normalizing with checkfix=fix
 Once setup, "pytest local/ufotests" will again normalize all the fonts listed and compare with the reference fonts
 '''
-__url__ = 'http://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2018 SIL International (http://www.sil.org)'
-__license__ = 'Released under the MIT License (http://opensource.org/licenses/MIT)'
+__url__ = 'https://github.com/silnrsi/pysilfont'
+__copyright__ = 'Copyright (c) 2018 SIL International (https://www.sil.org)'
+__license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
 from silfont.core import execute, csvreader
