@@ -15,7 +15,7 @@ from xml.etree import ElementTree as ET
 argspec = [
     ('primaryds', {'help': 'Primary design space file'}, {'type': 'filename'}),
     ('secondds', {'help': 'Second design space file', 'nargs': '?', 'default': None}, {'type': 'filename', 'def': None}),
-    ('--complex', {'help': 'Indicates complex set of fonts rather than RIBBI', 'action': 'store_true', 'default': False},{}),
+    ('--complex', {'help': 'Obsolete - here for backwards compatibility only', 'action': 'store_true', 'default': False},{}),
     ('-l','--log', {'help': 'Log file'}, {'type': 'outfile', 'def': '_sync.log'}),
     ('-n','--new', {'help': 'append "_new" to file names', 'action': 'store_true', 'default': False},{}) # For testing/debugging
     ]
@@ -29,17 +29,16 @@ def doit(args) :
                   "openTypeOS2TypoDescender", "openTypeOS2TypoLineGap", "openTypeOS2UnicodeRanges",
                   "openTypeOS2VendorID", "openTypeOS2WinAscent", "openTypeOS2WinDescent", "versionMajor",
                   "versionMinor")
-    ficopyopt = ("openTypeNameSampleText", "postscriptFamilyBlues", "postscriptFamilyOtherBlues", "trademark",
-                 "woffMetadataCredits", "woffMetadataDescription")
+    ficopyopt = ("openTypeNameSampleText", "postscriptFamilyBlues", "postscriptFamilyOtherBlues", "styleMapFamilyName",
+                  "trademark", "woffMetadataCredits", "woffMetadataDescription")
     fispecial = ("italicAngle", "openTypeOS2WeightClass", "openTypeNamePreferredSubfamilyName", "openTypeNameUniqueID",
-                 "styleMapFamilyName", "styleMapStyleName", "styleName", "unitsPerEm")
+                 "styleName", "unitsPerEm")
     fiall = sorted(set(ficopyreq) | set(ficopyopt) | set(fispecial))
     firequired = ficopyreq + ("openTypeOS2WeightClass", "styleName", "unitsPerEm")
     libcopyreq = ("com.schriftgestaltung.glyphOrder", "public.glyphOrder", "public.postscriptNames")
     libcopyopt = ("public.skipExportGlyphs",)
     liball = sorted(set(libcopyreq) | set(libcopyopt))
     logger = args.logger
-    complex = args.complex
 
     pds = DSD.DesignSpaceDocument()
     pds.read(args.primaryds)
@@ -100,11 +99,6 @@ def doit(args) :
                 pval = pwmap[desweight]
             else:
                 logger.log(f"Design weight {desweight} not in axes mapping so openTypeOS2WeightClass not updated", "I")
-        elif field == "styleMapFamilyName":
-            if not complex and pval is None: logger.log("styleMapFamilyName missing from primary font", "E")
-        elif field == "styleMapStyleName":
-            if not complex and pval not in ('regular', 'bold', 'italic', 'bold italic'):
-                logger.log("styleMapStyleName must be 'regular', 'bold', 'italic', 'bold italic'", "E")
         elif field in ("styleName", "openTypeNamePreferredSubfamilyName"):
             pval = psource.source.styleName
         elif field == "openTypeNameUniqueID":
@@ -164,9 +158,6 @@ def doit(args) :
                     sval = swmap[desweight]
                 else:
                     logger.log(f"Design weight {desweight} not in axes mapping so openTypeOS2WeightClass not updated", "I")
-            elif field == "styleMapStyleName":
-                if not complex and sval not in ('regular', 'bold', 'italic', 'bold italic'):
-                    logger.log(dsource.source.filename + ": styleMapStyleName must be 'regular', 'bold', 'italic', 'bold italic'", "E")
             elif field in ("styleName", "openTypeNamePreferredSubfamilyName"):
                 sval = dsource.source.styleName
             elif field == "openTypeNameUniqueID":

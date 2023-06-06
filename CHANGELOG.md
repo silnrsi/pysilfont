@@ -25,7 +25,8 @@ not the design coordinate space. (1.6.1.dev5)
 - Add -d to psfaddanchors (1.6.1.dev7)
 - Global adjustments to use https: instead of http: (1.6.1.dev7)
 - Corrected ufo.py so plists still have http: in the DOCTYPE (1.6.1.dev8)
-
+- psfsyncmasters - removed checks relating to styleMapFamilyName and styleMapStyleName; --complex now does nothing (1.6.1.dev9)
+- psfrunfbchecks - general updates to reflect new Font Bakery checks (1.6.1.dev9)
 ### Removed
 
 None

@@ -63,7 +63,7 @@ def doit(args):
     if args.privatedata:
         try:
             with open(args.privatedata, 'rb') as f:
-                flavorData.privateData = f.read()
+                flavorData.privData = f.read()
         except:
             logger.log(f'Unable to read file "{args.privatedata}"', 'S')
     elif inFlavor != 'ttf':
