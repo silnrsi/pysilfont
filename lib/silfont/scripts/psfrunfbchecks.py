@@ -12,7 +12,8 @@ from textwrap import TextWrapper
 
 from fontbakery.reporters.serialize import SerializeReporter
 from fontbakery.reporters.html import HTMLReporter
-from fontbakery.checkrunner import distribute_generator, CheckRunner, get_module_profile, SKIP, INFO
+from fontbakery.checkrunner import distribute_generator, CheckRunner, get_module_profile
+from fontbakery.status import PASS, FAIL, WARN, ERROR, INFO, SKIP
 from fontbakery.configuration import Configuration
 from fontbakery.commands.check_profile import get_module
 from fontbakery import __version__ as version

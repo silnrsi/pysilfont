@@ -5,16 +5,14 @@ __copyright__ = 'Copyright (c) 2020 SIL International (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
-from fontbakery.checkrunner import Section, PASS, FAIL, WARN, ERROR, INFO, SKIP
-from fontbakery.callable import condition, check, disable
-from fontbakery.message import Message
+from fontbakery.section import Section
+from fontbakery.status import PASS, FAIL, WARN, ERROR, INFO, SKIP
 from fontbakery.fonts_profile import profile_factory
-from fontbakery.constants import NameID, PlatformID, WindowsEncodingID
 from fontbakery.profiles.googlefonts import METADATA_CHECKS, REPO_CHECKS, DESCRIPTION_CHECKS
 from fontbakery.profiles.ufo_sources import UFO_PROFILE_CHECKS
-from fontbakery.profiles.universal import DESIGNSPACE_CHECKS
 from silfont.fbtests.silttfchecks import *
 from silfont.fbtests.silnotcjk import *
+
 
 from collections import OrderedDict
 
@@ -31,9 +29,8 @@ def make_base_profile():
     profile.auto_register(globals())
 
     # Exclude groups of checks that check files other than ttfs
-    for checkid in DESCRIPTION_CHECKS + DESIGNSPACE_CHECKS + METADATA_CHECKS + REPO_CHECKS + UFO_PROFILE_CHECKS:
-        if checkid in profile._check_registry: profile.remove_check(checkid)
-
+    for checkid in DESCRIPTION_CHECKS + METADATA_CHECKS + REPO_CHECKS + UFO_PROFILE_CHECKS:
+       if checkid in profile._check_registry: profile.remove_check(checkid)
     return profile
 
 def make_profile(check_list, variable_font=False):
@@ -145,7 +142,7 @@ psfcheck_list['com.google.fonts/check/cjk_chws_feature']                        
 psfcheck_list['com.google.fonts/check/cjk_not_enough_glyphs']                     = {'exclude': True}
 psfcheck_list['com.google.fonts/check/cjk_vertical_metrics']                      = {'exclude': True}
 psfcheck_list['com.google.fonts/check/cjk_vertical_metrics_regressions']          = {'exclude': True}
-psfcheck_list['com.google.fonts/check/cmap/alien_codepoints']                    = {'exclude': True}
+psfcheck_list['com.google.fonts/check/cmap/alien_codepoints']                     = {'exclude': True}
 psfcheck_list['com.google.fonts/check/cmap/format_12']                            = {'exclude': True}
 psfcheck_list['com.google.fonts/check/cmap/unexpected_subtables']                 = {}
 psfcheck_list['com.google.fonts/check/color_cpal_brightness']                     = {}
