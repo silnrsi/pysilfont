@@ -21,19 +21,32 @@ to the example scripts or give you the code locally to look at.
 
 ### Full install
 
-First clone this repository or download the files from this [github URL](https://github.com/silnrsi/pysilfont). 
+First clone this repository or download the files from this [github URL](https://github.com/silnrsi/pysilfont). To isolate change from your system python we will use a virtual environment.
 Then navigate to the resulting pysilfont directory and run:
 ```
-sudo python3 -m pip install .
+python3 -m venv venv
+source venv/bin/activate
+python3 -m pip install --upgrade pip setuptools setuptools-scm wheel build
+python3 -m build
+python3 -m pip install .
 ```
 in the pysilfont directory
 
 ### Uninstalling pysilfont
 
-pip3 can be used to uninstall pysilfont:
+pip3 can be used to uninstall silfont:
+
+
+or locally for your user (inside the venv or not)
 ```
-sudo pip3 uninstall pysilfont
+pip3 uninstall silfont
 ```
+
+or if you have it installed system-wide:
+```
+sudo pip3 uninstall silfont
+```
+
 
 ## Contributing to the project
 
