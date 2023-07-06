@@ -7,7 +7,7 @@ __copyright__ = 'Copyright (c) 2022 SIL International (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
-from fontbakery.checkrunner import Section, PASS, FAIL, WARN, ERROR, INFO, SKIP
+from fontbakery.status import PASS, FAIL, WARN, ERROR, INFO, SKIP
 from fontbakery.callable import condition, check, disable
 from fontbakery.message import Message
 from fontbakery.profiles.shared_conditions import typo_metrics_enabled
