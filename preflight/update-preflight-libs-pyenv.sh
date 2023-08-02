@@ -22,9 +22,12 @@ echo ""
 
 echo "Populating/updating the preflight dependencies for the active pyenv interpreter"  
 
+# moving to the root of the user's home directory so that src/ folder for editable mode don't appear everywhere
+cd
+
 python3 -m pip install -e git+https://github.com/silnrsi/pysilfont.git@master#egg=pysilfont
 
-python3 -m pip install git+https://github.com/silnrsi/palaso-python.git@master#egg=palaso git+https://github.com/googlefonts/GlyphsLib.git@main#egg=glyphsLib git+https://github.com/fonttools/ufoLib2.git@master#egg=ufoLib2 git+https://github.com/fonttools/fonttools.git@main#egg=fontTools git+https://github.com/typemytype/glyphConstruction.git@master#egg=glyphConstruction git+https://github.com/robotools/fontParts.git@master#egg=fontParts
+python3 -m pip install git+https://github.com/silnrsi/palaso-python.git@master#egg=palaso git+https://github.com/googlefonts/GlyphsLib.git@main#egg=glyphsLib git+https://github.com/fonttools/ufoLib2.git@main#egg=ufoLib2 git+https://github.com/fonttools/fonttools.git@main#egg=fontTools git+https://github.com/typemytype/glyphConstruction.git@master#egg=glyphConstruction git+https://github.com/robotools/fontParts.git@master#egg=fontParts
 
 python3 -m pip install fs mutatorMath defcon fontMath lxml
 
