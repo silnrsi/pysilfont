@@ -164,7 +164,7 @@ class gfr_manifest(_familydata):
                 for filen in filenames:
                     (base, ext) = os.path.splitext(filen)
                     if ext in fontexts:
-                        dfilelist[filen] = (os.path.relpath(os.path.join(dirname, filen), start=path))
+                        dfilelist[filen] = (os.path.relpath(os.path.join(dirname, filen), start=path).replace('\\', '/'))
 
             if mfilelist == dfilelist:
                 logs.append(('Files OK', 'I'))
@@ -239,7 +239,7 @@ class gfr_family(object): # For families.json.
 def setpaths(logger): # Check that the script is being run from the root of the repository and set standard paths
     repopath = os.path.abspath(os.path.curdir)
     # Do cursory checks that this is the root of the fonts repo
-    if repopath[-6:] != "/fonts" or not os.path.isdir(os.path.join(repopath, "fonts/sil")):
+    if repopath[-5:] != "fonts" or not os.path.isdir(os.path.join(repopath, "fonts/sil")):
         logger.log("GFR scripts must be run from the root of the fonts repo", "S")
     # Set up standars paths for scripts to use
     silpath = os.path.join(repopath, "fonts/sil")
