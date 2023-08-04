@@ -41,6 +41,11 @@ class MyBuilder(Builder):
                     latelookups.append(bldr)
             else:
                 bldr.lookup_index = len(lookups)
+                self.lookup_locations[tag][str(bldr.lookup_index)] = LookupDebugInfo(
+                    location=str(bldr.location),
+                    name=self.get_lookup_name_(bldr),
+                    feature=None,
+                )
                 lookups.append(bldr)
                 bldr.map_index = bldr.lookup_index
         numl = len(lookups)
