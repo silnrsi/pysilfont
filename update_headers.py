@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 'Checks for standard headers and update version and copyright info in python files'
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2016 SIL International (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2016-2023 SIL International (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
-cyear = "2016" # Year to use if no other copyright year present
+cyear = "2023" # Year to use if no other copyright year present
 
 from silfont.core import execute
 import os,sys
@@ -36,7 +36,7 @@ def doit(args) :
 
     for subdir, dirs, files in os.walk("."):
         if not (subdir=="." or subdir[0:5] in ("./lib","./scr")) : continue
-        if subdir[0:] == "./lib/pysilfont.egg-info" : continue
+        if subdir[0:] == "./src/pysilfont.egg-info" : continue
 
         for filen in files:
             if filen[-1:]=="~" : continue
@@ -46,11 +46,11 @@ def doit(args) :
             fulln = os.path.join(subdir,filen)
             file = open(fulln,"r")
             line1 = nextline()
-            pyline1 = (True if line1 in ("#!/usr/bin/env python", "#!/usr/bin/python") else False)
+            pyline1 = (True if line1 in ("#!/usr/bin/env python3", "#!/usr/bin/python3") else False)
             if pyline1 or filen[-3:] == ".py" :
                 # Look for standard headers
                 headererror = []
-                headers = "#!/usr/bin/env python"
+                headers = "#!/usr/bin/env python3"
                 if pyline1 :
                     # Read description which may be single or multiline
                     line = nextline()
@@ -180,9 +180,9 @@ def doit(args) :
                     else:
                         logger.log(fulln + ": No author header variable", "I")
 
-    print "\n"+"Non-python files"+"\n"
+    print("\n"+"Non-python files"+"\n")
     for filen in otherfiles:
-        print filen
+        print(filen)
 
     return
 
@@ -193,4 +193,3 @@ def nextline() :
     return line
 
 execute(None,doit, argspec)
-
