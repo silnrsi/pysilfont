@@ -13,9 +13,8 @@ pysilfont.cfg
 /dev
 /venv
 
-/lib/pysilfont.egg-info
-/pysilfont.egg-info
-/setuptools-*
+/src/silfont.egg-info
+/src/silfont/__pycache__
 /.pytest_cache
 /tests/localufos.csv
 
@@ -23,4 +22,3 @@ pysilfont.cfg
 
 .DS_Store
 
-src/silfont/_version.py

@@ -1,9 +1,11 @@
 [build-system]
-requires = ["setuptools>=62.0", "setuptools_scm[toml]>=6.2", "wheel"]
+requires = ["setuptools>=62.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "silfont"
+version = "1.6.1.dev10"
+# (also manually bump version in src/silfont/__init__.py)
 authors = [{name = "SIL International", email = "fonts@sil.org"}]
 readme = "README.md"
 license = {file = "LICENSE"}
@@ -37,11 +39,6 @@ dependencies = [
 "ufo2ft @ git+https://github.com/googlei18n/ufo2ft",
 "ufoLib2 @ git+https://github.com/fonttools/ufoLib2",
 ]
-
-dynamic = ["version"]
-
-[tool.setuptools_scm]
-write_to = "src/silfont/_version.py"
 
 [project.urls]
 Home-Page = "https://github.com/silnrsi/pysilfont"
