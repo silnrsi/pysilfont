@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 'Harfbuzz support for fonttools'
 
 import gi

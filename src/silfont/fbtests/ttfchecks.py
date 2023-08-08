@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 'Support for use of Fontbakery ttf checks'
 __url__ = 'https://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2020 SIL International (https://www.sil.org)'

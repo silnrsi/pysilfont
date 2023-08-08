@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 __doc__ = '''General classes and functions for use with SIL's github fonts repository, github.com/silnrsi/fonts'''
 __url__ = 'https://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2022 SIL International (https://www.sil.org)'

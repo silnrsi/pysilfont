@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 'IPython support for fonttools'
 
 __all__ = ['displayGlyphs', 'loadFont', 'displayText', 'displayRaw']

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 '''These are copies of checks that have the "not is_cjk" condition, but these versions have that condition removed.
 The is_cjk condition was being matched by multiple fonts that are not cjk fonts - but do have some cjk punctuation characters.
 These checks based on based on examples from Font Bakery, copyright 2017 The Font Bakery Authors, licensed under the Apache 2.0 license'''

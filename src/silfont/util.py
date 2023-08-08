@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 'General classes and functions for use in pysilfont scripts'
 __url__ = 'https://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2014 SIL International (https://www.sil.org)'

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 '''Checks to be imported by ttfchecks.py
 Some checks based on examples from Font Bakery, copyright 2017 The Font Bakery Authors, licensed under the Apache 2.0 license'''
 __url__ = 'https://github.com/silnrsi/pysilfont'
