@@ -24,25 +24,29 @@ to the example scripts or give you the code locally to look at.
 First clone this repository or download the files from this [github URL](https://github.com/silnrsi/pysilfont). To isolate change from your system python we will use a virtual environment.
 Then navigate to the resulting pysilfont directory and run:
 ```
+sudo apt install python3-pip python3-venv wheel setuptools
 python3 -m venv venv
 source venv/bin/activate
 python3 -m pip install --upgrade pip setuptools setuptools-scm wheel build
 python3 -m build
 python3 -m pip install .
 ```
-in the pysilfont directory
+
+Alternatively to install in editable mode:
+```
+python3 -m pip install -e .
+```
 
 ### Uninstalling pysilfont
 
 pip3 can be used to uninstall silfont:
 
-
-or locally for your user (inside the venv or not)
+locally for your user (either inside the venv or not)
 ```
 pip3 uninstall silfont
 ```
 
-or if you have it installed system-wide:
+or if you have it installed system-wide (only recommended inside a separate VM or container)
 ```
 sudo pip3 uninstall silfont
 ```
