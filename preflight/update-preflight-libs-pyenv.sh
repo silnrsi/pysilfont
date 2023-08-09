@@ -5,13 +5,15 @@
 # Released under the MIT License (https://opensource.org/licenses/MIT)
 # maintained by Nicolas Spalinger
 
+echo "Update preflight libs pyenv - version 2023-08-03"
+
 # checking we have pyenv installed 
 if ! [ -x "$(command -v pyenv)" ]; then
   echo 'Error: pyenv is not installed. Try "brew install pyenv". ' 
 fi
 
 echo ""
-echo "Which version of Python are we using? and from where?"
+echo "Python version and location:"
 type python3
 pyenv versions
 echo ""
