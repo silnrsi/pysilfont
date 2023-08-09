@@ -9,13 +9,14 @@ echo "Update preflight libs pyenv - version 2023-08-03"
 
 # checking we have pyenv installed 
 if ! [ -x "$(command -v pyenv)" ]; then
-  echo 'Error: pyenv is not installed. Try "brew install pyenv". ' 
+  echo 'Error: pyenv is not installed. Check the workflow doc for details. '
+  exit 0
 fi
 
 echo ""
-echo "Python version and location:"
+echo "Active python version and location (via pyenv):"
+pyenv version
 type python3
-pyenv versions
 echo ""
 
 echo "Installing/Updating pip"
@@ -25,7 +26,7 @@ echo ""
 echo "Populating/updating the preflight dependencies for the active pyenv interpreter"  
 
 # components in editable mode:
-# (with source at the root of the user's home directory so that src/ folder don't appear anywhere else)
+# (with source at the root of the user's home directory so that src/ folders don't appear anywhere else)
 python3 -m pip install -e git+https://github.com/silnrsi/pysilfont.git#egg=pysilfont --src "$HOME"/src
 # moving to the root of the user's home directory so that src/ folder for editable mode don't appear everywhere
 
@@ -36,8 +37,5 @@ python3 -m pip install git+https://github.com/silnrsi/palaso-python.git git+http
 python3 -m pip install fs mutatorMath defcon fontMath lxml
 
 echo ""
-echo "Please check these dependencies have been installed correctly: defcon, fontMath, fontTools, glyphConstruction, glyphsLib, MutatorMath, pysilfont, palaso, lxml, ufoLib2 and fontParts. Only these are currently needed for preflight."
-
-echo ""
-psfversion
+psfpreflightversion
 
