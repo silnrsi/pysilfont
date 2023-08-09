@@ -67,6 +67,7 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfufo2glyphs](#psfufo2glyphs)                  | Generate a glyphs files from a designspace file and UFO(s)                                             |
 | [psfufo2ttf](#psfufo2ttf)                        | Generate a ttf file without OpenType tables from a UFO                                                 |
 | [psfversion](#psfversion)                        | Display version info for pysilfont and dependencies                                                    |
+| [psfpreflightversion](#psfpreflightversion)      | Display version info for pysilfont and dependencies but only for preflight                                                   |
 | [psfwoffit](#psfwoffit)                          | Convert between ttf, woff, and woff2                                                                   |
 | [psfxml2compdef](#psfxml2compdef)                | Convert composite definition file from XML format                                                      |
 
