@@ -37,5 +37,7 @@ python3 -m pip install git+https://github.com/silnrsi/palaso-python.git git+http
 python3 -m pip install fs mutatorMath defcon fontMath lxml
 
 echo ""
-psfpreflightversion
-
+if [ -x "$(which psfpreflightversion)" ]; then
+	psfpreflightversion
+    else echo "psfpreflightversion not installed yet, re-run the install script"
+fi
