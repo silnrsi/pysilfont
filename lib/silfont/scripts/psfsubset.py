@@ -2,7 +2,7 @@
 __doc__ = '''Subset an existing UFO based on a csv or text list of glyph names or USVs to keep.
 '''
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2018 SIL International (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2018-2023 SIL International (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'Bob Hallissy'
 
@@ -14,7 +14,8 @@ argspec = [
     ('ifont',{'help': 'Input font file'}, {'type': 'infont'}),
     ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
     ('-i','--input',{'help': 'Input csv file'}, {'type': 'incsv'}),
-    ('--header', {'help': 'Column header for glyphlist', 'default': 'glyph_name'}, {}),
+    ('--header', {'help': 'Column header for glyph list', 'default': 'glyph_name'}, {}),
+    ('--filter', {'help': 'Column header for filter status', 'default': 'subset'}, {}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_subset.log'})]
 
 def doit(args) :
@@ -36,9 +37,16 @@ def doit(args) :
         try:
             dataCol = fl.index(args.header)
         except ValueError as e:
-            logger.log('Missing csv input field: ' + e.message, 'S')
+            logger.log('Missing csv header field: ' + e.message, 'S')
         except Exception as e:
-            logger.log('Error reading csv input field: ' + e.message, 'S')
+            logger.log('Error reading csv header field: ' + e.message, 'S')
+        if args.filter:
+            try:
+                filterCol = fl.index(args.filter)
+            except ValueError as e:
+                logger.log('Missing csv filter field: ' + e.message, 'S')
+            except Exception as e:
+                logger.log('Error reading csv filter field: ' + e.message, 'S')
         next(incsv.reader, None)  # Skip first line with headers in
     else:
         logger.log("Invalid csv file", "S")
@@ -47,6 +55,10 @@ def doit(args) :
     toProcess = set()
     usvRE = re.compile('[0-9a-f]{4,6}',re.IGNORECASE)   # matches 4-6 digit hex
     for r in incsv:
+        if args.filter:
+            filterstatus = r[filterCol].strip()
+            if filterstatus != "Y":
+                continue
         gname = r[dataCol].strip()
         if usvRE.match(gname):
             # data is USV, not glyph name
