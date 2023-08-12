@@ -1337,7 +1337,7 @@ This script writes an output UFO that is a subset of the input UFO. The subset c
 
 The INPUT file can be a plain text file (one glyph per line) or a csv file. In the case of csv, the HEADER parameter is used to indicate which column from the csv to use (default is `glyph_name`).
 
-FILTER can be used to further reduce the subset of glyphs to only those with `Y` in the named csv column (default is `subset`). 
+FILTER can be used to further reduce the subset of glyphs to only those with `Y` in the named csv column. 
 
 Glyphs can be identified either by their name or the Unicode codepoint (USV). Glyph names and USVs can be intermixed in the list: anything that is between 4 and 6 hexadecimal digits is first processed as a USV and then, if there is no glyph encoded with that USV, processed as a glyph name.
 

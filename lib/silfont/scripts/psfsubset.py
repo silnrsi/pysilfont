@@ -15,7 +15,7 @@ argspec = [
     ('ofont',{'help': 'Output font file','nargs': '?' }, {'type': 'outfont'}),
     ('-i','--input',{'help': 'Input csv file'}, {'type': 'incsv'}),
     ('--header', {'help': 'Column header for glyph list', 'default': 'glyph_name'}, {}),
-    ('--filter', {'help': 'Column header for filter status', 'default': 'subset'}, {}),
+    ('--filter', {'help': 'Column header for filter status', 'default': None}, {}),
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_subset.log'})]
 
 def doit(args) :
