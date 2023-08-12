@@ -53,7 +53,7 @@ def doit(args) :
 
     # From the csv, assemble a list of glyphs to process:
     toProcess = set()
-    usvRE = re.compile('[0-9a-f]{4,6}',re.IGNORECASE)   # matches 4-6 digit hex
+    usvRE = re.compile('[0-9a-f]{4,6}$',re.IGNORECASE)   # matches 4-6 digit hex
     for r in incsv:
         if args.filter:
             filterstatus = r[filterCol].strip()
