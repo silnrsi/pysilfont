@@ -37,16 +37,16 @@ def doit(args) :
         try:
             dataCol = fl.index(args.header)
         except ValueError as e:
-            logger.log('Missing csv header field: ' + e.message, 'S')
+            logger.log(f'Missing csv header field: {e}', 'S')
         except Exception as e:
-            logger.log('Error reading csv header field: ' + e.message, 'S')
+            logger.log(f'Error reading csv header field: {e}', 'S')
         if args.filter:
             try:
                 filterCol = fl.index(args.filter)
             except ValueError as e:
-                logger.log('Missing csv filter field: ' + e.message, 'S')
+                logger.log(f'Missing csv filter field: {e}', 'S')
             except Exception as e:
-                logger.log('Error reading csv filter field: ' + e.message, 'S')
+                logger.log(f'Error reading csv filter field: {e}', 'S')
         next(incsv.reader, None)  # Skip first line with headers in
     else:
         logger.log("Invalid csv file", "S")
