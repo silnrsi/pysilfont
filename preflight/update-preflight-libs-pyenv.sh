@@ -5,7 +5,7 @@
 # Released under the MIT License (https://opensource.org/licenses/MIT)
 # maintained by Nicolas Spalinger
 
-echo "Update preflight libs pyenv - version 2023-08-09"
+echo "Update preflight libs pyenv - version 2023-08-14"
 
 # checking we have pyenv installed 
 if ! [ -x "$(command -v pyenv)" ]; then
@@ -16,7 +16,7 @@ fi
 echo ""
 echo "Active python version and location (via pyenv):"
 pyenv version
-type python3
+which python3
 echo ""
 
 echo "Installing/Updating pip"
@@ -35,8 +35,15 @@ python3 -m pip install git+https://github.com/silnrsi/palaso-python.git git+http
 # components from stable releases on pypi
 python3 -m pip install fs mutatorMath defcon fontMath lxml
 
-echo ""
-if [ -f "$(type psfpreflightversion)" ]; then
-	psfpreflightversion
-    else echo "psfpreflightversion indicates if all the modules are installed but it won't show on the very first run"
+# reload the config file to rehash the path for either bash or zsh
+if [ -n "$ZSH_VERSION" ]; then
+  SHELL_PROFILE="$HOME/.zshrc"
+else
+  SHELL_PROFILE="$HOME/.bash_profile"
 fi
+if [ -n "$ZSH_VERSION" ]; then
+  . $SHELL_PROFILE
+fi
+
+# show the paths and the versions of the preflight lib modules
+psfpreflightversion
