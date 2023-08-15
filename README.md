@@ -27,7 +27,7 @@ Then navigate to the resulting pysilfont directory and run:
 sudo apt install python3-pip python3-venv python3-wheel python3-setuptools
 python3 -m venv venv
 source venv/bin/activate
-python3 -m pip install --upgrade pip setuptools setuptools-scm wheel build
+python3 -m pip install --upgrade pip setuptools wheel build
 python3 -m build
 python3 -m pip install .
 ```
