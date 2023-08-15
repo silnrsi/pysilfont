@@ -11,8 +11,10 @@ Please read the main [documentation](docs/docs.md) in the docs folder for more d
 Pysilfont requires Python 3.6+ and pip3. Some scripts also need other libraries.
 
 ### Updating your python toolchain to be current
-```sudo apt install python3-pip python3-setuptools
-sudo python3 -m pip install --upgrade pip setuptools wheel build```
+```
+sudo apt install python3-pip python3-setuptools
+sudo python3 -m pip install --upgrade pip setuptools wheel build
+```
 
 ### Simple install
 To just install the main scripts without cloning the github repository run:
