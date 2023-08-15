@@ -24,7 +24,7 @@ to the example scripts or give you the code locally to look at.
 First clone this repository or download the files from this [github URL](https://github.com/silnrsi/pysilfont). To isolate change from your system python we will use a virtual environment.
 Then navigate to the resulting pysilfont directory and run:
 ```
-sudo apt install python3-pip python3-venv wheel setuptools
+sudo apt install python3-pip python3-venv python3-wheel python3-setuptools
 python3 -m venv venv
 source venv/bin/activate
 python3 -m pip install --upgrade pip setuptools setuptools-scm wheel build
