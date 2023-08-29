@@ -5,7 +5,7 @@
 # Released under the MIT License (https://opensource.org/licenses/MIT)
 # maintained by Nicolas Spalinger
 
-echo "Update preflight libs pyenv - version 2023-08-16"
+echo "Update preflight libs pyenv - version 2023-08-28"
 
 # checking we have pyenv installed 
 if ! [ -x "$(command -v pyenv)" ]; then
@@ -45,5 +45,8 @@ if [ -n "$ZSH_VERSION" ]; then
   . $SHELL_PROFILE
 fi
 
-# show the paths and the versions of the preflight lib modules
-psfpreflightversion
+# conditional to only run psfpreflightversion if the command is really available otherwise output a guidance message
+if [ -n "$(command -v psfpreflightversion)" ]; then
+	psfpreflightversion
+	else echo "Open a new Terminal and type psfpreflightversion to check paths and versions of the preflight modules"
+fi
