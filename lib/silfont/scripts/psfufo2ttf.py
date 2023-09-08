@@ -80,15 +80,16 @@ def doit(args):
     font = outlineCompiler.compile()
 
     # handle uvs glyphs until ufo2ft does it for us.
-    uvsdict = getuvss(ufo)
-    if len(uvsdict):
-        from fontTools.ttLib.tables._c_m_a_p import cmap_format_14
-        cmap_uvs = cmap_format_14(14)
-        cmap_uvs.platformID = 0
-        cmap_uvs.platEncID = 5
-        cmap_uvs.cmap = {}
-        cmap_uvs.uvsDict = uvsdict
-        font['cmap'].tables.append(cmap_uvs)
+    if 'public.unicodeVariationSequences' not in ufo.lib:
+        uvsdict = getuvss(ufo)
+        if len(uvsdict):
+            from fontTools.ttLib.tables._c_m_a_p import cmap_format_14
+            cmap_uvs = cmap_format_14(14)
+            cmap_uvs.platformID = 0
+            cmap_uvs.platEncID = 5
+            cmap_uvs.cmap = {}
+            cmap_uvs.uvsDict = uvsdict
+            font['cmap'].tables.append(cmap_uvs)
 
     args.logger.log('Saving ttf file', 'P')
     font.save(args.ottf)
