@@ -28,6 +28,7 @@ not the design coordinate space. (1.6.1.dev5)
 - psfsyncmasters - removed checks relating to styleMapFamilyName and styleMapStyleName; --complex now does nothing (1.6.1.dev9)
 - psfrunfbchecks - general updates to reflect new Font Bakery checks (1.6.1.dev9)
 - psfrunfbchecks + fbtests modules - updates to relect structure changes in Font Bakery (1.6.1.dev10)
+- psfufo2ttf - fix crash in cases where both `public` and `org.sil` keys for Variation Sequence data are present (1.6.1.dev10)
 - 
 ### Removed
 
