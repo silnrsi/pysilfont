@@ -27,17 +27,13 @@ dependencies = [
 "palaso @ git+https://github.com/silnrsi/palaso-python",
 "tabulate",
 "glyphConstruction @ git+https://github.com/typemytype/glyphConstruction",
-"booleanOperations @ git+https://github.com/typemytype/booleanOperations",
-"cu2qu @ git+https://github.com/googlefonts/cu2qu",
 "defcon @ git+https://github.com/robotools/defcon",
 "fontMath @ git+https://github.com/robotools/fontMath",
 "fontParts @ git+https://github.com/robotools/fontParts",
 "fonttools @ git+https://github.com/fonttools/fonttools",
 "fontbakery @ git+https://github.com/googlefonts/fontbakery",
 "glyphsLib @ git+https://github.com/googlefonts/GlyphsLib",
-"protobuf <= 3.19.4",
 "ufo2ft @ git+https://github.com/googlei18n/ufo2ft",
-"ufoLib2 @ git+https://github.com/fonttools/ufoLib2",
 ]
 
 [project.urls]
