@@ -43,6 +43,12 @@ Alternatively to install in editable mode:
 python3 -m pip install -e .
 ```
 
+Alternatively to install in editable mode but tracking main/master repositories
+(see details in the optional-dependencies section of the pyproject.toml file):
+```
+python3 -m pip install -e .[git]
+```
+
 ### Uninstalling pysilfont
 
 pip3 can be used to uninstall silfont:

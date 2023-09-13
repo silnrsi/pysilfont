@@ -22,10 +22,27 @@ requires-python = ">=3.8"
 dependencies = [
 "lxml",
 "lz4",
+"MutatorMath",
+"odfpy",
+"tabulate",
+"defcon",
+"fontMath",
+"fontParts",
+"fonttools",
+"fontbakery",
+"glyphsLib",
+"ufo2ft",
+"palaso @ git+https://github.com/silnrsi/palaso-python",
+"glyphConstruction @ git+https://github.com/typemytype/glyphConstruction",
+]
+
+[project.optional-dependencies]
+git = [
+"lxml @ git+https://github.com/lxml/lxml",
+"lz4 @ git+https://github.com/lz4/lz4",
 "MutatorMath @ git+https://github.com/LettError/MutatorMath",
 "odfpy @ git+https://github.com/eea/odfpy",
 "palaso @ git+https://github.com/silnrsi/palaso-python",
-"tabulate",
 "glyphConstruction @ git+https://github.com/typemytype/glyphConstruction",
 "defcon @ git+https://github.com/robotools/defcon",
 "fontMath @ git+https://github.com/robotools/fontMath",
@@ -34,7 +51,9 @@ dependencies = [
 "fontbakery @ git+https://github.com/googlefonts/fontbakery",
 "glyphsLib @ git+https://github.com/googlefonts/GlyphsLib",
 "ufo2ft @ git+https://github.com/googlei18n/ufo2ft",
+"tabulate @ git+https://github.com/astanin/python-tabulate",
 ]
+
 
 [project.urls]
 Home-Page = "https://github.com/silnrsi/pysilfont"
