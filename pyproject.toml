@@ -44,7 +44,6 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 "silfont.data" = ["*.*"]
-"silfont.fbtests" = ["*.*"]
 
 [tool.bdist_wheel]
 universal = true
