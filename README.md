@@ -27,8 +27,8 @@ to the example scripts or give you the code locally to look at.
 
 ### Full install
 
-First clone this repository or download the files from this [github URL](https://github.com/silnrsi/pysilfont). To isolate change from your system python we will use a virtual environment.
-Then navigate to the resulting pysilfont directory and run:
+First clone this repository or download the files from this [https://github.com/silnrsi/pysilfont](https://github.com/silnrsi/pysilfont). To better isolate changes from your system python we will use a virtual environment.
+Then navigate to the newly created pysilfont directory and run:
 ```
 sudo apt install python3-pip python3-venv python3-wheel python3-setuptools
 python3 -m venv venv
@@ -43,10 +43,11 @@ Alternatively to install in editable mode:
 python3 -m pip install -e .
 ```
 
-Alternatively to install in editable mode but tracking main/master repositories
-(see details in the optional-dependencies section of the pyproject.toml file):
+By default the dependencies pulled in are tracking git main/master. 
+
+Alternatively to install in editable mode but only tracking released version (except palaso and glyphConstruction from git master)
 ```
-python3 -m pip install -e .[git]
+python3 -m pip install -e .[pipy]
 ```
 
 To have more than one project in editable mode you should install each one separately and only install pysilfont at the last step, for example:
