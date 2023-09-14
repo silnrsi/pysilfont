@@ -49,6 +49,14 @@ Alternatively to install in editable mode but tracking main/master repositories
 python3 -m pip install -e .[git]
 ```
 
+To have more than one project in editable mode you should install each one separately and only install pysilfont at the last step, for example:
+```
+python3 -m pip install -e git+https://github.com/fonttools/fontbakery.git@main#egg=fontbakery
+python3 -m pip install -e git+https://github.com/fonttools/fonttools@main#egg=fonttools
+python3 -m pip install -e git+https://github.com/robotools/fontParts.git@master#egg=fontparts
+python3 -m pip install -e git+https://github.com/silnrsi/pysilfont.git@pep621#egg=silfont
+```
+
 ### Uninstalling pysilfont
 
 pip3 can be used to uninstall silfont:
