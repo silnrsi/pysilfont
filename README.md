@@ -47,7 +47,7 @@ By default the dependencies pulled in are tracking git main/master.
 
 Alternatively to install in editable mode but only tracking released version (except palaso and glyphConstruction from git master)
 ```
-python3 -m pip install --upgrade -e .[pipy]
+python3 -m pip install --upgrade -e .[pypi]
 ```
 
 To have more than one project in editable mode you should install each one separately and only install pysilfont at the last step, for example:
