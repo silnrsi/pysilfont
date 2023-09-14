@@ -39,7 +39,7 @@ dependencies = [
 [project.optional-dependencies]
 git = [
 "lxml @ git+https://github.com/lxml/lxml",
-"lz4 @ git+https://github.com/lz4/lz4",
+"lz4 @ git+https://github.com/python-lz4/python-lz4",
 "MutatorMath @ git+https://github.com/LettError/MutatorMath",
 "odfpy @ git+https://github.com/eea/odfpy",
 "palaso @ git+https://github.com/silnrsi/palaso-python",
