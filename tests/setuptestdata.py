@@ -32,6 +32,14 @@ for ufo in ufos:
     (base, ufoname) = os.path.split(ufo)
     resultufo = os.path.join(resultsdir, "ufo", ufoname)
     shutil.copytree(ufo, resultufo)
+    
+# Repeat for ufos in subfolders
+ufos = glob.iglob("tests/reference/ufo/*/*.ufo")
+for ufo in ufos:
+    (base, ufoname) = os.path.split(ufo)
+    (base, subfolder) = os.path.split(base)
+    resultufo = os.path.join(resultsdir, "ufo", subfolder, ufoname)
+    shutil.copytree(ufo, resultufo)
 
 # Create reference log files from .lg files
 for name in os.listdir("tests/reference/"):
