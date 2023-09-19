@@ -515,7 +515,7 @@ class Ufont(object):
                             array = ET.Element("array")
                             for val in new: # Only covers integer at present for openTypeOS2Selection
                                 ET.SubElement(array, "integer").text = val
-                                self.fontinfo.setelem(key, array)
+                            self.fontinfo.setelem(key, array)
                         else: # Does not cover real at present
                             valtype = "integer" if isinstance(new, int) else "string"
                             self.fontinfo.setval(key, valtype, new)
