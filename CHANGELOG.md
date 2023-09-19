@@ -5,12 +5,12 @@
 
 ### Added
 
-| Command                                            | Description                                                                                |
-|----------------------------------------------------|--------------------------------------------------------------------------------------------|
-| [psfcheckproject](docs/scripts.md#psfcheckproject) | Check UFOs in designspace files have consistent glyph inventory & unicode values (1.6.1.dev2) |
-| [update-preflight-libs-pyenv.sh](preflight/update-prefligh-libs-pyenv.sh)  | Preflight/preglyphs libs update shell script for macOS users (1.6.1.dev6)             |
+| Command                                                                    | Description                                                                                |
+|----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
+| [psfcheckproject](docs/scripts.md#psfcheckproject)                         | Check UFOs in designspace files have consistent glyph inventory & unicode values (1.6.1.dev2) |
+| [update-preflight-libs-pyenv.sh](preflight/update-preflight-libs-pyenv.sh) | Preflight/preglyphs libs update shell script for macOS users (1.6.1.dev6)             |
 
-### Changed
+### Changes
 
 - check&fix, used by most UFO commands, no longer warns if styleMapFamilyName or styleMapStyleName are missing in fontinfo (1.6.1.dev1)
 - Low-level bug fix to ufo.py found when running some temp code! Not previously found in live code. (1.6.1.dev1)
@@ -30,7 +30,10 @@ not the design coordinate space. (1.6.1.dev5)
 - psfrunfbchecks + fbtests modules - updates to relect structure changes in Font Bakery (1.6.1.dev10)
 - psfsubset - Added filtering (1.6.1.dev10)
 - psfufo2ttf - fix crash in cases where both `public` and `org.sil` keys for Variation Sequence data are present (1.6.1.dev10)
-- 
+- psfbuildcomp - updated to use g_blue,g_purple as the default colours for -c (1.6.1.dev10)
+- Fixed bug in setuptestdata.py used by pytest  (1.6.1.dev10)
+- Bug-fix to check&fix where updates that empty an array failed  (1.6.1.dev10)
+
 ### Removed
 
 None
