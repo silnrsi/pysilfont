@@ -5,10 +5,11 @@
 
 ### Added
 
-| Command                                                                    | Description                                                                                |
-|----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
+| Command                                                                    | Description                                                                                   |
+|----------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
 | [psfcheckproject](docs/scripts.md#psfcheckproject)                         | Check UFOs in designspace files have consistent glyph inventory & unicode values (1.6.1.dev2) |
-| [update-preflight-libs-pyenv.sh](preflight/update-preflight-libs-pyenv.sh) | Preflight/preglyphs libs update shell script for macOS users (1.6.1.dev6)             |
+| [update-preflight-libs-pyenv](preflight/update-preflight-libs-pyenv)       | Preflight/preglyphs libs update shell script for macOS users (1.6.1.dev6)                     |
+| [psfpreflightversion](docs/scripts.md#psfpreflightversion)                 | Script to check version of modules but only for preflight (1.6.1.dev11)                                    |
 
 ### Changes
 
@@ -33,6 +34,7 @@ not the design coordinate space. (1.6.1.dev5)
 - psfbuildcomp - updated to use g_blue,g_purple as the default colours for -c (1.6.1.dev11)
 - Fixed bug in setuptestdata.py used by pytest  (1.6.1.dev11)
 - Bug-fix to check&fix where updates that empty an array failed  (1.6.1.dev11)
+- update-preflight-libs-pyenv - adjusted dependencies, added conditional to modules installation report calling script only for the desired modules, made output terser, added stricter pyenv checking, dropped filename suffix (1.6.dev11)
 
 ### Removed
 
