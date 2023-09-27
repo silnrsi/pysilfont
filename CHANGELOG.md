@@ -1,7 +1,17 @@
 # Changelog
 
-## [1.6.1] - - Placeholder for next release
+## [1.7.1] - - Placeholder for next release
 
+### Added
+
+### Changed
+
+### Removed
+
+
+## [1.7.0] - 2023-09-27 Maintenance Release - general updates
+
+General updates over the last year
 
 ### Added
 
