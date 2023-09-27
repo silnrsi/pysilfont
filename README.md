@@ -13,13 +13,13 @@ Pysilfont requires Python 3.6+ and pip3. Some scripts also need other libraries.
 ### Updating your python toolchain to be current
 ```
 sudo apt install python3-pip python3-setuptools
-sudo python3 -m pip install --upgrade pip setuptools wheel build
+python3 -m pip install --upgrade pip setuptools wheel build
 ```
 
 ### Simple install
-To just install the main scripts without cloning the github repository run:
+To just install the main scripts (only in the user's folder not system-wide) without cloning the GitHub repository run:
 ```
-sudo python3 -m pip install git+https://github.com/silnrsi/pysilfont
+python3 -m pip install git+https://github.com/silnrsi/pysilfont
 ```
 
 This will allow you to run the scripts listed in [scripts.md](docs/scripts.md), but won’t give access
@@ -27,50 +27,81 @@ to the example scripts or give you the code locally to look at.
 
 ### Full install
 
-First clone this repository or download the files from this [https://github.com/silnrsi/pysilfont](https://github.com/silnrsi/pysilfont). To better isolate changes from your system python we will use a virtual environment.
+First clone this repository or download the files from this [https://github.com/silnrsi/pysilfont](https://github.com/silnrsi/pysilfont). To better isolate changes from your system Python we will use a virtual environment.
 Then navigate to the newly created pysilfont directory and run:
 ```
 sudo apt install python3-pip python3-venv python3-wheel python3-setuptools
+```
+
+Then create a virtual environment:
+```
 python3 -m venv venv
+```
+Get inside the virtual environment, you have to do this everytime you want to use the pysilfont tools again:
+```
 source venv/bin/activate
+```
+
+Then install update the toolchain and install:
+```
 python3 -m pip install --upgrade pip setuptools wheel build
 python3 -m build
 python3 -m pip install .
 ```
+
+You can deactivate your virtual environment (venv) by typing:
+```
+deactivate
+```
+or by closing that Terminal. 
+
 
 Alternatively to install in editable mode:
 ```
 python3 -m pip install -e .
 ```
 
-By default the dependencies pulled in are tracking git main/master. 
+By default the dependencies pulled in are using releases. 
 
-Alternatively to install in editable mode but only tracking released version (except palaso and glyphConstruction from git master)
+
+
+For developers: 
+
+Install from git main/master to track the freshest versions of the dependencies:
 ```
-python3 -m pip install --upgrade -e .[pypi]
+python3 -m pip install --upgrade -e .[git]
 ```
 
 To have more than one project in editable mode you should install each one separately and only install pysilfont at the last step, for example:
 ```
 python3 -m pip install -e git+https://github.com/fonttools/fontbakery.git@main#egg=fontbakery
 python3 -m pip install -e git+https://github.com/fonttools/fonttools@main#egg=fonttools
-python3 -m pip install -e git+https://github.com/robotools/fontParts.git@master#egg=fontparts
-python3 -m pip install -e git+https://github.com/silnrsi/pysilfont.git@pep621#egg=silfont
+python3 -m pip install -e git+https://github.com/silnrsi/pysilfont.git@master#egg=silfont
 ```
 
 ### Uninstalling pysilfont
 
 pip3 can be used to uninstall silfont:
 
-locally for your user (either inside the venv or not)
+locally for your user:
 ```
 pip3 uninstall silfont
 ```
+
+or to remove a venv (virtual environment):
+```
+deactivate (if you are inside the venv) 
+rm -rf venv
+```
+
 
 or if you have it installed system-wide (only recommended inside a separate VM or container)
 ```
 sudo pip3 uninstall silfont
 ```
+
+If you need fontbakery, you will need to install it separately.
+Follow the instructions on https://font-bakery.readthedocs.io
 
 
 ## Contributing to the project
