@@ -45,7 +45,6 @@ source venv/bin/activate
 Then install update the toolchain and install:
 ```
 python3 -m pip install --upgrade pip setuptools wheel build
-python3 -m build
 python3 -m pip install .
 ```
 
@@ -99,6 +98,9 @@ or if you have it installed system-wide (only recommended inside a separate VM o
 ```
 sudo pip3 uninstall silfont
 ```
+
+If you need palaso, you will need to install it separately.
+Follow the instructions on https://github.com/silnrsi/palaso-python
 
 If you need fontbakery, you will need to install it separately.
 Follow the instructions on https://font-bakery.readthedocs.io
