@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "silfont"
-version = "1.6.1.dev10"
+version = "1.7.1.dev1"
 # (also manually bump version in src/silfont/__init__.py)
 authors = [{name = "SIL International", email = "fonts@sil.org"}]
 readme = "README.md"
@@ -20,10 +20,24 @@ classifiers = [
 requires-python = ">=3.8"
 
 dependencies = [
+"MutatorMath",
+"odfpy",
+"defcon",
+"fontMath",
+"fontParts",
+"fonttools",
+"glyphsLib",
+"ufo2ft",
+"tabulate",
+"lxml",
+"lz4",
+]
+
+[project.optional-dependencies]
+git = [
 "MutatorMath @ git+https://github.com/LettError/MutatorMath",
 "odfpy @ git+https://github.com/eea/odfpy",
 "palaso @ git+https://github.com/silnrsi/palaso-python",
-"glyphConstruction @ git+https://github.com/typemytype/glyphConstruction",
 "defcon @ git+https://github.com/robotools/defcon",
 "fontMath @ git+https://github.com/robotools/fontMath",
 "fontParts @ git+https://github.com/robotools/fontParts",
@@ -35,25 +49,6 @@ dependencies = [
 "lxml",
 "lz4",
 ]
-
-[project.optional-dependencies]
-pypi = [
-"MutatorMath",
-"odfpy",
-"defcon",
-"fontMath",
-"fontParts",
-"fonttools",
-"fontbakery",
-"glyphsLib",
-"ufo2ft",
-"palaso @ git+https://github.com/silnrsi/palaso-python",
-"glyphConstruction @ git+https://github.com/typemytype/glyphConstruction",
-"tabulate",
-"lxml",
-"lz4",
-]
-
 
 [project.urls]
 Home-Page = "https://github.com/silnrsi/pysilfont"
