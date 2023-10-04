@@ -1226,7 +1226,7 @@ def writeToDisk(dtree, outdir, font, odtree=None, logindent="", changes = False)
             else:
                 logmess = 'Deleting directory ' + ofilen + ' from existing output UFO'
                 shutil.rmtree(os.path.join(outdir, ofilen))
-            if ofilen not in dtree.removedfiles: font.logger.log(logmess, "W")  # No need to log for remaned files
+            if ofilen not in dtree.removedfiles: font.logger.log(logmess, "W")  # No need to log for renamed files
             okey = odtreelist.pop(0) if odtreelist != [] else None
 
         if key == okey:

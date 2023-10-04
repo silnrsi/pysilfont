@@ -241,7 +241,7 @@ def setpaths(logger): # Check that the script is being run from the root of the 
     # Do cursory checks that this is the root of the fonts repo
     if repopath[-5:] != "fonts" or not os.path.isdir(os.path.join(repopath, "fonts/sil")):
         logger.log("GFR scripts must be run from the root of the fonts repo", "S")
-    # Set up standars paths for scripts to use
+    # Set up standard paths for scripts to use
     silpath = os.path.join(repopath, "fonts/sil")
     otherpath = os.path.join(repopath, "fonts/other")
     basespath = os.path.join(repopath, "basefiles")

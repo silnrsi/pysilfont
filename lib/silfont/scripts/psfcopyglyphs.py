@@ -55,7 +55,7 @@ def copyglyph(sfont, tfont, g, args):
 
     global dusv2gname
     if not dusv2gname:
-        # Create mappings to find exsting glyph name from decimal usv:
+        # Create mappings to find existing glyph name from decimal usv:
         dusv2gname = {int(unicode.hex, 16): gname for gname in tfont.deflayer for unicode in tfont.deflayer[gname]['unicode']}
         # NB: Assumes font is well-formed and has at most one glyph with any particular Unicode value.
 
