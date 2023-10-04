@@ -290,7 +290,7 @@ def colortoname(color, default=None):
         return colorstonameslist.get(color)
 
 def parsecolors(colors, single = False, allowspecial = False): # Process a list of colors - designed for handling command-line input
-    # Colors can be in RBGA format (eg (0.25,0.25,0.25,1)) or text name (eg g_dark_grey), spearated by commas.
+    # Colors can be in RBGA format (eg (0.25,0.25,0.25,1)) or text name (eg g_dark_grey), separated by commas.
     # Function returns a list of tuples, one per color, (RGBA, name, logcolor, original color after splitting)
     # If the color can't be parsed, RGBA will be None and logocolor contain an error message
     # If single is set, just return one tuple rather than a list of tuples

@@ -37,7 +37,7 @@ Then create a virtual environment:
 ```
 python3 -m venv venv
 ```
-Get inside the virtual environment, you have to do this everytime you want to use the pysilfont tools again:
+Get inside the virtual environment, you have to do this every time you want to use the pysilfont tools again:
 ```
 source venv/bin/activate
 ```
