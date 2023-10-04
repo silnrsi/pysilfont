@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 '''Write mapping of graphite names to new graphite names based on:
    - an original ttf font
    - the gdl file produced by makeGdl when original font was produced

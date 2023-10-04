@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from __future__ import unicode_literals
 'FontForge: Remove overlap on all glyphs in font'
 __url__ = 'https://github.com/silnrsi/pysilfont'

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ''' Demo of how to chain calls to multiple scripts together.
 Running
    python chaindemo.py infont outfont --featfile feat.csv --uidsfile uids.csv

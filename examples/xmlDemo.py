@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 'Demo script for use of ETWriter'
 __url__ = 'https://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2015 SIL International (https://www.sil.org)'

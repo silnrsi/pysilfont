@@ -1,0 +1,124 @@
+[build-system]
+requires = ["setuptools>=62.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "silfont"
+version = "1.7.1.dev1"
+# (also manually bump version in src/silfont/__init__.py)
+authors = [{name = "SIL International", email = "fonts@sil.org"}]
+readme = "README.md"
+license = {file = "LICENSE"}
+description = "A growing collection of font utilities in Python to help with font design and production. Developed and maintained by SIL International's WSTech team (formerly NRSI)."
+classifiers = [
+   "Environment :: Console",
+   "Programming Language :: Python :: 3.8",
+   "Intended Audience :: Developers",
+   "License :: OSI Approved :: MIT License",
+   "Topic :: Text Processing :: Fonts"
+   ]
+requires-python = ">=3.8"
+
+dependencies = [
+"MutatorMath",
+"odfpy",
+"defcon",
+"fontMath",
+"fontParts",
+"fonttools",
+"glyphsLib",
+"ufo2ft",
+"tabulate",
+"lxml",
+"lz4",
+]
+
+[project.optional-dependencies]
+git = [
+"MutatorMath @ git+https://github.com/LettError/MutatorMath",
+"odfpy @ git+https://github.com/eea/odfpy",
+"palaso @ git+https://github.com/silnrsi/palaso-python",
+"defcon @ git+https://github.com/robotools/defcon",
+"fontMath @ git+https://github.com/robotools/fontMath",
+"fontParts @ git+https://github.com/robotools/fontParts",
+"fonttools @ git+https://github.com/fonttools/fonttools",
+"fontbakery @ git+https://github.com/fonttools/fontbakery",
+"glyphsLib @ git+https://github.com/googlefonts/GlyphsLib",
+"ufo2ft @ git+https://github.com/googlei18n/ufo2ft",
+"tabulate",
+"lxml",
+"lz4",
+]
+
+[project.urls]
+Home-Page = "https://github.com/silnrsi/pysilfont"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"silfont.data" = ["*.*"]
+
+[tool.bdist_wheel]
+universal = true
+
+[project.scripts]
+psfaddanchors = "silfont.scripts.psfaddanchors:cmd"
+psfbuildcomp = "silfont.scripts.psfbuildcomp:cmd"
+psfbuildcompgc = "silfont.scripts.psfbuildcompgc:cmd"
+psfbuildfea = "silfont.scripts.psfbuildfea:cmd"
+psfchangegdlnames = "silfont.scripts.psfchangegdlnames:cmd"
+psfchangettfglyphnames = "silfont.scripts.psfchangettfglyphnames:cmd"
+psfcheckbasicchars = "silfont.scripts.psfcheckbasicchars:cmd"
+psfcheckclassorders = "silfont.scripts.psfcheckclassorders:cmd"
+psfcheckftml = "silfont.scripts.psfcheckftml:cmd"
+psfcheckglyphinventory = "silfont.scripts.psfcheckglyphinventory:cmd"
+psfcheckinterpolatable = "silfont.scripts.psfcheckinterpolatable:cmd"
+psfcheckproject = "silfont.scripts.psfcheckproject:cmd"
+psfcompdef2xml = "silfont.scripts.psfcompdef2xml:cmd"
+psfcompressgr = "silfont.scripts.psfcompressgr:cmd"
+psfcopyglyphs = "silfont.scripts.psfcopyglyphs:cmd"
+psfcopymeta = "silfont.scripts.psfcopymeta:cmd"
+psfcreateinstances = "silfont.scripts.psfcreateinstances:cmd"
+psfcsv2comp = "silfont.scripts.psfcsv2comp:cmd"
+psfdeflang = "silfont.scripts.psfdeflang:cmd"
+psfdeleteglyphs = "silfont.scripts.psfdeleteglyphs:cmd"
+psfdupglyphs = "silfont.scripts.psfdupglyphs:cmd"
+psfexportanchors = "silfont.scripts.psfexportanchors:cmd"
+psfexportmarkcolors = "silfont.scripts.psfexportmarkcolors:cmd"
+psfexportpsnames = "silfont.scripts.psfexportpsnames:cmd"
+psfexportunicodes = "silfont.scripts.psfexportunicodes:cmd"
+psffixffglifs = "silfont.scripts.psffixffglifs:cmd"
+psffixfontlab = "silfont.scripts.psffixfontlab:cmd"
+psfftml2TThtml = "silfont.scripts.psfftml2TThtml:cmd"
+psfftml2odt = "silfont.scripts.psfftml2odt:cmd"
+psfgetglyphnames = "silfont.scripts.psfgetglyphnames:cmd"
+psfglyphs2ufo = "silfont.scripts.psfglyphs2ufo:cmd"
+psfmakedeprecated = "silfont.scripts.psfmakedeprecated:cmd"
+psfmakefea = "silfont.scripts.psfmakefea:cmd"
+psfmakescaledshifted = "silfont.scripts.psfmakescaledshifted:cmd"
+psfmakewoffmetadata = "silfont.scripts.psfmakewoffmetadata:cmd"
+psfnormalize = "silfont.scripts.psfnormalize:cmd"
+psfremovegliflibkeys = "silfont.scripts.psfremovegliflibkeys:cmd"
+psfrenameglyphs = "silfont.scripts.psfrenameglyphs:cmd"
+psfrunfbchecks = "silfont.scripts.psfrunfbchecks:cmd"
+psfsetassocfeat = "silfont.scripts.psfsetassocfeat:cmd"
+psfsetassocuids = "silfont.scripts.psfsetassocuids:cmd"
+psfsetdummydsig = "silfont.scripts.psfsetdummydsig:cmd"
+psfsetglyphdata = "silfont.scripts.psfsetglyphdata:cmd"
+psfsetglyphorder = "silfont.scripts.psfsetglyphorder:cmd"
+psfsetkeys = "silfont.scripts.psfsetkeys:cmd"
+psfsetmarkcolors = "silfont.scripts.psfsetmarkcolors:cmd"
+psfsetpsnames = "silfont.scripts.psfsetpsnames:cmd"
+psfsetunicodes = "silfont.scripts.psfsetunicodes:cmd"
+psfsetversion = "silfont.scripts.psfsetversion:cmd"
+psfshownames = "silfont.scripts.psfshownames:cmd"
+psfsubset = "silfont.scripts.psfsubset:cmd"
+psfsyncmasters = "silfont.scripts.psfsyncmasters:cmd"
+psfsyncmeta = "silfont.scripts.psfsyncmeta:cmd"
+psftuneraliases = "silfont.scripts.psftuneraliases:cmd"
+psfufo2glyphs = "silfont.scripts.psfufo2glyphs:cmd"
+psfufo2ttf = "silfont.scripts.psfufo2ttf:cmd"
+psfversion = "silfont.scripts.psfversion:cmd"
+psfwoffit = "silfont.scripts.psfwoffit:cmd"
+psfxml2compdef = "silfont.scripts.psfxml2compdef:cmd"

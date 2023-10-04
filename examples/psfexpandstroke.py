@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from __future__ import unicode_literals
 '''Expands an unclosed UFO stroke font into monoline forms with a fixed width'''
 __url__ = 'https://github.com/silnrsi/pysilfont'

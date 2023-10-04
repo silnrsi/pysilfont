@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 'Normalize an FTML file'
 __url__ = 'https://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2016 SIL International (https://www.sil.org)'
