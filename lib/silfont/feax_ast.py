@@ -401,6 +401,20 @@ class ast_DoLetSubStatement(ast_DoSubStatement):
         else:
             yield(zip(self.names, list(v) + [None] * (len(self.names) - len(v))))
 
+class ast_DoForLetSubStatement(ast_DoLetSubStatement):
+    def items(self, variables):
+        gbls = dict(self.parser.fns, **variables)
+        try:
+            v = eval(self.expr, gbls)
+        except Exception as e:
+            raise FeatureLibError(str(e) + " in " + self.expr, self.location)
+        if len(self.names) == 1:
+            for e in v:
+                yield((self.names[0], e),)
+        else:
+            for e in v:
+                yield(zip(self.names, list(e) + [None] * (len(self.names) - len(e))))
+
 class ast_DoIfSubStatement(ast_DoLetSubStatement):
     def __init__(self, expression, parser, block, location=None):
         ast_DoLetSubStatement.__init__(self, None, expression, parser, location=None)

@@ -19,6 +19,7 @@ class feaplus_ast(object) :
     LigatureSubstStatement = astx.ast_LigatureSubstStatement
     IfBlock = astx.ast_IfBlock
     DoForSubStatement = astx.ast_DoForSubStatement
+    DoForLetSubStatement = astx.ast_DoForLetSubStatement
     DoLetSubStatement = astx.ast_DoLetSubStatement
     DoIfSubStatement = astx.ast_DoIfSubStatement
     AlternateSubstStatement = astx.ast_AlternateSubstStatement
@@ -70,8 +71,8 @@ class feaplus_parser(Parser) :
         }
         # Document which builtins we really need. Of course still insecure.
         for x in ('True', 'False', 'None', 'int', 'float', 'str', 'abs', 'all', 'any', 'bool',
-                    'dict', 'enumerate', 'filter', 'hasattr', 'hex', 'len', 'list', 'map', 'print',
-                    'max', 'min', 'ord', 'range', 'set', 'sorted', 'sum', 'tuple', 'zip'):
+                    'dict', 'enumerate', 'filter', 'hasattr', 'hex', 'isinstance', 'len', 'list', 'map', 'print',
+                    'max', 'min', 'ord', 'range', 'set', 'sorted', 'sum', 'tuple', 'type', 'zip'):
             self.fns[x] = __builtins__[x]
 
     def parse(self, filename=None) :
@@ -590,7 +591,9 @@ class feaplus_parser(Parser) :
         ifs = []
         while True:
             self.advance_lexer_()
-            if self.is_cur_keyword_("for"):
+            if self.is_cur_keyword_("forlet"):
+                substatements.append(self.parseDoForLet_())
+            elif self.is_cur_keyword_("forgroup") or self.is_cur_keyword_("for"):
                 substatements.append(self.parseDoFor_())
             elif self.is_cur_keyword_("let"):
                 substatements.append(self.parseDoLet_())
@@ -658,7 +661,7 @@ class feaplus_parser(Parser) :
         res = self.ast.DoForSubStatement(name, glyphs, location=location)
         return res
 
-    def parseDoLet_(self):
+    def parseLetish_(self, callback):
         # import pdb; pdb.set_trace()
         location = self.cur_token_location_
         self.advance_lexer_()
@@ -681,7 +684,13 @@ class feaplus_parser(Parser) :
         expr = lex.text_[start:lex.pos_]
         self.advance_lexer_()
         self.expect_symbol_(";")
-        return self.ast.DoLetSubStatement(names, expr, self, location=location)
+        return callback(names, expr, self, location=location)
+
+    def parseDoLet_(self):
+        return self.parseLetish_(self.ast.DoLetSubStatement)
+
+    def parseDoForLet_(self):
+        return self.parseLetish_(self.ast.DoForLetSubStatement)
 
     def parseDoIf_(self):
         location = self.cur_token_location_

@@ -17,6 +17,7 @@ This document describes the functionality of `psfmakefea` and lists the extensio
         - [SubStatements](#substatements)
             - [for](#for)
             - [let](#let)
+            - [forlet](#forlet)
             - [if](#if)
         - [Examples](#examples)
             - [Simple calculation](#simple-calculation)
@@ -267,6 +268,8 @@ The `for` substatement is structured as:
 
 This creates a variable _var_ that will iterate over the _glyphlist_.
 
+With the addition of `forlet` (see below), there is also `forgroup` that is a synonym for the `for` substatement defined here.
+
 ##### let
 
 The `let` substatement executes a short python expression (via `eval`), storing the result in the given variable, or variable list. The structure of the substatement is:
@@ -291,6 +294,42 @@ There are various python functions that are especially supported, along with the
 | MAXy       | _glyphname_             | Returns the maximum y value of the bounding box of the glyph |
 
 See the section on python in the `def` command section following.
+
+##### forlet
+
+The `for` substatement only allows iteration over a group of glyphs. There are situations in which someone would want to iterate over a true python expression, for example, over the return value of a function. The `forlet` substatement is structured identically to a `let` substatement, but instead of setting the variable once, the following substatements are executed once for each value of the expression, with the variable set to each in turn. For example:
+
+```
+def optlist(*alist) {
+    if len(alist) > 0:
+        for r in optlist(*alist[1:]):
+            yield [alist[0]] + r
+            yield r
+    else:
+        yield alist
+} optlist;
+
+lookup example {
+do
+    forlet l = optlist("uni17CC", "@coeng_no_ro", "[uni17C9 uni17CA]", "@below_vowels", "@above_vowels");
+    let s = " ".join(l)
+    {
+        sub uni17C1 @coeng_ro @base_cons $s uni17B8' lookup insert_dotted_circle;
+        sub uni17C1 @base_cons $s uni17B8' lookup insert_dotted_circle;
+    }
+} example;
+```
+
+This examples uses a `def` statement as defined below. The example produces rules for each of the possible subsequences of the optlist parameters, where each element is treated as being optional. It is a way of writing:
+
+```
+sub uni17C1 @base_cons uni17CC? @coeng_no_ro [uni17C9 uni17CA]? @below_vowels? @above_vowels? uni17B8' lookup insert_dotted_circle;
+```
+
+The structure of a `forlet` substatement is:
+
+`forlet` _var_ [`,` _var_]* `=` _expression_ `;`
+
 
 ##### if
 

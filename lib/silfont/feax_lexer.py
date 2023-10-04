@@ -44,7 +44,7 @@ class feax_Lexer(Lexer):
                     self.scan_over_(Lexer.CHAR_NAME_CONTINUATION_)
                     varname = text[start+1:self.pos_]
                     if len(varname) < 1 or len(varname) > 63:
-                        raise FeatureLibError("Bad variable name length", location)
+                        raise FeatureLibError("Bad variable name length for: %s" % varname, location)
                     res = (VARIABLE, varname, location)
                 else:
                     raise FeatureLibError("Unexpected character: %r" % cur_char, location)
