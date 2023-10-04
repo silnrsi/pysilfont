@@ -12,11 +12,9 @@ def cmd() :
 
     deps = (  # (module, used by, min recommended version)
         ('defcon', '?', ''),
-        ('fontbakery', '?', ''),
         ('fontMath', '?', ''),
         ('fontParts', '?', ''),
         ('fontTools', '?', ''),
-        ('glyphConstruction', '?', ''),
         ('glyphsLib', '?', ''),
         ('lxml','?', ''),
         ('lz4', '?', ''),
@@ -25,7 +23,6 @@ def cmd() :
         ('palaso', '?', ''),
         ('tabulate', '?', ''),
         ('ufo2ft', '?', ''),
-        ('ufoLib2', '?', ''),
         )
 
     # Pysilfont info
