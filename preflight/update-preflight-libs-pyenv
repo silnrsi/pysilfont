@@ -27,7 +27,7 @@ echo "Populating/updating the preflight dependencies for the active pyenv interp
 
 # components in editable mode:
 # (with source at the root of the user's home directory so that src/ folders don't appear anywhere else)
-python3 -m pip install -e git+https://github.com/silnrsi/pysilfont.git#egg=pysilfont --src "$HOME"/src
+python3 -m pip install -e git+https://github.com/silnrsi/pysilfont.git#egg=silfont --src "$HOME"/src
 
 # components from main/master directly from upstream git repositories
 python3 -m pip install git+https://github.com/silnrsi/palaso-python.git git+https://github.com/googlefonts/GlyphsLib.git git+https://github.com/fonttools/ufoLib2.git git+https://github.com/fonttools/fonttools.git git+https://github.com/typemytype/glyphConstruction.git git+https://github.com/robotools/fontParts.git --use-pep517
