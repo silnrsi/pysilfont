@@ -279,7 +279,7 @@ The `let` substatement executes a short python expression (via `eval`), storing 
 There are various python functions that are especially supported, along with the builtins. These are:
 
 | Function | Parameters | Description |
-|-------------|----------------|----------------|
+|-------------|-------------|------------------------|
 | ADVx       | _glyphname_             | Returns the advanced width of the given glyph |
 | allglyphs  |                         | Returns a list of all the glyph names in the font |
 | APx        | _glyphname_, "_apname_" | Returns the x coordinate of the given attachment point on the given glyph |
@@ -329,6 +329,8 @@ sub uni17C1 @base_cons uni17CC? @coeng_no_ro [uni17C9 uni17CA]? @below_vowels? @
 The structure of a `forlet` substatement is:
 
 `forlet` _var_ [`,` _var_]* `=` _expression_ `;`
+
+A `forlet` substatement has the same access to functions that the `let` statement has, included those listed above under `let`.
 
 
 ##### if
@@ -458,11 +460,11 @@ def <fn>(<param_list>) {
 The `fn` must conform to a FEA name (not starting with a digit, etc.) and is repeated at the end of the block to mark the end of the function. The parameter is a standard python parameter list and the python code is standard python code, indented as if under a `def` statement. 
 
 #### python support
-Here and in `let` substatements, the python that is allowed to executed is limited. Only a subset of functions from builtins is supported and the `__` may not occur in any attribute. This is to stop people escaping the sandbox in which python code is interpreted. The `math` and `re` modules are also included along with the functions available to a `let` substatement. The full list of builtins supported are:
+Here and in `let` and `forlet` substatements, the python that is allowed to be executed is limited. Only a subset of functions from builtins is supported and the `__` may not occur in any attribute. This is to stop people escaping the sandbox in which python code is interpreted. The `math` and `re` modules are also included along with the functions available to a `let` and `forlet` substatement. The full list of builtins supported are:
 
 ```
-True, False, None, int, float, str, abs, bool, dict, enumerate, filter, hex, len, list,
-map, max, min, ord, range, set, sorted, sum, tuple, zip
+True, False, None, int, float, str, abs, bool, dict, enumerate, filter, hex, isinstance, len, list,
+map, max, min, ord, range, set, sorted, sum, tuple, type, zip
 ```
 
 ### kernpairs
