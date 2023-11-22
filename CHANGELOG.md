@@ -1,13 +1,13 @@
 # Changelog
 
-## [1.7.1] - - Placeholder for next release
+## [1.8.0] - 2023-11-22 Updated packaging
 
-### Added
+Updated the packaging to follow PEP621 guidelines
 
-### Changed
+Also
 
-### Removed
-
+- Added do forlet to fea extensions
+- Updates to MacOS preflight support
 
 ## [1.7.0] - 2023-09-27 Maintenance Release - general updates
 
