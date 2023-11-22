@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.8.1] - - Placeholder for next release
+
+### Added
+
+### Changed
+
+### Removed
+
 ## [1.8.0] - 2023-11-22 Updated packaging
 
 Updated the packaging to follow PEP621 guidelines
