@@ -15,15 +15,15 @@ import defcon, fontTools.ttLib, ufo2ft
 
 argspec = [
     ('iufo', {'help': 'Input UFO folder'}, {}),
-    ('ittf', {'help': 'Input ttf file name'}, {}), 
+    ('ittf', {'help': 'Input ttf file name'}, {}),
     ('ottf', {'help': 'Output ttf file name'}, {})]
-    
+
 def doit(args):
     ufo = defcon.Font(args.iufo)
     ttf = fontTools.ttLib.TTFont(args.ittf)
     
     args.logger.log('Renaming the input ttf glyphs based on production names in the UFO', 'P')
-    postProcessor = ufo2ft.PostProcessor(ttf, ufo)
+    postProcessor = ufo2ft.postProcessor.PostProcessor(ttf, ufo)
     ttf = postProcessor.process(useProductionNames=True, optimizeCFF=False)
     
     args.logger.log('Saving the output ttf file', 'P')
