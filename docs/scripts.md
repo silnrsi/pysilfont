@@ -1073,7 +1073,7 @@ Pysilfont's standard logging parameters (-p scrlevel and -p loglevel) also chang
 
 By default Font Bakery truncates long lists of items within check reports.  Use `--full-lists` to get full lists of items.
 
-A special option, `--ttfaudit` compares the list of checks within ttfchecks.py against those in Font Bakery and reports any descrepancies to screen.
+A special option, `--ttfaudit` compares the list of checks within ttfchecks.py against those in Font Bakery and reports any discrepancies to screen.
 It also writes a csv file containing a list of all checks.  Usage `psfrunfbchecks --ttfaudit csvfile`
 
 ---
