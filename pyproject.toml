@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "silfont"
-version = "1.7.1.dev1"
+version = "1.8.0"
 # (also manually bump version in src/silfont/__init__.py)
 authors = [{name = "SIL International", email = "fonts@sil.org"}]
 readme = "README.md"
@@ -28,23 +28,6 @@ dependencies = [
 "fonttools",
 "glyphsLib",
 "ufo2ft",
-"tabulate",
-"lxml",
-"lz4",
-]
-
-[project.optional-dependencies]
-git = [
-"MutatorMath @ git+https://github.com/LettError/MutatorMath",
-"odfpy @ git+https://github.com/eea/odfpy",
-"palaso @ git+https://github.com/silnrsi/palaso-python",
-"defcon @ git+https://github.com/robotools/defcon",
-"fontMath @ git+https://github.com/robotools/fontMath",
-"fontParts @ git+https://github.com/robotools/fontParts",
-"fonttools @ git+https://github.com/fonttools/fonttools",
-"fontbakery @ git+https://github.com/fonttools/fontbakery",
-"glyphsLib @ git+https://github.com/googlefonts/GlyphsLib",
-"ufo2ft @ git+https://github.com/googlei18n/ufo2ft",
 "tabulate",
 "lxml",
 "lz4",
