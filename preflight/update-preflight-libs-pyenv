@@ -30,10 +30,7 @@ echo "Populating/updating the preflight dependencies for the active pyenv interp
 python3 -m pip install "silfont[git] @ git+https://github.com/silnrsi/pysilfont.git#egg=silfont" --src "$HOME"/src
 
 # components from main/master directly from upstream git repositories
-python3 -m pip install git+https://github.com/silnrsi/palaso-python.git git+https://github.com/googlefonts/GlyphsLib.git git+https://github.com/fonttools/ufoLib2.git git+https://github.com/fonttools/fonttools.git git+https://github.com/typemytype/glyphConstruction.git git+https://github.com/robotools/fontParts.git --use-pep517
-
-# components from stable releases on pypi
-python3 -m pip install fs mutatorMath defcon fontMath lxml
+# python3 -m pip install git+https://github.com/typemytype/glyphConstruction.git --use-pep517
 
 # reload the config file to rehash the path for either bash or zsh
 if [ -n "$ZSH_VERSION" ]; then
