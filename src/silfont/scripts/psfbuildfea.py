@@ -69,6 +69,7 @@ argspec = [
     ('-l','--log',{'help': 'Optional log file'}, {'type': 'outfile', 'def': '_buildfea.log', 'optlog': True}),
     ('-e','--end',{'help': 'Push lookups not in features to the end', 'action': 'store_true'}, {}),
     ('-F','--front',{'help': 'Pull named lookups to the front of unnamed list', 'action': 'append'}, {}),
+    ('-N','--nohb',{'help': 'Disable Harfbuzz repacker. Use if it is reporting errors', 'action': 'store_true'}, {}),
 ]
 
 def doit(args) :
@@ -76,6 +77,8 @@ def doit(args) :
     configLogger(level=levels[min(len(levels) - 1, args.verbose)])
 
     font = TTFont(args.input_font)
+    if args.nohb:
+        font.cfg.set("fontTools.ttLib.tables.otBase:USE_HARFBUZZ_REPACKER", False)
     builder = MyBuilder(font, args.input_fea, lateSortLookups=args.end, fronts=args.front)
     builder.build()
     if args.lookupmap:
