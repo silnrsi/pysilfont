@@ -2,7 +2,12 @@
 
 ## [1.8.1] - - Placeholder for next release
 
+General updates for new year, 2024
+
 ### Added
+
+psfcsv2kern
+psfkern2csv
 
 ### Changed
 

@@ -14,6 +14,7 @@ def cmd() :
         ('defcon', '?', ''),
         ('fontMath', '?', ''),
         ('fontParts', '?', ''),
+        ('fontbakery', "?", ''),
         ('fontTools', '?', ''),
         ('glyphsLib', '?', ''),
         ('lxml','?', ''),
