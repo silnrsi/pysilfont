@@ -10,6 +10,11 @@ Please read the main [documentation](https://github.com/silnrsi/pysilfont/blob/m
 
 Pysilfont requires Python 3.6+ and pip3. Some scripts also need other libraries.
 
+You can install the stable release directly from PyPi:
+```
+pip3 install silfont
+```
+
 ### Updating your python toolchain to be current
 ```
 sudo apt install python3-pip python3-setuptools
