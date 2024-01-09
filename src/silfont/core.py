@@ -701,7 +701,10 @@ def execute(tool, fn, scriptargspec, chain = None):
             logger.resetscrlevel()
         else:
             logger.log(message, "P")
-        if logger.scrlevel == "P" and logger.warningcount: logger.log("See log file for warning messages or rerun with '-p scrlevel=w'", "P")
+
+        if logger.scrlevel == "P" and logger.warningcount:
+            mess = "See log file for warning messages or rerun with '-p scrlevel=w'" if logfile else "Rerun with '-p scrlevel=w' to see warning messages"
+            logger.log(mess, "P")
     else:
         logger.log("Command completed with no warnings", "P")
 
