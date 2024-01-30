@@ -249,7 +249,7 @@ class Feature(object):
 class FChar(object):
     """abstraction of an encoded glyph in the font"""
 
-    def __init__(self, uids, basename, logger):
+    def __init__(self, uids, basename, ps_basename, logger):
         self.logger = logger
         # uids can be a singleton integer or, for multiple-encoded glyphs, some kind of sequence of integers
         if isinstance(uids,collections.abc.Sequence):
@@ -274,6 +274,7 @@ class FChar(object):
         assert len(uids2) > 0, f'No valid USVs found in {repr(uids)}'
         self._uids = tuple(uids2)
         self.basename = basename
+        self.ps_basename = ps_basename
         self.feats = set()  # feat tags that affect this char
         self.langs = set()  # lang tags that affect this char
         self.aps = set()
@@ -364,6 +365,7 @@ class FTMLBuilder(object):
         # Be able to find chars and specials:
         self._charFromUID = {}
         self._charFromBasename = {}
+        self._charFromPSBasename = {}
         self._specialFromUIDs = {}
         self._specialFromBasename = {}
 
@@ -384,21 +386,38 @@ class FTMLBuilder(object):
         if incsv is not None:
             self.readGlyphData(incsv, fontcode, font)
 
-    def addChar(self, uids, basename):
+    def addChar(self, uids, basename, ps_basename=''):
         # Add an FChar
+        if ps_basename == '':
+            ps_basename = basename
         # assume parameters are OK:
-        c = FChar(uids, basename, self.logger)
-        # fatal error if the basename or any of uids have already been seen
+        c = FChar(uids, basename, ps_basename, self.logger)
+        # fatal error if the ps_basename or any of uids have already been seen
         fatal = False
         for uid in c.uids:
             if uid in self._charFromUID:
                 self.logger.log('Attempt to add duplicate USV %04X' % uid, 'E')
                 fatal = True
             self._charFromUID[uid] = c
-        if basename in self._charFromBasename:
-            self.logger.log('Attempt to add duplicate basename %s' % basename, 'E')
+        if ps_basename in self._charFromPSBasename:
+            self.logger.log('Attempt to add duplicate ps_basename %s' % basename, 'E')
             fatal = True
-        self._charFromBasename[basename] = c
+        if basename in self._charFromBasename:
+            self.logger.log('Attempt to add duplicate basename %s' % basename, 'W')
+            # This happens with variants of ASCII characters used with CJK,
+            # such as fullwidth or circled forms. These variants have the same basename
+            # (in the Glyphs.App XML glyph name database) as their ASCII counterparts
+            # (with a different extension) but different ps_basename since the variants
+            # have their own, non ASCII codepoint. For example,
+            # U+FF01 FULLWIDTH EXCLAMATION MARK (exclam.full)
+            # is the fullwidth variant of
+            # U+0021 EXCLAMATION MARK (exclam)
+            # The ps_basename is different (uniFF01 vs exclam)
+            # but the basename is the same (exclam). Since the basename is the same,
+            # only the first FChar() with a given basename is stored in the index of basenames.
+        else:
+            self._charFromBasename[basename] = c
+        self._charFromPSBasename[ps_basename] = c
         if fatal:
             self.logger.log('Cannot continue due to previous errors', 'S')
         return c
@@ -533,6 +552,7 @@ class FTMLBuilder(object):
 
             # compute basename-- the glyph name without extensions:
             basename = gname.split('.',1)[0]
+            ps_basename = psname.split('.',1)[0]
 
             # Process USV(s)
             # could be empty string, a single USV, space-separated list of USVs for multiple encoding,
@@ -574,7 +594,7 @@ class FTMLBuilder(object):
             else:
                 # Handle simple encoded glyphs (could be multiple uids!)
                 # Create character object
-                c = self.addChar(uids, basename)
+                c = self.addChar(uids, basename, ps_basename)
                 if font is not None:
                     # Examine APs to determine if this character takes marks:
                     c.checkGlyph(gname, font, self.apRE)

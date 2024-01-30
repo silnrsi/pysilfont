@@ -11,6 +11,9 @@ psfkern2csv
 
 ### Changed
 
+- Handle CJK variants of ASCII characters in FTML builder that have
+the same base glyph name (that is, with no extension) as the ASCII base glyph name.
+
 ### Removed
 
 ## [1.8.0] - 2023-11-22 Updated packaging
