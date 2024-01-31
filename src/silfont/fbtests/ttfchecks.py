@@ -121,6 +121,7 @@ psfcheck_list['com.adobe.fonts/check/name/empty_records']                       
 psfcheck_list['com.adobe.fonts/check/name/postscript_name_consistency']           = {}
 psfcheck_list['com.adobe.fonts/check/nameid_1_win_english']                       = {}
 psfcheck_list['com.adobe.fonts/check/name/postscript_vs_cff']                     = {'exclude': True}
+psfcheck_list['com.adobe.fonts/check/postscript_name']                            = {}
 psfcheck_list['com.adobe.fonts/check/sfnt_version']                               = {}
 psfcheck_list['com.adobe.fonts/check/stat_has_axis_value_tables']                 = {}
 psfcheck_list['com.adobe.fonts/check/STAT_strings']                               = {'exclude': True}
@@ -135,6 +136,10 @@ psfcheck_list['com.adobe.fonts/check/varfont/valid_subfamily_nameid']           
 # psfcheck_list['com.fontwerk/check/inconsistencies_between_fvar_stat']             = {} # No longer in Font Bakery
 # psfcheck_list['com.fontwerk/check/weight_class_fvar']                             = {} # No longer in Font Bakery
 psfcheck_list['com.google.fonts/check/aat']                                       = {}
+psfcheck_list['com.google.fonts/check/alt_caron']                                 = {}
+psfcheck_list['com.google.fonts/check/alt_caron:googlefonts']                     = {}
+psfcheck_list['com.google.fonts/check/arabic_high_hamza']                         = {}
+psfcheck_list['com.google.fonts/check/arabic_spacing_symbols']                    = {}
 # psfcheck_list['com.google.fonts/check/all_glyphs_have_codepoints']                = {'exclude': True} #  No longer in Font Bakery
 psfcheck_list['com.google.fonts/check/canonical_filename']                        = {}
 psfcheck_list['com.google.fonts/check/caret_slope']                               = {}
@@ -154,6 +159,7 @@ psfcheck_list['com.google.fonts/check/dsig']                                    
 psfcheck_list['com.google.fonts/check/empty_glyph_on_gid1_for_colrv0']            = {'exclude': True}
 psfcheck_list['com.google.fonts/check/epar']                                      = {'exclude': True}
 psfcheck_list['com.google.fonts/check/family/control_chars']                      = {}
+psfcheck_list['com.google.fonts/check/family/equal_codepoint_coverage']           = {}
 psfcheck_list['com.google.fonts/check/family/equal_font_versions']                = {}
 psfcheck_list['com.google.fonts/check/family/equal_unicode_encodings']            = {}
 psfcheck_list['com.google.fonts/check/family/has_license']                        = {'exclude': True}
@@ -188,6 +194,7 @@ psfcheck_list['com.google.fonts/check/glyf_nested_components']                  
 psfcheck_list['com.google.fonts/check/glyf_non_transformed_duplicate_components'] = {}
 psfcheck_list['com.google.fonts/check/glyf_unused_data']                          = {}
 psfcheck_list['com.google.fonts/check/glyph_coverage']                            = {'exclude': True}
+psfcheck_list['com.google.fonts/check/glyphsets/shape_languages']                 = {}
 psfcheck_list['com.google.fonts/check/gpos7']                                     = {}
 psfcheck_list['com.google.fonts/check/gpos_kerning_info']                         = {}
 psfcheck_list['com.google.fonts/check/has_ttfautohint_params']                    = {'exclude': True}
@@ -210,6 +217,7 @@ psfcheck_list['com.google.fonts/check/layout_valid_feature_tags']               
 psfcheck_list['com.google.fonts/check/layout_valid_language_tags']                = \
     {'change_status': {'FAIL': 'WARN', 'reason': 'The "invalid" ones are used by Harfbuzz'}}
 psfcheck_list['com.google.fonts/check/layout_valid_script_tags']                  = {}
+psfcheck_list['com.google.fonts/check/legacy_accents']                            = {}
 psfcheck_list['com.google.fonts/check/ligature_carets']                           = {'exclude': True}
 psfcheck_list['com.google.fonts/check/linegaps']                                  = {}
 psfcheck_list['com.google.fonts/check/loca/maxp_num_glyphs']                      = {}
@@ -294,8 +302,9 @@ psfcheck_list['com.google.fonts/check/varfont_duplicate_instance_names']        
 # psfcheck_list['com.google.fonts/check/varfont_weight_instances']                  = {} # No longer in Font Bakery
 psfcheck_list['com.google.fonts/check/varfont/bold_wght_coord']                   = {}
 psfcheck_list['com.google.fonts/check/varfont/consistent_axes']                   = {'exclude': True}
+psfcheck_list['com.google.fonts/check/varfont/duplexed_axis_reflow']              = {}
 psfcheck_list['com.google.fonts/check/varfont/generate_static']                   = {}
-psfcheck_list['com.google.fonts/check/varfont/grade_reflow']                      = {}
+# psfcheck_list['com.google.fonts/check/varfont/grade_reflow']                      = {}  # No longer in Font Bakery
 psfcheck_list['com.google.fonts/check/varfont/has_HVAR']                          = {}
 psfcheck_list['com.google.fonts/check/varfont/regular_ital_coord']                = {}
 psfcheck_list['com.google.fonts/check/varfont/regular_opsz_coord']                = {}
@@ -318,6 +327,7 @@ psfcheck_list['com.google.fonts/check/whitespace_ink']                          
 psfcheck_list['com.google.fonts/check/whitespace_widths']                         = {}
 psfcheck_list['com.google.fonts/check/xavgcharwidth']                             = {}
 psfcheck_list['com.thetypefounders/check/vendor_id']                              = {'exclude': True}
+psfcheck_list['com.typenetwork/check/varfont/ital_range']                        = {}
 psfcheck_list['org.sil/check/family/win_ascent_and_descent']                      = {}
 psfcheck_list['org.sil/check/os2/use_typo_metrics']                               = {}
 psfcheck_list['org.sil/check/os2_metrics_match_hhea']                             = {}
@@ -325,5 +335,6 @@ psfcheck_list['org.sil/check/os2_metrics_match_hhea']                           
 psfcheck_list['org.sil/check/number_widths']                                      = {}
 psfcheck_list['org.sil/check/name/version_format']                                = {}
 psfcheck_list['org.sil/check/whitespace_widths']                                  = {}
+psfcheck_list['org.sil/check/is_OFL_FAQ_current']                                 = {'exclude': True} # Not a ttf check
 
 profile = make_profile(check_list=psfcheck_list)
