@@ -335,6 +335,5 @@ psfcheck_list['org.sil/check/os2_metrics_match_hhea']                           
 psfcheck_list['org.sil/check/number_widths']                                      = {}
 psfcheck_list['org.sil/check/name/version_format']                                = {}
 psfcheck_list['org.sil/check/whitespace_widths']                                  = {}
-psfcheck_list['org.sil/check/is_OFL_FAQ_current']                                 = {'exclude': True} # Not a ttf check
 
 profile = make_profile(check_list=psfcheck_list)
