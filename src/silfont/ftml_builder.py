@@ -282,7 +282,7 @@ class FChar(object):
             # the above is a dict keyed by either:
             #   lang tag e.g., 'ur', or
             #   feat tag and value, e.g., 'cv24=3'
-            # and returns a the glyphname for that alternate.
+            # and returns the glyphname for that alternate.
         # Additional info from UFO:
         self.takesMarks = self.isMark = self.isBase = self.notInUFO = False
 
@@ -400,7 +400,7 @@ class FTMLBuilder(object):
                 fatal = True
             self._charFromUID[uid] = c
         if ps_basename in self._charFromPSBasename:
-            self.logger.log('Attempt to add duplicate ps_basename %s' % basename, 'E')
+            self.logger.log('Attempt to add duplicate ps_basename %s' % ps_basename, 'E')
             fatal = True
         if basename in self._charFromBasename:
             self.logger.log('Attempt to add duplicate basename %s' % basename, 'W')
