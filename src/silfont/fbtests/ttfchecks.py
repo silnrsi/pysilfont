@@ -11,8 +11,6 @@ from fontbakery.fonts_profile import profile_factory
 from fontbakery.profiles.googlefonts import METADATA_CHECKS, REPO_CHECKS, DESCRIPTION_CHECKS
 from fontbakery.profiles.ufo_sources import UFO_PROFILE_CHECKS
 from silfont.fbtests.silttfchecks import *
-from silfont.fbtests.silnotcjk import *
-
 
 from collections import OrderedDict
 
@@ -170,7 +168,7 @@ psfcheck_list['com.google.fonts/check/family/single_directory']                 
 psfcheck_list['com.google.fonts/check/family/tnum_horizontal_metrics']            = {}
 psfcheck_list['com.google.fonts/check/family/underline_thickness']                = {}
 psfcheck_list['com.google.fonts/check/family/vertical_metrics']                   = {}
-psfcheck_list['com.google.fonts/check/family/win_ascent_and_descent']             = {'exclude': True}
+psfcheck_list['com.google.fonts/check/family/win_ascent_and_descent']             = {}
 #    {'change_status': {'FAIL': 'WARN', 'reason': 'Under review'}}
 psfcheck_list['com.google.fonts/check/family_naming_recommendations']             = {}
 psfcheck_list['com.google.fonts/check/file_size']                                 = {}
@@ -254,10 +252,10 @@ psfcheck_list['com.google.fonts/check/name/unwanted_chars']                     
 psfcheck_list['com.google.fonts/check/name/version_format']                       = {'exclude': True}
 psfcheck_list['com.google.fonts/check/no_debugging_tables']                       = {}
 psfcheck_list['com.google.fonts/check/old_ttfautohint']                           = {'exclude': True}
-psfcheck_list['com.google.fonts/check/os2/use_typo_metrics']                      = {'exclude': True}
+psfcheck_list['com.google.fonts/check/os2/use_typo_metrics']                      = {}
 # psfcheck_list['com.google.fonts/check/os2/use_typo_metrics']                      = \  (Left a copy commented out as an
 #    {'change_status': {'FAIL': 'WARN', 'reason': 'Under review'}}                      example of an override!)
-psfcheck_list['com.google.fonts/check/os2_metrics_match_hhea']                    = {'exclude': True}
+psfcheck_list['com.google.fonts/check/os2_metrics_match_hhea']                    = {}
 psfcheck_list['com.google.fonts/check/ots']                                       = {}
 psfcheck_list['com.google.fonts/check/outline_alignment_miss']                    = {'exclude': True}
 psfcheck_list['com.google.fonts/check/outline_colinear_vectors']                  = {'exclude': True}
@@ -327,11 +325,7 @@ psfcheck_list['com.google.fonts/check/whitespace_ink']                          
 psfcheck_list['com.google.fonts/check/whitespace_widths']                         = {}
 psfcheck_list['com.google.fonts/check/xavgcharwidth']                             = {}
 psfcheck_list['com.thetypefounders/check/vendor_id']                              = {'exclude': True}
-psfcheck_list['com.typenetwork/check/varfont/ital_range']                        = {}
-psfcheck_list['org.sil/check/family/win_ascent_and_descent']                      = {}
-psfcheck_list['org.sil/check/os2/use_typo_metrics']                               = {}
-psfcheck_list['org.sil/check/os2_metrics_match_hhea']                             = {}
-#psfcheck_list['org.sil/check/vertical_metrics']                                   = {}
+psfcheck_list['com.typenetwork/check/varfont/ital_range']                         = {}
 psfcheck_list['org.sil/check/number_widths']                                      = {}
 psfcheck_list['org.sil/check/name/version_format']                                = {}
 psfcheck_list['org.sil/check/whitespace_widths']                                  = {}
