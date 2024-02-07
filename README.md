@@ -8,7 +8,7 @@ Please read the main [documentation](https://github.com/silnrsi/pysilfont/blob/m
 
 ## Installation
 
-Pysilfont requires Python 3.6+ and pip3. Some scripts also need other libraries.
+Pysilfont requires Python 3.6+ and pip3.
 
 You can install the stable release directly from PyPi:
 ```
@@ -107,9 +107,14 @@ sudo pip3 uninstall silfont
 If you need palaso, you will need to install it separately.
 Follow the instructions on https://github.com/silnrsi/palaso-python
 
-If you need fontbakery, you will need to install it separately.
-Follow the instructions on https://font-bakery.readthedocs.io
+### Font Bakery
 
+If you need use `psfrunfbchecks` you will need to install Font Bakery manually. 
+It needs to be installed with the [googlefonts] option, eg clone the repo and run
+
+```
+python3 -m pip install .[googlefonts]
+```
 
 ## Contributing to the project
 

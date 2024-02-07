@@ -6,23 +6,31 @@ __copyright__ = 'Copyright (c) 2020 SIL International (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
-import glob, os, csv
+import glob, os, csv, sys
 
 from textwrap import TextWrapper
 
 # Error message for users installing pysilfont manually
 try:
-    import fontbakery
-except ImportError:
-    print("\nError: Fontbakery is not installed by default, type pip3 install fontbakery[all]\n")
-else:
-    from fontbakery.reporters.serialize import SerializeReporter
-    from fontbakery.reporters.html import HTMLReporter
-    from fontbakery.checkrunner import distribute_generator, CheckRunner, get_module_profile
-    from fontbakery.status import PASS, FAIL, WARN, ERROR, INFO, SKIP
-    from fontbakery.configuration import Configuration
-    from fontbakery.commands.check_profile import get_module
     from fontbakery import __version__ as version
+except ImportError:
+    sys.exit("\nError: Fontbakery is not installed by default - see README.md\n")
+
+v = version.split(".")
+version = f'{v[0]}.{v[1]}.{v[2]}'  # Set version to just the number part - ie without .dev...
+version10 = True if version[0:4] == "0.10" else False
+
+if version10:
+    from fontbakery.checkrunner import distribute_generator, CheckRunner, get_module_profile
+else:
+    from fontbakery.checkrunner import CheckRunner
+    from fontbakery.profile import get_module_profile
+
+from fontbakery.reporters.serialize import SerializeReporter
+from fontbakery.reporters.html import HTMLReporter
+from fontbakery.status import PASS, FAIL, WARN, ERROR, INFO, SKIP
+from fontbakery.configuration import Configuration
+from fontbakery.commands.check_profile import get_module
 
 from silfont.core import execute
 
@@ -37,9 +45,7 @@ argspec = [
     ('-l', '--log', {'help': 'Log file'}, {'type': 'outfile', 'def': '_runfbchecks.log'})]
 
 def doit(args):
-    global version
-    v = version.split(".")
-    version = f'{v[0]}.{v[1]}.{v[2]}' # Set version to just the number part - ie without .dev...
+    global version10
 
     logger = args.logger
     htmlfile = args.html
@@ -110,17 +116,16 @@ def doit(args):
         "fonts": fonts, 'ufos': [], 'designspaces': [], 'glyphs_files': [], 'readme_md': [], 'metadata_pb': []}
                          , config=configuration)
 
-    if version == "0.8.6":
-        sr = SerializeReporter(runner=runner) # This produces results from all the tests in sr.getdoc for later analysis
-    else:
-        sr = SerializeReporter(runner=runner, loglevels = [INFO]) # loglevels was added with 0.8.7
-    reporters = [sr.receive]
-
+    sr = SerializeReporter(runner=runner, loglevels = [INFO])
+    reporters = [sr.receive] if version10 else [sr]
     if htmlfile:
         hr = HTMLReporter(runner=runner, loglevels = [SKIP])
-        reporters.append(hr.receive)
+        reporters.append(hr.receive if version10 else hr)
 
-    distribute_generator(runner.run(), reporters)
+    if version10:
+        distribute_generator(runner.run(), reporters)
+    else:
+        runner.run(reporters)
 
     # Process the results
     results = sr.getdoc()
@@ -190,7 +195,15 @@ def doit(args):
                     csvline = [ttfdir, fontname, check["key"][1][17:-1], status, check["description"]]
                     messparts.append(" > {}".format(checkid))
                     for record in check["logs"]:
-                        message = record["message"]
+                        messrecord = record["message"]
+                        if version10:
+                            message = messrecord
+                        else: # message changed from string to dict with FB 0.11
+                            message = messrecord["message"]
+                            if "code" in messrecord:
+                                code = messrecord["code"]
+                                if code is not None: message = f"{message} [code: {code}]"
+
                         if record["status"] != status: message = record["status"] + " " + message
                         messparts += wrapper.wrap(message)
                         csvline.append(message)

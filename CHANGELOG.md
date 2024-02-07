@@ -6,14 +6,19 @@ General updates for new year, 2024
 
 ### Added
 
-psfcsv2kern
-psfkern2csv
+| Command                                                    | Description                 |
+|------------------------------------------------------------|-----------------------------|
+| [psfcsv2kern](docs/scripts.md#psfcsv2kern)                 | To be written (1.8.1.dev2?) |
+| [psfkern2csv](docs/scripts.md#psfkern2csv)                 | To be written (1.8.1.dev2?) |
+
 
 ### Changed
 
 - Handle CJK variants of ASCII characters in FTML builder that have
 the same base glyph name (that is, with no extension) as the ASCII base glyph name. (1.8.1.dev2)
 - Updated ttfchecks.py to match changes in Font Bakery checks (1.8.1.dev3)
+- Changed fontbakery support to use standard Google checks now is_cjk has been fixed (1.8.1.dev3)
+- Updated psfrunfbchecks to work with latest Font Bakery, ie v0.11 on (1.8.1.dev3)
 
 ### Removed
 

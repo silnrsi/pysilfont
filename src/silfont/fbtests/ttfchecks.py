@@ -141,6 +141,7 @@ psfcheck_list['com.google.fonts/check/arabic_spacing_symbols']                  
 # psfcheck_list['com.google.fonts/check/all_glyphs_have_codepoints']                = {'exclude': True} #  No longer in Font Bakery
 psfcheck_list['com.google.fonts/check/canonical_filename']                        = {}
 psfcheck_list['com.google.fonts/check/caret_slope']                               = {}
+psfcheck_list['com.google.fonts/check/case_mapping']                              = {}
 psfcheck_list['com.google.fonts/check/cjk_chws_feature']                          = {'exclude': True}
 psfcheck_list['com.google.fonts/check/cjk_not_enough_glyphs']                     = {'exclude': True}
 psfcheck_list['com.google.fonts/check/cjk_vertical_metrics']                      = {'exclude': True}
@@ -283,6 +284,7 @@ psfcheck_list['com.google.fonts/check/STAT_in_statics']                         
 psfcheck_list['com.google.fonts/check/stylisticset_description']                  = {}
 psfcheck_list['com.google.fonts/check/superfamily/list']                          = {'exclude': True}
 psfcheck_list['com.google.fonts/check/superfamily/vertical_metrics']              = {'exclude': True}
+psfcheck_list['com.google.fonts/check/tabular_kerning']                           = {}
 psfcheck_list['com.google.fonts/check/transformed_components']                    = {}
 psfcheck_list['com.google.fonts/check/ttx_roundtrip']                             = {}
 psfcheck_list['com.google.fonts/check/unicode_range_bits']                        = {}
@@ -301,6 +303,7 @@ psfcheck_list['com.google.fonts/check/varfont_duplicate_instance_names']        
 psfcheck_list['com.google.fonts/check/varfont/bold_wght_coord']                   = {}
 psfcheck_list['com.google.fonts/check/varfont/consistent_axes']                   = {'exclude': True}
 psfcheck_list['com.google.fonts/check/varfont/duplexed_axis_reflow']              = {}
+psfcheck_list['com.google.fonts/check/varfont/family_axis_ranges']                = {}
 psfcheck_list['com.google.fonts/check/varfont/generate_static']                   = {}
 # psfcheck_list['com.google.fonts/check/varfont/grade_reflow']                      = {}  # No longer in Font Bakery
 psfcheck_list['com.google.fonts/check/varfont/has_HVAR']                          = {}
