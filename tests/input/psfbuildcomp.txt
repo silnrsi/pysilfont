@@ -1,5 +1,5 @@
 # Copyright (c) 2008-2015, SIL International (https://www.sil.org) with Reserved Font Names 'Andika' and 'SIL'.
-# This Font Software is licensed under the SIL Open Font License, Version 1.1 (https://scripts.sil.org/OFL)
+# This Font Software is licensed under the SIL Open Font License, Version 1.1 (https://openfontlicense.org)
 # and is from the Andika Mtihani project (https://github.com/silnrsi/font-andika-mtihani)
 
 # Within each section, lines are in order of resulting Unicode value
