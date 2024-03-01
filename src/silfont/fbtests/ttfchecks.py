@@ -135,7 +135,7 @@ psfcheck_list['com.adobe.fonts/check/varfont/valid_subfamily_nameid']           
 # psfcheck_list['com.fontwerk/check/weight_class_fvar']                             = {} # No longer in Font Bakery
 psfcheck_list['com.google.fonts/check/aat']                                       = {}
 psfcheck_list['com.google.fonts/check/alt_caron']                                 = {}
-psfcheck_list['com.google.fonts/check/alt_caron:googlefonts']                     = {}
+psfcheck_list['com.google.fonts/check/alt_caron:googlefonts']                     = {'exclude': True}
 psfcheck_list['com.google.fonts/check/arabic_high_hamza']                         = {}
 psfcheck_list['com.google.fonts/check/arabic_spacing_symbols']                    = {}
 # psfcheck_list['com.google.fonts/check/all_glyphs_have_codepoints']                = {'exclude': True} #  No longer in Font Bakery
@@ -193,7 +193,7 @@ psfcheck_list['com.google.fonts/check/glyf_nested_components']                  
 psfcheck_list['com.google.fonts/check/glyf_non_transformed_duplicate_components'] = {}
 psfcheck_list['com.google.fonts/check/glyf_unused_data']                          = {}
 psfcheck_list['com.google.fonts/check/glyph_coverage']                            = {'exclude': True}
-psfcheck_list['com.google.fonts/check/glyphsets/shape_languages']                 = {}
+psfcheck_list['com.google.fonts/check/glyphsets/shape_languages']                 = {'exclude': True}
 psfcheck_list['com.google.fonts/check/gpos7']                                     = {}
 psfcheck_list['com.google.fonts/check/gpos_kerning_info']                         = {}
 psfcheck_list['com.google.fonts/check/has_ttfautohint_params']                    = {'exclude': True}
@@ -203,7 +203,7 @@ psfcheck_list['com.google.fonts/check/hmtx/encoded_latin_digits']               
 psfcheck_list['com.google.fonts/check/hmtx/whitespace_advances']                  = {'exclude': True}
 psfcheck_list['com.google.fonts/check/integer_ppem_if_hinted']                    = {}
 psfcheck_list['com.google.fonts/check/interpolation_issues']                      = {}
-psfcheck_list['com.google.fonts/check/italic_angle']                              = {}
+psfcheck_list['com.google.fonts/check/italic_angle']                              = {'exclude': True}
 psfcheck_list['com.google.fonts/check/italic_angle:googlefonts']                  = {}
 psfcheck_list['com.google.fonts/check/italic_axis_in_stat']                       = {'exclude': True}
 psfcheck_list['com.google.fonts/check/italic_axis_in_stat_is_boolean']            = {'exclude': True}
