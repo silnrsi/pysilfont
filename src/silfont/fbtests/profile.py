@@ -99,6 +99,8 @@ PROFILE = {
         "com.google.fonts/check/alt_caron:googlefonts",
         "com.google.fonts/check/glyphsets/shape_languages",
         "com.google.fonts/check/italic_angle",
+        "com.google.fonts/check/license/OFL_body_text",
+        "com.google.fonts/check/license/OFL_copyright",
     ],
     "configuration_defaults": {
         "com.google.fonts/check/file_size": {
