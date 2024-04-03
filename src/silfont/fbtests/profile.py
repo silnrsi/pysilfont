@@ -97,7 +97,7 @@ PROFILE = {
         "com.adobe.fonts/check/cff_deprecated_operators",
         "com.adobe.fonts/check/cff2_call_depth",
         "com.google.fonts/check/alt_caron:googlefonts",
-        "com.google.fonts/check/glyphsets/shape_language",
+        "com.google.fonts/check/glyphsets/shape_languages",
         "com.google.fonts/check/italic_angle",
     ],
     "configuration_defaults": {
