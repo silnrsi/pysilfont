@@ -40,7 +40,6 @@ PROFILE = {
             "com.google.fonts/check/family/control_chars",
             "com.google.fonts/check/family/equal_codepoint_coverage",
             "com.google.fonts/check/family/equal_font_versions",
-            "com.google.fonts/check/family/equal_unicode_encodings",
             "com.google.fonts/check/family/italics_have_roman_counterparts",
             "com.google.fonts/check/family/panose_familytype",
             "com.google.fonts/check/family/single_directory",
