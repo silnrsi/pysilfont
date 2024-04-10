@@ -1,0 +1,67 @@
+#!/usr/bin/env python
+
+from sys import argv
+from csv import writer as csvwriter
+from fontbakery.fonts_profile import profile_factory, get_module
+
+outfilebase = argv[1] if len(argv) == 2 else "checkslist"
+checkslist = {}
+
+# First load data for checks from googlefonts profile
+profile = profile_factory(get_module("fontbakery.profiles.googlefonts"))
+for section in profile.sections:
+    for check in section.checks:
+        checkslist[check.id] = {
+            "section": section.name,
+            "description": check.description,
+            "rationale": check.rationale,
+            "conditions": check.conditions,
+            "experimental": check.experimental,
+            "adobefonts": "",
+            "notofonts": ""}
+
+# Now add in data from other profiles
+for profilename in ("adobefonts", "notofonts"):
+    # Along with googlefonts, hese are the profiles used in current ttfchecks.py except that:
+    # - not universal, since googlefonts includes universal
+    # - not fontval since we exclude the only check in there!
+    profile = profile_factory(get_module("fontbakery.profiles." + profilename))
+
+    for section in profile.sections:
+        for check in section.checks:
+            if check.id in checkslist:
+                checkslist[check.id][profilename] = section.name
+            else:
+                checkslist[check.id] = {
+                    "section": "",
+                    "description": check.description,
+                    "rationale": check.rationale,
+                    "conditions": check.conditions,
+                    "experimental": check.experimental,
+                    "adobefonts": "",
+                    "notofonts": ""
+                }
+                checkslist[check.id][profilename] = section.name
+
+# Columns to output in additoon to checkid
+columnslist = ["section", "conditions", "experimental", "adobefonts", "notofonts"]
+
+with open(outfilebase + "_full.csv", "w", encoding="utf-8") as outfilefull:
+    with open(outfilebase + ".csv", "w", encoding="utf-8") as outfile:
+        fullwriter = csvwriter(outfilefull)
+        writer = csvwriter(outfile)
+        fullwriter.writerow(["checkid"] + columnslist)
+        writer.writerow(["checkid"] + columnslist)
+        for checkid in sorted(checkslist):
+            checkinfo = checkslist[checkid]
+            row = [checkid] + [str(checkinfo[col]) for col in columnslist]
+            fullwriter.writerow(row)
+            # Exclude certain batches of checks
+            if checkinfo["section"] in ["Description Checks", "Metadata Checks", "Repository Checks", "UFO Sources"]: continue
+            if "is_variable_font" in checkinfo["conditions"]: continue
+            if checkinfo["experimental"]: continue
+            writer.writerow(row)
+
+
+
+
