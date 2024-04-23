@@ -114,6 +114,13 @@ PROFILE = {
         ]
     },
     "overrides": {
+        "com.google.fonts/check/alt_caron" : [
+            {
+                "code": "decomposed-outline",
+                "status": "PASS",
+                "reason": "some SIL fonts intentionally use decomposed outlines for Lcaron, dcaron, lcaron and tcaron."
+            }
+        ],
         "com.google.fonts/check/whitespace_glyphs": [
             {
                 "code": "missing-whitespace-glyph-0x00A0",
