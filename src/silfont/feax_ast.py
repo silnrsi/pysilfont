@@ -194,9 +194,17 @@ class ast_MultipleSubstStatement(ast.Statement):
         self.prefix, self.glyph, self.suffix = prefix, glyph, suffix
         self.replacement = replacement
         self.forceChain = forceChain
-        lenglyphs = len(self.glyph.glyphSet())
-        for i, r in enumerate(self.replacement) :
-            if len(r.glyphSet()) == lenglyphs:
+        if hasattr(self.glyph, "glyphSet"):
+            glyphs = self.glyph.glyphSet()
+        else:
+            glyphs = [self.glyph]
+        lenglyphs = len(glyphs)
+        for i, r in enumerate(self.replacement):
+            if hasattr(r, "glyphSet"):
+                replace = r.glyphSet()
+            else:
+                replace = [r]
+            if len(replace) == lenglyphs:
                 self.multindex = i #first RHS slot with a glyph class
                 break
         else:
@@ -209,8 +217,15 @@ class ast_MultipleSubstStatement(ast.Statement):
     def build(self, builder):
         prefix = [p.glyphSet() for p in self.prefix]
         suffix = [s.glyphSet() for s in self.suffix]
-        glyphs = self.glyph.glyphSet()
-        replacements = self.replacement[self.multindex].glyphSet()
+        if hasattr(self.glyph, "glyphSet"):
+            glyphs = self.glyph.glyphSet()
+        else:
+            glyphs = [self.glyph]
+        replacements = self.replacement[self.multindex]
+        if hasattr(replacements, "glyphSet"):
+            replacements = replacements.glyphSet()
+        else:
+            replacements = [replacements]
         lenglyphs = len(glyphs)
         for i in range(max(lenglyphs, len(replacements))) :
             builder.add_multiple_subst(
@@ -227,8 +242,15 @@ class ast_MultipleSubstStatement(ast.Statement):
             res += "sub " + pres + self.glyph.asFea() + mark + sufs + " by "
             res += " ".join(asFea(g) for g in self.replacement) + ";"
             return res
-        glyphs = self.glyph.glyphSet()
-        replacements = self.replacement[self.multindex].glyphSet()
+        if hasattr(self.glyph, "glyphSet"):
+            glyphs = self.glyph.glyphSet()
+        else:
+            glyphs = [self.glyph]
+        replacements = self.replacement[self.multindex]
+        if hasattr(replacements, "glyphSet"):
+            replacements = replacements.glyphSet()
+        else:
+            replacements = [replacements]
         lenglyphs = len(glyphs)
         count = max(lenglyphs, len(replacements))
         for i in range(count) :
