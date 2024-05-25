@@ -372,9 +372,6 @@ class FTMLBuilder(object):
         # list of USVs that are in the CSV but whose glyphs are not in the UFO
         self.uidsMissingFromUFO = set()
 
-        # DummyUSV  (see charAuto())
-        self.curDummyUSV = 0x100000 # Supplemental Private Use Area B
-
         # Compile --ap parameter
         if ap is None:
             ap = "."
@@ -430,22 +427,6 @@ class FTMLBuilder(object):
         """ finds an FChar based either basename or uid;
             generates KeyError if not found."""
         return self._charFromBasename[x] if isinstance(x, str) else self._charFromUID[x]
-
-    def charAuto(self, x):
-        """ Like char() but will issue a warning and add a dummy """
-        try:
-            return self._charFromBasename[x] if isinstance(x, str) else self._charFromUID[x]
-        except KeyError:
-            # Issue error message and create dummy Char object for this character
-            if isinstance(x, str):
-                self.logger.log(f'Glyph "{x}" isn\'t in glyph_data.csv - adding dummy', 'E')
-                while self.curDummyUSV in self._charFromUID:
-                    self.curDummyUSV += 1
-                c = self.addChar(self.curDummyUSV, x)
-            else:
-                self.logger.log(f'Char U+{x:04x} isn\'t in glyph_data.csv - adding dummy', 'E')
-                c = self.addChar(x, f'U+{x:04x}')
-            return c
 
     def addSpecial(self, uids, basename):
         # Add an FSpecial:
