@@ -513,13 +513,13 @@ class FTMLBuilder(object):
         namesToSkipRE = re.compile('^(?:[._].*|null|cr|nonmarkingreturn|tab|glyph_name)$',re.IGNORECASE)
 
         # RE that matches things like 'cv23' or 'cv23=4' or 'cv23=2,3'
-        featRE = re.compile('^(\w{2,4})(?:=([\d,]+))?$')
+        featRE = re.compile(r'^(\w{2,4})(?:=([\d,]+))?$')
 
         # RE that matches USV sequences for ligatures
         ligatureRE = re.compile('^[0-9A-Fa-f]{4,6}(?:_[0-9A-Fa-f]{4,6})+$')
         
         # RE that matches space-separated USV sequences
-        USVsRE = re.compile('^[0-9A-Fa-f]{4,6}(?:\s+[0-9A-Fa-f]{4,6})*$')
+        USVsRE = re.compile(r'^[0-9A-Fa-f]{4,6}(?:\s+[0-9A-Fa-f]{4,6})*$')
 
         # keep track of glyph names we've seen to detect duplicates
         namesSeen = set()
