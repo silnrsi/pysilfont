@@ -558,7 +558,7 @@ class FTMLBuilder(object):
 
             if len(uids) == 0:
                 # Handle unencoded glyphs
-                uids = None # Prevents using this record to set default feature values
+                uids = None # Prevent unencoded glyph records from defining default feature values
                 if basename in self._charFromBasename:
                     c = self._charFromBasename[basename]
                     # Check for additional AP info
@@ -571,7 +571,7 @@ class FTMLBuilder(object):
             elif isLigature:
                 # Handle ligatures
                 c = self.addSpecial(uids, basename)
-                uids = None  # Prevents using this record to set default feature values  (TODO: Research this)
+                uids = None  # Prevent ligatures records from defining default feature values  (TODO: Research this)
             else:
                 # Handle simple encoded glyphs (could be multiple uids!)
                 # Create character object
@@ -603,12 +603,18 @@ class FTMLBuilder(object):
                                 vals = [int(i) for i in m.group(2).split(',')]
                                 if len(vals) > 0:
                                     if uids is not None:
+                                        # For encoded glyphs: capture first value as the default for this feature
+                                        # (For OpenType this must always be zero; might be non-zero for Graphite)
                                         feature.default = vals[0]
-                                    elif len(feats) == 1:  # TODO: This seems like wrong test.
+                                        # NB: all vals on encoded glyphs will also be processed (below) when 
+                                        #     computing the maxval for the feature, so putting a second value
+                                        #     on encoded glyphs is a way to push the maxval out past all 
+                                        #     defined variants to test behavior.
+                                    elif c is not None and len(feats) == 1:  # TODO: len() seems like wrong test.
                                         for v in vals:
                                             # remember the glyph name for this feature/value combination:
                                             feat = '{}={}'.format(tag,v)
-                                            if c is not None and feat not in c.altnames:
+                                            if feat not in c.altnames:
                                                 c.altnames[feat] = gname
                                     vals.append(feature.maxval)
                                     feature.maxval = max(vals)
