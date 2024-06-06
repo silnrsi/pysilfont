@@ -148,7 +148,7 @@ class Font(object) :
         doc = et.parse(fname)
         for c in doc.findall('.//class'):
             class_name = c.get('name')
-            m = re.search('\[(\d+)\]$', class_name)
+            m = re.search(r'\[(\d+)\]$', class_name)
             # support fixedclasses like make_gdl.pl via AP.pm
             if m:
                 class_nm = class_name[0:m.start()]

@@ -15,7 +15,7 @@ argspec = [
     ('-l','--log',{'help': 'Log file'}, {'type': 'outfile', 'def': '_setversion.log'})
     ]
 
-otnvre = re.compile('Version (\d)\.(\d\d\d)( .+)?$')
+otnvre = re.compile(r'Version (\d)\.(\d\d\d)( .+)?$')
 
 def doit(args) :
 

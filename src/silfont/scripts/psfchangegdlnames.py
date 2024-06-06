@@ -120,8 +120,8 @@ def doit(args) :
                 scan = line[0:cpos]
                 comment = line[cpos:]
             tmpline = ""
-            while re.search('[\s(\[,]g\w+?[\s)\],?:;=]'," "+scan+" ") :
-                m = re.search('[\s(\[,]g\w+?[\s)\],?:;=]'," "+scan+" ")
+            while re.search(r'[\s(\[,]g\w+?[\s)\],?:;=]'," "+scan+" ") :
+                m = re.search(r'[\s(\[,]g\w+?[\s)\],?:;=]'," "+scan+" ")
                 gname = m.group(0)[1:-1]
                 if gname in names :
                     gname = names[gname]
@@ -138,7 +138,7 @@ def doit(args) :
             newline = ""
             lastend = 0
 
-            for m in re.finditer('postscript\(.+?\)',scan) :
+            for m in re.finditer(r'postscript\(.+?\)',scan) :
                 psname = m.group(0)[12:-2]
                 if psname in psnames :
                     psname = psnames[psname]

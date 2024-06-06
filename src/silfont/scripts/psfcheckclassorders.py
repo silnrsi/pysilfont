@@ -53,7 +53,7 @@ def doit(args):
         sorts[glyphn] = float(line[sortpos])
 
     # RegEx we are looking for in comments
-    matchCountRE = re.compile("\*NEXT ([1-9]\d*) CLASSES MUST MATCH\*")
+    matchCountRE = re.compile(r"\*NEXT ([1-9]\d*) CLASSES MUST MATCH\*")
 
     # parse classes.xml but include comments
     class MyTreeBuilder(ET.TreeBuilder):
@@ -64,6 +64,7 @@ def doit(args):
                 self.start(ET.Comment, {})
                 self.data(res.group(1))
                 self.end(ET.Comment)
+
     doc = ET.parse(args.classes, parser=ET.XMLParser(target=MyTreeBuilder())).getroot()
 
     # process results looking for both class elements and specially formatted comments
@@ -78,7 +79,7 @@ def doit(args):
                 logger.log("Unexpected match request '{}': matching {} is not yet complete".format(child.text, refClassName), "E")
                 ref = None
             matchCount = int(child.text)
-            # print "Match count = {}".format(matchCount)
+            #print("Match count = {}".format(matchCount))
 
         elif child.tag == 'class':
             l = orderClass(child, logger)  # Do this so we record classes whether we match them or not.
