@@ -26,7 +26,7 @@ for section in profile.sections:
 
 # Now add in data from other profiles
 for profilename in ("adobefonts", "notofonts"):
-    # Along with googlefonts, hese are the profiles used in current ttfchecks.py except that:
+    # Along with googlefonts, these are the profiles used in current ttfchecks.py except that:
     # - not universal, since googlefonts includes universal
     # - not fontval since we exclude the only check in there!
     profile = profile_factory(get_module("fontbakery.profiles." + profilename))
@@ -47,7 +47,7 @@ for profilename in ("adobefonts", "notofonts"):
                 }
                 checkslist[check.id][profilename] = section.name
 
-# Columns to output in additoon to checkid
+# Columns to output in addition to checkid
 columnslist = ["section", "conditions", "experimental", "adobefonts", "notofonts"]
 
 with open(outfilebase + "_full.csv", "w", encoding="utf-8") as outfilefull:

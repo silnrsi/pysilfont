@@ -62,7 +62,7 @@ def doit(args) :
                         glyphlist.append(glyphn)
                         unicodesfound.append(unicode)
             for unicode in inlist:
-                if unicode not in unicodesfound: logger.log("No gylphs with unicode '" + unicode + "' in the font", "I")
+                if unicode not in unicodesfound: logger.log("No glyphs with unicode '" + unicode + "' in the font", "I")
         else:
             for glyphn in inlist:
                 if glyphn in font.deflayer:

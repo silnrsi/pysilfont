@@ -208,7 +208,7 @@ class ETelement(_container):
     def process_subelements(self,subspec, offspec = False) :
         # Process all subelements based on spec of expected elements
         # subspec is a list of elements, with each list in the format:
-        #    (element name, attribute name, class name, required, multiple valeus allowed)
+        #    (element name, attribute name, class name, required, multiple values allowed)
         # If cl is set, attribute is set to an object made with that class; otherwise just text of the element
 
         if not hasattr(self,"parseerrors")  or self.parseerrors is None : self.parseerrors=[]

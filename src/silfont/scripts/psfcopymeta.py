@@ -19,7 +19,7 @@ argspec = [
 
 def doit(args) :
 
-    fields = ["copyright", "openTypeNameDescription", "openTypeNameDesigner", "openTypeNameDesignerURL", "openTypeNameLicense", # General feilds
+    fields = ["copyright", "openTypeNameDescription", "openTypeNameDesigner", "openTypeNameDesignerURL", "openTypeNameLicense", # General fields
                 "openTypeNameLicenseURL", "openTypeNameManufacturer", "openTypeNameManufacturerURL", "openTypeOS2CodePageRanges",
                 "openTypeOS2UnicodeRanges", "openTypeOS2VendorID", "trademark",
                 "openTypeNameVersion", "versionMajor", "versionMinor", # Version fields
