@@ -14,6 +14,8 @@ General updates for new year, 2024
 
 ### Changed
 
+- Fix r-string SyntaxWarnings
+- Deprecate psfmakefea in favor of makefea
 - Handle CJK variants of ASCII characters in FTML builder that have
 the same base glyph name (that is, with no extension) as the ASCII base glyph name. (1.8.1.dev2)
 - Updated ttfchecks.py to match changes in Font Bakery checks (1.8.1.dev3)
