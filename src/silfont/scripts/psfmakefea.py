@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
-__doc__ = 'Make features.fea file'
+__doc__ = '''Make features.fea file
+
+-------------------------------------------------------------------------------
+NOTE: psfmakefea is now deprecated; please adjust your scripts (e.g. preflight)
+      to use makefea (from https://github.com/silnrsi/feax) instead. 
+-------------------------------------------------------------------------------
+'''
 # TODO: add conditional compilation, compare to fea, compile to ttf
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2017 SIL International  (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2017-2024 SIL International  (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'Martin Hosken, Alan Ward'
 
@@ -333,6 +339,7 @@ argspec = [
 ]
 
 def doit(args) :
+    logger = args.logger
     defines = dict(x.split('=') for x in args.define) if args.define else {}
     font = Font(defines)
     # if args.debug:
@@ -341,6 +348,15 @@ def doit(args) :
         args.paramsobj.sets["main"]["checkfix"] = "None"
     if args.infile is not None:
         font.readaps(args.infile, args.omitaps, args.paramsobj)
+
+    # If we get this far, it looks like the program is likely to succeed so now is a good time to
+    # issue a warning that projects should be updated to use the feax module. 
+    # Make sure the warning goes to the screen: 
+
+    scrlevel = logger.scrlevel
+    logger.scrlevel = 'W'
+    logger.log("NOTE: psfmakefea is now deprecated; please adjust your scripts (e.g. preflight) to use makefea instead.", "W")
+    logger.scrlevel = scrlevel
 
     font.make_marks()
     font.make_classes(args.ligmode)
