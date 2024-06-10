@@ -1,9 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<glyph name="LtnSmITilde" format="2">
-  <advance width="1110.0"/>
-  <unicode hex="0129"/>
-  <outline>
-    <component base="LtnSmDotlessI" xOffset="550.0"/>
-    <component base="CombTilde" xOffset="1125.0" yOffset="-1100.0"/>
-  </outline>
-</glyph>

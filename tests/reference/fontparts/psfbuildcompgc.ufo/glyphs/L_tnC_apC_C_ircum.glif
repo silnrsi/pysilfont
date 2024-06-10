@@ -1,9 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<glyph name="LtnCapCCircum" format="2">
-  <advance width="1355"/>
-  <unicode hex="0108"/>
-  <outline>
-    <component base="LtnCapC"/>
-    <component base="CombCircum" xOffset="1320.0" yOffset="430.0"/>
-  </outline>
-</glyph>
