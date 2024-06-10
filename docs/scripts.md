@@ -48,7 +48,6 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfnormalize](#psfnormalize)                    | Normalize a UFO and optionally converts it between UFO2 and UFO3 versions                              |
 | [psfremovegliflibkeys](#psfremovegliflibkeys)    | Remove keys from glif lib entries                                                                      |
 | [psfrenameglyphs](#psfrenameglyphs)              | Within a UFO and class definition, assign new working names to glyphs based on csv input file          |
-| [psfrunfbchecks](#psfrunfbchecks)                | Run Font Bakery checks using a standard profile with option to specify an alternative profile          |
 | [psfsetassocfeat](#psfsetassocfeat)              | Add associate feature info to glif lib based on a csv file                                             |
 | [psfsetassocuids](#psfsetassocuids)              | Add associate UID info to glif lib based on a csv file                                                 |
 | [psfsetdummydsig](#psfsetdummydsig)              | Add a dummy DSIG table into a TTF font                                                                 |

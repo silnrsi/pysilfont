@@ -23,6 +23,7 @@ the same base glyph name (that is, with no extension) as the ASCII base glyph na
 - Updated psfrunfbchecks to work with latest Font Bakery, ie v0.11 on (1.8.1.dev3)
 - Updated profiles and checks in fbtests/ to work with latest refactored Font Bakery v0.12.X
 - Fixed #86 "psfmakefea fails when there are different substitution types" (1.8.1.dev4)
+- Updated psfrunfbchecks to output a warning indicating the script is no longer to be used (1.8.1.dev4)
 
 ### Removed
 

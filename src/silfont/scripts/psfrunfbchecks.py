@@ -4,7 +4,7 @@
 
 def cmd():
     '''the simplest function possible'''
-    msg = """psfrunfbchecks is deprecated and no longer functional.
+    msg = """psfrunfbchecks is no longer functional.
 Please use *smith fbchecks* or fontbakery directly with the pysilfont profile:
 *fontbakery check-profile silfont.fbtests.profile [options] *-Regular.ttf*"""
     print(msg)
