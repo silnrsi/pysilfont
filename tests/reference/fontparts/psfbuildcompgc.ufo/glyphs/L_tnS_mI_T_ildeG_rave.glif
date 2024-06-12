@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<glyph name="LtnSmITildeGrave" format="2">
+  <unicode hex="E000"/>
+  <outline>
+    <component base="LtnSmDotlessI"/>
+    <component base="CombTilde" xOffset="575.0" yOffset="-1100.0"/>
+    <component base="CombGrave" xOffset="550.0" yOffset="-725.0"/>
+  </outline>
+</glyph>
