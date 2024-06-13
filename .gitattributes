@@ -40,3 +40,10 @@
 # with the python modules ``pickle``, ``dbm.*``,
 # ``shelve``, ``marshal``, ``anydbm``, & ``bsddb``
 # (among others).
+
+# Explicitly declare the below matches to be text files, to keep LF eols when 
+# writing to the working copy, and to convert CRLF to LF eols when adding to the repo.
+
+*.fea text eol=lf
+*.glif text eol=lf
+*.plist text eol=lf
