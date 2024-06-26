@@ -32,6 +32,7 @@ jobs:
       - name: Run pytest tests
         run: |
           python3 tests/setuptestdata.py
+          python3 -m pip install .
           pytest --full-trace -v
       - name: Lint with flake8
         run: |
