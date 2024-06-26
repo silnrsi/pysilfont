@@ -4,7 +4,7 @@ Pysilfont is a collection of tools to support font development, with an emphasis
 
 In addition, all scripts will output UFOs in a normalized form, designed to work with source control systems.
 
-Please read the main [documentation](https://github.com/silnrsi/pysilfont/blob/master/docs/docs.md) in the docs folder for more details. Within there is a list of [scripts](https://github.com/silnrsi/pysilfont/blob/docs/scripts.md).
+Please read the main [documentation](https://github.com/silnrsi/pysilfont/blob/master/docs/docs.md) in the docs folder for more details. Within there is a list of [scripts](https://github.com/silnrsi/pysilfont/blob/master/docs/scripts.md).
 
 ## Installation
 
