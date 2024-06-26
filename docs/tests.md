@@ -13,7 +13,7 @@ python3 tests/setuptestdata.py
 
 ## get extra modules:
 ```
-python3 -m pip install https://github.com/typemytype/GlyphConstruction.git
+python3 -m pip install git+https://github.com/typemytype/GlyphConstruction.git
 ```
 
 ## run the test suite:
