@@ -10,6 +10,7 @@ __author__ = 'Alan Ward'
 
 from silfont.core import execute
 import defcon, ufo2ft.outlineCompiler, ufo2ft.preProcessor, ufo2ft.filters
+import re
 
 # ufo2ft v2.32.0b3 uses standard logging and the InstructionCompiler emits errors 
 #  when a composite glyph is flattened, so filter out that message 
@@ -28,11 +29,18 @@ argspec = [
     ('ottf', {'help': 'Output ttf file name'}, {}),
     ('--removeOverlaps', {'help': 'Merge overlapping contours', 'action': 'store_true'}, {}),
     ('--decomposeComponents', {'help': 'Decompose componenets', 'action': 'store_true'}, {}),
+    ('-c', '--compregex', {'help': "RegEx identifying names of component-only glyphs; remove any that are unreachable",'nargs': '?', 'const': r'^_'}, {}),
     ('-l', '--log', {'help': 'Optional log file'}, {'type': 'outfile', 'def': '_ufo2ttf.log', 'optlog': True})]
 
 PUBLIC_PREFIX = 'public.'
 
 def doit(args):
+    # before we get too far, make sure regEx argument, if provided, is legit:
+    try:
+        compRegEx = re.compile(args.compregex) if args.compregex else None
+    except re.error as e:
+        args.logger.log(f'Error compiling --compregex argument "{e.pattern}": {e.msg}','S')
+
     ufo = defcon.Font(args.iufo)
 
     # if style is Regular and there are no openTypeNameRecords defining the full name (ID=4), then
@@ -91,6 +99,9 @@ def doit(args):
             cmap_uvs.uvsDict = uvsdict
             font['cmap'].tables.append(cmap_uvs)
 
+    if compRegEx:
+        ftshake(font, compRegEx, args.logger)
+
     args.logger.log('Saving ttf file', 'P')
     font.save(args.ottf)
 
@@ -116,6 +127,59 @@ def getuvss(ufo):
             uvsdict[codes[1]] = []
         uvsdict[codes[1]].append((codes[0], (g.name if codes[0] not in g.unicodes else None)))
     return uvsdict
+
+def ftshake(f, componentNameRE, logger):
+    '''Using fontTools subsetter, Remove unreachable components that match the provided RegEx '''
+    from fontTools import subset
+
+    gnames = set(f.getGlyphSet().keys())
+    allComponents = set(filter(componentNameRE.search, gnames))
+    neededComponents = set()
+    gtable = f['glyf']
+
+    # In case nested composites haven't yet been flattened, use
+    # recursion to make sure all components that are actually 
+    # needed are identified
+    def markneeded(gname):
+        if gname in allComponents:
+            neededComponents.add(gname)
+        g = gtable[gname]
+        if g.isComposite():
+            for c in g.components:
+                markneeded(c.glyphName)
+
+    for gname in gnames - allComponents:
+        markneeded(gname)
+
+    toDelete = allComponents-neededComponents
+    toKeep = gnames - toDelete
+
+    # copied from nototools.subset
+    opt = subset.Options()
+    opt.name_IDs = ["*"]
+    opt.name_legacy = True
+    opt.name_languages = ["*"]
+    opt.layout_features = ["*"]
+    opt.notdef_outline = True
+    opt.recalc_bounds = True
+    # opt.recalc_timestamp = True
+    # opt.canonical_order = True
+
+    # Added for glyphshaker:
+    opt.layout_features = ["*"]
+    opt.layout_scripts = ["*"]
+    opt.drop_tables = []
+    opt.passthrough_tables = True
+    opt.glyph_names = True
+    opt.legacy_cmap = True
+    opt.prune_unicode_ranges = False
+    opt.prune_codepage_ranges = False
+
+    # Invoke the subsetter!
+    subsetter = subset.Subsetter(options=opt)
+    subsetter.populate(glyphs=toKeep)
+    subsetter.subset(f)
+    logger.log(f'Subsetter: Of {len(gnames)} glyphs, found {len(allComponents)} matching components but can remove {len(toDelete)}, leaving {len(gnames)-len(toDelete)}.', 'P')
 
 def cmd(): execute(None, doit, argspec)
 if __name__ == '__main__': cmd()
