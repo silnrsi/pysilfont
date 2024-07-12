@@ -66,12 +66,12 @@ def doit(args):
 
     # Need to handle cases if filters that are used are set in com.github.googlei18n.ufo2ft.filters with lib.plist
     dc = dtc = ftpos = None
-    for (i,filter) in enumerate(preProcessor.preFilters):
-        if isinstance(filter, ufo2ft.filters.decomposeComponents.DecomposeComponentsFilter):
+    for (i,fltr) in enumerate(preProcessor.preFilters):
+        if isinstance(fltr, ufo2ft.filters.decomposeComponents.DecomposeComponentsFilter):
             dc = True
-        if isinstance(filter, ufo2ft.filters.decomposeTransformedComponents.DecomposeTransformedComponentsFilter):
+        if isinstance(fltr, ufo2ft.filters.decomposeTransformedComponents.DecomposeTransformedComponentsFilter):
             dtc = True
-        if isinstance(filter, ufo2ft.filters.flattenComponents.FlattenComponentsFilter):
+        if isinstance(fltr, ufo2ft.filters.flattenComponents.FlattenComponentsFilter):
             ftpos = i
     # Add decomposeComponents if --decomposeComponents is used
     if args.decomposeComponents and not dc: preProcessor.preFilters.append(
