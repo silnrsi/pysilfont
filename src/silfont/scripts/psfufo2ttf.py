@@ -99,8 +99,17 @@ def doit(args):
             cmap_uvs.uvsDict = uvsdict
             font['cmap'].tables.append(cmap_uvs)
 
+    # Component-only glyphs are candidates for removal.
+    # Generate a set containing names of component-only glyphs from either or both of:
+    #   the UFO lib key org.sil.componentOnlyGlyphs
+    #   matching user-supplied regEx
+    gnames = set(font.getGlyphSet().keys())
+    componentOnlyGlyphs = set(ufo.lib.get('org.sil.componentOnlyGlyphs', [])) & gnames
     if compRegEx:
-        ftshake(font, compRegEx, args.logger)
+        componentOnlyGlyphs.update(filter(compRegEx.search, gnames))
+    # If any component-only glyphnames specified, then remove any that are unreachable
+    if componentOnlyGlyphs:
+        ftshake(font, componentOnlyGlyphs, args.logger)
 
     args.logger.log('Saving ttf file', 'P')
     font.save(args.ottf)
@@ -128,24 +137,23 @@ def getuvss(ufo):
         uvsdict[codes[1]].append((codes[0], (g.name if codes[0] not in g.unicodes else None)))
     return uvsdict
 
-def ftshake(f, componentNameRE, logger):
-    '''Using fontTools subsetter, Remove unreachable components that match the provided RegEx '''
+def ftshake(f, allComponents, logger):
+    '''Using fontTools subsetter, remove any glyphs named in set allComponents that are unreachable'''
     from fontTools import subset
 
     gnames = set(f.getGlyphSet().keys())
-    allComponents = set(filter(componentNameRE.search, gnames))
-    neededComponents = set()
     gtable = f['glyf']
 
     # In case nested composites haven't yet been flattened, use
     # recursion to make sure all components that are actually 
     # needed are identified
+    neededComponents = set()
     def markneeded(gname):
-        if gname in allComponents:
-            neededComponents.add(gname)
         g = gtable[gname]
         if g.isComposite():
             for c in g.components:
+                if gname in allComponents:
+                    neededComponents.add(gname)
                 markneeded(c.glyphName)
 
     for gname in gnames - allComponents:
