@@ -418,8 +418,6 @@ def parsefontsrc(text, allowplain = False) : # Check fontsrc text is valid and r
     else :
         return ("local("+text+")", None , text)
 
-    return (text,url,local)
-
 def getfontinfo(filename) : # peek inside the font for the name, weight, style
         f = ttLib.TTFont(filename)
         # take name from name table, NameID 1, platform ID 3, Encoding ID 1 (possible fallback platformID 1, EncodingID =0)
