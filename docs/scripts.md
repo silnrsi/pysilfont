@@ -1435,18 +1435,23 @@ Note: This is just bare-bones code at present so does the same as glyphsLib's uf
 
 ---
 #### psfufo2ttf
-Usage: **`psfufo2ttf [--removeOverlaps] [--decomposeComponents] iufo ottf`**
+Usage: **`psfufo2ttf [--compregex [regEx]] [--removeOverlaps] [--decomposeComponents] iufo ottf`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
 This is based on ufo2ft and generates a ttf file without OpenType tables from a UFO.
 
-If `--removeOverlaps` is used it merges overlapping contours
+optional arguments:
+
+- `-c [regEx]`, `--compregex [regEx]`   Remove unreachable component glyphs
+        
+Glyphs with names that match the provided regular expression will be removed from the generated ttf if they are not referenced by any other glyphs in the ttf. If the regEx value is omitted, a default value `^_` matching all glyph names starting with '_' will be used. 
 
 ufo2ft filters
 
 - The decomposeTransformedComponents and flattenComponents filters are always used
 - decomposeComponents is used if `--decomposeComponents` is set (or the filter is set in lib.plist)
+- Overlapping contours are merged if `--removeOverlaps` is set (or the filter is set in lib.plist)
 - Other ufo2ft filters can also be set in lib.plist - see ufo2ft documentation for details
 
 ---

@@ -14,6 +14,7 @@ General updates for new year, 2024
 
 ### Changed
 
+- Added --compregex to psfufo2ttf
 - Fix r-string SyntaxWarnings
 - Deprecate psfmakefea in favor of makefea
 - Handle CJK variants of ASCII characters in FTML builder that have
