@@ -75,7 +75,6 @@ PROFILE = {
             "com.google.fonts/check/missing_small_caps_glyphs",
             "com.google.fonts/check/monospace",
             "com.google.fonts/check/name/ascii_only_entries",
-            "com.google.fonts/check/name/copyright_length",
             "com.google.fonts/check/name/description_max_length",
             "com.google.fonts/check/name/family_and_style_max_length",
             "com.google.fonts/check/name/family_name_compliance",
