@@ -103,8 +103,7 @@ class FTML(object):
         'orange':  '#ffa500'
     }
 
-    @staticmethod
-    def _getColor(color):
+    def _getColor(self, color):
         if color is None or len(color) == 0:
             return None
         color = color.lower()

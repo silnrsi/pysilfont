@@ -129,7 +129,7 @@ def doit(args) :
                     if gname not in missed and gname not in exceptions :
                         logger.log(gname + " from '" + line.strip() + "' in " + filen + " missing from csv", "W")
                         missed.append(gname) # only log each missed name once
-                tmpline = tmpline + scan[lastend:m.start()] + gname
+                tmpline = tmpline + scan[0:m.start()] + gname
                 scan = scan[m.end()-2:]
             tmpline = tmpline + scan + comment
 
