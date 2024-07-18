@@ -109,11 +109,10 @@ Follow the instructions on https://github.com/silnrsi/palaso-python
 
 ### Font Bakery
 
-If you need use `psfrunfbchecks` you will need to install Font Bakery manually. 
-It needs to be installed with the [googlefonts] option, eg clone the repo and run
+If you want to use the SIL profile for Font Bakery you will need to install Font Bakery manually (with the googlefonts extras):
 
 ```
-python3 -m pip install .[googlefonts]
+python3 -m pip install fontbakery.[googlefonts]
 ```
 
 ## Contributing to the project
