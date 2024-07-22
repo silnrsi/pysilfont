@@ -9,6 +9,7 @@ import sys
 import importlib
 import silfont
 
+
 def cmd():
     """gather the deps"""
 
@@ -19,10 +20,11 @@ def cmd():
         ('fontTools', '?', ''),
         ('glyphConstruction', '?', ''),
         ('glyphsLib', '?', ''),
-        ('lxml','?', ''),
+        ('lxml', '?', ''),
         ('mutatorMath', '?', ''),
         ('palaso', '?', ''),
         ('ufoLib2', '?', ''),
+        ('feaxlib', '?', ''),
         )
 
     # Pysilfont info
@@ -56,4 +58,6 @@ def cmd():
 
         print('{:20} {:15} {}'.format(name + ":", version, path))
 
-if __name__ == "__main__": cmd()
+
+if __name__ == "__main__":
+    cmd()
