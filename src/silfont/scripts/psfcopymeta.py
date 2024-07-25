@@ -65,7 +65,7 @@ def doit(args) :
                         fupdated = True
                 elif ftag in ("true, false") :
                     if ftag != ttag :
-                        fti.setelem(field, ET.fromstring("<" + ftag + "/>"))
+                        tfi.setelem(field, ET.fromstring("<" + ftag + "/>"))
                         logger.log(message + " Old: '" + ttag + "' New: '" + str(ftag) + "'", "W")
                         fupdated = True
                 elif ftag == "array" : # Assume simple array with just values to compare
@@ -77,7 +77,7 @@ def doit(args) :
                         tfi.setelem(field, ET.fromstring(ET.tostring(felem)))
                         logger.log(message + "Some values different Old: " + str(tarray) + " New: " + str(farray), "W")
                         fupdated = True
-                else : logger.log("Non-standard fontinfo field type: "+ ftag + " in " + fontname, "S")
+                else : logger.log("Non-standard fontinfo field type: "+ ftag + " in " + fromfont.ufodir, "S")
             else :
                 tfi.addelem(field, ET.fromstring(ET.tostring(felem)))
                 logger.log(message + "is missing from destination font so will be copied from source font", "W")

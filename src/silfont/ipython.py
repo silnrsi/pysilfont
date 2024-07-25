@@ -83,7 +83,7 @@ def loadFont(fname):
     return f
 
 def displayGlyphs(f, gnames, points=None, scale=None):
-    if not hasattr(gnames, '__len__') or isinstance(gnames, basestring):
+    if not hasattr(gnames, '__len__') or isinstance(gnames, (str,bytes)):
         gnames = [gnames]
     if not hasattr(points, '__len__'):
         points = []

@@ -144,7 +144,7 @@ def getfonts(fontsourcestrings, logfile, fromcommandline=True):
                     checkembeddedfont.append(os.path.basename(fontstring))
             except IOError:
                 logfile.log("Unable to find font file to embed: " + fontstring, "E")
-            except fontTools.ttLib.TTLibError:
+            except ttLib.TTLibError:
                 logfile.log("File is not a valid font: " + fontstring, "E")
             except:
                 logfile.log("Error occurred while checking font: " + fontstring, "E") # some other error
