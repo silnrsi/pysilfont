@@ -605,23 +605,37 @@ psfdupglyphs Andika-Regular.ufo -i dup.csv
 
 ---
 ####  psfexportanchors
-Usage: **`psfexportanchors [-r {X,S,E,P,W,I,V}]  [-g] [-s] ifont [output]`**
+Usage: **`psfexportanchors [-r {X,S,E,P,W,I,V}] [-g] [-s] [--ignoreglyphs [RegEx]] ifont [output]`**
 
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
-This exports anchor data from a UFO font to an XML file. (An "anchor" is also called an "attachment point" which is sometimes abbreviated to "AP".)
+This exports anchor data from a UFO font to an XML file. (An "anchor" is also called an "attachment point" which is sometimes abbreviated to "AP".) If no output filename is provided, the output will be written to a file with a name based on the UFO name.
 
-Example that exports the anchors contained in the UFO font `CharisSIL-Regular.ufo`, sorts the resulting glyph elements by public.glyphOrder rather than glyph ID (GID), and writes them to an XML file `CharisSIL-Regular_ap.xml`.
+The generated XML includes the following attributes for each glyph:
+
+- PSName - name of the glyph. In spite of what it is called, this is the _working name_ (also called _friendly_ or _GlyphsApp name_) and not the _production_ name of the glyph
+- UID - Unicode scalar value (codepoint) expressed in hexadecimal (present only if the glyph is encoded)
+- (optionally) GID - Glyph index. Note that this may not be accurate and is a guess based on contents of a UFO and not the TTF actually generated from that UFO.
+
+along with `<point>` elements for each anchor within the glyph.
+
+Any glyph names enumerated in the UFO's `public.skipExportGlyphs` key, if present in the UFO's lib.plist, will be omitted from the XML.
+
+If `--ignoreGlyphs` is provided, any glyph names that match the regular expression argument (default `^_`) will also be omitted from the XML.
+
+Other commandline options:
+
+- `-g`, a GID attribute (for those glyphs included in public.glyphOrder in the lib.plist) will be included in the glyph element.
+- `-s`, the glyph elements will be sorted by glyph name rather than by the public.glyphOrder in lib.plist.
+- `-u`, the UID attribute will include a "U+" prefix (not recommended)
+
+The following exports the anchors contained in the UFO font `CharisSIL-Regular.ufo`, sorts the resulting glyph elements by glyph name (PSName attribute) rather than the UFO's public.glyphOrder, and writes them to an XML file `CharisSIL-Regular_ap.xml`:
 
 ```
 psfexportanchors -s font-charis/source/CharisSIL-Regular.ufo CharisSIL-Regular_ap.xml
 ```
 
-If the command line includes
-
-- -g, then the GID attribute will be present in the glyph element.
-- -s, then the glyph elements will be sorted by public.glyphOrder in lib.plist (rather than by GID attribute).
-- -u, then the UID attribute will include a "U+" prefix
+For more information about AP XML files, see [font-ttf-scripts documentation](https://metacpan.org/dist/Font-TTF-Scripts/view/scripts/ttfbuilder#Attachment-Points).
 
 ---
 #### psfexportmarkcolors

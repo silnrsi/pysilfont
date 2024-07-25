@@ -8,6 +8,7 @@ __author__ = 'David Rowe'
 from silfont.core import execute
 from silfont.etutil import ETWriter
 from xml.etree import ElementTree as ET
+import re
 
 argspec = [
     ('ifont',{'help': 'Input UFO'}, {'type': 'infont'}),
@@ -15,7 +16,8 @@ argspec = [
     ('-r','--report',{'help': 'Set reporting level for log', 'type':str, 'choices':['X','S','E','P','W','I','V']},{}),
     ('-l','--log',{'help': 'Set log file name'}, {'type': 'outfile', 'def': '_anc.log'}),
     ('-g','--gid',{'help': 'Include GID attribute in <glyph> elements', 'action': 'store_true'},{}),
-    ('-s','--sort',{'help': 'Sort by public.glyphOrder in lib.plist', 'action': 'store_true'},{}),
+    ('-s','--sort',{'help': 'Sort by glyph name rather than by public.glyphOrder', 'action': 'store_true'},{}),
+    ('--ignoreglyphs',{'help': "RegEX describing glyphs to ignore. If value not provided, '^_' is assumed", 'const': r'^_', 'default': None, 'nargs': '?', 'metavar': 'RegEx'},{}),
     ('-u','--Uprefix',{'help': 'Include U+ prefix on UID attribute in <glyph> elements', 'action': 'store_true'},{}),
     ('-p','--params',{'help': 'XML formatting parameters: indentFirst, indentIncr, attOrder','action': 'append'}, {'type': 'optiondict'})
     ]
@@ -26,33 +28,38 @@ def doit(args) :
     infont = args.ifont
     prefix = "U+" if args.Uprefix else ""
 
-    if hasattr(infont, 'lib') and 'public.glyphOrder' in infont.lib:
-        glyphorderlist = [s.text for s in infont.lib['public.glyphOrder'][1].findall('string')]
-    else:
-        glyphorderlist = []
-        if args.gid:
-            logfile.log("public.glyphOrder is absent; ignoring --gid option", "E")
-            args.gid = False
+    try:
+        ignoreGlyphsRE = re.compile(args.ignoreglyphs) if args.ignoreglyphs else None
+    except re.error as e:
+        logfile.log(f'Error compiling --compregex argument "{e.pattern}": {e.msg}', 'S')
+
+    glyphorderlist = infont.lib.getval('public.glyphOrder', [])
+    if args.gid and not glyphorderlist:
+        logfile.log("public.glyphOrder is absent; ignoring --gid option", "E")
+        args.gid = False
     glyphorderset = set(glyphorderlist)
     if len(glyphorderlist) != len(glyphorderset):
         logfile.log("At least one duplicate name in public.glyphOrder", "W")
         # count of duplicate names is len(glyphorderlist) - len(glyphorderset)
-    actualglyphlist = [g for g in infont.deflayer.keys()]
+    actualglyphlist = list(infont.deflayer.keys())
     actualglyphset = set(actualglyphlist)
+    skipglyphset = set(infont.lib.getval('public.skipExportGlyphs', []))
     listorder = []
     gid = 0
     for g in glyphorderlist:
         if g in actualglyphset:
+            actualglyphset.remove(g)
+            if g in skipglyphset or (ignoreGlyphsRE and ignoreGlyphsRE.search(g)):
+                continue
             listorder.append( (g, gid) )
             gid += 1
-            actualglyphset.remove(g)
-            glyphorderset.remove(g)
         else:
             logfile.log(g + " in public.glyphOrder list but absent from UFO", "W")
-    if args.sort: listorder.sort()
     for g in sorted(actualglyphset):    # if any glyphs remaining
         listorder.append( (g, None) )
         logfile.log(g + " in UFO but not in public.glyphOrder list", "W")
+    if args.sort: 
+        listorder.sort()
 
     if 'postscriptFontName' in infont.fontinfo:
         postscriptFontName = infont.fontinfo['postscriptFontName'][1].text
