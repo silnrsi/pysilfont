@@ -8,6 +8,7 @@ __author__ = 'David Raymond'
 import sys
 import importlib
 import silfont
+from importlib.metadata import version
 
 
 def cmd():
@@ -18,7 +19,6 @@ def cmd():
         ('fontMath', '?', ''),
         ('fontParts', '?', ''),
         ('fontTools', '?', ''),
-        ('glyphConstruction', '?', ''),
         ('glyphsLib', '?', ''),
         ('lxml', '?', ''),
         ('mutatorMath', '?', ''),
@@ -33,6 +33,7 @@ def cmd():
     print("   Commands in:       " + sys.argv[0][:-10])
     print("   Code running from: " + silfont.__file__[:-12])
     print("   using:             Python " + sys.version.split(' \n', maxsplit=1)[0])
+    print("   ")
 
     for dep in deps:
         name = dep[0]
@@ -43,7 +44,7 @@ def cmd():
             # Remove .py file name from end
             pyname = path.split("/")[-1]
             path = path[:-len(pyname)-1]
-            version = "No version info"
+            version = importlib.metadata.version(name)
             for attr in ("__version__", "version", "VERSION"):
                 if hasattr(module, attr):
                     version = getattr(module, attr)
