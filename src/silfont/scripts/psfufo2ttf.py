@@ -174,6 +174,7 @@ def ftshake(f, componentNameRE, logger):
     opt.legacy_cmap = True
     opt.prune_unicode_ranges = False
     opt.prune_codepage_ranges = False
+    opt.recalc_average_width = True
 
     # Invoke the subsetter!
     subsetter = subset.Subsetter(options=opt)
