@@ -349,14 +349,14 @@ def doit(args) :
             # 2) Fix up all occurrences of <td> elements referencing font2
 
             # Add @fontface to <style>
-            style = html_doc.find('//style')
+            style = html_doc.find('.//style')
             style.text = style.text + '\n' + '\n'.join([x.fontface for x in sname2font.values()])
 
             # Iterate over all <td> elements looking for font2 and a style or lang indicating feature settings
 
             classRE = re.compile(r'string\s+(?:(\w+)\s+)?font2$')
 
-            for td in html_doc.findall('//td'):
+            for td in html_doc.findall('.//td'):
                 tdclass = td.get('class')
                 tdlang = td.get('lang')
                 m = classRE.match(tdclass)
