@@ -42,8 +42,8 @@ def shape_text(f, text, features = [], lang=None, dir="", script="", shapers="")
     feats = []
     if len(features):
         for feat_string in features:
-            if hb.feature_from_string(feat_string, -1, aFeats):
-                feats.append(aFeats)
+            if hb.feature_from_string(feat_string, -1, aFeats):   # noqa: F821
+                feats.append(aFeats)   # noqa: F821
     if shapers:
         hb.shape_full(font, buf, feats, shapers)
     else:

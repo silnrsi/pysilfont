@@ -20,12 +20,12 @@ ast.asFea = asFea
 SHIFT = ast.SHIFT
 
 def asLiteralFea(self, indent=""):
-    Element.mode = 'literal'
+    Element.mode = 'literal'   # noqa: F821
     return self.asFea(indent=indent)
-    Element.mode = 'flat'
+    Element.mode = 'flat'   # noqa: F821
 
 ast.Element.asLiteralFea = asLiteralFea
-ast.Element.mode = 'flat'
+ast.Element.mode = 'flat'   # noqa: F821
 
 class ast_Comment(ast.Comment):
     def __init__(self, text, location=None):
@@ -365,7 +365,7 @@ class ast_IfBlock(ast.Block):
 
     def asFea(self, indent=""):
         if self.mode == 'literal':
-            res = "{}if{}({}) {{".format(indent, name, cond)
+            res = "{}if{}({}) {{".format(indent, name, cond)   # noqa: F821
             res += ast.Block.asFea(self, indent=indent)
             res += indent + "}\n"
             return res
