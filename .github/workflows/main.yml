@@ -1,19 +1,39 @@
 name: Testing and linting
 
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+on: [push, pull_request]
 
 jobs:
-  build:
+  lint:
+    runs-on: ubuntu-latest
 
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install flake8
+          # python3 -m pip install ruff
+      - name: Lint with flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      # - name: Lint with ruff
+      #   run: |
+      #     ruff check 
+
+  test:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest]
-        python-version: ["3.12"]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "pypy3.9", "pypy3.10"]  # "graalpy-24.0"
 
     steps:
       - uses: actions/checkout@v4
@@ -27,19 +47,8 @@ jobs:
           python3 -m pip install --upgrade pip setuptools
           python3 -m pip install pytest 
           python3 -m pip install git+https://github.com/typemytype/GlyphConstruction.git
-          python3 -m pip install flake8
-          python3 -m pip install ruff
       - name: Run pytest tests
         run: |
           python3 tests/setuptestdata.py
           python3 -m pip install .[git]
           pytest --full-trace -v
-      - name: Lint with flake8
-        run: |
-          # stop the build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-      # - name: Lint with ruff
-      #   run: |
-      #     ruff check 
