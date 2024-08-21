@@ -112,10 +112,7 @@ PROFILE = {
         ],
         "New checks from 0.12.10/Aug 2024": [
             "com.google.fonts/check/dsig",
-            "com.google.fonts/check/family/panose_proportion",
             "com.google.fonts/check/family_naming_recommendations",
-            "com.google.fonts/check/family/equal_unicode_encodings",
-            "com.thetypefounders/check/features_default_languagesystem",
             "com.thetypefounders/check/features_default_languagesystem",
             "com.google.fonts/check/xavgcharwidth",
             "com.google.fonts/check/fontvalidator",
