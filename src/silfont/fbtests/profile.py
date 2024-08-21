@@ -110,26 +110,31 @@ PROFILE = {
             "com.google.fonts/check/whitespace_ink",
             "com.google.fonts/check/whitespace_widths"
         ],
-        "New checks from 0.12.10": [
+        "New checks from 0.12.10/Aug 2024": [
+            "com.google.fonts/check/dsig",
+            "com.google.fonts/check/family/panose_proportion",
+            "com.google.fonts/check/family_naming_recommendations",
+            "com.google.fonts/check/family/equal_unicode_encodings",
             "com.thetypefounders/check/features_default_languagesystem",
             "com.thetypefounders/check/features_default_languagesystem",
             "com.google.fonts/check/xavgcharwidth",
+            "com.google.fonts/check/fontvalidator",
             "com.arrowtype.fonts/check/typoascender_exceeds_Agrave",
             "com.google.fonts/check/designspace_has_consistent_codepoints",
             "com.google.fonts/check/designspace_has_consistent_glyphset",
             "com.google.fonts/check/designspace_has_default_master",
             "com.google.fonts/check/designspace_has_sources",
             "com.google.fonts/check/gsub/smallcaps_before_ligatures",
+            "com.google.fonts/check/name/mandatory_entries",
+            "com.google.fonts/check/os2_metrics_match_hhea",
+            "com.google.fonts/check/production_glyphs_similarity",
+            "com.google.fonts/check/vertical_metrics_regressions",
             "com.adobe.fonts/check/find_empty_letters",
             "com.adobe.fonts/check/nameid_1_win_english",
             "com.fontwerk/check/no_mac_entries",
             "com.fontwerk/check/style_linking",
-            "com.google.fonts/check/cmap/alien_codepoints",
-            "com.google.fonts/check/cmap/format_12",
+            "com.google.fonts/check/name/italic_names",
             "com.google.fonts/check/cmap/unexpected_subtables",
-            "com.google.fonts/check/hmtx/comma_period",
-            "com.google.fonts/check/hmtx/encoded_latin_digits",
-            "com.google.fonts/check/hmtx/whitespace_advances",
             "com.google.fonts/check/iso15008_intercharacter_spacing",
             "com.google.fonts/check/iso15008_interline_spacing",
             "com.google.fonts/check/iso15008_interword_spacing",
@@ -137,6 +142,7 @@ PROFILE = {
             "com.google.fonts/check/iso15008_proportions",
             "com.google.fonts/check/iso15008_stem_width",
             "com.google.fonts/check/unicode_range_bits",
+            "com.google.fonts/check/rupee",
             "com.microsoft/check/manufacturer",
             "com.microsoft/check/name_id_1",
             "com.microsoft/check/name_id_2",
@@ -146,7 +152,6 @@ PROFILE = {
             "com.microsoft/check/trademark",
             "com.microsoft/check/typographic_family_name",
             "com.microsoft/check/version",
-            "com.microsoft/check/vertical_metrics",
             "com.microsoft/check/vtt_volt_data",
             "com.typenetwork/check/PUA_encoded_glyphs",
             "com.typenetwork/check/composite_glyphs",
@@ -157,8 +162,7 @@ PROFILE = {
             "com.typenetwork/check/font_is_centered_vertically",
             "com.typenetwork/check/glyph_coverage",
             "com.typenetwork/check/marks_width",
-            "com.typenetwork/check/name/mandatory_entries",
-            "com.typenetwork/check/vertical_metrics"
+            "com.typenetwork/check/name/mandatory_entries"
             ],
     },
     "overrides": {
@@ -167,6 +171,13 @@ PROFILE = {
                 "code": "decomposed-outline",
                 "status": "PASS",
                 "reason": "some SIL fonts intentionally use decomposed outlines for Lcaron, dcaron, lcaron and tcaron."
+            }
+            ],
+        "com.google.fonts/check/legacy_accents": [
+            {
+                "code": "legacy-accent-components",
+                "status": "PASS",
+                "reason": "SIL disagrees with the premise of this check."
             }
         ],
         "com.google.fonts/check/whitespace_glyphs": [
