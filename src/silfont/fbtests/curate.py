@@ -25,7 +25,7 @@ for section in profile.sections:
             "notofonts": ""}
 
 # Now add in data from other profiles
-for profilename in ("adobefonts", "notofonts"):
+for profilename in ("adobefonts", "notofonts", "fontwerk", "opentype", "fontbureau", "notofonts", "typenetwork", "microsoft", "iso15008"):
     # Along with googlefonts, these are the profiles used in current ttfchecks.py except that:
     # - not universal, since googlefonts includes universal
     # - not fontval since we exclude the only check in there!
@@ -61,10 +61,14 @@ with open(outfilebase + "_full.csv", "w", encoding="utf-8") as outfilefull:
             row = [checkid] + [str(checkinfo[col]) for col in columnslist]
             fullwriter.writerow(row)
             # Exclude certain batches of checks
-            if checkinfo["section"] in ["Description Checks", "Metadata Checks", "Repository Checks", "UFO Sources"]: continue
+            #if checkinfo["section"] in ["Description Checks", "Metadata Checks", "Repository Checks", "UFO Sources"]: continue
+            if checkinfo["section"] in [""]: continue
             if "is_variable_font" in checkinfo["conditions"]: continue
-            if checkinfo["experimental"]: continue
+            if "has_STAT_table" in checkinfo["conditions"]: continue
+            if "has_ital_axis" in checkinfo["conditions"]:  continue
             writer.writerow(row)
+
+print("Exported cvs files: full list and selection")
 
 
 
