@@ -10,9 +10,13 @@ PROFILE = {
     "check_definitions": ["silfont.fbtests.checks"],
     "sections": {
         "SIL Checks": [
-            "org.sil/check/name/version_format",
-            "org.sil/check/number_widths",
-            "org.sil/check/whitespace_widths",
+            "org.sil.software/check/name/version_format",
+            "org.sil.software/check/number_widths",
+            "org.sil.software/check/whitespace_widths",
+            "org.sil.software/check/FONTLOG",
+            "org.sil.software/check/is_OFL_FAQ_present_and_current",
+            "org.sil.software/check/repo/is_OFL_URL_current",
+            "org.sil.software/check/repo/executable_bits"
         ],
         "Google Fonts": [
             "com.adobe.fonts/check/family/bold_italic_unique_for_nameid1",

@@ -1,6 +1,6 @@
 """
 SIL checks <https://software.sil.org/fonts/>
-for version 0.12.X (and not just for ttfs)
+for version 0.12.10+
 """
 # pylint: disable=line-too-long  # This is data, not code
 
@@ -24,19 +24,19 @@ from fontbakery.testable import CheckRunContext, Font
 
 
 @check(
-    id="org.sil/check/name/version_format",
-    rationale="""
+    id="org.sil.software/check/name/version_format",
+    rationale="""SIL follows their own versionning scheme,
         Based on com.google.fonts/check/name/version_format but:
         - Checks for two valid formats:
         - Production: exactly 3 digits after decimal point
 
-
         - Allows major version to be 0
         - Allows extra info after numbers, eg for beta or dev versions
-  """,
+        """,
+    proposal="https://github.com/silnrsi/pysilfont/issues",
 )
-def org_sil_version_format(ttFont):
-    "Version format is correct in 'name' table?"
+def org_sil_software_version_format(ttFont):
+    "Is the version format correct in the 'name' table?"
 
     from fontbakery.utils import get_name_entry_strings
     import re
@@ -66,9 +66,13 @@ def org_sil_version_format(ttFont):
         yield PASS, "Version format in NAME table entries is correct."
 
 
-@check(id="org.sil/check/whitespace_widths")
-def org_sil_whitespace_widths(ttFont):
-    """Checks with widths of space characters in the font against best practice"""
+@check(
+    id="org.sil.software/check/whitespace_widths",
+    rationale="Whitespace characters must be following best practise",
+    proposal="https://github.com/silnrsi/pysilfont/issues",
+    )
+def org_sil_software_whitespace_widths(ttFont):
+    """Are widths of whitespace characters in the font best practice?"""
     from fontbakery.utils import get_glyph_name
 
     allok = True
@@ -211,9 +215,13 @@ def org_sil_whitespace_widths(ttFont):
         yield PASS, "Space widths all match expected values"
 
 
-@check(id="org.sil/check/number_widths")
-def org_sil_number_widths(ttFont, config):
-    """Check widths of latin digits 0-9 are equal and match that of figure space"""
+@check(
+    id="org.sil.software/check/number_widths",
+    rationale="Widths of latin digits 0-9 must be equal and match figure space",
+    proposal="https://github.com/silnrsi/pysilfont/issues",
+    )
+def org_sil_software_number_widths(ttFont, config):
+    """Are widths of latin digits 0-9 equal and match figure space"""
     from fontbakery.utils import get_glyph_name
 
     num_data = {
@@ -281,3 +289,96 @@ def org_sil_number_widths(ttFont, config):
             yield WARN, figuremess
     else:
         yield PASS, "All number widths are OK"
+
+
+@check(
+    id='org.sil.software/check/FONTLOG',
+    rationale="Although optional, we recommend you have a FONTLOG.txt file in your font project",
+    proposal="https://github.com/silnrsi/pysilfont/issues",
+    )
+def org_sil_software_fontlog(family_directory):
+    """Is the FONTLOG.txt file present?"""
+
+    import os
+    parent_path = os.path.abspath(os.path.join(family_directory, os.pardir))
+    fontlog_file = os.path.join(parent_path, "FONTLOG.txt")
+    if not os.path.exists(fontlog_file):
+        yield WARN, Message(
+                "fontlog-missing",
+                "Although optional, we recommend you include it in your project. Get a template from https://openfontlicense.org",
+        )
+    else:
+        yield PASS, Message("ok", "FONTLOG.txt is present.")
+
+
+@check(
+    id="org.sil.software/check/is_OFL_FAQ_present_and_current",
+    rationale="Although optional, we recommend to have the current version of the OFL-FAQ in your font project",
+    proposal="https://github.com/silnrsi/pysilfont/issues",
+    )
+def org_sil_software_check_is_ofl_faq_present_and_current(family_directory):
+    """Is OFL-FAQ.txt present and current?"""
+
+    import os
+    parent_path = os.path.abspath(os.path.join(family_directory, os.pardir))
+    faq_file = os.path.join(parent_path, "OFL-FAQ.txt")
+    if not os.path.exists(faq_file):
+        yield WARN, Message(
+            "OFL-FAQ-missing",
+            "Although optional, we recommend you include it in your project. Get the most current version from https://openfontlicense.org",
+        )
+    else:
+        with open(faq_file, 'r', encoding='utf-8') as file:
+            data = file.read()
+            if "Version 1.1-update7" not in data:
+                yield WARN, Message(
+                    "OFL-FAQ-old",
+                    "The OFL-FAQ file is not the most current version, get the latest 1.1-update7 from November 2023 from https://openfontlicense.org",
+                    )
+            else:
+                yield PASS, Message("ok", "OFL-FAQ.txt is most current version.")
+
+
+@check(
+    id="org.sil.software/check/repo/is_OFL_URL_current",
+    rationale="In November 2023 a new OFL website was set up, you should use the new URL but the old one will redirect",
+    proposal="https://github.com/silnrsi/pysilfont/issues",
+    )
+def org_sil_software_check_repo_is_ofl_url_current(family_directory):
+    """Is the OFL URL current?"""
+
+    import os
+    parent_path = os.path.abspath(os.path.join(family_directory, os.pardir))
+    ofl_file = os.path.join(parent_path, "OFL.txt")
+    with open(ofl_file, 'r', encoding='utf-8') as file:
+        data = file.read()
+        if "scripts.sil.org/OFL" in data:
+            yield WARN, Message(
+                    "OFL-URL-old",
+                    "Although a redirection is in place, you should use to the new URL instead: https://openfontlicense.org",
+                    )
+        else:
+            yield PASS, Message("ok", "OFL URL is current.")
+
+
+@check(
+    id="org.sil.software/check/repo/executable_bits",
+    rationale="Various script files should have the expected execute bits, so they can be ran seperately, text files should not have execute bits",
+    proposal="https://github.com/silnrsi/pysilfont/issues",
+    )
+def org_sil_software_check_repo_unneeded_exe_bits(family_directory):
+    """Are all the basic script files executable?"""
+
+    import os
+    parent_path = os.path.abspath(os.path.join(family_directory, os.pardir))
+    for root, dirs, files in os.walk(parent_path):
+        for file in files:
+            if file.endswith(".txt"):
+                file = os.path.join(root, file)  # get absolute path
+                if os.access(file, os.X_OK):
+                    yield WARN, Message("text-files-no-need-exec-bits", f"Extra text files found that don't need executable bit set: \n\n({file})")
+
+            if file.startswith("pre"):
+                file = os.path.join(root, file)  # get absolute path
+                if not os.access(file, os.X_OK):
+                    yield WARN, Message("script-files-need-exec-bits", f"Script files found which still need the executable bit set: \n\n({file})")
