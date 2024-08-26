@@ -378,7 +378,7 @@ def org_sil_software_check_repo_unneeded_exe_bits(family_directory):
                 if os.access(file, os.X_OK):
                     yield WARN, Message("text-files-no-need-exec-bits", f"Extra text files found that don't need executable bit set: \n\n({file})")
 
-            if file.startswith("pre"):
+            if file.startswith("pre") or file.startswith("make"):
                 file = os.path.join(root, file)  # get absolute path
                 if not os.access(file, os.X_OK):
                     yield WARN, Message("script-files-need-exec-bits", f"Script files found which still need the executable bit set: \n\n({file})")
