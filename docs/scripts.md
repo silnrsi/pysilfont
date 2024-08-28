@@ -42,7 +42,6 @@ There are further example scripts supplied with Pysilfont, and some of these are
 | [psfgetglyphnames](#psfgetglyphnames)            | Create a file of glyphs to import from a list of characters to import                                  |
 | [psfglyphs2ufo](#psfglyphs2ufo)                  | Export all the masters in a .glyphs file to UFOs                                                       |
 | [psfmakedeprecated](#psfmakedeprecated)          | Creates deprecated versions of glyphs                                                                  |
-| [psfmakefea](#psfmakefea)                        | Make a features file base on input UFO or AP database                                                  |
 | [psfmakescaledshifted](#psfmakescaledshifted)    | Creates scaled and shifted versions of glyphs                                                          |
 | [psfmakewoffmetadata](#psfmakewoffmetadata)      | Make the WOFF metadata xml file based on input UFO                                                     |
 | [psfnormalize](#psfnormalize)                    | Normalize a UFO and optionally converts it between UFO2 and UFO3 versions                              |
@@ -858,30 +857,6 @@ Example usage:
 
 ```
 psfmakedeprecated Andika-Regular.ufo -i deprecate.csv
-```
-
----
-#### psfmakefea
-Usage: **`usage: psfmakefea [-i INPUT] [-o OUTPUT] [-c CLASSFILE]
-                  [--classprops] [--omitaps OMITAPS] infile`**
-
-_([Standard options](docs.md#standard-command-line-options) also apply)_
-
-Creates OUTPUT feature (FEA) file by merging the INPUT feature (FEA or FEAX) file with information gleaned from an input UFO or [attachment point (AP)](https://metacpan.org/pod/distribution/Font-TTF-Scripts/scripts/ttfbuilder#Attachment-Points) xml file. For more information about FEAX see [Fea Extensions](feaextensions.md) documentation.
-
-required arguments:
-
-```
-  infile      UFO or AP xml files
-  INPUT       FEA or FEAX input file
-```
-
-optional arguments:
-```
-  OUTPUT       name of FEA file to create (if not supplied, only error checking is done)
-  CLASSFILE    name of xml class definition file
-  --classprops  if specified, class properties will be read from CLASSFILE
-  OMITAPS       comma-separated list of attachment points to ignore when creating classes
 ```
 
 ---

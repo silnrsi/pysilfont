@@ -1,3 +1,0 @@
-2024-06-10 13:48:46 Progress: Running:  psfmakefea -i tests/input/psfmakefea.feax -o local/testresults/ufo/psfmakefea.fea -l local/testresults/ufo/psfmakefea.log tests/input/font-psf-test/source/PsfTest-Regular.ufo
-2024-06-10 13:48:46 Progress: Reading UFO: tests/input/font-psf-test/source/PsfTest-Regular.ufo
-2024-06-10 13:48:46 Warning:  NOTE: psfmakefea is now deprecated; please adjust your scripts (e.g. preflight) to use makefea instead.

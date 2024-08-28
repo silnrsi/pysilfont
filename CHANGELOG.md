@@ -26,6 +26,9 @@ the same base glyph name (that is, with no extension) as the ASCII base glyph na
 - Fix r-string SyntaxWarnings
 - Added --compregex to psfufo2ttf
 - psfexportanchors: Support public.skipExportGlyphs; add --ignoreglyphs option; correct/enhance documentation (1.8.1.dev5)
+- Added warning in psfmakefea (not just deprecation notice) to indicate migration to feaxlib and makefea
+- Removed all feax-related code, docs and tests as everything is now moved to feaxlib
+
 
 ### Removed
 
