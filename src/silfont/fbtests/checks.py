@@ -363,7 +363,7 @@ def org_sil_software_check_repo_is_ofl_url_current(family_directory):
 
 @check(
     id="org.sil.software/check/repo/executable_bits",
-    rationale="Various script files should have the expected execute bits, so they can be ran seperately, text files should not have execute bits",
+    rationale="Various script files should have the expected execute bits, so they can be ran separately, text files should not have execute bits",
     proposal="https://github.com/silnrsi/pysilfont/issues",
     )
 def org_sil_software_check_repo_unneeded_exe_bits(family_directory):

@@ -140,7 +140,6 @@ PROFILE = {
             "com.google.fonts/check/iso15008_interline_spacing",
             "com.google.fonts/check/iso15008_interword_spacing",
             "com.google.fonts/check/iso15008_proportions",
-            "com.google.fonts/check/iso15008_proportions",
             "com.google.fonts/check/iso15008_stem_width",
             "com.google.fonts/check/unicode_range_bits",
             "com.google.fonts/check/rupee",
