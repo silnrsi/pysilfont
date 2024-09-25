@@ -87,6 +87,7 @@ class parameters(object):
             ("indentML",         False),  # Should multi-line string values be indented?
             ("plistIndentFirst", ""),     # First indent amount for plists
             ('precision', 6),             # Decimal precision to use in XML output - both for real values and for attributes if float
+            ("updateTimestamps", True),   # Update the value of openTypeHeadCreated field in fontinfo.plist if other changes occur
             ("floatAttribs", ['xScale', 'xyScale', 'yxScale', 'yScale', 'angle']),  # Used with precision above
             ("intAttribs", ['pos', 'width', 'height', 'xOffset', 'yOffset', 'x', 'y']),
             ("sortDicts",        True),   # Should dict elements be sorted alphabetically?
@@ -117,6 +118,7 @@ class parameters(object):
             "plistIndentFirst": "First indent amount for plists",
             "sortDicts": "Should dict elements be sorted alphabetically?",
             "precision": "Decimal precision to use in XML output - both for real values and for attributes if numeric",
+            "updateTimestamps": "Should font timestamps be updated if other changes occur",
             "renameGlifs": "Rename glifs based on UFO3 suggested algorithm",
             "UFOversion": "UFOversion to output - defaults to version of the input UFO",
             "format1Glifs": "Force output format 1 glifs including UFO2-style anchors (was used with FontForge; no longer needed)",

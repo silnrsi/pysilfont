@@ -122,7 +122,8 @@ def doit(args) :
         fipval[field] = pval
     if reqmissing: logger.log("Required fontinfo fields missing from " + psource.source.filename, "S")
     if changes:
-        psource.fontinfo.setval("openTypeHeadCreated", "string",
+        if psource.outparams["updateTimestamps"]:
+            psource.fontinfo.setval("openTypeHeadCreated", "string",
                              datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
         psource.write("fontinfo")
 
@@ -200,7 +201,8 @@ def doit(args) :
             dsource.write("lib")
             fchanges = True # Force fontinfo to update so openTypeHeadCreated is set
         if fchanges:
-            dsource.fontinfo.setval("openTypeHeadCreated", "string",
+            if dsource.outparams["updateTimestamps"]:
+                dsource.fontinfo.setval("openTypeHeadCreated", "string",
                                     datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
             dsource.write("fontinfo")
 

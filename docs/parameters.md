@@ -82,6 +82,7 @@ Currently only font output parameters can be changed via lib.plist
 | plistIndentFirst | Empty string | Different initial indent for plists | (dict is commonly not indented) |
 | sortDicts | True | sort all plist dicts |  |
 | precision | 6 | decimal precision |  |
+| updateTimestamps | True | Update font timestamps if other changes occur | Controls handling of the `openTypeHeadCreated` field in UFO fontinfo. |
 | renameGlifs | True | Name glifs with standard algorithm |  |
 | UFOversion | (existing) |  | Defaults to the version of the UFO when opened |
 | format1Glifs | False| Force output of format 1 glifs | Includes UFO2-style anchors; for use with FontForge |
