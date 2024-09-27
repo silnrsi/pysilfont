@@ -124,7 +124,9 @@ def doit(args):
             xmlstring += '</array></dict>'
             fi.setelem("woffMetadataCredits", ET.fromstring(xmlstring))
 
-            fi.setval("openTypeHeadCreated", "string", datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
+            if font.outparams["updateTimestamps"]:
+                fi.setval("openTypeHeadCreated", "string", datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
+
             logger.log("Writing updated fontinfo.plist with values from FONTLOG.txt", "P")
             exists = True if os.path.isfile(os.path.join(font.ufodir, "fontinfo.plist")) else False
             UFO.writeXMLobject(fi, font.outparams, font.ufodir, "fontinfo.plist", exists, fobject=True)

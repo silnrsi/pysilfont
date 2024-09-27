@@ -679,7 +679,7 @@ class Ufont(object):
         self.logger.log("Writing font to " + outdir, "P")
 
         changes = writeToDisk(dtree, outdir, self, odtree)
-        if changes: # Need to update openTypeHeadCreated if there have been any changes to the font
+        if changes and self.outparams["updateTimestamps"]: # Need to update openTypeHeadCreated if there have been any changes to the font
             if "fontinfo" in self.__dict__:
                 self.fontinfo.setval("openTypeHeadCreated", "string",
                                      datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S"))
