@@ -370,10 +370,10 @@ class Ufont(object):
                             "openTypeNamePreferredFamilyName": "familyName",
                             "openTypeNamePreferredSubfamilyName": "styleName", "openTypeOS2TypoAscender": "ascender",
                             "openTypeOS2TypoDescender": "descender"}
-            fisetto = {"openTypeHheaLineGap": 0, "openTypeOS2TypoLineGap": 0, "openTypeOS2WidthClass": 5,
+            fisetto = {"openTypeHheaLineGap": 0, "openTypeOS2TypoLineGap": 0,
                        "openTypeOS2Selection": [7], "openTypeOS2Type": []} # Other values are added below
 
-            libdel = ("com.fontlab.v2.tth", "com.typemytype.robofont.italicSlantOffset")
+            libdel = ("com.typemytype.robofont.italicSlantOffset")
             libsetto = {"com.schriftgestaltung.customParameter.GSFont.disablesAutomaticAlignment": True,
                             "com.schriftgestaltung.customParameter.GSFont.disablesLastChange": True}
             libwarnifnot = {"com.schriftgestaltung.customParameter.GSFont.useNiceNames": False}
