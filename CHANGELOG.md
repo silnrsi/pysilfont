@@ -30,6 +30,7 @@ the same base glyph name (that is, with no extension) as the ASCII base glyph na
 - Removed all feax-related code, docs and tests as everything is now moved to feaxlib
 - Removed `com.fontlab.v2.tth` from list of lib.plist keys removed in normalization
 - Disabled explicit setting of `openTypeOS2WidthClass` in normalization
+- Removed `openTypeGaspRangeRecords` from list of fontinfo.plist keys removed in normalization
 
 ### Removed
 
