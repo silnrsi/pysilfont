@@ -64,13 +64,13 @@ class _familydata(object):
     def fieldscheck(self, data, validfields, reqfields, logprefix, valid, logs):
         for key in data: # Check all keys have valid names
             if key not in validfields:
-                logs.append((f'{logprefix}: Invalid field "{key}"', 'W'))
+                logs.append((f'{logprefix}: Invalid field "{key}"', 'E'))
                 valid = False
                 continue
         # Are required fields present
         for key in reqfields:
             if key not in data:
-                logs.append((f'{logprefix}: Required field "{key}" missing', 'W'))
+                logs.append((f'{logprefix}: Required field "{key}" missing', 'E'))
                 valid = False
                 continue
         return (valid, logs)
@@ -170,7 +170,7 @@ class gfr_manifest(_familydata):
                 logs.append(('Files OK', 'I'))
             else:
                 valid = False
-                logs.append(('Files on disk and in manifest do not match.', 'W'))
+                logs.append(('Files on disk and in manifest do not match.', 'E'))
                 logs.append(('Files on disk:', 'I'))
                 for filen in sorted(dfilelist):
                     logs.append((f'     {dfilelist[filen]}', 'I'))
@@ -189,7 +189,7 @@ class gfr_manifest(_familydata):
                     logs.append(('Defaults OK', 'I'))
                 else:
                     valid = False
-                    logs.append(('At least one default missing', 'W'))
+                    logs.append(('At least one default missing', 'E'))
 
         if version:
             if "version" in data:
@@ -198,7 +198,7 @@ class gfr_manifest(_familydata):
                     logs.append(('Versions OK', 'I'))
                 else:
                     valid = False
-                    logs.append((f'Version mismatch: {version} supplied and {mversion} in manifest', "W"))
+                    logs.append((f'Version mismatch: {version} supplied and {mversion} in manifest', "E"))
 
         return (valid, logs)
 

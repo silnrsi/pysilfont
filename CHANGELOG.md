@@ -31,6 +31,7 @@ the same base glyph name (that is, with no extension) as the ASCII base glyph na
 - Removed `com.fontlab.v2.tth` from list of lib.plist keys removed in normalization
 - Disabled explicit setting of `openTypeOS2WidthClass` in normalization
 - Removed `openTypeGaspRangeRecords` from list of fontinfo.plist keys removed in normalization
+- In `gfr.py` change all Warnings to Errors
 
 ### Removed
 
