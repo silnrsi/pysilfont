@@ -85,7 +85,7 @@ PROFILE = {
             "googlefonts/name/familyname_first_char",
             "googlefonts/name/mandatory_entries",
             "opentype/name/match_familyname_fullfont",
-            "name/no_copyright_on_description",
+            # "name/no_copyright_on_description",
             "no_debugging_tables",
             "os2_metrics_match_hhea",
             "googlefonts/os2/use_typo_metrics",
