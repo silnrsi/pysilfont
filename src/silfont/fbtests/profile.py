@@ -130,7 +130,7 @@ PROFILE = {
             "adobefonts/nameid_1_win_english",
             "no_mac_entries",
             "fontwerk/style_linking",
-            "name/italic_names",
+            # "name/italic_names",
             "notofonts/cmap/unexpected_subtables",
             "notofonts/unicode_range_bits",
             "rupee",
