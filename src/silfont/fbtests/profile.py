@@ -144,18 +144,14 @@ PROFILE = {
             "typoascender_exceeds_Agrave",
             "vtt_volt_data"
         ],
-        "New checks from 0.13.X / November/December 2024": [
+        "New checks from 0.13.X/November/December 2024": [
             "caps_vertically_centered",
             "cjk_chws_feature",
             "cjk_not_enough_glyphs",
             "color_cpal_brightness",
             "googlefonts/colorfont_tables",
             "contour_count",
-            "designspace_has_consistent_codepoints",
-            "designspace_has_consistent_glyphset",
             "designspace_has_consistent_groups",
-            "designspace_has_default_master",
-            "designspace_has_sources",
             "empty_glyph_on_gid1_for_colrv0",
             "fontbakery_version",
             "freetype_rasterizer",
@@ -230,7 +226,7 @@ PROFILE = {
             "googlefonts/repo/upstream_yaml_has_required_fields",
             "googlefonts/repo/vf_has_static_fonts",
             "googlefonts/repo/zip_files",
-            "googlefonts/metadata/weightclass",
+            "googlefonts/weightclass",
             "googlefonts/vendor_id",
             "googlefonts/version_bump",
             "googlefonts/vertical_metrics",
@@ -269,6 +265,12 @@ PROFILE = {
             "ufo_recommended_fields",
             "ufo_required_fields",
             "ufo_unnecessary_fields"
+         ],
+        "New checks from 0.13.X/January 2025": [
+            "STAT_strings",
+            "base_has_width",
+            "googlefonts/metadata/parses",
+            "opentype/weight_class_fvar"
          ],
     },
     "overrides": {
