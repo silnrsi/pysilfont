@@ -5,7 +5,7 @@
 # Released under the MIT License (https://opensource.org/licenses/MIT)
 # maintained by Nicolas Spalinger
 
-echo "Update preflight libs pyenv - version 2024-7-22"
+echo "Update preflight libs pyenv - version 2025-1-14"
 
 # checking we have pyenv installed 
 if ! [ -x "$(command -v pyenv)" ]; then
@@ -32,6 +32,9 @@ python3 -m pip install "silfont[git] @ git+https://github.com/silnrsi/pysilfont.
 # components from main/master directly from upstream git repositories
 # python3 -m pip install git+https://github.com/typemytype/glyphConstruction.git --use-pep517
 python3 -m pip install --upgrade git+https://github.com/silnrsi/feax.git
+
+# temporary downgrades or version-frozen components
+python3 -m pip install --upgrade glyphsLib==6.9.4
 
 # reload the config file to rehash the path for either bash or zsh
 if [ -n "$ZSH_VERSION" ]; then
