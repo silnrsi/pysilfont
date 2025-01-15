@@ -373,7 +373,7 @@ class Ufont(object):
             fisetto = {"openTypeHheaLineGap": 0, "openTypeOS2TypoLineGap": 0,
                        "openTypeOS2Selection": [7], "openTypeOS2Type": []} # Other values are added below
 
-            libdel = ("com.typemytype.robofont.italicSlantOffset")
+            libdel = ("com.typemytype.robofont.italicSlantOffset", "com.schriftgestaltung.customParameter.GSFont.uniqueID")
             libsetto = {"com.schriftgestaltung.customParameter.GSFont.disablesAutomaticAlignment": True,
                             "com.schriftgestaltung.customParameter.GSFont.disablesLastChange": True}
             libwarnifnot = {"com.schriftgestaltung.customParameter.GSFont.useNiceNames": False}

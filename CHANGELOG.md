@@ -14,6 +14,7 @@ General updates for new year, 2024
 
 ### Changed
 
+- Added `com.schriftgestaltung.customParameter.GSFont.uniqueID` to the list of lib.plist keys removed in normalization, and also added it to the list of lib keys deleted by psfglyphs2ufo as glyphsLib now directly creates that custom parameter from the `openTypeNameUniqueID` in fontinfo.plist (1.8.1.dev7)
 - Disable code for Unicode Variation Sequences since the ufo2ft library now handles this (1.8.1.dev6)
 - Handle CJK variants of ASCII characters in FTML builder that have
 the same base glyph name (that is, with no extension) as the ASCII base glyph name. (1.8.1.dev2)

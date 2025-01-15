@@ -41,6 +41,7 @@ def doit(args):
                           "com.schriftgestaltung.customParameter.GSFont.designer",
                           "com.schriftgestaltung.customParameter.GSFont.manufacturer",
                           "com.schriftgestaltung.customParameter.GSFont.note",
+                          "com.schriftgestaltung.customParameter.GSFont.uniqueID",
                           "com.schriftgestaltung.customParameter.GSFont.Axes",
                           "com.schriftgestaltung.customParameter.GSFont.Axis Mappings",
                           "com.schriftgestaltung.customParameter.GSFontMaster.Master Name"),
