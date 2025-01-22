@@ -53,7 +53,6 @@ PROFILE = {
             "name/family_and_style_max_length",
             "name/no_copyright_on_description",
             "nested_components",
-            "no_debugging_tables",
             "notofonts/cmap/unexpected_subtables",
             "notofonts/unicode_range_bits",
             "opentype/caret_slope",
@@ -104,7 +103,6 @@ PROFILE = {
             "unwanted_aat_tables",
             "unwanted_tables",
             "valid_glyphnames",
-            "vttclean",
             "whitespace_glyphs",
             "whitespace_ink",
             "whitespace_widths"
@@ -127,8 +125,6 @@ PROFILE = {
             "name/italic_names",
             "name_length_req",
             "no_mac_entries",
-            "notofonts/cmap/unexpected_subtables",
-            "notofonts/unicode_range_bits",
             "opentype/xavgcharwidth",
             "rupee",
             "smallcaps_before_ligatures",
@@ -225,7 +221,6 @@ PROFILE = {
             "googlefonts/repo/sample_image",
             "googlefonts/repo/upstream_yaml_has_required_fields",
             "googlefonts/repo/vf_has_static_fonts",
-            "googlefonts/repo/zip_files",
             "googlefonts/weightclass",
             "googlefonts/vendor_id",
             "googlefonts/version_bump",
@@ -268,9 +263,10 @@ PROFILE = {
          ],
         "New checks from 0.13.X/January 2025": [
             "STAT_strings",
-            "base_has_width",
             "googlefonts/metadata/parses",
-            "opentype/weight_class_fvar"
+            "opentype/weight_class_fvar", 
+            "typographic_family_name",
+            "cmap/format_12"
          ],
     },
     "overrides": {
