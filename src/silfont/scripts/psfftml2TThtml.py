@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 '''Build fonts for all combinations of TypeTuner features needed for specific ftml then build html that uses those fonts'''
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2019 SIL International  (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2019-2025, SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'Bob Hallissy'
 

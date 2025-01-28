@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 __doc__ = 'Display name fields and other bits for linking fonts into families'
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2021 SIL International (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2021-2025, SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'Bobby de Vos'
 

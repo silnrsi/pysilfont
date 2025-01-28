@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 '''Expands an unclosed UFO stroke font into monoline forms with a fixed width'''
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2017 SIL International (https://www.sil.org), based on outlinerRoboFontExtension Copyright (c) 2016 Frederik Berlaen'
+__copyright__ = 'Copyright (c) 2017-2025, SIL Global (https://www.sil.org), based on outlinerRoboFontExtension Copyright (c) 2016 Frederik Berlaen'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'Victor Gaultney'
 

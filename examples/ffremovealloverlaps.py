@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 'FontForge: Remove overlap on all glyphs in font'
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2015 SIL International (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2015-2025, SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'Victor Gaultney'
 

@@ -3,7 +3,7 @@ __doc__ = '''Add public.postscriptNames to lib.plist based on a csv file in one 
     - simple glyphname, postscriptname with no headers
     - with headers, where the headers for glyph name and postscript name "glyph_name" and "ps_name"'''
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2015 SIL International (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2015-2025, SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 

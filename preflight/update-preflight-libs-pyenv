@@ -1,7 +1,7 @@
 #!/bin/sh
 # Update preflight libs (assumes a pyenv approach)
 
-# Copyright (c) 2023, SIL International  (https://www.sil.org)
+# Copyright (c) 2023-2025, SIL Global (https://www.sil.org)
 # Released under the MIT License (https://opensource.org/licenses/MIT)
 # maintained by Nicolas Spalinger
 

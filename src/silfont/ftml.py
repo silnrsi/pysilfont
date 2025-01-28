@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 'Classes and functions for use handling FTML objects in pysilfont scripts'
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2016 SIL International (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2016-2025, SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 

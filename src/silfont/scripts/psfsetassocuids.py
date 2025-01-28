@@ -2,7 +2,7 @@
 __doc__ = '''Add associate UID info to glif lib based on a csv file
 - Could be one value for variant UIDs and multiple for ligatures'''
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2015 SIL International (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2015-2025, SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 

@@ -2,7 +2,7 @@
 __doc__ = '''Write mapping of glyph name to postscript name to a csv file
 - csv format glyphname,postscriptname'''
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2016 SIL International (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2016-2025, SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 

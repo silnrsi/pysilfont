@@ -28,7 +28,7 @@ To try this with the Harmattan font project:
        and launch tests/DiacTest-dev.ftml in a browser.
 '''
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2018,2021 SIL International  (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2018-2025, SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'Bob Hallissy'
 

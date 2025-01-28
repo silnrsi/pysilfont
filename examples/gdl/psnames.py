@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 'Glyph name analyser to create GDL names from AGL type names'
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2012 SIL International (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2012-2025, SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 
 import re

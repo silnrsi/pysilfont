@@ -6,10 +6,10 @@ build-backend = "setuptools.build_meta"
 name = "silfont"
 version = "1.8.1.dev7"
 # (also manually bump version in src/silfont/__init__.py)
-authors = [{name = "SIL International", email = "fonts@sil.org"}]
+authors = [{name = "SIL Global", email = "fonts@sil.org"}]
 readme = "README.md"
 license = {file = "LICENSE"}
-description = "A growing collection of font utilities in Python to help with font design and production. Developed and maintained by SIL International's WSTech team (formerly NRSI)."
+description = "A growing collection of font utilities in Python to help with font design and production. Developed and maintained by SIL Global's WSTech team (formerly NRSI)."
 classifiers = [
    "Environment :: Console",
    "Programming Language :: Python :: 3.8",
