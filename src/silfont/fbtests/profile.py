@@ -250,7 +250,6 @@ PROFILE = {
             "shaping/regression",
             "smart_dropout",
             "soft_dotted",
-            "soft_hyphen",
             "superfamily/list",
             "superfamily/vertical_metrics",
             "ufo_consistent_curve_type",
@@ -265,7 +264,6 @@ PROFILE = {
             "STAT_strings",
             "googlefonts/metadata/parses",
             "opentype/weight_class_fvar", 
-            "typographic_family_name",
             "cmap/format_12"
          ],
     },
