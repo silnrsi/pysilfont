@@ -14,6 +14,10 @@ General updates for new year, 2024
 
 ### Changed
 
+- Updated copyright headers to reflect change to SIL Global, made them consistent (1.8.1.dev8)
+- Updated copyright year to include 2025 (1.8.1.dev7)
+- Added `com.schriftgestaltung.customParameter.GSFont.uniqueID` to the list of lib.plist keys removed in normalization, and also added it to the list of lib keys deleted by psfglyphs2ufo as glyphsLib now directly creates that custom parameter from the `openTypeNameUniqueID` in fontinfo.plist (1.8.1.dev7)
+- Disable code for Unicode Variation Sequences since the ufo2ft library now handles this (1.8.1.dev6)
 - Handle CJK variants of ASCII characters in FTML builder that have
 the same base glyph name (that is, with no extension) as the ASCII base glyph name. (1.8.1.dev2)
 - Updated ttfchecks.py to match changes in Font Bakery checks (1.8.1.dev3)
@@ -30,6 +34,8 @@ the same base glyph name (that is, with no extension) as the ASCII base glyph na
 - Removed all feax-related code, docs and tests as everything is now moved to feaxlib
 - Removed `com.fontlab.v2.tth` from list of lib.plist keys removed in normalization
 - Disabled explicit setting of `openTypeOS2WidthClass` in normalization
+- Removed `openTypeGaspRangeRecords` from list of fontinfo.plist keys removed in normalization
+- In `gfr.py` change all Warnings to Errors
 
 ### Removed
 

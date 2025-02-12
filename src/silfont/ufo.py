@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 'Classes and functions for use handling Ufont UFO font objects in pysilfont scripts'
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2015 SIL International (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2015-2025, SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
@@ -356,7 +356,7 @@ class Ufont(object):
                            "styleMapStyleName": ("regular", "bold", "italic", "bold italic")},
             fiwarnifpresent = ("note",)
             fidel = ("macintoshFONDFamilyID", "macintoshFONDName", "openTypeNameCompatibleFullName",
-                     "openTypeGaspRangeRecords", "openTypeHheaCaretOffset",
+                     "openTypeHheaCaretOffset",
                      "openTypeOS2FamilyClass", "postscriptForceBold", "postscriptIsFixedPitch",
                      "postscriptBlueFuzz", "postscriptBlueScale", "postscriptBlueShift", "postscriptWeightName",
                      "year")
@@ -373,7 +373,7 @@ class Ufont(object):
             fisetto = {"openTypeHheaLineGap": 0, "openTypeOS2TypoLineGap": 0,
                        "openTypeOS2Selection": [7], "openTypeOS2Type": []} # Other values are added below
 
-            libdel = ("com.typemytype.robofont.italicSlantOffset")
+            libdel = ("com.typemytype.robofont.italicSlantOffset", "com.schriftgestaltung.customParameter.GSFont.uniqueID")
             libsetto = {"com.schriftgestaltung.customParameter.GSFont.disablesAutomaticAlignment": True,
                             "com.schriftgestaltung.customParameter.GSFont.disablesLastChange": True}
             libwarnifnot = {"com.schriftgestaltung.customParameter.GSFont.useNiceNames": False}

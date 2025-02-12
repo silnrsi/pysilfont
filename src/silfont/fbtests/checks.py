@@ -1,6 +1,6 @@
 """
 SIL checks <https://software.sil.org/fonts/>
-for version 0.12.10+
+for version 0.13.0+
 """
 # pylint: disable=line-too-long  # This is data, not code
 
@@ -24,7 +24,7 @@ from fontbakery.testable import CheckRunContext, Font
 
 
 @check(
-    id="org.sil.software/check/name/version_format",
+    id="silfonts/name/version_format",
     rationale="""SIL follows their own versionning scheme,
         Based on com.google.fonts/check/name/version_format but:
         - Checks for two valid formats:
@@ -35,7 +35,7 @@ from fontbakery.testable import CheckRunContext, Font
         """,
     proposal="https://github.com/silnrsi/pysilfont/issues",
 )
-def org_sil_software_version_format(ttFont):
+def silfonts_name_version_format(ttFont):
     "Is the version format correct in the 'name' table?"
 
     from fontbakery.utils import get_name_entry_strings
@@ -67,11 +67,11 @@ def org_sil_software_version_format(ttFont):
 
 
 @check(
-    id="org.sil.software/check/whitespace_widths",
+    id="silfonts/whitespace_widths",
     rationale="Whitespace characters must be following best practise",
     proposal="https://github.com/silnrsi/pysilfont/issues",
     )
-def org_sil_software_whitespace_widths(ttFont):
+def silfonts_whitespace_widths(ttFont):
     """Are widths of whitespace characters in the font best practice?"""
     from fontbakery.utils import get_glyph_name
 
@@ -216,11 +216,11 @@ def org_sil_software_whitespace_widths(ttFont):
 
 
 @check(
-    id="org.sil.software/check/number_widths",
+    id="silfonts/number_widths",
     rationale="Widths of latin digits 0-9 must be equal and match figure space",
     proposal="https://github.com/silnrsi/pysilfont/issues",
     )
-def org_sil_software_number_widths(ttFont, config):
+def silfonts_number_widths(ttFont, config):
     """Are widths of latin digits 0-9 equal and match figure space"""
     from fontbakery.utils import get_glyph_name
 
@@ -292,11 +292,11 @@ def org_sil_software_number_widths(ttFont, config):
 
 
 @check(
-    id='org.sil.software/check/FONTLOG',
+    id='silfonts/repo/FONTLOG',
     rationale="Although optional, we recommend you have a FONTLOG.txt file in your font project",
     proposal="https://github.com/silnrsi/pysilfont/issues",
     )
-def org_sil_software_fontlog(family_directory):
+def silfonts_repo_fontlog(family_directory):
     """Is the FONTLOG.txt file present?"""
 
     import os
@@ -312,11 +312,11 @@ def org_sil_software_fontlog(family_directory):
 
 
 @check(
-    id="org.sil.software/check/is_OFL_FAQ_present_and_current",
+    id="silfonts/repo/is_OFL_FAQ_present_and_current",
     rationale="Although optional, we recommend to have the current version of the OFL-FAQ in your font project",
     proposal="https://github.com/silnrsi/pysilfont/issues",
     )
-def org_sil_software_check_is_ofl_faq_present_and_current(family_directory):
+def silfonts_repo_is_ofl_faq_present_and_current(family_directory):
     """Is OFL-FAQ.txt present and current?"""
 
     import os
@@ -340,11 +340,11 @@ def org_sil_software_check_is_ofl_faq_present_and_current(family_directory):
 
 
 @check(
-    id="org.sil.software/check/repo/is_OFL_URL_current",
+    id="silfonts/repo/is_OFL_URL_current",
     rationale="In November 2023 a new OFL website was set up, you should use the new URL but the old one will redirect",
     proposal="https://github.com/silnrsi/pysilfont/issues",
     )
-def org_sil_software_check_repo_is_ofl_url_current(family_directory):
+def silfonts_repo_is_ofl_url_current(family_directory):
     """Is the OFL URL current?"""
 
     import os
@@ -362,11 +362,11 @@ def org_sil_software_check_repo_is_ofl_url_current(family_directory):
 
 
 @check(
-    id="org.sil.software/check/repo/executable_bits",
+    id="silfonts/repo/executable_bits",
     rationale="Various script files should have the expected execute bits, so they can be ran separately, text files should not have execute bits",
     proposal="https://github.com/silnrsi/pysilfont/issues",
     )
-def org_sil_software_check_repo_unneeded_exe_bits(family_directory):
+def silfonts_repo_executable_bits(family_directory):
     """Are all the basic script files executable?"""
 
     import os

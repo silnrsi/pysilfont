@@ -2,7 +2,7 @@
 __doc__ = '''Assign new working names to glyphs based on csv input file
 - csv format oldname,newname'''
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2017 SIL International (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2017-2025, SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'Bob Hallissy'
 
@@ -39,10 +39,12 @@ def doit(args) :
     secondarylayers = [x for x in font.layers if x.layername != "public.default"]
 
     # Obtain lib.plist glyph order(s) and psnames if they exist:
-    publicGlyphOrder = csGlyphOrder = psnames = displayStrings = None
+    publicGlyphOrder = publicOpenTypeCategories = csGlyphOrder = psnames = displayStrings = None
     if hasattr(font, 'lib'):
         if 'public.glyphOrder' in font.lib:
             publicGlyphOrder = font.lib.getval('public.glyphOrder')     # This is an array
+        if 'public.openTypeCategories' in font.lib:
+            publicOpenTypeCategories = font.lib.getval('public.openTypeCategories')     # This is an array
         if 'com.schriftgestaltung.glyphOrder' in font.lib:
             csGlyphOrder = font.lib.getval('com.schriftgestaltung.glyphOrder') # This is an array
         if 'public.postscriptNames' in font.lib:
@@ -65,9 +67,10 @@ def doit(args) :
     #      and put relevant details in saveforlater[]
 
     saveforlaterFont = []   # For the font itself
-    saveforlaterPGO = []    # For public.GlyphOrder
+    saveforlaterPGO = []    # For public.glyphOrder
     saveforlaterCSGO = []   # For GlyphsApp GlyphOrder (com.schriftgestaltung.glyphOrder)
     saveforlaterPSN = []    # For public.postscriptNames
+    saveforlaterPOTC = []   # for public.openTypeCategories
     deletelater = []        # Glyphs we'll delete after merging
 
     for r in incsv:
@@ -174,6 +177,23 @@ def doit(args) :
                 psnames[tempname] = psnames.pop(oldname)
                 saveforlaterPSN.append( (tempname, oldname, newname))
 
+        # And for public.openTypeCategories
+        if publicOpenTypeCategories:
+            if oldname not in publicOpenTypeCategories:
+                logger.log("glyph name not in publicOpenTypeCategories: " + oldname , "I")
+            elif newname not in publicOpenTypeCategories:
+                publicOpenTypeCategories[newname] = publicOpenTypeCategories.pop(oldname)
+                nameMap[oldname] = newname
+                logger.log("Pass 1 (POTC): Renamed %s to %s" % (oldname, newname), "I")
+            elif mergemode:
+                del publicOpenTypeCategories[oldname]
+                nameMap[oldname] = newname
+                logger.log("Pass 1 (POTC): Removed %s (now using %s)" % (oldname, newname), "I")
+            else:
+                tempname = gettempname(lambda n: n not in publicOpenTypeCategories)
+                publicOpenTypeCategories[tempname] = publicOpenTypeCategories.pop(oldname)
+                saveforlaterPOTC.append( (tempname, oldname, newname))
+
     # Second pass: now we can reprocess those things we saved for later:
     #    If the new glyphname is no longer present, we can complete the renaming
     #    Otherwise we've got a fatal error
@@ -223,6 +243,16 @@ def doit(args) :
             nameMap[oldname] = newname
             logger.log("Pass 2 (psn): Renamed %s to %s" % (oldname, newname), "I")
 
+    for tempname, oldname, newname in saveforlaterPOTC:
+        if newname in psnames:
+            # Ok, this really is a problem
+            logger.log("Glyph %s already in public.openTypeCategories; can't rename %s" % (newname, oldname), "E")
+            failerrors += 1
+        else:
+            publicOpenTypeCategories[newname] = publicOpenTypeCategories.pop(tempname)
+            nameMap[oldname] = newname
+            logger.log("Pass 2 (POTC): Renamed %s to %s" % (oldname, newname), "I")
+
     # Rebuild font structures from the modified lists we have:
 
     # Rebuild glyph order elements:
@@ -245,6 +275,14 @@ def doit(args) :
             ET.SubElement(dict, "key").text = n
             ET.SubElement(dict, "string").text = psnames[n]
         font.lib.setelem("public.postscriptNames", dict)
+
+    # Rebuild public.openTypeCategories:
+    if publicOpenTypeCategories:
+        dict = ET.Element("dict")
+        for n in publicOpenTypeCategories:
+            ET.SubElement(dict, "key").text = n
+            ET.SubElement(dict, "string").text = publicOpenTypeCategories[n]
+        font.lib.setelem("public.openTypeCategories", dict)
 
     # Iterate over all glyphs, and fix up any components that reference renamed glyphs
     for layer in font.layers:

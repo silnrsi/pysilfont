@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 __doc__ = '''General classes and functions for use with SIL's github fonts repository, github.com/silnrsi/fonts'''
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2022 SIL International (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2022-2025, SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
@@ -64,13 +64,13 @@ class _familydata(object):
     def fieldscheck(self, data, validfields, reqfields, logprefix, valid, logs):
         for key in data: # Check all keys have valid names
             if key not in validfields:
-                logs.append((f'{logprefix}: Invalid field "{key}"', 'W'))
+                logs.append((f'{logprefix}: Invalid field "{key}"', 'E'))
                 valid = False
                 continue
         # Are required fields present
         for key in reqfields:
             if key not in data:
-                logs.append((f'{logprefix}: Required field "{key}" missing', 'W'))
+                logs.append((f'{logprefix}: Required field "{key}" missing', 'E'))
                 valid = False
                 continue
         return (valid, logs)
@@ -170,7 +170,7 @@ class gfr_manifest(_familydata):
                 logs.append(('Files OK', 'I'))
             else:
                 valid = False
-                logs.append(('Files on disk and in manifest do not match.', 'W'))
+                logs.append(('Files on disk and in manifest do not match.', 'E'))
                 logs.append(('Files on disk:', 'I'))
                 for filen in sorted(dfilelist):
                     logs.append((f'     {dfilelist[filen]}', 'I'))
@@ -189,7 +189,7 @@ class gfr_manifest(_familydata):
                     logs.append(('Defaults OK', 'I'))
                 else:
                     valid = False
-                    logs.append(('At least one default missing', 'W'))
+                    logs.append(('At least one default missing', 'E'))
 
         if version:
             if "version" in data:
@@ -198,7 +198,7 @@ class gfr_manifest(_familydata):
                     logs.append(('Versions OK', 'I'))
                 else:
                     valid = False
-                    logs.append((f'Version mismatch: {version} supplied and {mversion} in manifest', "W"))
+                    logs.append((f'Version mismatch: {version} supplied and {mversion} in manifest', "E"))
 
         return (valid, logs)
 

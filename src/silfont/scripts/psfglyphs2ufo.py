@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 __doc__ = '''Export fonts in a GlyphsApp file to UFOs'''
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2017 SIL International (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2017-2025, SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'Victor Gaultney'
 
@@ -41,6 +41,7 @@ def doit(args):
                           "com.schriftgestaltung.customParameter.GSFont.designer",
                           "com.schriftgestaltung.customParameter.GSFont.manufacturer",
                           "com.schriftgestaltung.customParameter.GSFont.note",
+                          "com.schriftgestaltung.customParameter.GSFont.uniqueID",
                           "com.schriftgestaltung.customParameter.GSFont.Axes",
                           "com.schriftgestaltung.customParameter.GSFont.Axis Mappings",
                           "com.schriftgestaltung.customParameter.GSFontMaster.Master Name"),

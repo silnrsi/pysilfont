@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 __doc__ = '''Sync metadata across a family of fonts assuming standard UFO file naming'''
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2017 SIL International (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2017-2025, SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 

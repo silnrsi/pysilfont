@@ -5,7 +5,7 @@
         This could be different versions of makeGdl
    - a csv mapping glyph names used in original ttf to those in the new font '''
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2016 SIL International (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2016-2025, SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 

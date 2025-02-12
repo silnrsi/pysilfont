@@ -45,7 +45,7 @@ The following sections work through this, using psfnormalize, which normalizes a
 '''Normalize a UFO and optionally convert between UFO2 and UFO3.
 - If no options are chosen, the output font will simply be a normalized version of the font.'''
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2015 SIL International (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2015-2025, SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
@@ -73,7 +73,7 @@ Sample headers:
 '''Normalize a UFO and optionally convert between UFO2 and UFO3.
 - If no options are chosen, the output font will simply be a normalized version of the font.'''
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2015 SIL International (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2015 SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 ```
@@ -184,13 +184,13 @@ Messages are sent using
 logger.log(<message text>, [severity level]>
 ```
 Where severity level has a default value of W and can be set to one of:
-- X	Exception - For fatal programming errors
-- S	Severe - For fatal errors - eg input file missing
-- E	Errors - For serious errors that must be reported to screen
-- P	Progress - Progress messages
-- W	Warning - General warnings about anything not correct
-- I	Info - For more detailed reporting - eg the name of each glif file opened
-- V	Verbose - For even more messages!
+- X Exception - For fatal programming errors
+- S Severe - For fatal errors - eg input file missing
+- E Errors - For serious errors that must be reported to screen
+- P Progress - Progress messages
+- W Warning - General warnings about anything not correct
+- I Info - For more detailed reporting - eg the name of each glif file opened
+- V Verbose - For even more messages!
 
 Errors are reported to screen if the severity level is higher or equal to logger.scrlevel (default P) and to log based on loglevel (default W).  The defaults for these can be set via parameters or within a script, if needed.
 

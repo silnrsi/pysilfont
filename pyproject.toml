@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "silfont"
-version = "1.8.1.dev5"
+version = "1.8.1.dev8"
 # (also manually bump version in src/silfont/__init__.py)
-authors = [{name = "SIL International", email = "fonts@sil.org"}]
+authors = [{name = "SIL Global", email = "fonts@sil.org"}]
 readme = "README.md"
 license = {file = "LICENSE"}
-description = "A growing collection of font utilities in Python to help with font design and production. Developed and maintained by SIL International's WSTech team (formerly NRSI)."
+description = "A growing collection of font utilities in Python to help with font design and production. Developed and maintained by SIL Global's WSTech team (formerly NRSI)."
 classifiers = [
    "Environment :: Console",
    "Programming Language :: Python :: 3.8",
@@ -43,7 +43,7 @@ git = [
 "fontParts @ git+https://github.com/robotools/fontParts",
 "fonttools @ git+https://github.com/fonttools/fonttools",
 "fontbakery @ git+https://github.com/fonttools/fontbakery",
-"glyphsLib @ git+https://github.com/googlefonts/GlyphsLib",
+"glyphsLib @ git+https://github.com/googlefonts/glyphsLib",
 "ufo2ft @ git+https://github.com/googlei18n/ufo2ft",
 "tabulate",
 "lxml",

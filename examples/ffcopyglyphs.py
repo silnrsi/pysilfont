@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''FontForge: Copy glyphs from one font to another, without using ffbuilder'''
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2015-2019 SIL International (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2015-2025, SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'Martin Hosken'
 
