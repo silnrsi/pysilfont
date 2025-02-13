@@ -34,7 +34,7 @@ def doit(args):
     keylists = {
 
         "librestorekeys": ["org.sil.pysilfontparams", "org.sil.altLineMetrics", "org.sil.lcg.toneLetters",
-                   "org.sil.lcg.transforms", "public.glyphOrder", "public.postscriptNames",
+                   "org.sil.lcg.transforms", "public.glyphOrder", "public.postscriptNames", "public.unicodeVariationSequences",
                    "com.schriftgestaltung.disablesLastChange", "com.schriftgestaltung.disablesAutomaticAlignment",
                    "public.skipExportGlyphs"],
         "libdeletekeys": ("com.schriftgestaltung.customParameter.GSFont.copyright",

@@ -14,6 +14,7 @@ General updates for new year, 2024
 
 ### Changed
 
+- Preserve Unicode Variation Sequences on UFO/GlyphsApp roundtrip (1.8.1.dev9)
 - Updated copyright headers to reflect change to SIL Global, made them consistent (1.8.1.dev8)
 - Updated copyright year to include 2025 (1.8.1.dev7)
 - Added `com.schriftgestaltung.customParameter.GSFont.uniqueID` to the list of lib.plist keys removed in normalization, and also added it to the list of lib keys deleted by psfglyphs2ufo as glyphsLib now directly creates that custom parameter from the `openTypeNameUniqueID` in fontinfo.plist (1.8.1.dev7)
