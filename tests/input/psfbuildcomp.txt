@@ -1,4 +1,4 @@
-# Copyright (c) 2008-2015, SIL International (https://www.sil.org) with Reserved Font Names 'Andika' and 'SIL'.
+# Copyright (c) 2008-2015, SIL Global (https://www.sil.org) with Reserved Font Names 'Andika' and 'SIL'.
 # This Font Software is licensed under the SIL Open Font License, Version 1.1 (https://openfontlicense.org)
 # and is from the Andika Mtihani project (https://github.com/silnrsi/font-andika-mtihani)
 

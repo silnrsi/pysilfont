@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ttFont sfntVersion="\x00\x01\x00\x00" ttLibVersion="4.53">
+<ttFont sfntVersion="\x00\x01\x00\x00" ttLibVersion="4.56">
 
   <GlyphOrder>
     <!-- The 'id' attribute is only for humans; it is ignored when parsed. -->
@@ -123,12 +123,12 @@
     <!-- Most of this table will be recalculated by the compiler -->
     <tableVersion value="1.0"/>
     <fontRevision value="5.55"/>
-    <checkSumAdjustment value="0xbd64af55"/>
+    <checkSumAdjustment value="0xb974f481"/>
     <magicNumber value="0x5f0f3cf5"/>
     <flags value="00000000 00000011"/>
     <unitsPerEm value="2048"/>
     <created value="Fri Jan  1 11:00:00 2021"/>
-    <modified value="Tue Feb 20 19:56:40 2024"/>
+    <modified value="Wed Feb 12 17:24:50 2025"/>
     <xMin value="-995"/>
     <yMin value="-505"/>
     <xMax value="2015"/>
@@ -149,7 +149,7 @@
     <minLeftSideBearing value="-995"/>
     <minRightSideBearing value="-55"/>
     <xMaxExtent value="2015"/>
-    <caretSlopeRise value="1"/>
+    <caretSlopeRise value="2048"/>
     <caretSlopeRun value="0"/>
     <caretOffset value="0"/>
     <reserved0 value="0"/>
@@ -214,7 +214,7 @@
     <ulUnicodeRange2 value="01010010 00000000 11100001 11111010"/>
     <ulUnicodeRange3 value="00000010 00000000 00000000 00101001"/>
     <ulUnicodeRange4 value="00000000 00000000 00000000 00000000"/>
-    <achVendID value="SIL\x00"/>
+    <achVendID value="SIL "/>
     <fsSelection value="00000000 01000000"/>
     <usFirstCharIndex value="32"/>
     <usLastCharIndex value="9676"/>
@@ -4579,7 +4579,7 @@
       Regular
     </namerecord>
     <namerecord nameID="3" platformID="3" platEncID="1" langID="0x409">
-      SIL International: Psf Test Regular: 2024
+      SIL International: Psf Test Regular: 2025
     </namerecord>
     <namerecord nameID="4" platformID="3" platEncID="1" langID="0x409">
       Psf Test

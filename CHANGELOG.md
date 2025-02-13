@@ -14,6 +14,7 @@ General updates for new year, 2024
 
 ### Changed
 
+- Updated pytest test data for 2025 and change to SIL Global (1.8.1.dev10)
 - Preserve Unicode Variation Sequences on UFO/GlyphsApp roundtrip (1.8.1.dev9)
 - Updated copyright headers to reflect change to SIL Global, made them consistent (1.8.1.dev8)
 - Updated copyright year to include 2025 (1.8.1.dev7)

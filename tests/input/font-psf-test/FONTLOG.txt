@@ -165,7 +165,7 @@ D: Graphite, OpenType, and TypeTuner code, and build support
 
 
 The Andika, Andika Basic and Andika New Basic fonts are maintained by
-SIL International.
+SIL Global.
 
 For more information please visit the Andika page on SIL
 International's Computers and Writing Systems website:

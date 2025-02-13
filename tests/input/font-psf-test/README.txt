@@ -5,7 +5,7 @@ Andika
 (see FONTLOG.txt for information on the Psf Test family)
 
 Thank you for your interest in Andika ("Write!" in Swahili), a
-Unicode-compliant sans serif font designed by SIL International
+Unicode-compliant sans serif font designed by SIL Global
 primarily for literacy use.
 
 Andika supports a wide range of Latin and Cyrillic characters.
@@ -80,7 +80,7 @@ that provide an adequate level of support for SIL Unicode Roman fonts"
 
 CONTACT
 ========
-For more information please visit the Andika page on SIL International's
+For more information please visit the Andika page on SIL Global's
 Computers and Writing systems website:
 https://scripts.sil.org/andika
 

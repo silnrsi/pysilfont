@@ -37,4 +37,4 @@ E: https://scripts.sil.org/support
 W: https://scripts.sil.org/
 D: Graphite, OpenType, and TypeTuner code, and build support
 
-The Pysilfont test font is maintained by SIL International.
+The Pysilfont test font is maintained by SIL Global.

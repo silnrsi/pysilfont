@@ -1,6 +1,6 @@
 ﻿OFL FAQ - Frequently Asked Questions about the SIL Open Font License (OFL)
 Version 1.1-update7 - November 2023
-The OFL FAQ is Copyright (c) 2005-2023, SIL International (https://www.sil.org)
+The OFL FAQ is Copyright (c) 2005-2023, SIL Global (https://www.sil.org)
 Everyone is permitted to copy and distribute verbatim copies of this license document, but changing it is not allowed.
 (See https://openfontlicense.org/ofl-faq for updates)
 
@@ -322,14 +322,14 @@ No. The Copyright Holder(s) still retain(s) all the rights to their creation; th
 The OFL is a worldwide license based on international copyright agreements and conventions. It is not a contract and so does not require you to sign it to have legal validity. By using, modifying and redistributing components under the OFL you indicate that you accept the license.
 
 8.4  I really like the terms of the OFL, but want to change it a little. Am I allowed to take ideas and actual wording from the OFL and put them into my own custom license for distributing my fonts?
-We strongly recommend against creating your very own unique open licensing model. Using a modified or derivative license will likely cut you off - along with the font(s) under that license - from the community of designers using the OFL, potentially expose you and your users to legal liabilities, and possibly put your work and rights at risk. The OFL went though a community and legal review process that took years of effort, and that review is only applicable to an unmodified OFL. The text of the OFL has been written by SIL (with review and consultation from the community) and is copyright (c) 2005-2023 SIL International. You may re-use the ideas and wording (in part, not in whole) in another non-proprietary license provided that you call your license by another unambiguous name, that you do not use the preamble, that you do not mention SIL and that you clearly present your license as different from the OFL so as not to cause confusion by being too similar to the original. If you feel the OFL does not meet your needs for an open license, please contact us.
+We strongly recommend against creating your very own unique open licensing model. Using a modified or derivative license will likely cut you off - along with the font(s) under that license - from the community of designers using the OFL, potentially expose you and your users to legal liabilities, and possibly put your work and rights at risk. The OFL went though a community and legal review process that took years of effort, and that review is only applicable to an unmodified OFL. The text of the OFL has been written by SIL (with review and consultation from the community) and is copyright (c) 2005-2023 SIL Global. You may re-use the ideas and wording (in part, not in whole) in another non-proprietary license provided that you call your license by another unambiguous name, that you do not use the preamble, that you do not mention SIL and that you clearly present your license as different from the OFL so as not to cause confusion by being too similar to the original. If you feel the OFL does not meet your needs for an open license, please contact us.
 
 8.5  Can I quote from the OFL FAQ?
 Yes, SIL gives permission to quote from the OFL FAQ (OFL-FAQ.txt), in whole or in part, provided that the quoted text is:
 
 - unmodified,
 - used to help explain the intent of the OFL, rather than cause misunderstanding, and
-- accompanied with the following attribution: "From the OFL FAQ (OFL-FAQ.txt), copyright (c) 2005-2023 SIL International. Used by permission. https://openfontlicense.org/OFL-FAQ".
+- accompanied with the following attribution: "From the OFL FAQ (OFL-FAQ.txt), copyright (c) 2005-2023 SIL Global. Used by permission. https://openfontlicense.org/OFL-FAQ".
 
 8.6  Can I translate the license and the FAQ into other languages?
 SIL certainly recognises the need for people who are not familiar with English to be able to understand the OFL and its use. Making the license very clear and readable has been a key goal for the OFL, but we know that people understand their own language best.
@@ -338,7 +338,7 @@ If you are an experienced translator, you are very welcome to translate the OFL 
 
 SIL gives permission to publish unofficial translations into other languages provided that they comply with the following guidelines:
 
-Put the following disclaimer in both English and the target language stating clearly that the translation is unofficial: "This is an unofficial translation of the SIL Open Font License into <language_name>. It was not published by SIL International, and does not legally state the distribution terms for fonts that use the OFL. A release under the OFL is only valid when using the original English text. However, we recognize that this unofficial translation will help users and designers not familiar with English to better understand and use the OFL. We encourage designers who consider releasing their creation under the OFL to read the OFL-FAQ in their own language if it is available. Please go to https://openfontlicense.org for the official version of the license and the accompanying OFL-FAQ."
+Put the following disclaimer in both English and the target language stating clearly that the translation is unofficial: "This is an unofficial translation of the SIL Open Font License into <language_name>. It was not published by SIL Global, and does not legally state the distribution terms for fonts that use the OFL. A release under the OFL is only valid when using the original English text. However, we recognize that this unofficial translation will help users and designers not familiar with English to better understand and use the OFL. We encourage designers who consider releasing their creation under the OFL to read the OFL-FAQ in their own language if it is available. Please go to https://openfontlicense.org for the official version of the license and the accompanying OFL-FAQ."
 
 Keep your unofficial translation current and update it at our request if needed, for example if there is any ambiguity which could lead to confusion. If you start such an unofficial translation effort of the OFL and OFL-FAQ please let us know.
 
@@ -354,7 +354,7 @@ The OFL is pronounced as three individual letters /ˈɑː.əf.əl/ or OH-EFF-ELL
 
 9  ABOUT SIL INTERNATIONAL
 
-9.1  Who is SIL International and what do they do?
+9.1  Who is SIL Global and what do they do?
 SIL is a global, faith-based nonprofit that works with local communities around the world to develop language solutions that expand possibilities for a better life. SIL serves language communities worldwide, building their capacity for sustainable language development, by means of research, translation, training and materials development. SIL makes its services available to all without regard to religious belief, political ideology, gender, race, or ethnic background. SIL's members and volunteers share a Christian commitment.
 
 9.2  What does this have to do with font licensing?

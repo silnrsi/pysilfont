@@ -5,7 +5,7 @@ test_localufos so that "pytest local" or "pytest local/ufotests" will find and r
 It assumes setuplocalufotests had run cleanly, so minimal checking for validity of csv file
 '''
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2018 SIL International (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2018 SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
