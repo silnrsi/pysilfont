@@ -18,7 +18,12 @@ python3 -m pip install git+https://github.com/silnrsi/palaso-python
 python3 -m pip install git+https://github.com/typemytype/GlyphConstruction.git
 ```
 
+## install the deps
+```
+python3 -m pip install .[git]
+
+
 ## run the test suite:
 ```
-pytest
+pytest --full-trace -v 
 ```
