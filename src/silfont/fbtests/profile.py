@@ -136,11 +136,8 @@ PROFILE = {
         ],
         "New checks from 0.13.X/November/December 2024": [
             "caps_vertically_centered",
-            "color_cpal_brightness",
-            "googlefonts/colorfont_tables",
             "contour_count",
             "designspace_has_consistent_groups",
-            "empty_glyph_on_gid1_for_colrv0",
             "fontbakery_version",
             "freetype_rasterizer",
             "fvar_name_entries",
