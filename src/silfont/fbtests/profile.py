@@ -150,7 +150,6 @@ PROFILE = {
             "googlefonts/description/min_length",
             "googlefonts/description/urls",
             "googlefonts/description/valid_html",
-            "googlefonts/family/has_license",
             "googlefonts/gasp",
             "googlefonts/glyphsets/shape_languages",
             "googlefonts/has_ttfautohint_params",
