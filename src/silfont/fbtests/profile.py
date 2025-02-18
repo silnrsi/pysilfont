@@ -269,6 +269,13 @@ PROFILE = {
                 "reason": "this is not as severe as assessed in the original check for 0x00A0.",
             }
         ],
+        "contour_count": [
+            {
+                "code": "contour-count",
+                "status" : "INFO",
+                "reason" : "SIL trusts designers, is concerned only with 'no-contour' results",
+            }
+        ],
     },
     "configuration_defaults": {
         "file_size": {
