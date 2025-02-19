@@ -17,6 +17,7 @@ PROFILE = {
             "silfonts/repo/is_OFL_FAQ_present_and_current",
             "silfonts/repo/is_OFL_URL_current",
             "silfonts/whitespace_widths",
+            "silfonts/repo/new_preferred_dba_sil_global"
         ],
         "Font Bakery checks": [
             "adobefonts/family/consistent_upm",
