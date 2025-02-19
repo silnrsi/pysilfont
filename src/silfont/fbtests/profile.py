@@ -138,7 +138,6 @@ PROFILE = {
             "caps_vertically_centered",
             "contour_count",
             "designspace_has_consistent_groups",
-            "fontbakery_version",
             "freetype_rasterizer",
             "fvar_name_entries",
             "googlefonts/description/broken_links",
