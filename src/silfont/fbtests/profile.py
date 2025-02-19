@@ -251,12 +251,22 @@ PROFILE = {
                 "status": "PASS",
                 "reason": "some SIL fonts intentionally use decomposed outlines for Lcaron, dcaron, lcaron and tcaron."
             }
-            ],
+        ],
         "legacy_accents": [
             {
                 "code": "legacy-accent-components",
                 "status": "PASS",
                 "reason": "SIL disagrees with the premise of this check."
+            }
+        ],
+        "opentype/family_naming_recommendations": [
+            {
+                # bh: This override is experimental to see if it is too noisy:
+                # Change messages about name strings being too long from INFO to WARN
+                # so they show up in our fontbakery reports.
+                "code": "bad-entries",
+                "status": "WARN",
+                "reason": "change from INFO to WARN so it shows up in our build results."
             }
         ],
         "whitespace_glyphs": [
