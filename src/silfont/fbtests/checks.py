@@ -382,3 +382,25 @@ def silfonts_repo_executable_bits(family_directory):
                 file = os.path.join(root, file)  # get absolute path
                 if not os.access(file, os.X_OK):
                     yield WARN, Message("script-files-need-exec-bits", f"Script files found which still need the executable bit set: \n\n({file})")
+
+
+@check(
+    id="silfonts/repo/new_preferred_dba_sil_global",
+    rationale="The new preferred DBA (Doing Business AS) is SIL Global instead of SIL International.",
+    proposal="https://github.com/silnrsi/pysilfont/issues"
+    )
+def silfonts_repo_new_preferred_dba_sil_global(family_directory):
+    """Are we using the new preferred DBA: SIL Global?"""
+
+    import os
+    parent_path = os.path.abspath(os.path.join(family_directory, os.pardir))
+    ofl_file = os.path.join(parent_path, "OFL.txt")
+    with open(ofl_file, 'r', encoding='utf-8') as file:
+        data = file.read()
+        if "SIL International" in data:
+            yield WARN, Message(
+                "old-dba",
+                "A new preferred DBA (Doing Business AS) is in place: SIL Global. We should replace SIL International with this new DBA throughout the project files when making a new release",
+                )
+        else:
+            yield PASS, Message("ok", "The preferred new DBA (Doing Business AS) is used")
