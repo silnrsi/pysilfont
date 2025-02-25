@@ -283,6 +283,13 @@ PROFILE = {
                 "reason" : "SIL trusts designers, is concerned only with 'no-contour' results",
             }
         ],
+        "unwanted_tables": [
+            {
+                "code": "unwanted-tables",
+                "status" : "WARN",
+                "reason" : "It's fine to have a fontTools Debg table in your font when developing since it's very useful for debugging, just make sure it gets removed when making a release",
+            }
+        ],
     },
     "configuration_defaults": {
         "file_size": {
