@@ -64,6 +64,7 @@ argspec = [
     ('input_fea', {'help': 'Input fea file'}, {}),
     ('input_font', {'help': 'Input font file'}, {}),
     ('-o', '--output', {'help': 'Output font file'}, {}),
+    ('-d', '--debug', {'help': 'Add source-level debugging information in the Debg table', 'action': 'store_true', 'default': False}, {}),
     ('-v', '--verbose', {'help': 'Repeat to increase verbosity', 'action': 'count', 'default': 0}, {}),
     ('-m', '--lookupmap', {'help': 'File into which place lookup map'}, {}),
     ('-l','--log',{'help': 'Optional log file'}, {'type': 'outfile', 'def': '_buildfea.log', 'optlog': True}),
@@ -80,7 +81,7 @@ def doit(args) :
     if args.nohb:
         font.cfg.set("fontTools.ttLib.tables.otBase:USE_HARFBUZZ_REPACKER", False)
     builder = MyBuilder(font, args.input_fea, lateSortLookups=args.end, fronts=args.front)
-    builder.build()
+    builder.build(debug=args.debug)
     if args.lookupmap:
         with open(args.lookupmap, "w") as outf:
             for n, l in sorted(builder.named_lookups_.items()):
