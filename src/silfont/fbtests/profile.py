@@ -114,7 +114,6 @@ PROFILE = {
             "opentype/unwanted_aat_tables",
             "opentype/varfont/family_axis_ranges",
             "opentype/vendor_id",
-            "opentype/weight_class_fvar", 
             "opentype/xavgcharwidth",
             "os2_metrics_match_hhea",
             "ots",
