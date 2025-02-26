@@ -36,7 +36,7 @@ PROFILE = {
             "dotted_circle",
             "empty_letters",
             "family/single_directory",
-            "family_vertical_metrics",
+            "family/vertical_metrics",
             "file_size",
             "fontwerk/style_linking",
             "freetype_rasterizer",
