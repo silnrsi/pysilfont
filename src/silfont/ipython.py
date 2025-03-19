@@ -50,7 +50,7 @@ def _bbox(f, gnames, points, scale=1):
         if hasattr(points, '__len__') and i == len(points):
             points.append((bbox[2] / scale, 0))
         pt = points[i] if i < len(points) else (0, 0)
-        g = gset[gname]._glyph
+        g, o = gset[gname]._getGlyphAndOffset()
         if g is None or not hasattr(g, 'xMin') :
             gbox = (0, 0, 0, 0)
         else :
@@ -111,7 +111,7 @@ def displayGlyphs(f, gnames, points=None, scale=None):
     #return res
 
 def displayText(f, text, features = [], lang=None, dir="", script="", shapers="", size=0):
-    import harfbuzz
+    from silfont import harfbuzz
     glyphs = harfbuzz.shape_text(f, text, features, lang, dir, script, shapers)
     gnames = []
     points = []
