@@ -374,14 +374,15 @@ def silfonts_repo_executable_bits(family_directory):
     for root, dirs, files in os.walk(parent_path):
         for file in files:
             if file.endswith(".txt"):
-                file = os.path.join(root, file)  # get absolute path
+                file = os.path.join(root, file)
                 if os.access(file, os.X_OK):
-                    yield WARN, Message("text-files-no-need-exec-bits", f"Extra text files found that don't need executable bit set: \n\n({file})")
+                    yield WARN, Message("text-files-no-need-exec-bits", f"Extra text files found that don't need the executable bit set: \n\n({file})")
 
-            if file.startswith("pre") or file.startswith("make"):
-                file = os.path.join(root, file)  # get absolute path
-                if not os.access(file, os.X_OK):
-                    yield WARN, Message("script-files-need-exec-bits", f"Script files found which still need the executable bit set: \n\n({file})")
+            if file.startswith(("pre", "make")) or file.endswith((".sh", ".py")):
+                if not file.startswith(("_cache", "build", "makepsmd")) and not file.endswith(".log"):
+                    file = os.path.join(root, file)
+                    if not os.access(file, os.X_OK):
+                        yield WARN, Message("script-files-need-exec-bits", f"Script files found which still need the executable bit set: \n\n({file})")
 
 
 @check(
