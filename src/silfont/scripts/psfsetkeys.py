@@ -49,19 +49,15 @@ def doit(args) :
     # Use entire file contents to set the key
     if args.key and args.file:
         fh = codecs.open(args.file, 'r', 'utf-8')
-        contents = ''.join(fh.readlines())
+        contents = join_lines(fh.readlines())
         set_key_value(font_plist, args.key, contents)
         fh.close()
 
     # Use some of the file contents to set the key
     if args.key and args.filepart:
         fh = codecs.open(args.filepart, 'r', 'utf-8')
-        lines = list()
-        for line in fh:
-            if line == '\n':
-                break
-            lines.append(line)
-        contents = ''.join(lines)
+        first_line = fh.readlines()[0]
+        contents = first_line.strip()
         set_key_value(font_plist, args.key, contents)
         fh.close()
 
@@ -76,6 +72,56 @@ def doit(args) :
             set_key_value(font_plist, key, value)
 
     return font
+
+
+def join_lines(lines):
+    """Join lines into a single string.
+
+    Paragraphs should not have newlines in the middle of them.
+    To do this for OFL.txt (which is the file generally used with this script),
+    various special cases (involving & and ---) needed to be handled.
+    """
+
+    preprocessed_lines = []
+    for line in lines:
+        possible_heading = line.strip()
+        possible_heading = possible_heading.replace(' ', '')
+        possible_heading = possible_heading.replace('&', '')
+        is_heading = all(char.isupper() for char in possible_heading) or possible_heading.startswith('-')
+        if line == '\n':
+            # Blank lines are kept as they are
+            preprocessed_lines.append(line)
+        elif is_heading:
+            # Text with no lowercase letters is a heading
+            preprocessed_lines.append(line.strip() + '\u2028')
+        else:
+            preprocessed_lines.append(line)
+
+    # Create a single string from the lines
+    text = ''.join(preprocessed_lines).strip()
+
+    # Three newline characters are used to separate sections
+    text = text.replace('\n\n\n', '\u2028\u2029')
+
+    # A blank line after a heading is a slightly different section
+    text = text.replace('\u2028\n', '\u2028\u2028')
+
+    # Two newline characters are used to separate paragraphs
+    text = text.replace('\n\n', '\u2029')
+
+    # Remove newlines in the middle of paragraphs
+    text = text.replace('\n', ' ')
+
+    # No trailing spaces at the end of paragraphs
+    text = text.replace(' ---', '\n---')
+    text = text.replace(' \u2029', '\u2029')
+
+    # Use newlines in the final text
+    text = text.replace('\u2028', '\n')
+    text = text.replace('\u2029', '\n\n')
+
+    return text
+
 
 def set_key_value(font_plist, key, value):
     """Set key to value in font."""
