@@ -1,7 +1,7 @@
 __url__ = 'https://github.com/silnrsi/pysilfont'
 __copyright__ = 'Copyright (c) 2024-2025, SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
-__author__ = 'David Raymond'
+__author__ = 'David Raymond, Bob Hallissy, Nicolas Spalinger'
 """
 SIL fontbakery profile for version 0.13.3+
 """
@@ -155,7 +155,12 @@ PROFILE = {
             "vtt_volt_data",
             "whitespace_glyphs",
             "whitespace_ink",
-            "whitespace_widths"
+            "whitespace_widths",
+            "base_has_width",
+            "microsoft/copyright",
+            "microsoft/vertical_metrics",
+            "typenetwork/family/equal_numbers_of_glyphs",
+            "typenetwork/vertical_metrics"
          ],
     },
     "overrides": {
