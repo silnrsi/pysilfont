@@ -42,7 +42,6 @@ git = [
 "fontMath @ git+https://github.com/robotools/fontMath",
 "fontParts @ git+https://github.com/robotools/fontParts",
 "fonttools @ git+https://github.com/fonttools/fonttools",
-"fontbakery @ git+https://github.com/fonttools/fontbakery",
 "glyphsLib @ git+https://github.com/googlefonts/glyphsLib",
 "ufo2ft @ git+https://github.com/googlei18n/ufo2ft",
 "tabulate",
