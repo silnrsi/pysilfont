@@ -1162,27 +1162,49 @@ Usage: **`psfsetkeys [--plist PLIST] [-i INPUT] [-k KEY] [-v VALUE] [--file FILE
 _([Standard options](docs.md#standard-command-line-options) also apply)_
 
 Set keys in a UFO p-list file.
+
+PLIST parameter must be either `fontinfo` (default) or `lib`
+and selects which p-list to modify.
+
 A single key can be set by specifying KEY and one of VALUE, FILE, or FILEPART.
-VALUE should be a single line string, FILE and FILEPART should be a filename.
+When specified, VALUE should be a single line string, FILE and FILEPART should be a filename.
 With FILEPART, the contents of the file are read until the first blank line.
 This is useful for setting the copyright key from the OFL.txt file.
 
 Multiple keys can be set using a csv INPUT file, format "key,value".
 A filename to read cannot be specified in the csv file.
 
-By default keys are stored with type string in the UFO.
-Values of true or false are converted to type boolean.
-Values that can be converted to integer are stored as type integer.
+Most VALUEs are stored with type `string` in the UFO.
+VALUEs of `true` or `false` are stored in the UFO as type `boolean`.
+VALUEs that can be converted to integer are stored in they UFO as type `integer`.
 
-PLIST selects which p-list to modify.
-If not specified defaults to `fontinfo` which means the `fontinfo.plist` file is modified.
+However, for certain keys in `fontinfo` such as `openTypeOS2UnicodeRanges`,
+the VALUE is store in the UFO as an array of bit-numbers. 
+When specifying the VALUE for such bit-number arrays, two formats are supported:
 
-Example:
+1. A comma-separated list of integer values:
+    - integers preceded by `-` indicate the corresponding bit number should be removed, if present.
+    - integers not preceded by `-` indicate the corresponding bit number should be included.
+2. A series of hexadecimal digits, optionally preceded by `x`.
+    - The hex string is converted to binary and replaces all bit numbers up to the length of that binary number (including leading zeros)
+
+In both cases, space characters can be intermixed for readability.
+
+Examples:
 
 Set a key in the file `lib.plist`.
 ```
 psfsetkeys --plist lib -k com.schriftgestaltung.width -v Regular font.ufo
 ```
+
+Examples of bit-number VALUEs:
+
+- `-v "5,6"` — sets bit numbers 5 and 6
+- `-v "-8, 5, 6"` — sets bit numbers 5 and 6 and clears bit 8 
+- `-v 4A` — sets bits 1, 3, and 6 while clearing bits 0, 2, 4, 5 and 7 
+- `-v 3` — sets bit 3
+- `-v x3` — sets bits 0 and 1 while clearing bits 2 and 3
+- `-v "x8000 0003"` — sets bits 0, 1 and 31 while clearing 2-30
 
 ---
 #### psfsetmarkcolors
