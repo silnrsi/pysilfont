@@ -125,12 +125,12 @@ def join_lines(lines):
     return text
 
 
-# Which fontInfo keys are bit number arrays, max field length for each
+# Which fontInfo keys are bit number arrays, bit-field length for each
 bitfieldlength = {
     'openTypeHeadFlags': 16,
     'openTypeOS2Selection': 16,
-    'openTypeOS2UnicodeRanges': 64,
-    'openTypeOS2CodePageRanges': 32,
+    'openTypeOS2UnicodeRanges': 128,
+    'openTypeOS2CodePageRanges': 64,
     'openTypeOS2Type': 16
 }
 
