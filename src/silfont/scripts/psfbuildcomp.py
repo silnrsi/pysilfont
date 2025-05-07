@@ -282,7 +282,6 @@ def addtolist(e, prevglyph):
     add a tuple to the list of glyphs in this composite, including
     "at" and "with" attachment point information, and x and y shift values
     """
-    global glyphlist
     subelementlist = []
     thisglyphname = e.get('PSName')
     atvalue = e.get("at")

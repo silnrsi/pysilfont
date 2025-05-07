@@ -29,7 +29,6 @@ ufolist = []
 for line in cfg: ufolist.append(line)
 
 def test_normalize():
-    global ufolist
     allclear = True
 
     for (ufo, ufoname, errorcount, warningcount) in ufolist:
@@ -42,7 +41,6 @@ def test_normalize():
     assert allclear
 
 def test_diffs():
-    global ufolist
     allclear = True
 
     for line in ufolist:

@@ -76,7 +76,6 @@ class _familydata(object):
         return (valid, logs)
 
     def validate(self):
-        global familyfields, filefields, defaultsfields
         logs = []
         valid = True
         if self.type == "m":

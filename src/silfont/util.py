@@ -276,14 +276,12 @@ namestocolorslist = {
 colorstonameslist = {v: k for k, v in namestocolorslist.items()}
 
 def nametocolor(color, default=None):
-    global namestocolorslist
     if default is not None:
         return namestocolorslist.get(color,default)
     else:
         return namestocolorslist.get(color)
 
 def colortoname(color, default=None):
-    global colorstonameslist
     if default:
         return colorstonameslist.get(color,default)
     else:

@@ -23,7 +23,7 @@ argspec = [
 csvmap = "" # Variable used globally
 
 def doit(args) :
-    global csvmap, ksetsbymember
+    global csvmap
     font = args.ifont
     incsv = args.input
     incsv.numfields = 2
@@ -618,7 +618,6 @@ def gettempname(f):
         if f(name): return name
 
 def glyphsub(m): # Function passed to re.sub() when updating display strings
-    global csvmap
     gname = m.group(1)
     return '/' + csvmap[gname] if gname in csvmap else m.group(0)
 
