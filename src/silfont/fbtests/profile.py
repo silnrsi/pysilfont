@@ -160,7 +160,8 @@ PROFILE = {
             "microsoft/copyright",
             "microsoft/vertical_metrics",
             "typenetwork/family/equal_numbers_of_glyphs",
-            "typenetwork/vertical_metrics"
+            "typenetwork/vertical_metrics",
+            "opentype/dsig"
          ],
     },
     "overrides": {
