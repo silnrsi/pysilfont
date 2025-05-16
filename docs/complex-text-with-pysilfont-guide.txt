@@ -1,0 +1,24 @@
+Pysilfont can be used interactively with ipython in the form of a Jupyter Notebook. 
+
+# Installing the notebook and its dependencies
+
+(assuming we have a virtualenv in venv already)
+
+source ../venv/bin/activate
+pip install notebook PyGObject
+
+ipython kernel install --user --name=venv
+
+# Using the notebook
+start in by typing:
+
+```
+jupyter notebook complex-text-with-pysilfont.ipynb
+```
+
+Make sure you select the right kernel in the Menu:
+Kernel -> Change kernel... venv
+
+
+Bear in mind, the nature of notebooks means that path variables are not accessible, so you will have to adjust paths to point to your previously downloaded files yourself. (Change nico to your own username in the path).
+
