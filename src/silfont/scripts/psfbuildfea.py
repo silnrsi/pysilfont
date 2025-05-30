@@ -31,28 +31,33 @@ class MyBuilder(Builder):
                 countFeatureLookups += 1
         lookups = []
         latelookups = []
-        for bldr in self.lookups_:
-            if bldr.table != tag:
+        for i, l in enumerate(self.lookups_):
+            if l.table != tag:
                 continue
-            if self.lateSortLookups and getattr(bldr, '_feature', "") == "":
-                if bldr in fronts:
-                    latelookups.insert(0, bldr)
+            name = self.get_lookup_name_(l)
+            resolved = l.promote_lookup_type(is_named_lookup=name is not None)
+            for bldr in resolved:
+                if self.lateSortLookups and getattr(bldr, '_feature', "") == "":
+                    if bldr in fronts:
+                        latelookups.insert(0, (bldr, i))
+                    else:
+                        latelookups.append((bldr, i))
                 else:
-                    latelookups.append(bldr)
-            else:
-                bldr.lookup_index = len(lookups)
-                lookups.append(bldr)
-                bldr.map_index = bldr.lookup_index
+                    l.lookup_index = len(lookups)
+                    lookups.append((bldr, i))
+                    l.map_index = l.lookup_index
         numl = len(lookups)
         for i, l in enumerate(latelookups):
-            l.lookup_index = numl + i
-            l.map_index = l.lookup_index
+            l[0].lookup_index = numl + i
+            self.lookups_[l[1]].lookup_index = numl + i
+            self.lookups_[l[1]].map_index = numl + i
         for l in lookups + latelookups:
+            l = l[0]
             self.lookup_locations[tag][str(l.lookup_index)] = LookupDebugInfo(
                     location=str(l.location),
                     name=self.get_lookup_name_(l),
                     feature=None)
-        return [b.build() for b in lookups + latelookups]
+        return [b[0].build() for b in lookups + latelookups]
 
     def add_lookup_to_feature_(self, lookup, feature_name):
         super(MyBuilder, self).add_lookup_to_feature_(lookup, feature_name)
