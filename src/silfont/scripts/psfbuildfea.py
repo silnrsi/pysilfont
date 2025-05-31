@@ -53,13 +53,17 @@ class MyBuilder(Builder):
                     name=self.get_lookup_name_(l),
                     feature=None)
         
-        # return [b.build() for b in lookups + latelookups]
+        # return [b.build() for b in lookups + latelookups] from before fonttools v4.58.1
         rtn = []
         for b in lookups + latelookups:
-            name = self.get_lookup_name_(b)
-            resolved = b.promote_lookup_type(is_named_lookup=name is not None)
-            for r in resolved:
-                rtn.append(r.build())
+            try:
+                rtn.append(b.build())
+            except: # for fonttools v4.58.1 or higher
+                name = self.get_lookup_name_(b)
+                resolved = b.promote_lookup_type(is_named_lookup=name is not None)
+                assert(len(resolved) == 1) # if this asserts, lkup indexes would likely be off
+                for r in resolved:
+                    rtn.append(r.build())
         return rtn
 
     def add_lookup_to_feature_(self, lookup, feature_name):
