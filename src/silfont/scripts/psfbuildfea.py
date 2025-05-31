@@ -31,28 +31,23 @@ class MyBuilder(Builder):
                 countFeatureLookups += 1
         lookups = []
         latelookups = []
-        for i, l in enumerate(self.lookups_):
-            if l.table != tag:
+        for bldr in self.lookups_:
+            if bldr.table != tag:
                 continue
-            name = self.get_lookup_name_(l)
-            resolved = l.promote_lookup_type(is_named_lookup=name is not None)
-            for bldr in resolved:
-                if self.lateSortLookups and getattr(bldr, '_feature', "") == "":
-                    if bldr in fronts:
-                        latelookups.insert(0, (bldr, i))
-                    else:
-                        latelookups.append((bldr, i))
+            if self.lateSortLookups and getattr(bldr, '_feature', "") == "":
+                if bldr in fronts:
+                    latelookups.insert(0, bldr)
                 else:
-                    l.lookup_index = len(lookups)
-                    lookups.append((bldr, i))
-                    l.map_index = l.lookup_index
+                    latelookups.append(bldr)
+            else:
+                bldr.lookup_index = len(lookups)
+                lookups.append(bldr)
+                bldr.map_index = bldr.lookup_index
         numl = len(lookups)
         for i, l in enumerate(latelookups):
-            l[0].lookup_index = numl + i
-            self.lookups_[l[1]].lookup_index = numl + i
-            self.lookups_[l[1]].map_index = numl + i
+            l.lookup_index = numl + i
+            l.map_index = l.lookup_index
         for l in lookups + latelookups:
-            l = l[0]
             self.lookup_locations[tag][str(l.lookup_index)] = LookupDebugInfo(
                     location=str(l.location),
                     name=self.get_lookup_name_(l),
