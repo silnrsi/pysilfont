@@ -14,6 +14,7 @@ General updates for new year, 2024
 
 ### Changed
 
+- Replace deprecated `pkg_resources` with recommended `importlib.resources` (1.8.1.dev11)
 - Updated psfbuildcomp to remove `com.schriftgestaltung.Glyphs.shapeOrder` key from built glyphs. (1.8.1.dev10)
 - Updated psfsetkeys to support bit-number fields (e.g., `openTypeOS2UnicodeRanges`)
 - Updated pytest test data for 2025 and change to SIL Global

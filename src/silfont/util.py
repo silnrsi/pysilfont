@@ -7,7 +7,7 @@ __author__ = 'David Raymond'
 
 import os, subprocess, difflib, sys, io, json
 from silfont.core import execute
-from pkg_resources import resource_filename
+from importlib.resources import files
 from csv import reader as csvreader
 
 try:
@@ -354,20 +354,22 @@ def parsecolors(colors, single = False, allowspecial = False): # Process a list 
 # Provide dict of required characters which match the supplied list of sets - sets can be basic, rtl or sil
 def required_chars(sets="basic"):
     if type(sets) == str: sets = (sets,) # Convert single string to a tuple
-    rcfile = open(resource_filename('silfont','data/required_chars.csv'))
-    rcreader = csvreader(rcfile)
-    next(rcreader) # Read fist line which is headers
-    rcdict = {}
-    for line in rcreader:
-        unicode = line[0][2:]
-        item = {
-            "ps_name": line[1],
-            "glyph_name": line[2],
-            "sil_set": line[3],
-            "rationale": line[4],
-            "notes": line[5]
-        }
-        if item["sil_set"] in sets: rcdict[unicode] = item
+    # Use importlib.resources to get the path to required_chars.csv
+    rcfile_path = files('silfont').joinpath('data/required_chars.csv')
+    with open(rcfile_path, encoding="utf-8") as rcfile:
+        rcreader = csvreader(rcfile)
+        next(rcreader) # Read first line which is headers
+        rcdict = {}
+        for line in rcreader:
+            unicode = line[0][2:]
+            item = {
+                "ps_name": line[1],
+                "glyph_name": line[2],
+                "sil_set": line[3],
+                "rationale": line[4],
+                "notes": line[5]
+            }
+            if item["sil_set"] in sets: rcdict[unicode] = item
     return rcdict
 
 # Pretty print routine for json files.
