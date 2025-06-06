@@ -16,8 +16,9 @@ from silfont.core import execute
 
 class MyBuilder(Builder):
 
-    def __init__(self, font, featurefile, lateSortLookups=False, fronts=None):
+    def __init__(self, font, featurefile, logger=None, lateSortLookups=False, fronts=None):
         super(MyBuilder, self).__init__(font, featurefile)
+        self.logger=logger
         self.lateSortLookups = lateSortLookups
         self.fronts = fronts if fronts is not None else []
 
@@ -52,7 +53,22 @@ class MyBuilder(Builder):
                     location=str(l.location),
                     name=self.get_lookup_name_(l),
                     feature=None)
-        return [b.build() for b in lookups + latelookups]
+        
+        # return [b.build() for b in lookups + latelookups] from before fonttools v4.58.1
+        rtn = []
+        for b in lookups + latelookups:
+            try:
+                rtn.append(b.build())
+            except AssertionError : # for fonttools v4.58.1 or higher
+                name = self.get_lookup_name_(b)
+                resolved = b.promote_lookup_type(is_named_lookup=name is not None)
+                if len(resolved) != 1:
+                    # if len > 1, lkup indexes would likely be off
+                    if self.logger: self.logger.log("Unsupported fea construct used", "X")
+                    else: assert()
+                for r in resolved:
+                    rtn.append(r.build())
+        return rtn
 
     def add_lookup_to_feature_(self, lookup, feature_name):
         super(MyBuilder, self).add_lookup_to_feature_(lookup, feature_name)
@@ -80,7 +96,8 @@ def doit(args) :
     font = TTFont(args.input_font)
     if args.nohb:
         font.cfg.set("fontTools.ttLib.tables.otBase:USE_HARFBUZZ_REPACKER", False)
-    builder = MyBuilder(font, args.input_fea, lateSortLookups=args.end, fronts=args.front)
+    builder = MyBuilder(font, args.input_fea, logger=args.logger, 
+                        lateSortLookups=args.end, fronts=args.front)
     builder.build(debug=args.debug)
     if args.lookupmap:
         with open(args.lookupmap, "w") as outf:
