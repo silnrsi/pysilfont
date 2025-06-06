@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "silfont"
-version = "1.8.1.dev11"
+version = "1.8.1.dev12"
 # (also manually bump version in src/silfont/__init__.py)
 authors = [{name = "SIL Global", email = "fonts@sil.org"}]
 readme = "README.md"
