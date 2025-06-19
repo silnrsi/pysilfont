@@ -210,8 +210,10 @@ def doit(args):
                 # delete information from existing glyph
                 targetglyph.remove('outline')
                 targetglyph.remove('advance')
-                if 'com.schriftgestaltung.Glyphs.shapeOrder' in targetglyph['lib']:
+                try:    
                     targetglyph["lib"].remove('com.schriftgestaltung.Glyphs.shapeOrder')
+                except (AttributeError, KeyError):
+                    pass
                 for i in xrange(len(targetglyph['anchor'])-1,-1,-1):
                     aname = targetglyph['anchor'][i].element.attrib['name']
                     if preserveRE is not None and preserveRE.match(aname):
