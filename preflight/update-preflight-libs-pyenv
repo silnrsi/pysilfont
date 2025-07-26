@@ -5,7 +5,7 @@
 # Released under the MIT License (https://opensource.org/licenses/MIT)
 # maintained by Nicolas Spalinger
 
-echo "Update preflight libs pyenv - version 2025-1-15"
+echo "Update preflight libs pyenv - version 2025-7-26"
 
 # checking we have pyenv installed 
 if ! [ -x "$(command -v pyenv)" ]; then
@@ -27,7 +27,7 @@ echo "Populating/updating the preflight dependencies for the active pyenv interp
 
 # install silfont from master along with master/main dependencies using [git] optional profile
 # install silfont source at the root of the user's home directory so that src/ folders don't appear anywhere else
-python3 -m pip install "silfont[git] @ git+https://github.com/silnrsi/pysilfont.git#egg=silfont" --src "$HOME"/src
+python3 -m pip install --use-pep517 "silfont[git] @ git+https://github.com/silnrsi/pysilfont.git#egg=silfont" --src "$HOME"/src
 
 # components from main/master directly from upstream git repositories
 # python3 -m pip install git+https://github.com/typemytype/glyphConstruction.git --use-pep517
