@@ -27,7 +27,6 @@ PROFILE = {
             "arabic_spacing_symbols",
             "base_has_width",
             "case_mapping",
-            "contour_count", 
             "control_chars",
             "designspace_has_consistent_codepoints",
             "designspace_has_consistent_glyphset",
@@ -194,13 +193,6 @@ PROFILE = {
                 "code": "missing-whitespace-glyph-0x00A0",
                 "status": "WARN",
                 "reason": "this is not as severe as assessed in the original check for 0x00A0.",
-            }
-        ],
-        "contour_count": [
-            {
-                "code": "contour-count",
-                "status" : "INFO",
-                "reason" : "SIL trusts designers, is concerned only with 'no-contour' results",
             }
         ],
         "unwanted_tables": [
