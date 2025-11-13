@@ -45,7 +45,6 @@ PROFILE = {
             "googlefonts/family/italics_have_roman_counterparts",
             "googlefonts/family_name_compliance",
             "googlefonts/family/tnum_horizontal_metrics",
-            "googlefonts/font_names",
             "googlefonts/fstype",
             "googlefonts/gasp",
             "googlefonts/glyphsets/shape_languages",
