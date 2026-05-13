@@ -5,9 +5,11 @@ __copyright__ = 'Copyright (c) 2023-2025, SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
+import os
 import sys
 import importlib
 import silfont
+import uharfbuzz
 from importlib.metadata import version
 
 
@@ -28,6 +30,7 @@ def cmd():
         ('palaso', '?', ''),
         ('tabulate', '?', ''),
         ('ufo2ft', '?', ''),
+        ('uharfbuzz', '?', ''),
         )
 
     # Pysilfont info
@@ -37,6 +40,7 @@ def cmd():
     print("   Code running from: " + silfont.__file__[:-12])
     print("   using:             Python " + sys.version.split(' \n', maxsplit=1)[0])
 
+    # Dependency info
     for dep in deps:
         name = dep[0]
 
@@ -60,6 +64,12 @@ def cmd():
             path = ""
 
         print('{:20} {:15} {}'.format(name + ":", version, path))
+    
+    # HarfBuzz info
+    print('\nHarfBuzz versions')
+    print('uharfbuzz module: ' + uharfbuzz.version_string())
+    print('HarfBuzz library:')
+    os.system('hb-shape --version')
 
 
 if __name__ == "__main__":
