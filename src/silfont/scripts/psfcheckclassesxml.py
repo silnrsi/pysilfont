@@ -270,13 +270,11 @@ def doit(args):
                     refLen = len(refClassList)
                     refClassName = className
                     refClassFixed = classFixed
-                    if args.graphite:
+                    if doGraphite := args.graphite:
                         # User has requested graphite order checking. Can we do it?
-                        if refClassFixed is None:
-                            doGraphite = True   #yes we can
-                        else:
+                        if refClassFixed is not None:
                             doGraphite = False  # Nope. Give warning:
-                            logger.log (f"Class '{className}' includes 'fixed' attribute; graphite ordering checks will not be attempted.", "W")
+                            logger.log (f"Class '{className}' includes 'fixed' attribute; graphite ordering checks will not be attempted.", "W")                    
                 else:
                     # compare ref class with this one
                     if len(l) != refLen:
