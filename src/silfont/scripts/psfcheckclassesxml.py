@@ -321,12 +321,17 @@ def doit(args):
 
 classes = {}  # Keep record of all classes we've seen so we can flatten references
 
+glyphNameRE = re.compile(r'\.notdef|[a-zA-Z]|[a-zA-Z_][a-zA-Z0-9_.*+:^|~-]+')
+classNameRE = re.compile(r'[a-zA-Z][a-zA-Z0-9_.-]*')
+
 def orderClass(classElement, logger):
     # returns a list of tuples, each containing (indexWithinClass, sortOrder, glyphName)
     # list is sorted by sortOrder
     className = classElement.attrib['name']
     if className in classes:
         logger.log(f"Invalid class definition file: class '{className}' defined more than once","E")
+    if not classNameRE.fullmatch(className):
+        logger.log(f"Invalid class name: '{className}'","E")
 
     # First, build and save a list of tupples, (sortOrder, GlyphName), ordered by
     # their appearance in the classElement, flattening any referenced classes as needed.
@@ -345,6 +350,8 @@ def orderClass(classElement, logger):
         # Not a class, thus should be a glyph name
         for ext in [''] + classElement.get('exts', '').split():
             g = token + ext
+            if not glyphNameRE.fullmatch(g):
+                logger.log(f"Invalid glyph working name: class '{className}' glyph '{g}'", 'E')
             if g in fontGnames:
                 # Add this glyph to the class, but use an invalid sort if sortvalue for this glyph is unknown
                 res.append((sortvalue.get(g, -1), g))
