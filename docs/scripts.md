@@ -293,7 +293,6 @@ optional arguments:
 ```
 #### Notes
 
-`psfcheckclassesxml` requires an input font, either a built TTF or the input UFO. If none is provided on the command line, it will use the first Regular face font it can find in `../results/*.ttf`, `masters/*.ufo`, and `./*.ufo`.  
 
 Glyph classes defined in xml format (typically `source/classes.xml`) can be accessed by both Graphite and OpenType code. Unlike FEA or GDL source files, glyph names mentioned in the classes XML file that are not present in the font project are silently ignored. While this allows a classes file to be shared among multiple projects, it also introduces the risk of undectected typos within the file. `psfcheckclassesxml` will issue warning messages if there are glyphs named in the `classes` file which are not included in the `glyphdata` or which are not the font file. It will also list _interesting_ glyph names found in the `glyphdata` or the input font which are not mentioned in the classes file -- in case some of those may be helpful in identifying how to correct typos in the classes file.
 
