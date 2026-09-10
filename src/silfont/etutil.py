@@ -8,7 +8,7 @@ __author__ = 'David Raymond'
 from xml.etree import ElementTree as ET
 import silfont.core
 
-import re, os, codecs, io, collections
+import re, os, io, collections
 
 _elementprotect = {
     '&' : '&amp;',

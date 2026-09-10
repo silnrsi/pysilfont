@@ -7,7 +7,6 @@ __author__ = 'Bobby de Vos'
 
 from silfont.core import execute
 from xml.etree import ElementTree as ET
-import codecs
 import re
 
 suffix = "_setkeys"
@@ -50,14 +49,14 @@ def doit(args):
 
     # Use entire file contents to set the key
     if args.key and args.file:
-        fh = codecs.open(args.file, 'r', 'utf-8')
+        fh = open(args.file)
         contents = join_lines(fh.readlines())
         set_key_value(font_plist, args.key, contents)
         fh.close()
 
     # Use some of the file contents to set the key
     if args.key and args.filepart:
-        fh = codecs.open(args.filepart, 'r', 'utf-8')
+        fh = open(args.filepart)
         first_line = fh.readlines()[0]
         contents = first_line.strip()
         set_key_value(font_plist, args.key, contents)
