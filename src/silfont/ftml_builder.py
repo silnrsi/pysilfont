@@ -90,17 +90,18 @@ class FTML(object):
         'fuchsia': '#ff00ff',
         'green':   '#008000',
         'grey':    '#808080',
+        'gray94':  '#F0F0F0',
         'lime':    '#00ff00',
         'maroon':  '#800000',
         'navy':    '#000080',
         'olive':   '#808000',
+        'orange':  '#ffa500',
         'purple':  '#800080',
         'red':     '#ff0000',
         'silver':  '#c0c0c0',
         'teal':    '#008080',
         'white':   '#ffffff',
         'yellow':  '#ffff00',
-        'orange':  '#ffa500'
     }
 
     def _getColor(self, color):

@@ -372,6 +372,11 @@ def silfonts_repo_executable_bits(family_directory):
     import os
     parent_path = os.path.abspath(os.path.join(family_directory, os.pardir))
     for root, dirs, files in os.walk(parent_path):
+        try:
+            # Don't bother looking in any .git folders (if present)
+            dirs.remove('.git')
+        except ValueError:
+            pass
         for file in files:
             if file.endswith(".txt"):
                 file = os.path.join(root, file)
