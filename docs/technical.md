@@ -45,7 +45,7 @@ The following sections work through this, using psfnormalize, which normalizes a
 '''Normalize a UFO and optionally convert between UFO2 and UFO3.
 - If no options are chosen, the output font will simply be a normalized version of the font.'''
 __url__ = 'https://github.com/silnrsi/pysilfont'
-__copyright__ = 'Copyright (c) 2015-2025, SIL Global (https://www.sil.org)'
+__copyright__ = 'Copyright (c) 2015-2026, SIL Global (https://www.sil.org)'
 __license__ = 'Released under the MIT License (https://opensource.org/licenses/MIT)'
 __author__ = 'David Raymond'
 
