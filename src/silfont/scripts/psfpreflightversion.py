@@ -16,6 +16,7 @@ def cmd():
 
     deps = (  # (module, used by, min recommended version)
         ('defcon', '?', ''),
+        ('feaxlib', '?', ''),
         ('fontMath', '?', ''),
         ('fontParts', '?', ''),
         ('fontTools', '?', ''),
@@ -23,8 +24,8 @@ def cmd():
         ('lxml', '?', ''),
         ('mutatorMath', '?', ''),
         ('palaso', '?', ''),
+        ('ucdinfo', '?', ''),
         ('ufoLib2', '?', ''),
-        ('feaxlib', '?', ''),
         )
 
     # Pysilfont info

@@ -18,6 +18,7 @@ def cmd():
 
     deps = (  # (module, used by, min recommended version)
         ('defcon', '?', ''),
+        ('feaxlib', '?', ''),
         ('fontMath', '?', ''),
         ('fontParts', '?', ''),
         ('fontbakery', "?", ''),
@@ -29,7 +30,9 @@ def cmd():
         ('odf', '?', ''),
         ('palaso', '?', ''),
         ('tabulate', '?', ''),
+        ('ucdinfo', '?', ''),
         ('ufo2ft', '?', ''),
+        ('ufoLib2', '?', ''),
         ('uharfbuzz', '?', ''),
         )
 

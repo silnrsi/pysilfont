@@ -14,6 +14,7 @@ General updates for new year, 2024
 
 ### Changed
 
+- `ftml_builder` now uses `python-ucd.ucdinfo` module rather than `palaso.unicode.ucd` (1.8.1.dev16)
 - Updated copyright year to include 2026
 - Fixed #104 ignore `.git` folder when looking for files that need executable bit set (1.8.1.dev15)
 - Updated psfcheckclassesxml to detect more kinds of errors.

@@ -6,7 +6,7 @@ __license__ = 'Released under the MIT License (https://opensource.org/licenses/M
 __author__ = 'Bob Hallissy'
 
 from silfont.ftml import Fxml, Ftestgroup, Ftest, Ffontsrc
-from palaso.unicode.ucd import get_ucd
+from ucdinfo.ucd import get_ucd
 from itertools import product
 import re
 import collections.abc
@@ -26,7 +26,8 @@ import collections.abc
 #       ...
 #       writeFile(...)
 #
-#     The module is clever enough, for example, to automatically close a test when changing features, languages or direction.
+#     The module is clever enough, for example, to automatically close a test when changing features,
+#     languages or direction.
 #
 #  2. The FTMLBuilder object which reads and processes glyph_data.csv and provides assistance in iterating over
 #     the characters, features, and languages that should be supported by the font, e.g.:
@@ -144,9 +145,9 @@ class FTML(object):
                 test.comment = comment
             if rtl: test.rtl = "True"
             # Construct stylename and add style if needed:
-            x = ['{}_{}'.format(t,v) for t,v in self._curFeatures.items()] if self._curFeatures else []
+            x = ['{}_{}'.format(t, v) for t, v in self._curFeatures.items()] if self._curFeatures else []
             if self._curLang:
-                x.insert(0,self._curLang)
+                x.insert(0, self._curLang)
             if len(x):
                 test.stylename = '_'.join(x)
                 self._fxml.head.addstyle(test.stylename, feats = self._curFeatures, lang = self._curLang)
@@ -155,7 +156,7 @@ class FTML(object):
             self._curTest = test
         if len(self._curTest.string): self._curTest.string += ' '
         # Special hack until we get to python3 with full unicode support
-        self._curTest.string += ''.join([ c if ord(c) < 128 else '\\u{0:06X}'.format(ord(c)) for c in s ])
+        self._curTest.string += ''.join([c if ord(c) < 128 else '\\u{0:06X}'.format(ord(c)) for c in s])
         # self._curTest.string += s
 
     def setFeatures(self, features):
@@ -179,7 +180,7 @@ class FTML(object):
 
     def setLang(self, langID):
         if langID != self._curLang:
-            self.closeTest();
+            self.closeTest()
         self._curLang = langID
 
     def clearLang(self):
@@ -233,16 +234,16 @@ class Feature(object):
         self.maxval = 1
         self._tvlist = None
 
-    def __getattr__(self,name):
+    def __getattr__(self, name):
         if name == "tvlist":
             # tvlist is a list of all possible tag,value pairs (except the default but including None) for this feature
             # This attribute shouldn't be needed until all the possible feature value are known,
             # therefore we'll generate this the first time we need it and save it
             if self._tvlist is None:
-                self._tvlist = [ None ]
-                for v in range (0, self.maxval+1):
+                self._tvlist = [None]
+                for v in range(0, self.maxval + 1):
                     if v != self.default:
-                        self._tvlist.append( [self.tag, str(v)])
+                        self._tvlist.append([self.tag, str(v)])
             return self._tvlist
 
 
@@ -252,7 +253,7 @@ class FChar(object):
     def __init__(self, uids, basename, ps_basename, logger):
         self.logger = logger
         # uids can be a singleton integer or, for multiple-encoded glyphs, some kind of sequence of integers
-        if isinstance(uids,collections.abc.Sequence):
+        if isinstance(uids, collections.abc.Sequence):
             uids1 = uids
         else:
             uids1 = (uids,)
@@ -261,7 +262,7 @@ class FChar(object):
         self.general = "unknown"
         for uid in uids1:
             try:
-                gc = get_ucd(uid,'gc')
+                gc = get_ucd(uid, 'gc')
                 if self.general == "unknown":
                     self.general = gc
                 uids2.append(uid)
@@ -288,7 +289,7 @@ class FChar(object):
 
     # Most callers don't need to support or or care about multiple-encoded glyphs, so we
     # support the old .uid attribute by returning the first (I guess we consider it primary) uid.
-    def __getattr__(self,name):
+    def __getattr__(self, name):
         if name == 'uids':
             return self._uids
         elif name == 'uid':
@@ -326,7 +327,7 @@ class FSpecial(object):
         self.basename = basename
         # a couple of properties based on the first uid:
         try:
-            self.general = get_ucd(uids[0],'gc')
+            self.general = get_ucd(uids[0], 'gc')
         except KeyError:
             self.logger.log('USV %04X not defined; no properties known' % uids[0], 'W')
         self.feats = set()  # feat tags that affect this char
@@ -471,7 +472,7 @@ class FTMLBuilder(object):
         if fl is None: self.logger.log("Empty input file", "S")
         # required columns:
         try:
-            nameCol = fl.index('glyph_name');
+            nameCol = fl.index('glyph_name')
             usvCol = fl.index('USV')
         except ValueError as e:
             self.logger.log('Missing csv input field: ' + str(e), 'S')
@@ -491,14 +492,14 @@ class FTMLBuilder(object):
         next(incsv.reader, None)  # Skip first line with headers
 
         # RE that matches names of glyphs we don't care about
-        namesToSkipRE = re.compile('^(?:[._].*|null|cr|nonmarkingreturn|tab|glyph_name)$',re.IGNORECASE)
+        namesToSkipRE = re.compile('^(?:[._].*|null|cr|nonmarkingreturn|tab|glyph_name)$', re.IGNORECASE)
 
         # RE that matches things like 'cv23' or 'cv23=4' or 'cv23=2,3'
         featRE = re.compile(r'^(\w{2,4})(?:=([\d,]+))?$')
 
         # RE that matches USV sequences for ligatures
         ligatureRE = re.compile('^[0-9A-Fa-f]{4,6}(?:_[0-9A-Fa-f]{4,6})+$')
-        
+
         # RE that matches space-separated USV sequences
         USVsRE = re.compile(r'^[0-9A-Fa-f]{4,6}(?:\s+[0-9A-Fa-f]{4,6})*$')
 
@@ -532,8 +533,8 @@ class FTMLBuilder(object):
             psnamesSeen.add(psname)
 
             # compute basename-- the glyph name without extensions:
-            basename = gname.split('.',1)[0]
-            ps_basename = psname.split('.',1)[0]
+            basename = gname.split('.', 1)[0]
+            ps_basename = psname.split('.', 1)[0]
 
             # Process USV(s)
             # could be empty string, a single USV, space-separated list of USVs for multiple encoding,
@@ -584,7 +585,7 @@ class FTMLBuilder(object):
 
             if featCol is not None:
                 feats = line[featCol].strip()
-                if len(feats) > 0 and not(feats.startswith('#')):
+                if len(feats) > 0 and not feats.startswith('#'):
                     feats = feats.split(';')
                     for feat in feats:
                         m = featRE.match(feat)
@@ -606,14 +607,14 @@ class FTMLBuilder(object):
                                         # For encoded glyphs: capture first value as the default for this feature
                                         # (For OpenType this must always be zero; might be non-zero for Graphite)
                                         feature.default = vals[0]
-                                        # NB: all vals on encoded glyphs will also be processed (below) when 
+                                        # NB: all vals on encoded glyphs will also be processed (below) when
                                         #     computing the maxval for the feature, so putting a second value
-                                        #     on encoded glyphs is a way to push the maxval out past all 
+                                        #     on encoded glyphs is a way to push the maxval out past all
                                         #     defined variants to test behavior.
                                     elif c is not None and len(feats) == 1:  # TODO: len() seems like wrong test.
                                         for v in vals:
                                             # remember the glyph name for this feature/value combination:
-                                            feat = '{}={}'.format(tag,v)
+                                            feat = '{}={}'.format(tag, v)
                                             if feat not in c.altnames:
                                                 c.altnames[feat] = gname
                                     vals.append(feature.maxval)
@@ -626,7 +627,7 @@ class FTMLBuilder(object):
 
             if bcp47Col is not None:
                 bcp47 = line[bcp47Col].strip()
-                if len(bcp47) > 0 and not(bcp47.startswith('#')):
+                if len(bcp47) > 0 and not (bcp47.startswith('#')):
                     if c is not None:
                         for tag in re.split(r'\s*[\s,]\s*', bcp47): # Allow comma- or space-separated tags
                             c.langs.add(tag)        # lang-tags mentioned for this character
@@ -696,30 +697,30 @@ class FTMLBuilder(object):
             # Construct comment from glyph names:
             comment = ' '.join([self._charFromUID[u].basename for u in uids])
         # see if uid list includes a mirrored char
-        hasMirrored = bool(len([x for x in uids if get_ucd(x,'Bidi_M')]))
+        hasMirrored = bool(len([x for x in uids if get_ucd(x, 'Bidi_M')]))
         # Analyze first and last joining char
         joiningChars = [x for x in uids if get_ucd(x, 'jt') != 'T']
         if len(joiningChars):
             # If first or last non-TRANSPARENT char is a joining char, then we need to emit examples with zwj
             # Assumes any non-TRANSPARENT char that is bc != L must be a rtl character of some sort
             uid = joiningChars[0]
-            zwjBefore = (get_ucd(uid,'jt') == 'D'
-                         or (get_ucd(uid,'bc') == 'L' and get_ucd(uid,'jt') == 'L')
-                         or (get_ucd(uid,'bc') != 'L' and get_ucd(uid,'jt') == 'R'))
+            zwjBefore = (get_ucd(uid, 'jt') == 'D'
+                        or (get_ucd(uid, 'bc') == 'L' and get_ucd(uid, 'jt') == 'L')
+                        or (get_ucd(uid, 'bc') != 'L' and get_ucd(uid, 'jt') == 'R'))
             uid = joiningChars[-1]
-            zwjAfter = (get_ucd(uid,'jt') == 'D'
-                         or (get_ucd(uid,'bc') == 'L' and get_ucd(uid,'jt') == 'R')
-                         or (get_ucd(uid,'bc') != 'L' and get_ucd(uid,'jt') == 'L'))
+            zwjAfter = (get_ucd(uid, 'jt') == 'D'
+                        or (get_ucd(uid, 'bc') == 'L' and get_ucd(uid, 'jt') == 'R')
+                        or (get_ucd(uid, 'bc') != 'L' and get_ucd(uid, 'jt') == 'L'))
         else:
             zwjBefore = zwjAfter = False
-        if get_ucd(startUID,'gc') == 'Mn':
+        if get_ucd(startUID, 'gc') == 'Mn':
             # First char is a NSM... prefix a suitable base
             uids.insert(0, self.diacBase)
             zwjBefore = False   # No longer any need to put zwj before
         elif get_ucd(startUID, 'WSpace'):
             # First char is whitespace -- prefix with baseline brackets:
             uids.insert(0, 0xF130)
-        lastNonMark = [x for x in uids if get_ucd(x,'gc') != 'Mn'][-1]
+        lastNonMark = [x for x in uids if get_ucd(x, 'gc') != 'Mn'][-1]
         if get_ucd(lastNonMark, 'WSpace'):
             # Last non-mark is whitespace -- append baseline brackets:
             uids.append(0xF131)
@@ -746,7 +747,8 @@ class FTMLBuilder(object):
         elif hasMirrored and self.rtlEnable:
             # Contains mirrored and rtl enabled:
             if addBreaks: ftml.closeTest()
-            ftml.addToTest(keyUID, u'{0} LTR: \u202A{0}\u202C RTL: \u202B{0}\u202C'.format(s), label = label, comment = comment, rtl = rtl)
+            ftml.addToTest(keyUID, u'{0} LTR: \u202A{0}\u202C RTL: \u202B{0}\u202C'.format(s),
+                           label = label, comment = comment, rtl = rtl)
             if addBreaks: ftml.closeTest()
         # elif is LRE, RLE, PDF
         # elif is LRI, RLI, FSI, PDI
